@@ -1,5 +1,13 @@
 # Label Taxonomy Examples
 
+## Table of Contents
+
+- [Example 1: Assign Task to Agent](#example-1-assign-task-to-agent)
+- [Example 2: Update Status During Workflow](#example-2-update-status-during-workflow)
+- [Example 3: Query Issues by Multiple Labels](#example-3-query-issues-by-multiple-labels)
+- [Example 4: Validate Label Cardinality](#example-4-validate-label-cardinality)
+
+
 ## Example 1: Assign Task to Agent
 
 ```bash

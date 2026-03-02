@@ -1,5 +1,18 @@
 # Exception Handling
 
+## Table of Contents
+
+- [1. Implementer Disagrees with Requirements](#1-implementer-disagrees-with-requirements)
+- [2. Architect Recommends Design Change](#2-architect-recommends-design-change)
+- [3. User Approves Requirement Change](#3-user-approves-requirement-change)
+- [4. Implementer Never Acknowledges](#4-implementer-never-acknowledges)
+- [5. Implementer Misunderstands Task](#5-implementer-misunderstands-task)
+- [6. Implementer Has Design Concerns](#6-implementer-has-design-concerns)
+- [7. Implementer Reports Incomplete Work](#7-implementer-reports-incomplete-work)
+- [8. Tests Fail in Post-Task Interview](#8-tests-fail-in-post-task-interview)
+- [9. Implementer Creates PR Before Approval](#9-implementer-creates-pr-before-approval)
+
+
 ## 1. Implementer Disagrees with Requirements
 
 If implementer believes requirements are wrong:

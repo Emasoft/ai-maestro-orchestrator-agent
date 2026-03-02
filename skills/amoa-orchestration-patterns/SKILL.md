@@ -84,6 +84,7 @@ Evaluate task complexity to determine appropriate planning investment.
 ---
 
 ### Agent Selection Guide ([references/agent-selection-guide.md](references/agent-selection-guide.md))
+<!-- TOC: Overview | Use-Case Quick Reference | Table of Contents -->
 
 Select the right specialized agent for each task based on language, domain, and capabilities.
 
@@ -110,6 +111,7 @@ Conduct interactive setup to establish project parameters, team configuration, a
 ---
 
 ### Language Verification Checklists ([references/language-verification-checklists.md](references/language-verification-checklists.md))
+<!-- TOC: Quick Navigation | Cross-Language Resources | Documents -->
 
 Ensure code quality, build success, and release readiness with language-specific verification standards.
 
@@ -239,6 +241,7 @@ AI Maestro messaging and Claude Code Tasks API reference.
 ---
 
 ### RULE 14 Enforcement ([references/rule-14-enforcement.md](references/rule-14-enforcement.md))
+<!-- TOC: 1 When handling user requirements in any workflow | 2 When detecting potential requirement deviations | 3 When a technical constraint conflicts with a requirement -->
 
 Canonical text for RULE 14: User Requirements Are Immutable.
 
@@ -247,6 +250,7 @@ Canonical text for RULE 14: User Requirements Are Immutable.
 ---
 
 ### Sub-Agent Role Boundaries Template ([references/sub-agent-role-boundaries-template.md](references/sub-agent-role-boundaries-template.md))
+<!-- TOC: YAML Frontmatter Structure | Purpose Section | Purpose -->
 
 Template for defining worker agent role boundaries in task delegations.
 
@@ -255,6 +259,7 @@ Template for defining worker agent role boundaries in task delegations.
 ---
 
 ### Workflow Checklists ([references/workflow-checklists.md](references/workflow-checklists.md))
+<!-- TOC: Checklist: Receiving New Task | Checklist: Delegating Task | Checklist: Monitoring Delegated Task -->
 
 Orchestration workflow checklists for task decomposition, assignment, monitoring, and integration.
 
@@ -271,6 +276,7 @@ Log format specifications for orchestration activities.
 ---
 
 ### Archive Structure ([references/archive-structure.md](references/archive-structure.md))
+<!-- TOC: Overview | Archive Location | Directory Structure -->
 
 Archive directory structure for completed work.
 
@@ -297,6 +303,7 @@ Copy this checklist and track your progress:
 - [ ] **PROACTIVELY** remind agents of pending tasks
 - [ ] Collect all task results
 - [ ] **Require 4 verification loops before any PR** (see [verification-loops.md](references/verification-loops.md))
+<!-- TOC: Table of Contents | Overview | 1 Why 4 Verification Loops Are Required -->
 - [ ] Verify completion against success criteria
 - [ ] Document lessons learned
 
@@ -382,17 +389,32 @@ See individual reference files for detailed troubleshooting.
 ## Resources
 
 - [Task Complexity Classifier](./references/task-complexity-classifier.md)
+<!-- TOC: Task Complexity Assessment | Use-Case Quick Reference | Simple Task -->
 - [Agent Selection Guide](./references/agent-selection-guide.md)
+<!-- TOC: Overview | Use-Case Quick Reference | Table of Contents -->
 - [Project Setup Menu](./references/project-setup-menu.md)
+<!-- TOC: Overview | Document Structure | [Part 1: Team, Repository & Release Configuration -->
 - [Language Verification Checklists](./references/language-verification-checklists.md)
+<!-- TOC: Quick Navigation | Cross-Language Resources | Documents -->
 - [RULE 14 - User Requirements Immutable](./references/user-requirements-immutable.md)
+<!-- TOC: Table of Contents | Core Principle | 1 What Immutable Requirements Means -->
 - [RULE 14 Enforcement](./references/rule-14-enforcement.md)
+<!-- TOC: 1 When handling user requirements in any workflow | 2 When detecting potential requirement deviations | 3 When a technical constraint conflicts with a requirement -->
 - [RULE 15 - Orchestrator No Implementation](./references/orchestrator-no-implementation.md)
+<!-- TOC: Table of Contents | Core Principle | 1 What the Orchestrator Does -->
 - [RULE 16 - Orchestrator Exclusive Communications](./references/orchestrator-exclusive-communications.md)
+<!-- TOC: Table of Contents | Core Principle | 1 What This Rule Means -->
 - [RULE 17 - Non-Blocking Patterns](./references/non-blocking-patterns.md)
+<!-- TOC: Overview | RULE 17: Orchestrator Must Remain Responsive (IRON RULE) | Async Task Delegation Patterns -->
 - [Orchestration Examples](./references/orchestration-examples.md)
+<!-- TOC: Authentication Module Implementation | 1 When you receive a plan handoff from AMAMA for authentication | 2 Task creation pattern for multi-component modules -->
 - [Orchestration API Commands](./references/orchestration-api-commands.md)
+<!-- TOC: AI Maestro Messaging for Remote Agents | 1 When to use AI Maestro vs Task tool | 2 Sending task assignments to remote agents -->
 - [Sub-Agent Role Boundaries Template](./references/sub-agent-role-boundaries-template.md)
+<!-- TOC: YAML Frontmatter Structure | Purpose Section | Purpose -->
 - [Workflow Checklists](./references/workflow-checklists.md)
+<!-- TOC: Checklist: Receiving New Task | Checklist: Delegating Task | Checklist: Monitoring Delegated Task -->
 - [Log Formats](./references/log-formats.md)
+<!-- TOC: Task Log Format | Delegation Log Format | Status File Format -->
 - [Archive Structure](./references/archive-structure.md)
+<!-- TOC: Overview | Archive Location | Directory Structure -->

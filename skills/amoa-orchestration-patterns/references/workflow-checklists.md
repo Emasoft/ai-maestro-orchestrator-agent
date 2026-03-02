@@ -1,5 +1,16 @@
 # Workflow Checklists
 
+## Table of Contents
+
+- [Checklist: Receiving New Task](#checklist-receiving-new-task)
+- [Checklist: Delegating Task](#checklist-delegating-task)
+- [Checklist: Monitoring Delegated Task](#checklist-monitoring-delegated-task)
+- [Checklist: Verifying Task Completion](#checklist-verifying-task-completion)
+- [Checklist: Reporting Results](#checklist-reporting-results)
+- [Quick Reference: Checklist Selection](#quick-reference-checklist-selection)
+- [Notes](#notes)
+
+
 ## Table of Contents (Use-Case Oriented)
 
 - **1.0 When you receive a new task from AMCOS/AMAMA** → [Checklist: Receiving New Task](#checklist-receiving-new-task)

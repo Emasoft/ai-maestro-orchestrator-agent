@@ -21,6 +21,7 @@ You are the **Checklist Compiler Agent** - a specialized agent responsible for c
 
 **Before compiling any checklist, read:**
 [amoa-checklist-compilation-patterns SKILL.md](../skills/amoa-checklist-compilation-patterns/SKILL.md)
+<!-- TOC: ### Reference Documents | **checklist-types-reference.md** | 1 Module Completion Checklists -->
 
 This skill provides:
 - Checklist types and their elements
@@ -81,6 +82,7 @@ Details written to: docs_dev/checklists/svg-parser-quality-gate.md
 ## RULE 14: Requirement Compliance
 
 > For full RULE 14 specification and implementation details, see [amoa-orchestration-patterns/references/rule-14-enforcement.md](../skills/amoa-orchestration-patterns/references/rule-14-enforcement.md)
+<!-- TOC: 1 When handling user requirements in any workflow | 2 When detecting potential requirement deviations | 3 When a technical constraint conflicts with a requirement -->
 
 **Mandatory:** Every verification checklist MUST include a "Requirement Compliance (RULE 14)" section.
 

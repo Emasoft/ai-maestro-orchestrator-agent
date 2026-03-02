@@ -401,12 +401,19 @@ python3 scripts/github_sync.py verify
 | Reference | Contents |
 |-----------|----------|
 | [module-creation.md](./references/module-creation.md) | Add-module workflow, validation, examples |
+<!-- TOC: 1 When to add modules during orchestration | 2 Required fields for new modules (name, criteria) | 3 Optional fields (priority level) -->
 | [module-modification.md](./references/module-modification.md) | Modify specs, notifications, restrictions |
+<!-- TOC: 1 What can be modified (name, criteria, priority) | 2 Modification restrictions by status | 3 Agent notification protocol -->
 | [module-removal-rules.md](./references/module-removal-rules.md) | Removal conditions, cleanup, alternatives |
+<!-- TOC: 1 Which modules can be removed (pending only) | 2 Why in-progress modules cannot be removed | 3 Removal process step by step -->
 | [module-prioritization.md](./references/module-prioritization.md) | Priority levels, effects, label updates |
+<!-- TOC: 1 Priority levels explained (critical, high, medium, low) | 2 Effects on assignment queue | 3 GitHub Issue label updates -->
 | [module-reassignment.md](./references/module-reassignment.md) | Transfer workflow, notifications, reset |
+<!-- TOC: 1 When reassignment is appropriate | 2 Reassignment workflow step by step | 3 Old agent notification protocol -->
 | [github-issue-sync.md](./references/github-issue-sync.md) | Issue creation, labels, sync protocol |
+<!-- TOC: 1 Issue creation format and labels | 2 Issue update synchronization | 3 Issue closure protocols -->
 | [troubleshooting.md](./references/troubleshooting.md) | Error recovery, force operations |
+<!-- TOC: 1 State file corruption recovery | 2 GitHub sync failure recovery | 3 Agent notification failures -->
 
 ---
 
@@ -442,12 +449,19 @@ python3 scripts/github_sync.py verify
 ## Resources
 
 - [module-creation.md](./references/module-creation.md) - Add-module workflow and validation
+<!-- TOC: 1 When to add modules during orchestration | 2 Required fields for new modules (name, criteria) | 3 Optional fields (priority level) -->
 - [module-modification.md](./references/module-modification.md) - Modify specs and notifications
+<!-- TOC: 1 What can be modified (name, criteria, priority) | 2 Modification restrictions by status | 3 Agent notification protocol -->
 - [module-removal-rules.md](./references/module-removal-rules.md) - Removal conditions and cleanup
+<!-- TOC: 1 Which modules can be removed (pending only) | 2 Why in-progress modules cannot be removed | 3 Removal process step by step -->
 - [module-prioritization.md](./references/module-prioritization.md) - Priority levels and effects
+<!-- TOC: 1 Priority levels explained (critical, high, medium, low) | 2 Effects on assignment queue | 3 GitHub Issue label updates -->
 - [module-reassignment.md](./references/module-reassignment.md) - Transfer workflow
+<!-- TOC: 1 When reassignment is appropriate | 2 Reassignment workflow step by step | 3 Old agent notification protocol -->
 - [github-issue-sync.md](./references/github-issue-sync.md) - Issue creation and sync
+<!-- TOC: 1 Issue creation format and labels | 2 Issue update synchronization | 3 Issue closure protocols -->
 - [troubleshooting.md](./references/troubleshooting.md) - Error recovery
+<!-- TOC: 1 State file corruption recovery | 2 GitHub sync failure recovery | 3 Agent notification failures -->
 
 ---
 

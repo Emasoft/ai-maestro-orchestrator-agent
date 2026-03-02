@@ -295,8 +295,11 @@ gh issue edit 42 --remove-label "assign:implementer-1" --add-label "assign:imple
 ## Resources
 
 - **[label-categories-detailed.md](./references/label-categories-detailed.md)** - Full category definitions
+<!-- TOC: Assignment Labels (`assign:*`) | Rules | Assignment Authority -->
 - **[cli-commands.md](./references/cli-commands.md)** - Complete CLI reference
+<!-- TOC: Create Labels | Query Labels | Update Labels -->
 - **[examples.md](./references/examples.md)** - Usage examples
+<!-- TOC: Example 1: Assign Task to Agent | Example 2: Update Status During Workflow | Example 3: Query Issues by Multiple Labels -->
 - **AGENT_OPERATIONS.md** - Core orchestrator workflow context
 - **amoa-messaging-templates** - Message templates using labels
 - **amoa-task-distribution** - Assignment workflow

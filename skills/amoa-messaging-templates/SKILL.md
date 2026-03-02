@@ -115,6 +115,7 @@ For complete JSON templates with all fields, see **[references/message-templates
 - **2.11 Integration Result (AMIA → AMOA)** - Integrator reporting integration/review result
 
 For AI Maestro curl command templates with all message types, see **[references/ai-maestro-message-templates.md](references/ai-maestro-message-templates.md)**:
+<!-- TOC: 1 Acknowledging task assignment from AMCOS/AMAMA | 2 Delegating task to sub-agent (implementer/tester) | 3 Requesting status update from sub-agent -->
 
 - Ready-to-use curl commands for each message type
 - Complete JSON payloads with all required fields
@@ -138,6 +139,7 @@ For session lifecycle messages (wake/hibernate/terminate), see **[references/ses
 - Decision trees for each lifecycle event
 
 For task lifecycle commands (cancel/pause/resume/broadcast/stop), see **[references/task-lifecycle-templates.md](references/task-lifecycle-templates.md)**:
+<!-- TOC: Task Cancellation (AMOA to Agent) | Task Pause (AMOA to Agent) | Task Resume (AMOA to Agent) -->
 
 - Task Cancellation send + agent work-summary response
 - Task Pause/Resume send + agent state-checkpoint ACK
@@ -146,6 +148,7 @@ For task lifecycle commands (cancel/pause/resume/broadcast/stop), see **[referen
 - Decision trees: Cancel vs Pause vs Reassign; Broadcast vs Targeted
 
 For agent resource and skill requests, see **[references/resource-request-templates.md](references/resource-request-templates.md)**:
+<!-- TOC: Agent Resource Request (Agent to AMOA) | AMOA Resource Response (AMOA to Agent) | Agent Skill/Capability Request (Agent to AMOA) -->
 
 - Agent Resource Request (tools/access/credentials) → AMOA response (grant/deny/escalate)
 - Agent Skill Request (different capability) → AMOA response
@@ -296,3 +299,4 @@ All ai-maestro plugins follow consistent record-keeping standards for delegation
 - **amoa-progress-monitoring** - Agent state tracking
 - **AI Maestro AMP messaging**
 - [AI Maestro Message Templates](./references/ai-maestro-message-templates.md) - Curl command templates
+<!-- TOC: 1 Acknowledging task assignment from AMCOS/AMAMA | 2 Delegating task to sub-agent (implementer/tester) | 3 Requesting status update from sub-agent -->

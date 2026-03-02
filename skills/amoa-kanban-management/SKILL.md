@@ -23,6 +23,7 @@ This skill teaches the Orchestrator (AMOA) how to manage GitHub Projects V2 kanb
 
 1. GitHub CLI (`gh`) installed and authenticated
 2. **OAuth scopes**: `project` and `read:project` scopes MUST be added to `gh auth`. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md) for details
+<!-- TOC: 1 Why project scopes are required - Default gh auth login does not include them | 2 Complete list of required OAuth scopes - All scopes needed for agent operations | 3 How to check current scopes - Verifying your authentication -->
 3. Read **amoa-task-distribution** for task assignment workflow
 4. Read **amoa-label-taxonomy** for label usage
 5. Understanding of the 8-column kanban system (Backlog, Todo, In Progress, AI Review, Human Review, Merge/Release, Done, Blocked)
@@ -38,6 +39,7 @@ gh auth status 2>&1 | grep -q "project" || echo "ERROR: Missing project scope. R
 ```
 
 If scopes are missing, the agent CANNOT proceed. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md) for how to add scopes.
+<!-- TOC: 1 Why project scopes are required - Default gh auth login does not include them | 2 Complete list of required OAuth scopes - All scopes needed for agent operations | 3 How to check current scopes - Verifying your authentication -->
 
 ---
 
@@ -59,6 +61,7 @@ If scopes are missing, the agent CANNOT proceed. See [references/gh-auth-scopes.
 **When to use:** When adding new status columns to an existing project board.
 
 **CRITICAL WARNING:** The `updateProjectV2Field` GraphQL mutation REPLACES all options. If you do not include existing option IDs in the mutation, ALL existing column assignments will be lost. See [references/kanban-pitfalls.md](references/kanban-pitfalls.md) Section 3.2 for details.
+<!-- TOC: 1 Done column auto-closes linked issues - GitHub built-in automation | 1 How to detect if an issue was auto-closed | 2 Guard: check issue state before attempting gh issue close -->
 
 **Steps:**
 1. ALWAYS use the safe column adder script: `scripts/gh-project-add-columns.sh`
@@ -208,9 +211,13 @@ After executing kanban operations, the agent produces:
 | Error | Cause | Solution |
 |-------|-------|----------|
 | `missing required scopes [project read:project]` | gh auth lacks project scopes | See [gh-auth-scopes.md](references/gh-auth-scopes.md) Section 1.4 |
+<!-- TOC: 1 Why project scopes are required - Default gh auth login does not include them | 2 Complete list of required OAuth scopes - All scopes needed for agent operations | 3 How to check current scopes - Verifying your authentication -->
 | `InputObject doesn't accept argument 'projectId'` | Wrong parameter name | Use `fieldId` only. See [github-projects-v2-graphql.md](references/github-projects-v2-graphql.md) Section 2.6 |
+<!-- TOC: 1 Querying project fields and their IDs - Getting field and option IDs | 2 Moving an item to a different column - updateProjectV2ItemFieldValue mutation | 3 Adding columns to a field - updateProjectV2Field mutation (DANGER: replaces all options) -->
 | Items lost column assignments after adding columns | Used raw `updateProjectV2Field` | See [kanban-pitfalls.md](references/kanban-pitfalls.md) Section 3.2 |
+<!-- TOC: 1 Done column auto-closes linked issues - GitHub built-in automation | 1 How to detect if an issue was auto-closed | 2 Guard: check issue state before attempting gh issue close -->
 | Issue auto-closed when moved to Done | GitHub Projects V2 built-in automation | See [kanban-pitfalls.md](references/kanban-pitfalls.md) Section 3.1 |
+<!-- TOC: 1 Done column auto-closes linked issues - GitHub built-in automation | 1 How to detect if an issue was auto-closed | 2 Guard: check issue state before attempting gh issue close -->
 | `gh auth refresh` fails in non-interactive session | Requires browser-based OAuth flow | Must be done by human before agent deployment |
 
 ---
@@ -277,8 +284,11 @@ fi
 ## Resources
 
 - [GitHub CLI Authentication and OAuth Scopes](references/gh-auth-scopes.md)
+<!-- TOC: 1 Why project scopes are required - Default gh auth login does not include them | 2 Complete list of required OAuth scopes - All scopes needed for agent operations | 3 How to check current scopes - Verifying your authentication -->
 - [GitHub Projects V2 GraphQL Mutations](references/github-projects-v2-graphql.md)
+<!-- TOC: 1 Querying project fields and their IDs - Getting field and option IDs | 2 Moving an item to a different column - updateProjectV2ItemFieldValue mutation | 3 Adding columns to a field - updateProjectV2Field mutation (DANGER: replaces all options) -->
 - [Kanban Pitfalls and Guards](references/kanban-pitfalls.md)
+<!-- TOC: 1 Done column auto-closes linked issues - GitHub built-in automation | 1 How to detect if an issue was auto-closed | 2 Guard: check issue state before attempting gh issue close -->
 - **amoa-task-distribution** skill - Task assignment workflow
 - **amoa-label-taxonomy** skill - Label categories and cardinality
 - **amoa-progress-monitoring** skill - Agent tracking and escalation

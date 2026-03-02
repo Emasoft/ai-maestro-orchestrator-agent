@@ -1,5 +1,13 @@
 # CLI Commands for Label Management
 
+## Table of Contents
+
+- [Create Labels](#create-labels)
+- [Query Labels](#query-labels)
+- [Update Labels](#update-labels)
+- [Validate Label Cardinality](#validate-label-cardinality)
+
+
 ## Create Labels
 
 ### Assignment Labels

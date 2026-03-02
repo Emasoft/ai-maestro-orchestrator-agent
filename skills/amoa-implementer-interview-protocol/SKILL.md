@@ -72,6 +72,7 @@ ORCHESTRATOR                           IMPLEMENTER
 ### 1.4 Escalation Paths and Messages
 
 **Full escalation templates**: [escalation-messages.md](./references/escalation-messages.md)
+<!-- TOC: Design Issues → Architect | Immutable Requirement Issues → Manager → User | PROCEED Message -->
 - Design issue escalation to Architect
 - Immutable requirement escalation to Manager → User
 - PROCEED approval message
@@ -122,6 +123,7 @@ IMPLEMENTER                            ORCHESTRATOR
 ### 2.3 Post-Task Verification
 
 **Full post-task protocol**: [interview-templates.md](./references/interview-templates.md)
+<!-- TOC: Pre-Task Interview Questions | Pre-Task Interview: {TASK_ID} | Post-Task Interview Questions -->
 - Complete verification question template (5 areas)
 - Response evaluation table
 - APPROVED, REVISE, and escalation criteria
@@ -215,6 +217,7 @@ Copy this checklist and track your progress:
 1. Send task assignment message via AI Maestro using the `agent-messaging` skill
 2. Wait for implementer ACK (acknowledgment)
 3. Send pre-task interview questions using the `agent-messaging` skill ([interview-templates.md](./references/interview-templates.md))
+<!-- TOC: Pre-Task Interview Questions | Pre-Task Interview: {TASK_ID} | Post-Task Interview Questions -->
 4. Evaluate implementer's understanding summary
 5. Check for concerns about requirements, design, capability, or dependencies
 6. If design concerns exist, escalate to Architect (AMAA) ([escalation-messages.md](./references/escalation-messages.md))
@@ -227,6 +230,7 @@ Copy this checklist and track your progress:
 
 1. Receive implementer's completion report `[DONE]`
 2. Send post-task verification questions ([interview-templates.md](./references/interview-templates.md))
+<!-- TOC: Pre-Task Interview Questions | Pre-Task Interview: {TASK_ID} | Post-Task Interview Questions -->
 3. Verify ALL requirements checklist items completed
 4. Verify test evidence (tests written and passing)
 5. Check code quality (linting, formatting, no TODOs)
@@ -257,6 +261,7 @@ Copy this checklist and track your progress:
 ## Error Handling
 
 **Common errors and solutions**: [exception-handling.md](./references/exception-handling.md)
+<!-- TOC: Implementer Disagrees with Requirements | Architect Recommends Design Change | User Approves Requirement Change -->
 
 | Error | Quick Solution |
 |-------|----------------|
@@ -290,9 +295,13 @@ Copy this checklist and track your progress:
 ## Resources
 
 - **[interview-templates.md](./references/interview-templates.md)** - Question templates, evaluation, and decision trees (Pre-Task, Post-Task, REVISE Cycle Escalation)
+<!-- TOC: Pre-Task Interview Questions | Pre-Task Interview: {TASK_ID} | Post-Task Interview Questions -->
 - **[escalation-messages.md](./references/escalation-messages.md)** - Escalation and approval messages, escalation path selection decision tree, AMAA/AMAMA response templates
+<!-- TOC: Design Issues → Architect | Immutable Requirement Issues → Manager → User | PROCEED Message -->
 - **[exception-handling.md](./references/exception-handling.md)** - Exception procedures
+<!-- TOC: Implementer Disagrees with Requirements | Architect Recommends Design Change | User Approves Requirement Change -->
 - **[examples.md](./references/examples.md)** - Complete curl examples
+<!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect | Example 3: Send PROCEED After Satisfactory Interview -->
 - **AGENT_OPERATIONS.md** - Core orchestrator workflow
 - **amoa-remote-agent-coordinator/references/rule-14-immutable-requirements.md** - Immutable vs. mutable requirements
 - **amoa-label-taxonomy** - Status label workflow

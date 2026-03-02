@@ -160,6 +160,7 @@ See [Troubleshooting](./references/troubleshooting.md):
 
 ### When you need to troubleshoot Docker-based verification environments
 See [Docker Troubleshooting](./references/docker-troubleshooting.md):
+<!-- TOC: ### 1. Assessing Docker Container Needs for a Project | 1 Identifying target platforms (Linux, Windows, macOS) | 2 Determining container purpose (dev, testing, CI/CD, production) -->
 - Docker service not starting
 - Container networking issues
 - Volume mount problems
@@ -246,6 +247,7 @@ When verification tasks complete, provide results in this format:
 ## Error Handling
 
 See [Troubleshooting](./references/troubleshooting.md) for complete solutions.
+<!-- TOC: Table of Contents | 1 Tests Pass Locally but Fail in CI/CD | 2 Exit Code is 0 but Process Failed -->
 
 | Issue | Cause | Resolution |
 |-------|-------|------------|
@@ -287,10 +289,15 @@ Record what you verified, when you verified it, and what the results were. This 
 | Situation | Pattern | Reference |
 |-----------|---------|-----------|
 | Prove a function returns correct value | Evidence-based verification | [evidence-based-verification.md](./references/evidence-based-verification.md) |
+<!-- TOC: Table of Contents | 1 What is Evidence | 2 Evidence-Based Verification Steps -->
 | Check if a script succeeded | Exit code proof | [exit-code-proof.md](./references/exit-code-proof.md) |
+<!-- TOC: Table of Contents | 1 What is an Exit Code | 2 Why Exit Codes Matter -->
 | Verify user workflow works | E2E testing | [end-to-end-testing.md](./references/end-to-end-testing.md) |
+<!-- TOC: Table of Contents | 1 What is E2E Testing | 2 Why E2E Testing Matters -->
 | Test API calls database correctly | Integration verification | [integration-verification.md](./references/integration-verification.md) |
+<!-- TOC: Table of Contents | 1 What is Integration Verification | 2 Why Integration Verification Matters -->
 | Build CI/CD pipeline | Exit code proof + E2E | [combining-patterns.md](./references/combining-patterns.md) |
+<!-- TOC: Table of Contents | 1 Pattern Combinations | 2 Verification Pyramid -->
 | Cross-platform script | Platform-aware commands | [cross-platform-support.md](./references/cross-platform-support.md) |
 | Report to orchestrator | Evidence format | [evidence-format.md](./references/evidence-format.md) |
 | Run tests in isolation | Worktree testing | [testing-protocol.md](./references/testing-protocol.md) |
@@ -347,17 +354,28 @@ For detailed implementation of each pattern, see the reference files linked in t
 ## Resources
 
 - [evidence-based-verification.md](./references/evidence-based-verification.md) - Collecting measurable proof
+<!-- TOC: Table of Contents | 1 What is Evidence | 2 Evidence-Based Verification Steps -->
 - [exit-code-proof.md](./references/exit-code-proof.md) - Using process exit codes
+<!-- TOC: Table of Contents | 1 What is an Exit Code | 2 Why Exit Codes Matter -->
 - [end-to-end-testing.md](./references/end-to-end-testing.md) - Complete workflow testing
+<!-- TOC: Table of Contents | 1 What is E2E Testing | 2 Why E2E Testing Matters -->
 - [integration-verification.md](./references/integration-verification.md) - Component interaction testing
+<!-- TOC: Table of Contents | 1 What is Integration Verification | 2 Why Integration Verification Matters -->
 - [combining-patterns.md](./references/combining-patterns.md) - Comprehensive strategies
+<!-- TOC: Table of Contents | 1 Pattern Combinations | 2 Verification Pyramid -->
 - [cross-platform-support.md](./references/cross-platform-support.md) - Platform compatibility
+<!-- TOC: Table of Contents | 1 Platform-Specific Behavior | 2 UTF-8 Encoding -->
 - [evidence-format.md](./references/evidence-format.md) - Evidence formatting for handoff
+<!-- TOC: Table of Contents | 1 Evidence Format Script | 2 Evidence Types -->
 - [testing-protocol.md](./references/testing-protocol.md) - Test execution protocols
 - [github-integration.md](./references/github-integration.md) - GitHub issue updates
+<!-- TOC: Table of Contents | 1 Verification Results and Issue Status | 2 Verification Evidence in Issue Comments -->
 - [troubleshooting.md](./references/troubleshooting.md) - Common issues
+<!-- TOC: Table of Contents | 1 Tests Pass Locally but Fail in CI/CD | 2 Exit Code is 0 but Process Failed -->
 - [docker-troubleshooting.md](./references/docker-troubleshooting.md) - Docker troubleshooting
+<!-- TOC: ### 1. Assessing Docker Container Needs for a Project | 1 Identifying target platforms (Linux, Windows, macOS) | 2 Determining container purpose (dev, testing, CI/CD, production) -->
 - [automation-scripts.md](./references/automation-scripts.md) - Script reference
+<!-- TOC: Table of Contents | 1 Traceability and Requirements Scripts | traceability_validator.py -->
 - [test-report-format.md](./references/test-report-format.md) - Report standards
 
 ---

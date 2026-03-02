@@ -79,12 +79,18 @@ REMOTE AGENTS (via AI Maestro)
 | 8 | Integration decision | Merge authorization |
 
 > For detailed step-by-step orchestration workflow, see [amoa-remote-agent-coordinator/references/agent-onboarding.md](../skills/amoa-remote-agent-coordinator/references/agent-onboarding.md).
+<!-- TOC: *When starting agent onboarding** → [Onboarding Checklist](#onboarding-checklist) | *When setting up your development environment** → [Environment Setup](#environment-setup) | *When verifying agent capability through a test task** → [Verification Task](#verification-task) -->
 
 > For AMCOS replacement protocol when agents fail, see [amoa-remote-agent-coordinator/references/amcos-replacement-protocol.md](../skills/amoa-remote-agent-coordinator/references/amcos-replacement-protocol.md).
+<!-- TOC: Overview | AMCOS Notification Format | Urgency Levels -->
 
 > For message templates and communication patterns, see [amoa-remote-agent-coordinator/references/messaging-protocol.md](../skills/amoa-remote-agent-coordinator/references/messaging-protocol.md) and [amoa-remote-agent-coordinator/references/task-instruction-format.md](../skills/amoa-remote-agent-coordinator/references/task-instruction-format.md).
+<!-- TOC: This document is the **index** for task instruction format documentation. Each section below links to detailed reference files. | ### Quick Reference | **[Overview](#overview)** - Critical principle: teach agents in every message -->
+<!-- TOC: IMPORTANT: Official Skill Reference | Overview | Document Structure -->
 
 > For orchestrator implementation boundaries and guardrails, see [amoa-orchestration-patterns/references/orchestrator-no-implementation.md](../skills/amoa-orchestration-patterns/references/orchestrator-no-implementation.md) and [amoa-orchestration-patterns/references/orchestrator-guardrails.md](../skills/amoa-orchestration-patterns/references/orchestrator-guardrails.md).
+<!-- TOC: Table of Contents | Part 1: Role Definition and Action Classification | Part 2: Decision Trees -->
+<!-- TOC: Table of Contents | Core Principle | 1 What the Orchestrator Does -->
 
 ## When to Use / When NOT to Use
 

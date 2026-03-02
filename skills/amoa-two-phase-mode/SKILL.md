@@ -95,6 +95,7 @@ The orchestrator enforces completion of CURRENT tasks while allowing dynamic mod
 **Why this matters:** Claude Code context windows compact during long sessions. Without Claude Tasks, agents forget instructions and progress. Claude Code native Tasks provide persistent memory.
 
 See [references/native-task-persistence.md](references/native-task-persistence.md) for complete documentation.
+<!-- TOC: Overview - Why use Claude Code native Tasks | Task Tool Reference - TaskCreate, TaskUpdate, TaskList, TaskGet | Task Lifecycle - Creating, tracking, and completing tasks -->
 
 ---
 
@@ -252,6 +253,7 @@ Complete reference for all Two-Phase Mode Python scripts.
 ---
 
 ### Claude Tasks Scheduling Principle ([references/native-task-persistence.md](references/native-task-persistence.md))
+<!-- TOC: Overview - Why use Claude Code native Tasks | Task Tool Reference - TaskCreate, TaskUpdate, TaskList, TaskGet | Task Lifecycle - Creating, tracking, and completing tasks -->
 
 **CRITICAL** principle for all orchestrator and subagent operations.
 
@@ -388,16 +390,25 @@ two-phase-mode/
 ## Next Steps
 
 1. Start with [Plan Phase Workflow](references/plan-phase-workflow.md) to enter planning mode
+<!-- TOC: Entering Plan Phase | 1 Using /start-planning command | 2 State file initialization -->
 2. After plan approval, read [Orchestration Phase Workflow](references/orchestration-phase-workflow.md)
+<!-- TOC: Entering Orchestration Phase | 1 Using /start-orchestration command | 2 State file structure -->
 3. **MANDATORY**: Read [Instruction Verification Protocol](references/instruction-verification-protocol.md) before assigning modules
+<!-- TOC: Why This Protocol Exists | 1 Reasons for misinterpretation | 2 Orchestrator proactive responsibility -->
 4. **MANDATORY**: Read [Proactive Progress Polling](references/proactive-progress-polling.md) for monitoring
+<!-- TOC: Why This Protocol Exists | 1 Never assume "no news is good news" | 2 Orchestrator must ACTIVELY ASK -->
 5. **MANDATORY**: Read [Instruction Update Verification Protocol](references/instruction-update-verification-protocol.md) before sending mid-implementation updates
 6. Reference [State File Formats](references/state-file-formats.md) for state structure
+<!-- TOC: Plan Phase State File | 1 File location | 2 Complete YAML schema -->
 7. Use [Command Reference](references/command-reference.md) for quick command lookup
+<!-- TOC: Plan Phase Commands (6) | 1 /start-planning | 2 /planning-status -->
 8. Use [Script Reference](references/script-reference.md) for script details
 9. See [Workflow Diagram](references/workflow-diagram.md) for visual overview
+<!-- TOC: Visual Workflow Overview | Phase Transitions | Module Processing Loop -->
 10. Keep [Quick Reference Checklist](references/quick-reference-checklist.md) handy during operations
+<!-- TOC: Plan Phase Checklist | Orchestration Phase Checklist | Module Completion Checklist -->
 11. Consult [Troubleshooting](references/troubleshooting.md) when issues arise
+<!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues -->
 
 ---
 
@@ -436,7 +447,13 @@ two-phase-mode/
 
 ## Error Handling
 
-See [Troubleshooting](references/troubleshooting.md) for complete solutions.
+See [Troubleshooting](references/troubleshooting.md) for complete solutions. For actionable checklists covering Plan Phase, Orchestration Phase, Module Completion, and Claude Tasks Scheduling, see [Quick Reference Checklist](references/quick-reference-checklist.md).
+<!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues -->
+
+**Quick verification before phase transition** (Copy this checklist and track your progress):
+- [ ] All required fields populated in state file
+- [ ] GitHub Issues created for each module
+- [ ] All module dependencies declared
 
 | Issue | Cause | Resolution |
 |-------|-------|------------|
@@ -447,52 +464,19 @@ See [Troubleshooting](references/troubleshooting.md) for complete solutions.
 
 ---
 
-## Checklist
-
-Copy this checklist and track your progress:
-
-### Plan Phase
-- [ ] Run `/start-planning` command
-- [ ] Document user requirements in USER_REQUIREMENTS.md
-- [ ] Define architecture and design
-- [ ] Break down into modules with acceptance criteria
-- [ ] Review plan with user
-- [ ] Run `/approve-plan` to transition
-- [ ] Verify GitHub issues created
-
-### Orchestration Phase
-- [ ] Run `/start-orchestration` command
-- [ ] Register all remote agents with `/register-agent`
-- [ ] Assign modules to agents with `/assign-module`
-- [ ] Execute Instruction Verification Protocol for each module
-- [ ] Poll agents every 10-15 minutes with `/check-agents`
-- [ ] Handle any instruction updates with Update Verification Protocol
-- [ ] Complete 4 verification loops per module
-- [ ] Verify all modules marked complete
-- [ ] Confirm stop hook allows exit
-
-### Claude Tasks Scheduling
-- [ ] Create Claude Tasks immediately when receiving instructions
-- [ ] Include verification task in each series
-- [ ] Include archive task in each series
-- [ ] Include commit task with [SERIES-COMPLETE] format
-- [ ] Verify Claude Tasks persist across compacting
-
----
-
 ## Resources
 
-- [Workflow Diagram](./references/workflow-diagram.md)
-- [Plan Phase Workflow](./references/plan-phase-workflow.md)
-- [Orchestration Phase Workflow](./references/orchestration-phase-workflow.md)
-- [Instruction Verification Protocol](./references/instruction-verification-protocol.md)
-- [Instruction Update Verification Protocol](./references/instruction-update-verification-protocol.md)
-- [Proactive Progress Polling](./references/proactive-progress-polling.md)
-- [Native Task Persistence](./references/native-task-persistence.md)
-- [Issue Handling Workflow](./references/issue-handling-workflow.md)
-- [Command Reference](./references/command-reference.md)
-- [Script Reference](./references/script-reference.md)
-- [State File Formats](./references/state-file-formats.md)
-- [Design Folder Structure](./references/design-folder-structure.md)
-- [Quick Reference Checklist](./references/quick-reference-checklist.md)
-- [Troubleshooting](./references/troubleshooting.md)
+- [Workflow Diagram](./references/workflow-diagram.md) <!-- TOC: Visual Workflow Overview | Phase Transitions | Module Processing Loop -->
+- [Plan Phase Workflow](./references/plan-phase-workflow.md) <!-- TOC: Entering Plan Phase | 1 Using /start-planning command | 2 State file initialization -->
+- [Orchestration Phase Workflow](./references/orchestration-phase-workflow.md) <!-- TOC: Entering Orchestration Phase | 1 Using /start-orchestration command | 2 State file structure -->
+- [Instruction Verification Protocol](./references/instruction-verification-protocol.md) <!-- TOC: Why This Protocol Exists | 1 Reasons for misinterpretation | 2 Orchestrator proactive responsibility -->
+- [Instruction Update Verification Protocol](./references/instruction-update-verification-protocol.md) <!-- TOC: Document Structure | Quick Reference: Contents | Part 1: Core Protocol -->
+- [Proactive Progress Polling](./references/proactive-progress-polling.md) <!-- TOC: Why This Protocol Exists | 1 Never assume "no news is good news" | 2 Orchestrator must ACTIVELY ASK -->
+- [Native Task Persistence](./references/native-task-persistence.md) <!-- TOC: Overview - Why use Claude Code native Tasks | Task Tool Reference - TaskCreate, TaskUpdate, TaskList, TaskGet | Task Lifecycle - Creating, tracking, and completing tasks -->
+- [Issue Handling Workflow](./references/issue-handling-workflow.md) <!-- TOC: Overview | When to Trigger | Issue Categories -->
+- [Command Reference](./references/command-reference.md) <!-- TOC: Plan Phase Commands (6) | 1 /start-planning | 2 /planning-status -->
+- [Script Reference](./references/script-reference.md) <!-- TOC: Overview | Part 1: Plan Phase Scripts | Part 2: Orchestration Basic Scripts -->
+- [State File Formats](./references/state-file-formats.md) <!-- TOC: Plan Phase State File | 1 File location | 2 Complete YAML schema -->
+- [Design Folder Structure](./references/design-folder-structure.md) <!-- TOC: ### Part 1: Overview | design-folder-structure-part1-overview.md | Why a Standardized Structure -->
+- [Quick Reference Checklist](./references/quick-reference-checklist.md) <!-- TOC: Plan Phase Checklist | Orchestration Phase Checklist | Module Completion Checklist -->
+- [Troubleshooting](./references/troubleshooting.md) <!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues -->

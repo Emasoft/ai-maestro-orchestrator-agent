@@ -78,9 +78,13 @@ Copy this checklist and track your progress:
 |----------|-----------|----------|
 | Acknowledgment | [echo-acknowledgment-protocol.md](./references/echo-acknowledgment-protocol.md) | Task requires confirmation of receipt |
 | 4-Verification Loops | [verification-loops-protocol.md](./references/verification-loops-protocol.md) | Agent requests PR permission |
+<!-- TOC: Table of Contents | 0 Overview | 0 The Verification Flow -->
 | Progress Monitoring | [progress-monitoring-protocol.md](./references/progress-monitoring-protocol.md) | Tracking agent progress |
+<!-- TOC: Table of Contents | 0 Overview | 0 Proactive Monitoring Principles -->
 | Error Handling | [error-handling-protocol.md](./references/error-handling-protocol.md) | Agent reports being blocked |
+<!-- TOC: Table of Contents | 0 Overview | 1 FAIL-FAST Principle -->
 | Escalation | [escalation-procedures.md](./references/escalation-procedures.md) | Issue requires user decision |
+<!-- TOC: **[If you need to understand the escalation hierarchy](#escalation-hierarchy)** - Learn which authority level handles which types of decisions | **[If a remote agent can handle something autonomously](#what-remote-agents-handle-level-0)** - Identify what agents resolve without escalation | **[If the orchestrator needs to make a decision](#what-orchestrator-handles-level-1)** - See what requires orchestrator-level decisions -->
 
 ---
 
@@ -114,6 +118,7 @@ Copy this checklist and track your progress:
 | `escalation` | Escalate to user | Architecture/security decision |
 
 **Full protocol details**: [messaging-protocol.md](./references/messaging-protocol.md)
+<!-- TOC: IMPORTANT: Official Skill Reference | Overview | Document Structure -->
 - 1.0 Sending Messages
 - 2.0 Message priorities and timeouts
 - 3.0 Task Management messages
@@ -136,6 +141,7 @@ Every task instruction MUST include:
 8. **Completion Criteria** - How to know when done
 
 **Full template and examples**: [task-instruction-format.md](./references/task-instruction-format.md)
+<!-- TOC: This document is the **index** for task instruction format documentation. Each section below links to detailed reference files. | ### Quick Reference | **[Overview](#overview)** - Critical principle: teach agents in every message -->
 - 1.0 Complete instruction template
 - 2.0 Example filled-in instruction
 - 3.0 Config reference patterns
@@ -172,6 +178,7 @@ Before any agent can receive real tasks, they must complete onboarding.
 5. Orchestrator approves registration
 
 **Full onboarding guide**: [agent-onboarding.md](./references/agent-onboarding.md)
+<!-- TOC: *When starting agent onboarding** → [Onboarding Checklist](#onboarding-checklist) | *When setting up your development environment** → [Environment Setup](#environment-setup) | *When verifying agent capability through a test task** → [Verification Task](#verification-task) -->
 - 1.0 Onboarding Checklist
 - 2.0 Environment Setup
 - 3.0 Verification Task
@@ -210,6 +217,7 @@ Before any agent can receive real tasks, they must complete onboarding.
 4. **PROACTIVELY verify** agents don't stop until ALL tasks complete
 
 **Full protocol**: [progress-monitoring-protocol.md](./references/progress-monitoring-protocol.md)
+<!-- TOC: Table of Contents | 0 Overview | 0 Proactive Monitoring Principles -->
 - 1.0 Polling intervals by task type
 - 2.0 Status request messages
 - 3.0 Unblocking protocol
@@ -225,6 +233,7 @@ Remote agents must follow **FAIL-FAST**:
 - If blocked, REPORT and WAIT
 
 **Full protocol**: [error-handling-protocol.md](./references/error-handling-protocol.md)
+<!-- TOC: Table of Contents | 0 Overview | 1 FAIL-FAST Principle -->
 - 1.0 FAIL-FAST principle
 - 2.0 Error report message format
 - 3.0 Orchestrator response procedures
@@ -241,6 +250,7 @@ Remote agents must follow **FAIL-FAST**:
 5. Tasks queued
 
 **Full guide**: [overnight-operation.md](./references/overnight-operation.md)
+<!-- TOC: **When preparing infrastructure for overnight operation** → [Prerequisites Checklist](#prerequisites-checklist) | **When handing off tasks to the orchestrator before leaving** → [User Handoff Protocol](#user-handoff-protocol) | **When monitoring autonomous task execution** → [Operation Flow](#operation-flow) -->
 - 1.0 Prerequisites Checklist
 - 2.0 User Handoff Protocol
 - 3.0 Operation Flow
@@ -258,6 +268,7 @@ Remote agents must follow **FAIL-FAST**:
 - Test failures suggesting spec issues
 
 **Full procedures**: [escalation-procedures.md](./references/escalation-procedures.md)
+<!-- TOC: **[If you need to understand the escalation hierarchy](#escalation-hierarchy)** - Learn which authority level handles which types of decisions | **[If a remote agent can handle something autonomously](#what-remote-agents-handle-level-0)** - Identify what agents resolve without escalation | **[If the orchestrator needs to make a decision](#what-orchestrator-handles-level-1)** - See what requires orchestrator-level decisions -->
 - 1.0 Escalation hierarchy (Level 0-2)
 - 2.0 Escalation message formats
 - 3.0 Escalation categories
@@ -271,9 +282,12 @@ Remote agents MUST have LSP servers installed for working languages. Verify LSP 
 
 **LSP References**:
 - [lsp-servers-overview.md](./references/lsp-servers-overview.md) - Available plugins table, install commands, configuration
+<!-- TOC: Table of Contents | What Are LSP Servers | Benefits for Remote Agents -->
 - [lsp-installation-guide.md](./references/lsp-installation-guide.md) - Per-language installation
 - [lsp-enforcement-checklist.md](./references/lsp-enforcement-checklist.md) - Pre-assignment verification
+<!-- TOC: Parts Overview | Quick Navigation by Task | Setting Up LSP -->
 - [orchestrator-lsp-management.md](./references/orchestrator-lsp-management.md) - Orchestrator LSP guide
+<!-- TOC: When setting up the orchestrator for the first time | When assigning a task to a remote agent | When an agent reports LSP problems -->
 
 ---
 
@@ -318,8 +332,10 @@ Documents are NEVER embedded in AI Maestro messages - only GitHub issue comment 
 ## Orchestrator Rules
 
 **RULE 15 - No Implementation**: The orchestrator NEVER writes code, runs builds, edits source files, or sets up infrastructure. See [rule-15-no-implementation.md](./references/rule-15-no-implementation.md).
+<!-- TOC: Table of Contents | 0 Overview | 0 What the Orchestrator NEVER Does -->
 
 **RULE 14 - Immutable Requirements**: Every task delegation MUST include requirement references, forbidden actions, and escalation protocol. See [rule-14-immutable-requirements.md](./references/rule-14-immutable-requirements.md).
+<!-- TOC: Table of Contents | 0 Overview | 0 Mandatory Task Delegation Elements -->
 
 ---
 
@@ -328,16 +344,27 @@ Documents are NEVER embedded in AI Maestro messages - only GitHub issue comment 
 | Document | Use When |
 |----------|----------|
 | [central-configuration.md](./references/central-configuration.md) | Setting up `design/` directory structure |
+<!-- TOC: Document Structure | Quick Navigation | If you need to understand why central configuration matters -->
 | [change-notification-protocol.md](./references/change-notification-protocol.md) | Notifying agents of config changes |
+<!-- TOC: Table of Contents | Purpose | Notification Types -->
 | [artifact-sharing-protocol.md](./references/artifact-sharing-protocol.md) | Sharing build artifacts between agents |
+<!-- TOC: When you need to understand artifact categories | When you need to choose a sharing method | When you need to document what was shared -->
 | [bug-reporting-protocol.md](./references/bug-reporting-protocol.md) | Receiving and handling bug reports |
+<!-- TOC: Purpose | When to Use | Document Structure -->
 | [skill-format-comparison.md](./references/skill-format-comparison.md) | Comparing Open Spec vs Claude Code Skills |
+<!-- TOC: When comparing Open Spec vs Claude Code Skills | When checking frontmatter field compatibility | When using the Open Agent Skills Specification -->
 | [skill-authoring-best-practices.md](./references/skill-authoring-best-practices.md) | Writing new skills |
+<!-- TOC: When you need to understand core principles | When setting up skill structure and naming | When implementing progressive disclosure -->
 | [skill-directory-structure.md](./references/skill-directory-structure.md) | Full skill directory structure |
+<!-- TOC: 0 Top-Level Structure | 0 References Directory | 0 Scripts Directory -->
 | [amcos-replacement-protocol.md](./references/amcos-replacement-protocol.md) | Agent failure or context loss replacement |
+<!-- TOC: Overview | AMCOS Notification Format | Urgency Levels -->
 | [agent-types.md](./references/agent-types.md) | Worker agent types and role boundaries |
+<!-- TOC: 1 AI Agents | 1 What are AI agents | 2 Communication via AI Maestro -->
 | [assignment-workflow.md](./references/assignment-workflow.md) | Agent availability and task-agent matching |
+<!-- TOC: 1 Pre-Assignment Validation | 1 Module exists and is pending | 2 Agent is registered -->
 | [agent-communication-templates.md](./references/agent-communication-templates.md) | Standard message templates for agent communication |
+<!-- TOC: 1 AI Agent Assignment Message Template | 2 AI Agent Verification Request Template | 3 AI Agent Progress Poll Template -->
 
 ---
 
@@ -438,15 +465,28 @@ The script is located at `../../scripts/amoa_design_search.py` relative to this 
 ## Resources
 
 - [echo-acknowledgment-protocol.md](./references/echo-acknowledgment-protocol.md) - ACK protocol
+<!-- TOC: Message Types: Instructions vs Conversations | When task acknowledgment is required | If agent receives task normally -->
 - [verification-loops-protocol.md](./references/verification-loops-protocol.md) - 4-verification loops
+<!-- TOC: Table of Contents | 0 Overview | 0 The Verification Flow -->
 - [progress-monitoring-protocol.md](./references/progress-monitoring-protocol.md) - Proactive monitoring
+<!-- TOC: Table of Contents | 0 Overview | 0 Proactive Monitoring Principles -->
 - [error-handling-protocol.md](./references/error-handling-protocol.md) - FAIL-FAST principle
+<!-- TOC: Table of Contents | 0 Overview | 1 FAIL-FAST Principle -->
 - [escalation-procedures.md](./references/escalation-procedures.md) - Escalation hierarchy
+<!-- TOC: **[If you need to understand the escalation hierarchy](#escalation-hierarchy)** - Learn which authority level handles which types of decisions | **[If a remote agent can handle something autonomously](#what-remote-agents-handle-level-0)** - Identify what agents resolve without escalation | **[If the orchestrator needs to make a decision](#what-orchestrator-handles-level-1)** - See what requires orchestrator-level decisions -->
 - [agent-onboarding.md](./references/agent-onboarding.md) - Onboarding checklist
+<!-- TOC: *When starting agent onboarding** → [Onboarding Checklist](#onboarding-checklist) | *When setting up your development environment** → [Environment Setup](#environment-setup) | *When verifying agent capability through a test task** → [Verification Task](#verification-task) -->
 - [task-instruction-format.md](./references/task-instruction-format.md) - Instruction template
+<!-- TOC: This document is the **index** for task instruction format documentation. Each section below links to detailed reference files. | ### Quick Reference | **[Overview](#overview)** - Critical principle: teach agents in every message -->
 - [overnight-operation.md](./references/overnight-operation.md) - Autonomous operation
+<!-- TOC: **When preparing infrastructure for overnight operation** → [Prerequisites Checklist](#prerequisites-checklist) | **When handing off tasks to the orchestrator before leaving** → [User Handoff Protocol](#user-handoff-protocol) | **When monitoring autonomous task execution** → [Operation Flow](#operation-flow) -->
 - [lsp-servers-overview.md](./references/lsp-servers-overview.md) - LSP requirements
+<!-- TOC: Table of Contents | What Are LSP Servers | Benefits for Remote Agents -->
 - [amcos-replacement-protocol.md](./references/amcos-replacement-protocol.md) - Agent replacement
+<!-- TOC: Overview | AMCOS Notification Format | Urgency Levels -->
 - [agent-types.md](./references/agent-types.md) - Agent type definitions
+<!-- TOC: 1 AI Agents | 1 What are AI agents | 2 Communication via AI Maestro -->
 - [assignment-workflow.md](./references/assignment-workflow.md) - Agent assignment
+<!-- TOC: 1 Pre-Assignment Validation | 1 Module exists and is pending | 2 Agent is registered -->
 - [agent-communication-templates.md](./references/agent-communication-templates.md) - Communication templates
+<!-- TOC: 1 AI Agent Assignment Message Template | 2 AI Agent Verification Request Template | 3 AI Agent Progress Poll Template -->

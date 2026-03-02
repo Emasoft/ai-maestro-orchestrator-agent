@@ -72,14 +72,22 @@ Copy this checklist and track your progress:
 |---------|-----------|
 | Step 1: Receive AMCOS Notification | [amcos-notification-handling.md](references/amcos-notification-handling.md) |
 | Step 2: Compile Task Context | [context-compilation-workflow.md](references/context-compilation-workflow.md) |
+<!-- TOC: 1 Information Sources | 2 State File Extraction | 3 GitHub Issue Collection -->
 | Step 3: Generate Handoff Document | [handoff-document-format.md](references/handoff-document-format.md) |
+<!-- TOC: 1 Required Sections | 2 Task Detail Format | 3 Progress Documentation -->
 | Step 4: Reassign Kanban Tasks | [kanban-reassignment-protocol.md](references/kanban-reassignment-protocol.md) |
+<!-- TOC: 1 Finding Assigned Cards | 2 Updating Assignee | 3 Adding Audit Comments -->
 | Step 5: Send Handoff to New Agent | [handoff-delivery-protocol.md](references/handoff-delivery-protocol.md) |
+<!-- TOC: 1 Document Upload | 2 AI Maestro Notification | 3 ACK Requirements -->
 | Step 6: Confirm Reassignment | [confirmation-protocol.md](references/confirmation-protocol.md) |
+<!-- TOC: 1 ACK Verification | 2 State File Updates | 3 AMCOS Notification -->
 | Handoff Protocols | [handoff-protocols.md](references/handoff-protocols.md) |
 | Design Document Protocol | [design-document-protocol.md](references/design-document-protocol.md) |
+<!-- TOC: Document UUID Format (GUUID) | Required Frontmatter Schema | Document Lifecycle -->
 | Edge Case Protocols | [edge-case-protocols.md](references/edge-case-protocols.md) |
+<!-- TOC: Table of Contents | 0 AI Maestro Unavailable | 1 Detection Methods -->
 | Task Completion Checklist | [task-completion-checklist.md](references/task-completion-checklist.md) |
+<!-- TOC: Before Reporting Task Complete | Acceptance Criteria Met | Quality Gates Passed -->
 
 ---
 
@@ -186,14 +194,17 @@ See: [confirmation-protocol.md](references/confirmation-protocol.md) - 6.1 ACK V
 | New agent ACK timeout | Agent unresponsive | Retry or alert user |
 
 See: [troubleshooting.md](references/troubleshooting.md) for detailed troubleshooting procedures.
+<!-- TOC: 1 AMCOS Communication Failures | 2 Context Compilation Failures | 3 Handoff Generation Failures -->
 
 See: [emergency-procedures.md](references/emergency-procedures.md) for critical failure scenarios.
+<!-- TOC: Replacement Agent Also Fails | Handoff Document Corrupted | GitHub Project Access Issues -->
 
 ---
 
 ## Examples
 
 See: [examples.md](references/examples.md) - Standard replacement flow, emergency replacement with partial context
+<!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
 
 ---
 
@@ -202,18 +213,31 @@ See: [examples.md](references/examples.md) - Standard replacement flow, emergenc
 | Reference | Description |
 |-----------|-------------|
 | [amcos-notification-handling.md](references/amcos-notification-handling.md) | AMCOS message handling + Agent Recovery decision tree and response template |
+<!-- TOC: 1 Notification Types | 2 Urgency Levels | 3 Acknowledgment Protocol -->
 | [context-compilation-workflow.md](references/context-compilation-workflow.md) | Gathering task context |
+<!-- TOC: 1 Information Sources | 2 State File Extraction | 3 GitHub Issue Collection -->
 | [handoff-document-format.md](references/handoff-document-format.md) | Handoff document structure |
+<!-- TOC: 1 Required Sections | 2 Task Detail Format | 3 Progress Documentation -->
 | [kanban-reassignment-protocol.md](references/kanban-reassignment-protocol.md) | GitHub Project updates |
+<!-- TOC: 1 Finding Assigned Cards | 2 Updating Assignee | 3 Adding Audit Comments -->
 | [handoff-delivery-protocol.md](references/handoff-delivery-protocol.md) | Delivering to new agent + Handoff delivery method decision tree and ACK template |
+<!-- TOC: 1 Document Upload | 2 AI Maestro Notification | 3 ACK Requirements -->
 | [confirmation-protocol.md](references/confirmation-protocol.md) | Confirming replacement + Confirmation outcome decision tree and AMCOS notification template |
+<!-- TOC: 1 ACK Verification | 2 State File Updates | 3 AMCOS Notification -->
 | [handoff-protocols.md](references/handoff-protocols.md) | Handoff protocol procedures |
+<!-- TOC: Document Delivery Protocol | Task Delegation Protocol | Acknowledgment Protocol -->
 | [design-document-protocol.md](references/design-document-protocol.md) | Design document protocol |
+<!-- TOC: Document UUID Format (GUUID) | Required Frontmatter Schema | Document Lifecycle -->
 | [edge-case-protocols.md](references/edge-case-protocols.md) | Edge case protocols |
+<!-- TOC: Table of Contents | 0 AI Maestro Unavailable | 1 Detection Methods -->
 | [task-completion-checklist.md](references/task-completion-checklist.md) | Task completion checklist |
+<!-- TOC: Before Reporting Task Complete | Acceptance Criteria Met | Quality Gates Passed -->
 | [troubleshooting.md](references/troubleshooting.md) | Common issues and solutions |
+<!-- TOC: 1 AMCOS Communication Failures | 2 Context Compilation Failures | 3 Handoff Generation Failures -->
 | [emergency-procedures.md](references/emergency-procedures.md) | Emergency procedures |
+<!-- TOC: Replacement Agent Also Fails | Handoff Document Corrupted | GitHub Project Access Issues -->
 | [examples.md](references/examples.md) | Usage examples |
+<!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
 
 ## Related Skills
 
