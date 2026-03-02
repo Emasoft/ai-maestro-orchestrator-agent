@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # pre-push hook - Validate plugin before allowing push
 #
-# Runs validate_plugin.py: CRITICAL and MAJOR block the push.
-# MINOR issues are reported as warnings but do not block.
+# Runs validate_plugin.py in strict mode: ALL severity levels
+# (CRITICAL, MAJOR, MINOR, NIT) block the push. Only WARNINGs are allowed.
 #
-# Exit codes from validate_plugin.py:
-#   0 - All checks passed
+# Exit codes from validate_plugin.py --strict:
+#   0 - All checks passed (only INFO/PASSED/WARNING)
 #   1 - CRITICAL issues found (blocks push)
 #   2 - MAJOR issues found (blocks push)
 #   3 - MINOR issues found (blocks push)
+#   4 - NIT issues found (blocks push)
 #
 # To install:
 #   mkdir -p .git/hooks && cp git-hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
@@ -94,9 +95,9 @@ fi
 # Falls back to python3 if uv is not available
 set +e
 if command -v uv &> /dev/null; then
-    uv run --with pyyaml python scripts/validate_plugin.py . --verbose 2>&1
+    uv run --with pyyaml python scripts/validate_plugin.py . --verbose --strict 2>&1
 else
-    python3 scripts/validate_plugin.py . --verbose 2>&1
+    python3 scripts/validate_plugin.py . --verbose --strict 2>&1
 fi
 VALIDATION_EXIT_CODE=$?
 set -e
@@ -128,10 +129,17 @@ case $VALIDATION_EXIT_CODE in
         ;;
     3)
         echo -e "${YELLOW}========================================${NC}"
-        echo -e "${YELLOW}  WARNING: MINOR issues found${NC}"
-        echo -e "${YELLOW}  Push allowed. Fix when convenient.${NC}"
+        echo -e "${YELLOW}  BLOCKED: MINOR issues found${NC}"
+        echo -e "${YELLOW}  Fix ALL issues before pushing.${NC}"
         echo -e "${YELLOW}========================================${NC}"
-        exit 0
+        exit 1
+        ;;
+    4)
+        echo -e "${YELLOW}========================================${NC}"
+        echo -e "${YELLOW}  BLOCKED: NIT issues found${NC}"
+        echo -e "${YELLOW}  Fix ALL issues before pushing.${NC}"
+        echo -e "${YELLOW}========================================${NC}"
+        exit 1
         ;;
     *)
         echo -e "${RED}========================================${NC}"
