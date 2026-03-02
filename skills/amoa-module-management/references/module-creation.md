@@ -13,7 +13,7 @@
 
 ## 1.1 When to Add Modules During Orchestration
 
-Module addition is a feature of EOA orchestration that allows dynamic scope expansion. This section explains when adding modules is appropriate.
+Module addition is a feature of AMOA orchestration that allows dynamic scope expansion. This section explains when adding modules is appropriate.
 
 ### Appropriate Scenarios for Adding Modules
 
@@ -35,7 +35,7 @@ Module addition is a feature of EOA orchestration that allows dynamic scope expa
 
 ### Dynamic Flexibility Concept
 
-EOA orchestration supports "dynamic flexibility" which means the plan can evolve during execution. When a module is added:
+AMOA orchestration supports "dynamic flexibility" which means the plan can evolve during execution. When a module is added:
 
 1. The total module count increases
 2. The stop hook now includes this module

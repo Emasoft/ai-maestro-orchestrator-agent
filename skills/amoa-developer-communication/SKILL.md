@@ -1,5 +1,5 @@
 ---
-name: eoa-developer-communication
+name: amoa-developer-communication
 description: "Trigger with developer communication needs. Use when communicating with human developers in code reviews, issues, technical discussions, and status updates. Covers effective communication patterns."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
@@ -11,7 +11,7 @@ metadata:
   prerequisites: None
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Steps 14, 15, 22"
 procedure: "proc-clarify-tasks, proc-handle-feedback, proc-handle-failed-pr"
 ---

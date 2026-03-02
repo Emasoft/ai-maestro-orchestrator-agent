@@ -2,8 +2,8 @@
 operation: decompose-goals-to-modules
 procedure: proc-decompose-design
 workflow-instruction: Step 10 - Design Decomposition
-parent-skill: eoa-two-phase-mode
-parent-plugin: emasoft-orchestrator-agent
+parent-skill: amoa-two-phase-mode
+parent-plugin: ai-maestro-orchestrator-agent
 version: 1.0.0
 ---
 
@@ -211,5 +211,5 @@ modules:
 ## Related Operations
 
 - [op-define-acceptance-criteria.md](op-define-acceptance-criteria.md) - Define criteria for each module
-- [op-identify-task-dependencies.md](../eoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Analyze dependencies
+- [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Analyze dependencies
 - [op-prioritize-task-assignments.md](op-prioritize-task-assignments.md) - Set module priorities

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EOA Orchestrator Storage Initialization
+AMOA Orchestrator Storage Initialization
 
 Initializes the orchestrator's document storage structure for tracking
 documents from all remote agents, including:
@@ -80,9 +80,9 @@ def init_orchestrator_storage(project_root: Path) -> dict:
         content = gitignore_path.read_text()
         if design_pattern not in content:
             with gitignore_path.open("a") as f:
-                f.write(f"\n# EOA Document Storage (local, not committed)\n{design_pattern}\n")
+                f.write(f"\n# AMOA Document Storage (local, not committed)\n{design_pattern}\n")
     else:
-        gitignore_path.write_text(f"# EOA Document Storage (local, not committed)\n{design_pattern}\n")
+        gitignore_path.write_text(f"# AMOA Document Storage (local, not committed)\n{design_pattern}\n")
 
     # Initialize empty category indexes
     category_indexes = ["tasks", "reports", "acks", "blockers", "sync"]
@@ -104,7 +104,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Initialize EOA orchestrator storage"
+        description="Initialize AMOA orchestrator storage"
     )
     parser.add_argument(
         "--project-root",
@@ -128,7 +128,7 @@ def main():
         if args.json:
             print(json.dumps(result, indent=2))
         else:
-            print(f"EOA orchestrator storage initialized at: {result['storage_root']}")
+            print(f"AMOA orchestrator storage initialized at: {result['storage_root']}")
             if result["directories_created"]:
                 print(f"Created {len(result['directories_created'])} directories")
             else:

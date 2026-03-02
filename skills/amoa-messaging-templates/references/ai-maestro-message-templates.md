@@ -1,29 +1,29 @@
-# AI Maestro Message Templates for EOA
+# AI Maestro Message Templates for AMOA
 
-Complete reference for all AI Maestro message templates used by Emasoft Orchestrator Agent (EOA). Use the `agent-messaging` skill for all message operations.
+Complete reference for all AI Maestro message templates used by AI Maestro Orchestrator Agent (AMOA). Use the `agent-messaging` skill for all message operations.
 
 ## Contents
 
-- 1.1 Acknowledging task assignment from ECOS/EAMA
+- 1.1 Acknowledging task assignment from AMCOS/AMAMA
 - 1.2 Delegating task to sub-agent (implementer/tester)
 - 1.3 Requesting status update from sub-agent
-- 1.4 Reporting task completion to ECOS
-- 1.5 Escalating blocked task to ECOS
-- 1.6 Escalating blocked task to EAMA (user decision needed)
+- 1.4 Reporting task completion to AMCOS
+- 1.5 Escalating blocked task to AMCOS
+- 1.6 Escalating blocked task to AMAMA (user decision needed)
 - 1.7 Standard AI Maestro API format and conventions
 
 ---
 
-## 1.1 Acknowledging Task Assignment from ECOS/EAMA
+## 1.1 Acknowledging Task Assignment from AMCOS/AMAMA
 
-**Use case:** When EOA receives a task assignment from ECOS or EAMA, send immediate acknowledgment.
+**Use case:** When AMOA receives a task assignment from AMCOS or AMAMA, send immediate acknowledgment.
 
-**Incoming message format (from ECOS/EAMA to EOA):**
+**Incoming message format (from AMCOS/AMAMA to AMOA):**
 
 ```json
 {
-  "from": "ecos-main",
-  "to": "eoa-[project-name]",
+  "from": "amcos-main",
+  "to": "amoa-[project-name]",
   "subject": "Task Assignment: [Task Name]",
   "priority": "normal|high|urgent",
   "content": {
@@ -39,8 +39,8 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 }
 ```
 
-**EOA acknowledgment:** Send an acknowledgment message using the `agent-messaging` skill:
-- **Recipient**: `ecos-main`
+**AMOA acknowledgment:** Send an acknowledgment message using the `agent-messaging` skill:
+- **Recipient**: `amcos-main`
 - **Subject**: "ACK: Task Assignment [Task Name]"
 - **Content**: "Task received and logged. UUID: [task-uuid]. Expected completion: [timestamp]."
 - **Type**: `acknowledgment`
@@ -50,8 +50,8 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 **Verify**: confirm message delivery.
 
 **Key fields:**
-- `from`: Your EOA session name (e.g., `eoa-myproject`)
-- `to`: Sender's session name (typically `ecos-main`)
+- `from`: Your AMOA session name (e.g., `amoa-myproject`)
+- `to`: Sender's session name (typically `amcos-main`)
 - `task_uuid`: Echo back the UUID from the incoming message
 - `status`: Always `"received"` for acknowledgments
 
@@ -59,9 +59,9 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 
 ## 1.2 Delegating Task to Sub-Agent
 
-**Use case:** When EOA delegates a task to an implementer, tester, or specialized sub-agent.
+**Use case:** When AMOA delegates a task to an implementer, tester, or specialized sub-agent.
 
-**EOA to sub-agent:** Send a task assignment message using the `agent-messaging` skill:
+**AMOA to sub-agent:** Send a task assignment message using the `agent-messaging` skill:
 - **Recipient**: the sub-agent session name (e.g., `svgbbox-impl-01`)
 - **Subject**: "Task Assignment: [Task Name]"
 - **Content**: detailed task description with all context needed
@@ -76,7 +76,7 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 ```json
 {
   "from": "[sub-agent-name]",
-  "to": "eoa-[project-name]",
+  "to": "amoa-[project-name]",
   "subject": "ACK: Task Assignment [Task Name]",
   "content": {
     "type": "acknowledgment",
@@ -97,9 +97,9 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 
 ## 1.3 Requesting Status Update from Sub-Agent
 
-**Use case:** When EOA needs to check progress on a delegated task (e.g., overdue, critical path, user request).
+**Use case:** When AMOA needs to check progress on a delegated task (e.g., overdue, critical path, user request).
 
-**EOA to sub-agent:** Send a status request message using the `agent-messaging` skill:
+**AMOA to sub-agent:** Send a status request message using the `agent-messaging` skill:
 - **Recipient**: the sub-agent session name
 - **Subject**: "Status Request: [Task Name]"
 - **Content**: "Please provide status update on task [task-uuid]. Expected completion was [timestamp]."
@@ -114,7 +114,7 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 ```json
 {
   "from": "[sub-agent-name]",
-  "to": "eoa-[project-name]",
+  "to": "amoa-[project-name]",
   "subject": "Status Update: [Task Name]",
   "content": {
     "type": "status_update",
@@ -136,12 +136,12 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 
 ---
 
-## 1.4 Reporting Task Completion to ECOS
+## 1.4 Reporting Task Completion to AMCOS
 
-**Use case:** When EOA verifies a delegated task is complete and reports results back to ECOS.
+**Use case:** When AMOA verifies a delegated task is complete and reports results back to AMCOS.
 
-**EOA to ECOS:** Send a completion report message using the `agent-messaging` skill:
-- **Recipient**: `ecos-main`
+**AMOA to AMCOS:** Send a completion report message using the `agent-messaging` skill:
+- **Recipient**: `amcos-main`
 - **Subject**: "Task Complete: [Task Name]"
 - **Content**: "[1-2 line summary]\nKey finding: [one-line summary]\nDetails: docs_dev/orchestration/reports/[task-uuid].md"
 - **Type**: `completion`
@@ -165,12 +165,12 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 
 ---
 
-## 1.5 Escalating Blocked Task to ECOS
+## 1.5 Escalating Blocked Task to AMCOS
 
-**Use case:** When EOA encounters a blocker that requires ECOS intervention (agent failure, technical blocker, requirement conflict).
+**Use case:** When AMOA encounters a blocker that requires AMCOS intervention (agent failure, technical blocker, requirement conflict).
 
-**EOA to ECOS:** Send an escalation message using the `agent-messaging` skill:
-- **Recipient**: `ecos-main`
+**AMOA to AMCOS:** Send an escalation message using the `agent-messaging` skill:
+- **Recipient**: `amcos-main`
 - **Subject**: "ESCALATION: [Issue Description]"
 - **Content**: "Escalation reason and details"
 - **Type**: `escalation`
@@ -185,9 +185,9 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 - `failed_agent`: Session name of agent that failed (if applicable)
 - `failure_reason`: Concise description of what went wrong
 - `attempts`: Number of retry attempts before escalation
-- `request`: Specific action needed from ECOS (choose one):
+- `request`: Specific action needed from AMCOS (choose one):
   - `"Agent replacement"` - Need different agent assigned
-  - `"Technical guidance"` - Need technical expertise from ECOS
+  - `"Technical guidance"` - Need technical expertise from AMCOS
   - `"User decision"` - Requirement conflict, needs user input
 
 **When to escalate:**
@@ -199,7 +199,7 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 
 ---
 
-## 1.6 Escalating Blocked Task to EAMA (User Decision Needed)
+## 1.6 Escalating Blocked Task to AMAMA (User Decision Needed)
 
 **Use case:** When a task is blocked and requires user input to proceed. This covers situations where:
 - A requirement is ambiguous and needs user clarification
@@ -208,8 +208,8 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 - A budget or cost decision must be made by the user
 - A feature scope question can only be answered by the user
 
-**EOA to EAMA:** Send a blocker escalation message using the `agent-messaging` skill:
-- **Recipient**: `eama-assistant-manager`
+**AMOA to AMAMA:** Send a blocker escalation message using the `agent-messaging` skill:
+- **Recipient**: `amama-assistant-manager`
 - **Subject**: "BLOCKER: Task requires user decision"
 - **Content**: brief description of the blocker and what user input is needed
 - **Type**: `blocker-escalation`
@@ -219,7 +219,7 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 **Verify**: confirm message delivery.
 
 **Key fields:**
-- `to`: Always `"eama-assistant-manager"` (EAMA's session name)
+- `to`: Always `"amama-assistant-manager"` (AMAMA's session name)
 - `blocker_issue_number`: GitHub issue number of the blocker issue (the separate issue created to track the blocking problem)
 - `blocker_type`: Specific type of user decision needed (choose one)
 - `blocker_description`: Detailed explanation of the blocking issue
@@ -238,11 +238,11 @@ Complete reference for all AI Maestro message templates used by Emasoft Orchestr
 | User decision needed, deadline <48h | Send with priority `urgent` | URGENT |
 | User decision needed, deadline <24h | Send with priority `urgent`, add `[URGENT]` to subject | URGENT |
 | No user response after 24h | Resend with `urgent` priority | URGENT |
-| No user response after 48h | EAMA should proactively remind user | URGENT |
+| No user response after 48h | AMAMA should proactively remind user | URGENT |
 
 **Response handling:**
 
-When EAMA responds with the user's decision:
+When AMAMA responds with the user's decision:
 1. Update the blocked task's GitHub issue with the decision (add comment)
 2. Close the blocker issue (the separate `type:blocker` issue tracking the problem): `gh issue close $BLOCKER_ISSUE --comment "Resolved by user decision: [details]"`
 3. Remove `status:blocked` label, restore the previous status label
@@ -279,8 +279,8 @@ Send a message using the `agent-messaging` skill with these fields:
 
 | Field | Description | Valid Values |
 |-------|-------------|--------------|
-| `from` | Sender session name | Your EOA session name (e.g., `eoa-myproject`) |
-| `to` | Recipient session name | Target agent (e.g., `ecos-main`, `svgbbox-impl-01`) |
+| `from` | Sender session name | Your AMOA session name (e.g., `amoa-myproject`) |
+| `to` | Recipient session name | Target agent (e.g., `amcos-main`, `svgbbox-impl-01`) |
 | `subject` | Message subject line | String describing message purpose |
 | `priority` | Message priority level | `normal`, `high`, `urgent` |
 | `content` | Message payload object | JSON object with `type` and `message` |
@@ -301,11 +301,11 @@ The `content` field MUST be a JSON object (NOT a string) with:
 
 ### Session Name Format
 
-EOA session names follow the pattern: `eoa-[project-name]`
+AMOA session names follow the pattern: `amoa-[project-name]`
 
 Examples:
-- `eoa-svgbbox` - EOA for svgbbox project
-- `eoa-myapp` - EOA for myapp project
+- `amoa-svgbbox` - AMOA for svgbbox project
+- `amoa-myapp` - AMOA for myapp project
 
 Sub-agent session names follow: `[project]-[role]-[number]`
 
@@ -338,13 +338,13 @@ If message delivery fails:
 2. Verify session names are correct (no typos)
 3. Validate JSON syntax (use `jq` to check)
 4. Check network connectivity to localhost
-5. Retry once, then escalate to ECOS if persistent
+5. Retry once, then escalate to AMCOS if persistent
 
 ### Testing Messages
 
 To test AI Maestro connectivity, use the `agent-messaging` skill:
 - **Health check**: verify the AI Maestro service is running and responding
-- **List unread messages**: retrieve unread messages for your session (e.g., `eoa-myproject`)
+- **List unread messages**: retrieve unread messages for your session (e.g., `amoa-myproject`)
 - **Get unread count**: query how many unread messages exist
 
 **Verify**: confirm the health check response indicates the service is operational.
@@ -365,9 +365,9 @@ To test AI Maestro connectivity, use the `agent-messaging` skill:
 
 **Verify**: confirm acknowledgment delivery.
 
-### Minimal Report Pattern (All Responses to ECOS)
+### Minimal Report Pattern (All Responses to AMCOS)
 
-**Always keep reports to ECOS under 3 lines:**
+**Always keep reports to AMCOS under 3 lines:**
 
 ```
 [1-2 line task summary]
@@ -386,8 +386,8 @@ Details: docs_dev/orchestration/reports/task-uuid-123.md
 
 **Always include task_uuid in all messages related to a task:**
 
-- Initial assignment from ECOS → includes UUID
-- EOA ACK → echo back UUID
+- Initial assignment from AMCOS → includes UUID
+- AMOA ACK → echo back UUID
 - Delegation to sub-agent → pass UUID
 - Sub-agent ACK → echo back UUID
 - Status requests → include UUID
@@ -406,37 +406,37 @@ This ensures full traceability across the task lifecycle.
 - Session names are case-sensitive
 - Priority `urgent` should be reserved for genuine urgent situations
 - Always wait for ACK after sending (timeout: 15 minutes)
-- If no ACK received, retry once, then escalate to ECOS
+- If no ACK received, retry once, then escalate to AMCOS
 
 ---
 
 ## Decision Trees for AI Maestro Message Handling
 
-### Receiving Task from ECOS Decision Tree
+### Receiving Task from AMCOS Decision Tree
 
-When EOA receives a new task assignment from ECOS via AI Maestro, follow this decision tree:
+When AMOA receives a new task assignment from AMCOS via AI Maestro, follow this decision tree:
 
 ```
-New task message from ECOS received
+New task message from AMCOS received
 ├─ Is message format valid (has task_id, description, priority, dependencies)?
 │   ├─ Yes → Are all dependencies satisfied (prerequisite tasks completed)?
-│   │         ├─ Yes → Does EOA have capacity (fewer than max concurrent tasks)?
-│   │         │         ├─ Yes → Send ACK to ECOS with estimated breakdown
+│   │         ├─ Yes → Does AMOA have capacity (fewer than max concurrent tasks)?
+│   │         │         ├─ Yes → Send ACK to AMCOS with estimated breakdown
 │   │         │         │         → Begin task decomposition into subtasks
 │   │         │         │         → Assign subtasks to implementers (see message-templates.md)
 │   │         │         └─ No (at capacity) → Send ACK with "queued" status
 │   │         │                               → Include current load and estimated start time
 │   │         └─ No (unmet dependencies) → Send ACK with "blocked" status
 │   │                                     → List which dependencies are unmet
-│   │                                     → Request ECOS to resolve or reprioritize
-│   └─ No (malformed message) → Send clarification request to ECOS
+│   │                                     → Request AMCOS to resolve or reprioritize
+│   └─ No (malformed message) → Send clarification request to AMCOS
 │                                → List which required fields are missing
 │                                → Do NOT begin work until clarification received
 ```
 
-### Reporting to ECOS Decision Tree
+### Reporting to AMCOS Decision Tree
 
-When EOA needs to send a status report or task completion to ECOS, follow this decision tree:
+When AMOA needs to send a status report or task completion to AMCOS, follow this decision tree:
 
 ```
 Status report trigger (30-min interval OR milestone reached OR blocker found)
@@ -447,7 +447,7 @@ Status report trigger (30-min interval OR milestone reached OR blocker found)
 │   ├─ Milestone reached (all subtasks of a task complete) → Verify all subtasks truly done
 │   │   ├─ All verified → Send completion report, type "report", priority "high"
 │   │   │                 → Include aggregated results from all implementers
-│   │   │                 → Request EIA review assignment from ECOS
+│   │   │                 → Request AMIA review assignment from AMCOS
 │   │   └─ Some failed verification → Send partial completion, list failures
 │   │                                 → Request guidance: retry vs reassign vs skip
 │   └─ Blocker found → Is blocker technical or external?

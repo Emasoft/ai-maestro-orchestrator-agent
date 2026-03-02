@@ -49,7 +49,7 @@ Standardized folder structure for all design documents, customized templates, ha
   - 6.2 Platform-specific customization
 - 7. State File Integration
 - 8. Script Support
-  - 8.1 eoa_init_design_folders.py   - 8.2 eoa_compile_handoff.py - 9. Checklists
+  - 8.1 amoa_init_design_folders.py   - 8.2 amoa_compile_handoff.py - 9. Checklists
   - 9.1 Design Folder Setup Checklist
   - 9.2 Per-Module Design Checklist
 
@@ -93,8 +93,8 @@ design/
 
 | Script | Purpose |
 |--------|---------|
-| `eoa_init_design_folders.py <!-- TODO: Script not implemented -->` | Create standardized folder structure |
-| `eoa_compile_handoff.py <!-- TODO: Script not implemented -->` | Compile template to handoff |
+| `amoa_init_design_folders.py <!-- TODO: Script not implemented -->` | Create standardized folder structure |
+| `amoa_compile_handoff.py <!-- TODO: Script not implemented -->` | Compile template to handoff |
 
 ---
 

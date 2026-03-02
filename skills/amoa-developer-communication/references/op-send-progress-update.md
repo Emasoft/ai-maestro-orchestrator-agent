@@ -57,7 +57,7 @@
 | Procedure | `proc-handle-feedback` |
 | Workflow Step | Step 15 |
 | Trigger | Scheduled update or stakeholder request |
-| Actor | Orchestrator (EOA) or implementing agent |
+| Actor | Orchestrator (AMOA) or implementing agent |
 | Target | Stakeholders (user, team, manager) |
 
 ---

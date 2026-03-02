@@ -16,7 +16,7 @@ operation: escalate-to-user
 - [Escalation Categories](#escalation-categories)
 - [Steps](#steps)
   - [Step 1: Prepare Escalation Message](#step-1-prepare-escalation-message)
-  - [Step 2: Send to EAMA (User Communication Channel)](#step-2-send-to-eama-user-communication-channel)
+  - [Step 2: Send to AMAMA (User Communication Channel)](#step-2-send-to-amama-user-communication-channel)
   - [Step 3: Update Blocked Task (if applicable)](#step-3-update-blocked-task-if-applicable)
   - [Step 4: Queue Management](#step-4-queue-management)
 - [Escalation Message Template](#escalation-message-template)
@@ -96,10 +96,10 @@ cat > "escalation_${ESCALATION_ID}.json" << EOF
 EOF
 ```
 
-### Step 2: Send to EAMA (User Communication Channel)
+### Step 2: Send to AMAMA (User Communication Channel)
 
-Send an escalation message to EAMA using the `agent-messaging` skill:
-- **Recipient**: `eama-main`
+Send an escalation message to AMAMA using the `agent-messaging` skill:
+- **Recipient**: `amama-main`
 - **Subject**: "[ESCALATION] [escalation_type]: [brief_description]"
 - **Content**: "User decision required." followed by category, context, options, impact (blocking task), and urgency
 - **Type**: `escalation`
@@ -170,13 +170,13 @@ echo "Queue position: $QUEUE_POSITION"
 | Level | Who Handles | Examples |
 |-------|-------------|----------|
 | Level 0 | Orchestrator | Routine decisions within methodology |
-| Level 1 | EAMA (User) | Architecture, requirements, scope |
+| Level 1 | AMAMA (User) | Architecture, requirements, scope |
 | Level 2 | User (Direct) | Security, breaking changes, major decisions |
 
 ## Success Criteria
 
 - [ ] Escalation ID generated
-- [ ] Message sent to EAMA
+- [ ] Message sent to AMAMA
 - [ ] Blocked task updated (if applicable)
 - [ ] Queue position recorded
 - [ ] Audit log entry created
@@ -185,7 +185,7 @@ echo "Queue position: $QUEUE_POSITION"
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| EAMA unreachable | Agent offline | Queue escalation, retry |
+| AMAMA unreachable | Agent offline | Queue escalation, retry |
 | User unavailable | After hours | Queue with urgency flag |
 | Duplicate escalation | Same issue raised twice | Dedupe by context hash |
 

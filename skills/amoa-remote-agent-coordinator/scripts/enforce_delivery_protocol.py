@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
 
-ACK_TRACKING_FILE = Path.home() / ".emasoft-orchestrator" / "ack-tracking.json"
+ACK_TRACKING_FILE = Path.home() / ".ai-maestro-orchestrator" / "ack-tracking.json"
 
 
 @dataclass

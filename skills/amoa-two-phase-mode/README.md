@@ -1,7 +1,7 @@
 # Two-Phase Mode Skill
 
 **Version**: 1.0.0
-**For**: EOA (Emasoft Orchestrator Agent) Plugin v2.4.0+
+**For**: AMOA (AI Maestro Orchestrator Agent) Plugin v2.4.0+
 
 ## Overview
 
@@ -69,30 +69,30 @@ two-phase-mode/
 
 ### Plan Phase Scripts (4)
 
-- `eoa_start_planning.py` - Initialize Plan Phase <!-- TODO: Script not implemented -->
-- `eoa_planning_status.py` - Display planning progress <!-- TODO: Script not implemented -->
-- `eoa_modify_requirement.py` - Add/modify/remove requirements <!-- TODO: Script not implemented -->
-- `eoa_approve_plan.py` - Validate plan, create GitHub Issues <!-- TODO: Script not implemented -->
+- `amoa_start_planning.py` - Initialize Plan Phase <!-- TODO: Script not implemented -->
+- `amoa_planning_status.py` - Display planning progress <!-- TODO: Script not implemented -->
+- `amoa_modify_requirement.py` - Add/modify/remove requirements <!-- TODO: Script not implemented -->
+- `amoa_approve_plan.py` - Validate plan, create GitHub Issues <!-- TODO: Script not implemented -->
 
 ### Orchestration Phase Scripts (13)
 
-- `eoa_start_orchestration.py` - Initialize Orchestration Phase
-- `eoa_orchestration_status.py` - Display orchestration progress <!-- TODO: Script not implemented -->
-- `eoa_register_agent.py` - Register remote agent
-- `eoa_assign_module.py` - Assign module to agent
-- `eoa_modify_module.py` - Add/modify/remove/prioritize modules
-- `eoa_reassign_module.py` - Reassign module to different agent
-- `eoa_check_remote_agents.py` - Poll active AI agents
-- `eoa_notify_agent.py` - Send AI Maestro message <!-- TODO: Script not implemented -->
-- `eoa_check_plan_phase.py` - Check plan phase completion <!-- TODO: Script not implemented -->
-- `eoa_check_orchestration_phase.py` - Check orchestration phase completion <!-- TODO: Script not implemented -->
-- `eoa_sync_github_issues.py` - Sync with GitHub Issues <!-- TODO: Script not implemented -->
-- `eoa_verify_instructions.py` - Instruction Verification Protocol
-- `eoa_poll_agent.py` - Proactive Progress Polling
+- `amoa_start_orchestration.py` - Initialize Orchestration Phase
+- `amoa_orchestration_status.py` - Display orchestration progress <!-- TODO: Script not implemented -->
+- `amoa_register_agent.py` - Register remote agent
+- `amoa_assign_module.py` - Assign module to agent
+- `amoa_modify_module.py` - Add/modify/remove/prioritize modules
+- `amoa_reassign_module.py` - Reassign module to different agent
+- `amoa_check_remote_agents.py` - Poll active AI agents
+- `amoa_notify_agent.py` - Send AI Maestro message <!-- TODO: Script not implemented -->
+- `amoa_check_plan_phase.py` - Check plan phase completion <!-- TODO: Script not implemented -->
+- `amoa_check_orchestration_phase.py` - Check orchestration phase completion <!-- TODO: Script not implemented -->
+- `amoa_sync_github_issues.py` - Sync with GitHub Issues <!-- TODO: Script not implemented -->
+- `amoa_verify_instructions.py` - Instruction Verification Protocol
+- `amoa_poll_agent.py` - Proactive Progress Polling
 
 ### Modified Scripts (1)
 
-- `eoa_orchestrator_stop_check.py` - Phase-aware stop hook <!-- TODO: Script not implemented -->
+- `amoa_orchestrator_stop_check.py` - Phase-aware stop hook <!-- TODO: Script not implemented -->
 
 ## Quick Start
 
@@ -168,7 +168,7 @@ Both files use YAML frontmatter format and are gitignored (`.local.md` suffix).
 
 ## Requirements
 
-- EOA (Emasoft Orchestrator Agent) Plugin v2.4.0+
+- AMOA (AI Maestro Orchestrator Agent) Plugin v2.4.0+
 - AI Maestro messaging system (AMP) running (routing handled automatically)
 - GitHub CLI (`gh`) installed and authenticated
 - Python 3.8+ with PyYAML

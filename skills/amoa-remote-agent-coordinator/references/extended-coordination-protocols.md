@@ -24,7 +24,7 @@ description: Extended coordination protocols for multi-agent scenarios including
 - Conflicting Multi-Agent Responses — two agents give contradictory results
 - Verification Loop Outcome — per-loop criteria for loops 1-4 + 5th decision
 - Agent Recovery Decision — original recovered after replacement: keep vs revert
-- Direct Handling vs Delegation — EOA handles vs delegates
+- Direct Handling vs Delegation — AMOA handles vs delegates
 - Post-Task Interview Escalation — REVISE cycle count before escalation
 
 ---
@@ -32,10 +32,10 @@ description: Extended coordination protocols for multi-agent scenarios including
 ## 2. Mid-Task Updates
 
 **See [mid-task-update-templates.md](./mid-task-update-templates.md) for:**
-- ECOS Mid-Task Requirement Update to EOA + relay to agent
+- AMCOS Mid-Task Requirement Update to AMOA + relay to agent
 - Module Modification Notification + agent ACK
 - Priority Change Notification + agent ACK
-- EAMA user decision relay after immutable requirement escalation
+- AMAMA user decision relay after immutable requirement escalation
 - Decision tree: Minor (relay) / Major (pause, re-verify) / Breaking (stop, escalate)
 
 ---
@@ -45,7 +45,7 @@ description: Extended coordination protocols for multi-agent scenarios including
 **See [reassignment-communication-templates.md](./reassignment-communication-templates.md) for:**
 - Reassignment Notification to Old Agent + work-summary response
 - Reassignment Assignment to New Agent (with context)
-- Agent Recovery Decision Notification (both agents) + EOA response
+- Agent Recovery Decision Notification (both agents) + AMOA response
 - Decision tree: Old agent cooperates / unresponsive / disputes
 
 ---
@@ -53,9 +53,9 @@ description: Extended coordination protocols for multi-agent scenarios including
 ## 4. Blocker Reports
 
 **See [blocker-report-templates.md](./blocker-report-templates.md) for:**
-- Agent Blocker Report to EOA (structured JSON: type, description, impact, workaround)
-- EOA Triage Response (unblock/escalate/workaround)
-- EOA Blocker Resolution Notification
+- Agent Blocker Report to AMOA (structured JSON: type, description, impact, workaround)
+- AMOA Triage Response (unblock/escalate/workaround)
+- AMOA Blocker Resolution Notification
 - Decision tree: Technical (fix/reroute) / External (escalate) / Requirement (escalate to user)
 
 ---
@@ -63,10 +63,10 @@ description: Extended coordination protocols for multi-agent scenarios including
 ## 5. Multi-Project Coordination
 
 **See [multi-project-coordination-templates.md](./multi-project-coordination-templates.md) for:**
-- Cross-Project Dependency Notification (EOA to EOA via ECOS)
+- Cross-Project Dependency Notification (AMOA to AMOA via AMCOS)
 - Cross-Project Status Request/Response
 - Human Developer Assignment (GitHub issue format) + completion report
-- Decision tree: Wait for dependency / Proceed independently / Escalate to ECOS
+- Decision tree: Wait for dependency / Proceed independently / Escalate to AMCOS
 
 ---
 

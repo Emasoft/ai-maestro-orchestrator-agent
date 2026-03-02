@@ -1,8 +1,8 @@
 ---
-name: eoa-prioritize-module
+name: amoa-prioritize-module
 description: "Change a module's priority level"
 argument-hint: "<MODULE_ID> --priority <LEVEL>"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_modify_module.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py:*)"]
 ---
 
 # Prioritize Module Command
@@ -12,7 +12,7 @@ Change the priority level of a module. This is a shortcut for `/modify-module --
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_modify_module.py" modify $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py" modify $ARGUMENTS
 ```
 
 ## Arguments

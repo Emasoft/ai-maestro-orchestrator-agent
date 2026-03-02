@@ -30,7 +30,7 @@
 | Procedure | `proc-clarify-tasks` |
 | Workflow Step | Step 14 |
 | Trigger | Implementer passes pre-task interview evaluation |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Target | Implementer agent |
 
 ---

@@ -183,8 +183,8 @@ source templates/toolchains/macos-docker-debug.md
 uv run pytest tests/test_platform_detector.py -v
 
 # 4. Test in Docker
-docker build -t eoa-test .
-docker run eoa-test python -c "from eoa.platform import get_platform; print(get_platform())"
+docker build -t amoa-test .
+docker run amoa-test python -c "from eoa.platform import get_platform; print(get_platform())"
 # Should print: docker
 ```
 

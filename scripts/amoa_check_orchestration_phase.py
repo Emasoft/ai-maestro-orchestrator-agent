@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-EOA Check Orchestration Phase -- Verify Orchestration Phase Completion
+AMOA Check Orchestration Phase -- Verify Orchestration Phase Completion
 
 Checks whether the Orchestration Phase is complete by examining:
   1. All modules have status "verified" or "complete" (no pending/in-progress)
   2. No verification loops remaining (verification_loops_remaining == 0)
   3. No blocking issues listed in the state
 
-This script is used by the EOA stop hook to determine if the orchestrator
+This script is used by the AMOA stop hook to determine if the orchestrator
 can safely stop during the Orchestration Phase.
 
 NO external dependencies -- Python 3.8+ stdlib only.
 
 Usage:
-    python3 eoa_check_orchestration_phase.py
-    python3 eoa_check_orchestration_phase.py --project-root /path/to/project
-    python3 eoa_check_orchestration_phase.py --verbose
+    python3 amoa_check_orchestration_phase.py
+    python3 amoa_check_orchestration_phase.py --project-root /path/to/project
+    python3 amoa_check_orchestration_phase.py --verbose
 
 Exit codes:
     0 - Orchestration phase is complete (all modules done, no loops, no blockers)
@@ -24,15 +24,15 @@ Exit codes:
 
 Examples:
     # Check orchestration phase in current directory:
-    python3 eoa_check_orchestration_phase.py
+    python3 amoa_check_orchestration_phase.py
     # Output: {"complete": true, "reason": "...", "modules_complete": 5, ...}
 
     # Check with verbose stderr output:
-    python3 eoa_check_orchestration_phase.py --verbose
+    python3 amoa_check_orchestration_phase.py --verbose
     # Stderr shows per-module status details
 
     # Check in a specific project:
-    python3 eoa_check_orchestration_phase.py --project-root /home/user/project
+    python3 amoa_check_orchestration_phase.py --project-root /home/user/project
 """
 
 import argparse
@@ -42,7 +42,7 @@ from pathlib import Path
 
 
 # State file location relative to the project root
-STATE_FILE_REL = ".emasoft/orchestration-state.json"
+STATE_FILE_REL = ".ai-maestro/orchestration-state.json"
 
 # Module statuses that count as "complete"
 COMPLETE_STATUSES = {"verified", "complete", "done"}

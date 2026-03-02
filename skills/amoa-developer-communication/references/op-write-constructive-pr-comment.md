@@ -27,7 +27,7 @@
 | Procedure | `proc-handle-feedback` |
 | Workflow Step | Step 15 |
 | Trigger | PR requires code review feedback |
-| Actor | Orchestrator (EOA) or Integrator (EIA) |
+| Actor | Orchestrator (AMOA) or Integrator (AMIA) |
 | Target | Human developer or AI agent |
 
 ---

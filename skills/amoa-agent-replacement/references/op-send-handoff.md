@@ -150,7 +150,7 @@ gh issue comment <ISSUE_NUM> --body "@USER: Replacement agent $REPLACEMENT_AGENT
 |-------|-------|----------|
 | Upload failed | GitHub API error | Retry or use alternative method |
 | AI Maestro unreachable | Service down | Restart service or use backup |
-| Agent session not found | Session ended | Request new session from ECOS |
+| Agent session not found | Session ended | Request new session from AMCOS |
 | ACK timeout | Agent unresponsive | Escalate to user |
 
 ## Example

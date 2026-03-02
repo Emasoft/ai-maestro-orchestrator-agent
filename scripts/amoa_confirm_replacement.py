@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
 """
-EOA Confirm Replacement Script
+AMOA Confirm Replacement Script
 
 Verifies that an agent replacement has been completed successfully and notifies
-ECOS (Emergency Context-loss Operations System) of the outcome. This is the
+AMCOS (Emergency Context-loss Operations System) of the outcome. This is the
 final step (Step 6) in the agent replacement workflow.
 
 Performs four verification checks:
   1. ACK verification - confirms the replacement agent acknowledged the handoff
   2. State file update - updates orchestration state with replacement metadata
-  3. ECOS notification - sends replacement confirmation to ECOS via AI Maestro
+  3. AMCOS notification - sends replacement confirmation to AMCOS via AI Maestro
   4. Audit logging - appends an audit entry to the replacement audit log
 
 Data sources:
   - AI Maestro inbox (via curl to localhost API) for ACK messages
-  - Orchestration state file (.emasoft/orchestration-state.json) for assignments
+  - Orchestration state file (.ai-maestro/orchestration-state.json) for assignments
   - Exec-phase state file (.claude/orchestrator-exec-phase.local.md) as fallback
 
 Usage:
-    python3 eoa_confirm_replacement.py --failed-agent NAME --new-agent NAME --handoff-id ID
-    python3 eoa_confirm_replacement.py --failed-agent impl-1 --new-agent impl-2 --handoff-id handoff-uuid-123
-    python3 eoa_confirm_replacement.py --failed-agent impl-1 --new-agent impl-2 --handoff-id handoff-uuid-123 --ecos-session ecos-chief-of-staff-one
-    python3 eoa_confirm_replacement.py --failed-agent impl-1 --new-agent impl-2 --handoff-id handoff-uuid-123 --skip-ack
+    python3 amoa_confirm_replacement.py --failed-agent NAME --new-agent NAME --handoff-id ID
+    python3 amoa_confirm_replacement.py --failed-agent impl-1 --new-agent impl-2 --handoff-id handoff-uuid-123
+    python3 amoa_confirm_replacement.py --failed-agent impl-1 --new-agent impl-2 --handoff-id handoff-uuid-123 --amcos-session amcos-chief-of-staff-one
+    python3 amoa_confirm_replacement.py --failed-agent impl-1 --new-agent impl-2 --handoff-id handoff-uuid-123 --skip-ack
 
 Exit codes:
     0 - Success (full or partial confirmation)
@@ -30,19 +30,19 @@ Exit codes:
 
 Examples:
     # Standard confirmation after replacement:
-    python3 eoa_confirm_replacement.py \\
+    python3 amoa_confirm_replacement.py \\
         --failed-agent implementer-1 --new-agent implementer-2 \\
         --handoff-id handoff-uuid-123
 
-    # Confirmation with explicit ECOS session and project root:
-    python3 eoa_confirm_replacement.py \\
+    # Confirmation with explicit AMCOS session and project root:
+    python3 amoa_confirm_replacement.py \\
         --failed-agent implementer-1 --new-agent implementer-2 \\
         --handoff-id handoff-uuid-123 \\
-        --ecos-session ecos-chief-of-staff-one \\
+        --amcos-session amcos-chief-of-staff-one \\
         --project-root /home/user/myproject
 
     # Skip ACK check (for emergency replacements where ACK is not expected):
-    python3 eoa_confirm_replacement.py \\
+    python3 amoa_confirm_replacement.py \\
         --failed-agent implementer-1 --new-agent implementer-2 \\
         --handoff-id handoff-uuid-123 --skip-ack
 """
@@ -56,7 +56,7 @@ from pathlib import Path
 
 
 # State file location relative to the project root (JSON format)
-STATE_FILE_PATH = ".emasoft/orchestration-state.json"
+STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 
 # Fallback exec-phase state file (YAML frontmatter in markdown)
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
@@ -68,8 +68,8 @@ AUDIT_LOG_FILE = "replacement_audit.json"
 # AI Maestro API base URL
 AIMAESTRO_API = "http://localhost:23000"
 
-# Default ECOS session name for notifications
-DEFAULT_ECOS_SESSION = "ecos-controller"
+# Default AMCOS session name for notifications
+DEFAULT_AMCOS_SESSION = "amcos-controller"
 
 
 def load_state(project_root):
@@ -330,13 +330,13 @@ def update_state_for_replacement(project_root, state, failed_agent, new_agent, h
 
 
 def send_ecos_notification(ecos_session, status, failed_agent, new_agent, handoff_id, details):
-    """Send replacement confirmation notification to ECOS via AI Maestro.
+    """Send replacement confirmation notification to AMCOS via AI Maestro.
 
-    Sends a structured JSON message to the ECOS controller agent with the
+    Sends a structured JSON message to the AMCOS controller agent with the
     replacement outcome (success, partial, or failed).
 
     Args:
-        ecos_session: The AI Maestro session name for ECOS.
+        ecos_session: The AI Maestro session name for AMCOS.
         status: The replacement status ('success', 'partial', or 'failed').
         failed_agent: The agent ID of the failed agent.
         new_agent: The agent ID of the replacement agent.
@@ -356,11 +356,11 @@ def send_ecos_notification(ecos_session, status, failed_agent, new_agent, handof
 
     # Determine subject line based on status
     subject_map = {
-        "success": "[EOA] Agent Replacement Complete",
-        "partial": "[EOA] Agent Replacement Partially Complete",
-        "failed": "[EOA] Agent Replacement Failed",
+        "success": "[AMOA] Agent Replacement Complete",
+        "partial": "[AMOA] Agent Replacement Partially Complete",
+        "failed": "[AMOA] Agent Replacement Failed",
     }
-    subject = subject_map.get(status, "[EOA] Agent Replacement Status Update")
+    subject = subject_map.get(status, "[AMOA] Agent Replacement Status Update")
 
     # Build the message content payload
     message_content = {
@@ -475,7 +475,7 @@ def build_audit_entry(
         reason: The reason for replacement.
         ack_info: ACK details dict from check_ack_received, or None.
         state_updates: Summary dict from update_state_for_replacement.
-        ecos_notified: Boolean indicating whether ECOS was notified.
+        ecos_notified: Boolean indicating whether AMCOS was notified.
         outcome: The overall outcome string ('success', 'partial', 'failed').
 
     Returns:
@@ -524,13 +524,13 @@ def main():
     """Main entry point for replacement confirmation.
 
     Parses arguments, checks for ACK from the replacement agent, updates
-    the orchestration state, notifies ECOS, and writes an audit log entry.
+    the orchestration state, notifies AMCOS, and writes an audit log entry.
 
     Returns:
         Exit code: 0 for success, 1 for unrecoverable error, 2 for no ACK.
     """
     parser = argparse.ArgumentParser(
-        description="Verify agent replacement completion and notify ECOS"
+        description="Verify agent replacement completion and notify AMCOS"
     )
     parser.add_argument(
         "--failed-agent", required=True,
@@ -549,8 +549,8 @@ def main():
         help="Reason for replacement (default: context_loss)"
     )
     parser.add_argument(
-        "--ecos-session", type=str, default=DEFAULT_ECOS_SESSION,
-        help="AI Maestro session name for ECOS (default: {})".format(DEFAULT_ECOS_SESSION)
+        "--amcos-session", type=str, default=DEFAULT_AMCOS_SESSION,
+        help="AI Maestro session name for AMCOS (default: {})".format(DEFAULT_AMCOS_SESSION)
     )
     parser.add_argument(
         "--project-root", type=str, default=".",
@@ -561,8 +561,8 @@ def main():
         help="Skip ACK verification (for emergency replacements)"
     )
     parser.add_argument(
-        "--skip-ecos-notify", action="store_true", default=False,
-        help="Skip sending ECOS notification"
+        "--skip-amcos-notify", action="store_true", default=False,
+        help="Skip sending AMCOS notification"
     )
 
     args = parser.parse_args()
@@ -603,7 +603,7 @@ def main():
             reason=args.reason,
         )
     else:
-        # State file not found -- still proceed with ECOS notification and audit
+        # State file not found -- still proceed with AMCOS notification and audit
         state_updates = {"error": "State file not found at {}".format(STATE_FILE_PATH)}
 
     # Determine overall outcome
@@ -614,7 +614,7 @@ def main():
     else:
         outcome = "failed"
 
-    # Step 3: Send ECOS notification
+    # Step 3: Send AMCOS notification
     ecos_notified = False
     if not args.skip_ecos_notify:
         notification_details = {

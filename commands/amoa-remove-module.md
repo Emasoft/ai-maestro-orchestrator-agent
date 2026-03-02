@@ -1,8 +1,8 @@
 ---
-name: eoa-remove-module
+name: amoa-remove-module
 description: "Remove a pending module from Orchestration Phase (only if not started)"
 argument-hint: "<MODULE_ID> [--force]"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_modify_module.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py:*)"]
 ---
 
 # Remove Module Command
@@ -12,7 +12,7 @@ Remove a module from Orchestration Phase. Only modules with `pending` status can
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_modify_module.py" remove $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py" remove $ARGUMENTS
 ```
 
 ## Arguments

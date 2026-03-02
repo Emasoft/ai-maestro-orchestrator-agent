@@ -324,4 +324,4 @@ After completing verification loops:
 - [ ] **Verify**: confirm all 4 verification loop results were recorded
 - [ ] **Verify**: confirm message delivery for each loop via the `agent-messaging` skill's sent messages feature
 - [ ] **Verify**: confirm PR approval or rejection decision was communicated to the agent
-- [ ] **Verify**: confirm EIA was notified if PR was approved for code review
+- [ ] **Verify**: confirm AMIA was notified if PR was approved for code review

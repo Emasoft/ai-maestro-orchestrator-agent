@@ -287,7 +287,7 @@ RECOMMENDED ACTIONS:
 1. Check .claude/orchestrator-hook.log for detailed error messages
 2. Verify helper scripts exist and are executable:
    - Claude Code TaskList
-   - eoa_check_github_projects.py
+   - amoa_check_github_projects.py
 3. Manually verify task completion in all sources:
    - Claude Code Tasks
    - GitHub Project items

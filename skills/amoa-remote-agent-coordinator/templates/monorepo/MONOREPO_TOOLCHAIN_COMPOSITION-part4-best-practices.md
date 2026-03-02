@@ -78,7 +78,7 @@ This part covers verification checklists, error recovery, best practices, and te
 template:
   name: MONOREPO_TOOLCHAIN_COMPOSITION
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   parent_template: MONOREPO_BASE
   requires:
     - MONOREPO_BASE

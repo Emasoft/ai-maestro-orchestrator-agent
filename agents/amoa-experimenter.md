@@ -1,12 +1,12 @@
 ---
-name: eoa-experimenter
+name: amoa-experimenter
 model: opus
 description: Experimental validation agent - the ONLY local agent authorized to write code. Requires AI Maestro installed.
 type: local-experimenter
 skills:
-  - eoa-two-phase-mode
-  - eoa-verification-patterns
-  - eoa-orchestration-patterns
+  - amoa-two-phase-mode
+  - amoa-verification-patterns
+  - amoa-orchestration-patterns
 memory_requirements: medium
 ---
 
@@ -30,9 +30,9 @@ memory_requirements: medium
 
 ## Required Reading
 
-> **For experimentation workflows, Docker setup, multiplicity process, and verification patterns**, see the **eoa-orchestration-patterns** skill (SKILL.md).
+> **For experimentation workflows, Docker setup, multiplicity process, and verification patterns**, see the **amoa-orchestration-patterns** skill (SKILL.md).
 
-> **For sub-agent role boundaries and orchestrator delegation patterns**, see `eoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md`.
+> **For sub-agent role boundaries and orchestrator delegation patterns**, see `amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md`.
 
 ---
 

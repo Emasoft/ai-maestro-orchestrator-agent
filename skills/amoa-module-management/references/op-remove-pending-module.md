@@ -29,7 +29,7 @@
 | Procedure | `proc-update-tasks` |
 | Workflow Step | Step 16 |
 | Trigger | Module cancelled or no longer needed |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Command | `/remove-module` |
 
 ---

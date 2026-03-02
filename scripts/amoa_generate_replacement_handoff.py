@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EOA Generate Replacement Handoff Script
+AMOA Generate Replacement Handoff Script
 
 Generates a comprehensive handoff document when replacing a failed agent.
 Compiles task context from: orchestration state file, GitHub issues (via gh CLI),
@@ -8,10 +8,10 @@ and git branch state to create a document the replacement agent can use to
 continue the failed agent's work.
 
 Usage:
-    python3 eoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2
-    python3 eoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2 --output handoff.md
-    python3 eoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2 --partial --flag-gaps
-    python3 eoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2 --upload
+    python3 amoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2
+    python3 amoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2 --output handoff.md
+    python3 amoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2 --partial --flag-gaps
+    python3 amoa_generate_replacement_handoff.py --failed-agent impl-1 --new-agent impl-2 --upload
 
 Exit codes:
     0 - Success
@@ -19,16 +19,16 @@ Exit codes:
 
 Examples:
     # Standard replacement handoff:
-    python3 eoa_generate_replacement_handoff.py \\
+    python3 amoa_generate_replacement_handoff.py \\
         --failed-agent implementer-1 --new-agent implementer-2
 
     # Partial handoff with gap markers when data is incomplete:
-    python3 eoa_generate_replacement_handoff.py \\
+    python3 amoa_generate_replacement_handoff.py \\
         --failed-agent implementer-1 --new-agent implementer-2 \\
         --partial --flag-gaps --output urgent-handoff.md
 
     # Generate and upload to GitHub issue:
-    python3 eoa_generate_replacement_handoff.py \\
+    python3 amoa_generate_replacement_handoff.py \\
         --failed-agent implementer-1 --new-agent implementer-2 --upload
 """
 

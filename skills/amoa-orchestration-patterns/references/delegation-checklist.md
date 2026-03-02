@@ -483,4 +483,4 @@ Run through this checklist for EVERY delegation:
 
 - [orchestrator-guardrails.md](./orchestrator-guardrails.md) - Role boundary details
 - [agent-selection-guide.md](./agent-selection-guide.md) - Which agent for which task
-- [TASK_DELEGATION_TEMPLATE.md](../../eoa-remote-agent-coordinator/templates/handoff/TASK_DELEGATION_TEMPLATE.md) - Delegation template
+- [TASK_DELEGATION_TEMPLATE.md](../../amoa-remote-agent-coordinator/templates/handoff/TASK_DELEGATION_TEMPLATE.md) - Delegation template

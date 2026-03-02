@@ -34,7 +34,7 @@
 | Procedure | `proc-update-tasks` |
 | Workflow Step | Step 16 |
 | Trigger | Urgency of module changes |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Command | `/prioritize-module` |
 
 ---

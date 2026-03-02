@@ -2,8 +2,8 @@
 operation: schedule-claude-tasks
 procedure: proc-create-task-plan
 workflow-instruction: Step 12 - Task Plan Creation
-parent-skill: eoa-two-phase-mode
-parent-plugin: emasoft-orchestrator-agent
+parent-skill: amoa-two-phase-mode
+parent-plugin: ai-maestro-orchestrator-agent
 version: 1.0.0
 ---
 
@@ -219,6 +219,6 @@ TaskUpdate(taskId=final_verify, addBlockedBy=[auth_tests])
 
 ## Related Operations
 
-- [op-identify-task-dependencies.md](../eoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies inform task blocking
+- [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies inform task blocking
 - [op-create-github-issues.md](op-create-github-issues.md) - GitHub issues parallel Claude tasks
 - [op-approve-plan-transition.md](op-approve-plan-transition.md) - Transition creates initial tasks

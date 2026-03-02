@@ -32,11 +32,11 @@
 
 | Label | Description | When to Use |
 |-------|-------------|-------------|
-| `assign:<agent-session-name>` | Specific agent assigned | When EOA assigns task to agent |
+| `assign:<agent-session-name>` | Specific agent assigned | When AMOA assigns task to agent |
 | `assign:implementer-1` | First implementer agent | For code implementation tasks |
 | `assign:implementer-2` | Second implementer agent | For parallel implementation |
 | `assign:code-reviewer` | Code review agent | For PR review tasks |
-| `assign:orchestrator` | Orchestrator handling | When EOA handles directly |
+| `assign:orchestrator` | Orchestrator handling | When AMOA handles directly |
 | `assign:human` | Human developer | When human intervention needed |
 | `assign:remote` | Remote agent (any) | For remote execution tasks |
 | `assign:local` | Local agent | For local execution tasks |
@@ -50,13 +50,13 @@
 
 | Agent | Authority | When to Use |
 |-------|-----------|-------------|
-| **EOA** | Primary | Normal task assignment during orchestration |
-| **ECOS** | Override | Agent failure, termination, or replacement |
-| **EIA** | Limited | Only for `assign:code-reviewer` on PRs |
-| **EAMA** | Limited | Only for `assign:human` escalations |
+| **AMOA** | Primary | Normal task assignment during orchestration |
+| **AMCOS** | Override | Agent failure, termination, or replacement |
+| **AMIA** | Limited | Only for `assign:code-reviewer` on PRs |
+| **AMAMA** | Limited | Only for `assign:human` escalations |
 
 **Conflict Resolution:**
-1. If EOA and ECOS both try to assign, ECOS wins (lifecycle takes priority)
+1. If AMOA and AMCOS both try to assign, AMCOS wins (lifecycle takes priority)
 2. If assignment conflict detected, message the other agent before changing
 3. Use AI Maestro to coordinate: `{"type": "request", "message": "Requesting assignment of #42 to implementer-2"}`
 
@@ -66,14 +66,14 @@
 
 | Label | Description | Who Sets It |
 |-------|-------------|-------------|
-| `status:backlog` | In backlog, needs triage or is deferred | Created automatically, by user, or EOA after triage |
-| `status:todo` | Ready to be worked on | EOA when assigning |
+| `status:backlog` | In backlog, needs triage or is deferred | Created automatically, by user, or AMOA after triage |
+| `status:todo` | Ready to be worked on | AMOA when assigning |
 | `status:in-progress` | Currently being worked on | Assigned agent when starting |
-| `status:blocked` | Cannot proceed (includes waiting for info, intentionally paused) | Agent when blocked, EOA or ECOS |
+| `status:blocked` | Cannot proceed (includes waiting for info, intentionally paused) | Agent when blocked, AMOA or AMCOS |
 | `status:ai-review` | Integrator reviews ALL tasks | Agent after completing work |
-| `status:human-review` | User reviews BIG tasks only | EIA after AI review passes |
-| `status:merge-release` | Ready to merge | EIA or user after review |
-| `status:done` | Completed | EIA after merge |
+| `status:human-review` | User reviews BIG tasks only | AMIA after AI review passes |
+| `status:merge-release` | Ready to merge | AMIA or user after review |
+| `status:done` | Completed | AMIA after merge |
 
 **Rules:**
 - An issue should have EXACTLY ONE `status:*` label
@@ -98,7 +98,7 @@ backlog → todo → in-progress → ai-review → human-review → merge-releas
 
 **Rules:**
 - An issue should have EXACTLY ONE `priority:*` label
-- Priority is set during triage by EOA or ECOS
+- Priority is set during triage by AMOA or AMCOS
 - Priority can be escalated by any agent when circumstances change
 
 ## Type Labels (`type:*`)
@@ -199,4 +199,4 @@ backlog → todo → in-progress → ai-review → human-review → merge-releas
 **Rules:**
 - Used primarily on PRs, not issues
 - An PR should have AT MOST ONE `review:*` label
-- Updated by EIA code-reviewer agent
+- Updated by AMIA code-reviewer agent

@@ -171,7 +171,7 @@ Please:
 {{PROGRESS_SUMMARY}}
 
 ---
-*Automated reassignment by EOA (Emasoft Orchestrator Agent)*
+*Automated reassignment by AMOA (AI Maestro Orchestrator Agent)*
 ```
 
 ### Add Comment via CLI
@@ -190,7 +190,7 @@ COMMENT_BODY="## Agent Reassignment Notice
 This task has been reassigned due to agent context loss.
 Handoff document: https://github.com/owner/repo/issues/42#issuecomment-123456
 
-*Automated reassignment by EOA*"
+*Automated reassignment by AMOA*"
 
 gh issue comment "$ISSUE_NUMBER" --body "$COMMENT_BODY"
 ```
@@ -329,7 +329,7 @@ Patch file: `uncommitted_work.patch` (attached to this issue)
 
 ```bash
 #!/bin/bash
-# eoa_reassign_kanban_tasks.sh
+# amoa_reassign_kanban_tasks.sh
 
 OLD_AGENT="$1"
 NEW_AGENT="$2"
@@ -358,7 +358,7 @@ for ISSUE in $ISSUES; do
 **Reason**: Agent replacement
 **Handoff**: $HANDOFF_URL
 
-*Automated by EOA*"
+*Automated by AMOA*"
 
   echo "  Issue #$ISSUE reassigned"
 done

@@ -40,7 +40,7 @@
 
 ## 1.0 Overview
 
-**Complete RULE 15 specification**: The orchestrator must never implement code directly. It only coordinates, delegates, and reviews. See the `eoa-orchestration-patterns` skill's `orchestrator-no-implementation.md` reference for the full specification and delegation protocol.
+**Complete RULE 15 specification**: The orchestrator must never implement code directly. It only coordinates, delegates, and reviews. See the `amoa-orchestration-patterns` skill's `orchestrator-no-implementation.md` reference for the full specification and delegation protocol.
 
 The orchestrator NEVER implements. It only coordinates, delegates, and reviews.
 

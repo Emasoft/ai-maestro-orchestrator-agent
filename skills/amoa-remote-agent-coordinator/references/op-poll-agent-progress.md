@@ -146,7 +146,7 @@ fi
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| No response | Agent hibernated/offline | Distinguish via ECOS check |
+| No response | Agent hibernated/offline | Distinguish via AMCOS check |
 | Stale progress | Agent stuck | Offer assistance or reassign |
 | Missing ETA | Agent uncertain | Request breakdown of remaining work |
 

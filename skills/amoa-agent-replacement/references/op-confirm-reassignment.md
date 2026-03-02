@@ -17,7 +17,7 @@ workflow-instruction: support
   - [Step 4: Update Orchestrator State](#step-4-update-orchestrator-state)
 - [Agent Replacement Record](#agent-replacement-record)
   - [Step 5: Remove Failed Agent from Roster](#step-5-remove-failed-agent-from-roster)
-  - [Step 6: Notify ECOS of Completion](#step-6-notify-ecos-of-completion)
+  - [Step 6: Notify AMCOS of Completion](#step-6-notify-amcos-of-completion)
   - [Step 7: Create Audit Log Entry](#step-7-create-audit-log-entry)
   - [Step 8: Resume Normal Operations](#step-8-resume-normal-operations)
   - [Step 9: Add Final GitHub Comment](#step-9-add-final-github-comment)
@@ -107,7 +107,7 @@ with open('design/state/exec-phase.md', 'r') as f:
 "
 ```
 
-### Step 6: Notify ECOS of Completion
+### Step 6: Notify AMCOS of Completion
 
 Send a completion notification using the `agent-messaging` skill:
 - **Recipient**: `ecos`
@@ -162,7 +162,7 @@ gh issue comment $PRIMARY_ISSUE --body "**Replacement Complete**
 | ACK Received | Boolean | Whether replacement agent acknowledged |
 | Questions Resolved | Boolean | Whether all questions answered |
 | State Updated | Boolean | Whether state file updated |
-| ECOS Notified | Boolean | Whether ECOS received completion notice |
+| AMCOS Notified | Boolean | Whether AMCOS received completion notice |
 | Audit Logged | Boolean | Whether audit log updated |
 
 ## Error Handling
@@ -172,7 +172,7 @@ gh issue comment $PRIMARY_ISSUE --body "**Replacement Complete**
 | No ACK received | Timeout expired | Escalate to user |
 | ACK with major questions | Agent needs more info | Provide clarification |
 | State update failed | File permission issue | Check file access |
-| ECOS notification failed | AI Maestro issue | Retry notification |
+| AMCOS notification failed | AI Maestro issue | Retry notification |
 
 ## Example
 
@@ -220,9 +220,9 @@ cat >> design/state/exec-phase.md <<EOF
 - ETA: $ETA
 EOF
 
-# 4. Notify ECOS
-echo "Notifying ECOS..."
-# Use the agent-messaging skill to notify ECOS:
+# 4. Notify AMCOS
+echo "Notifying AMCOS..."
+# Use the agent-messaging skill to notify AMCOS:
   # - Recipient: ecos
   # - Subject: "Replacement Complete"
   # - Content: replacement details
@@ -247,7 +247,7 @@ echo "Reassignment confirmation complete. Normal operations resumed."
 - [ ] Resolve any questions
 - [ ] Update orchestrator state file
 - [ ] Remove failed agent from active roster
-- [ ] Notify ECOS of successful replacement
+- [ ] Notify AMCOS of successful replacement
 - [ ] Create audit log entry
 - [ ] Add completion comment to GitHub issue
 - [ ] Clear replacement_in_progress flag

@@ -2,7 +2,7 @@
 
 ## Contents
 
-- [7.1 ECOS Communication Failures](#71-ecos-communication-failures)
+- [7.1 AMCOS Communication Failures](#71-amcos-communication-failures)
 - [7.2 Context Compilation Failures](#72-context-compilation-failures)
 - [7.3 Handoff Generation Failures](#73-handoff-generation-failures)
 - [7.4 GitHub Integration Failures](#74-github-integration-failures)
@@ -10,12 +10,12 @@
 
 ---
 
-## 7.1 ECOS Communication Failures
+## 7.1 AMCOS Communication Failures
 
 ### 7.1.1 Notification Not Received
 
 **Symptoms:**
-- ECOS sent replacement notification but orchestrator did not receive it
+- AMCOS sent replacement notification but orchestrator did not receive it
 - Agent failed but no replacement triggered
 
 **Diagnostic Steps:**
@@ -37,8 +37,8 @@ Use the `agent-messaging` skill to:
 **Manual Recovery:**
 
 Send a resend request using the `agent-messaging` skill:
-- **Recipient**: `ecos-controller`
-- **Subject**: "[EOA] Request: Resend Replacement Notification"
+- **Recipient**: `amcos-controller`
+- **Subject**: "[AMOA] Request: Resend Replacement Notification"
 - **Content**: "Did not receive replacement notification for agent implementer-1. Please resend."
 - **Type**: `request`, **Priority**: `high`
 
@@ -47,22 +47,22 @@ Send a resend request using the `agent-messaging` skill:
 ### 7.1.2 Confirmation Not Delivered
 
 **Symptoms:**
-- Orchestrator sent confirmation but ECOS did not receive it
-- ECOS keeps sending reminders
+- Orchestrator sent confirmation but AMCOS did not receive it
+- AMCOS keeps sending reminders
 
 **Diagnostic Steps:**
 
 Use the `agent-messaging` skill to:
 - List sent messages and filter for "Replacement Complete" subjects
-- Query the agent registry to verify the ECOS session exists
+- Query the agent registry to verify the AMCOS session exists
 
 **Solutions:**
 
 | Cause | Solution |
 |-------|----------|
-| Wrong ECOS session name | Use correct "ecos-controller" session |
+| Wrong AMCOS session name | Use correct "amcos-controller" session |
 | Message queue full | Wait and retry |
-| ECOS offline | Wait for ECOS to come online |
+| AMCOS offline | Wait for AMCOS to come online |
 
 ---
 
@@ -360,15 +360,15 @@ Use the `agent-messaging` skill to:
 | Cause | Solution |
 |-------|----------|
 | Session not registered | Wait for agent to register |
-| Agent crashed | Notify ECOS, request different agent |
+| Agent crashed | Notify AMCOS, request different agent |
 | Message not read | Send urgent priority message |
 | Agent offline | Wait or request different agent |
 
 **Escalation Path:**
 
 After 3 reminders, send an escalation using the `agent-messaging` skill:
-- **Recipient**: `ecos-controller`
-- **Subject**: "[EOA-ESCALATE] Replacement Agent Not Responding"
+- **Recipient**: `amcos-controller`
+- **Subject**: "[AMOA-ESCALATE] Replacement Agent Not Responding"
 - **Content**: "Replacement agent helper-agent-2 has not acknowledged handoff after 3 reminders. Please provide alternative agent."
 - **Type**: `escalation`, **Priority**: `urgent`
 - **Data**: include `failed_original_agent`, `failed_replacement_agent`

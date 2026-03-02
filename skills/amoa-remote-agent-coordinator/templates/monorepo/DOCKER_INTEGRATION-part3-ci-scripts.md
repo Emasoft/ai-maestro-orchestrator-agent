@@ -371,7 +371,7 @@ log_info "All images pushed successfully!"
 template:
   name: DOCKER_INTEGRATION
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   parent_template: MONOREPO_BASE
   requires:
     - MONOREPO_BASE

@@ -1,23 +1,23 @@
 # Multi-Project Coordination and Human Developer Assignment Templates
 
-This document provides message templates for cross-project dependency coordination between Orchestrator Agents (EOA) and for assigning tasks to human developers via GitHub issues.
+This document provides message templates for cross-project dependency coordination between Orchestrator Agents (AMOA) and for assigning tasks to human developers via GitHub issues.
 
 ---
 
 ## Contents
 
-- [1. Cross-Project Dependency Notification (EOA to EOA via ECOS)](#1-cross-project-dependency-notification-eoa-to-eoa-via-ecos)
-- [2. Cross-Project Status Request (EOA to ECOS to Other EOA)](#2-cross-project-status-request-eoa-to-ecos-to-other-eoa)
-- [3. Cross-Project Status Response (Other EOA to ECOS to EOA)](#3-cross-project-status-response-other-eoa-to-ecos-to-eoa)
-- [4. Human Developer Task Assignment (EOA to GitHub)](#4-human-developer-task-assignment-eoa-to-github)
-- [5. Human Developer Completion Report (GitHub to EOA)](#5-human-developer-completion-report-github-to-eoa)
+- [1. Cross-Project Dependency Notification (AMOA to AMOA via AMCOS)](#1-cross-project-dependency-notification-amoa-to-amoa-via-ecos)
+- [2. Cross-Project Status Request (AMOA to AMCOS to Other AMOA)](#2-cross-project-status-request-amoa-to-amcos-to-other-eoa)
+- [3. Cross-Project Status Response (Other AMOA to AMCOS to AMOA)](#3-cross-project-status-response-other-amoa-to-amcos-to-eoa)
+- [4. Human Developer Task Assignment (AMOA to GitHub)](#4-human-developer-task-assignment-amoa-to-github)
+- [5. Human Developer Completion Report (GitHub to AMOA)](#5-human-developer-completion-report-github-to-eoa)
 - [6. Cross-Project Conflict Decision Tree](#6-cross-project-conflict-decision-tree)
 
 ---
 
-## 1. Cross-Project Dependency Notification (EOA to EOA via ECOS)
+## 1. Cross-Project Dependency Notification (AMOA to AMOA via AMCOS)
 
-**When to use**: The EOA discovers that one of its tasks depends on a deliverable from another project. The EOA cannot contact the other project's EOA directly. Instead, the EOA sends the notification to ECOS, which routes it to the correct project's EOA.
+**When to use**: The AMOA discovers that one of its tasks depends on a deliverable from another project. The AMOA cannot contact the other project's AMOA directly. Instead, the AMOA sends the notification to AMCOS, which routes it to the correct project's AMOA.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -25,13 +25,13 @@ This document provides message templates for cross-project dependency coordinati
 
 ```json
 {
-  "from": "eoa-{project}-orchestrator",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-{project}-orchestrator",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[CROSS-DEP] {requesting_project} depends on {target_project}",
   "priority": "high",
   "content": {
     "type": "request",
-    "message": "Cross-project dependency detected. My project requires a deliverable from another project before a blocking task can proceed. Please route this notification to the target project's EOA.",
+    "message": "Cross-project dependency detected. My project requires a deliverable from another project before a blocking task can proceed. Please route this notification to the target project's AMOA.",
     "data": {
       "requesting_project": "{requesting_project_name}",
       "target_project": "{target_project_name}",
@@ -44,22 +44,22 @@ This document provides message templates for cross-project dependency coordinati
 }
 ```
 
-### Response Template (ECOS to Requesting EOA)
+### Response Template (AMCOS to Requesting AMOA)
 
 ```json
 {
-  "from": "ecos-chief-of-staff-main-agent",
-  "to": "eoa-{project}-orchestrator",
+  "from": "amcos-chief-of-staff-main-agent",
+  "to": "amoa-{project}-orchestrator",
   "subject": "RE: [CROSS-DEP] {requesting_project} depends on {target_project}",
   "priority": "high",
   "content": {
     "type": "response",
-    "message": "Dependency notification routed to target project's EOA. Current status of the target deliverable is included below.",
+    "message": "Dependency notification routed to target project's AMOA. Current status of the target deliverable is included below.",
     "data": {
-      "routed_to": "eoa-{target_project}-orchestrator",
+      "routed_to": "amoa-{target_project}-orchestrator",
       "target_deliverable_status": "not_started|in_progress|blocked|completed",
       "estimated_delivery": "YYYY-MM-DD",
-      "notes": "Any relevant context from the target EOA"
+      "notes": "Any relevant context from the target AMOA"
     }
   }
 }
@@ -75,16 +75,16 @@ Cross-project dependency detected
 ├─ Is there a blocking task ID (GitHub issue)?
 │   ├─ Yes ─→ Include blocking_task_id in the message
 │   └─ No ─→ Create a GitHub issue for the blocked task first
-└─ Send notification to ECOS
-    ├─ ECOS acknowledges ─→ Wait for routed response
+└─ Send notification to AMCOS
+    ├─ AMCOS acknowledges ─→ Wait for routed response
     └─ No acknowledgment within 30 minutes ─→ Resend with priority "urgent"
 ```
 
 ---
 
-## 2. Cross-Project Status Request (EOA to ECOS to Other EOA)
+## 2. Cross-Project Status Request (AMOA to AMCOS to Other AMOA)
 
-**When to use**: The EOA needs to know the current progress, blockers, estimated completion time, or deliverable readiness of another project. The request goes through ECOS, which queries the other project's EOA on behalf of the requesting EOA.
+**When to use**: The AMOA needs to know the current progress, blockers, estimated completion time, or deliverable readiness of another project. The request goes through AMCOS, which queries the other project's AMOA on behalf of the requesting AMOA.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -92,13 +92,13 @@ Cross-project dependency detected
 
 ```json
 {
-  "from": "eoa-{project}-orchestrator",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-{project}-orchestrator",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[STATUS-REQ] Query {target_project} status",
   "priority": "normal",
   "content": {
     "type": "request",
-    "message": "Requesting status information from another project. Please forward this query to the target project's EOA and relay their response back.",
+    "message": "Requesting status information from another project. Please forward this query to the target project's AMOA and relay their response back.",
     "data": {
       "target_project": "{target_project_name}",
       "query_type": "progress|blocker|eta|deliverable",
@@ -108,22 +108,22 @@ Cross-project dependency detected
 }
 ```
 
-### Response Template (ECOS Relays Target EOA Response)
+### Response Template (AMCOS Relays Target AMOA Response)
 
 ```json
 {
-  "from": "ecos-chief-of-staff-main-agent",
-  "to": "eoa-{project}-orchestrator",
+  "from": "amcos-chief-of-staff-main-agent",
+  "to": "amoa-{project}-orchestrator",
   "subject": "RE: [STATUS-REQ] Query {target_project} status",
   "priority": "normal",
   "content": {
     "type": "response",
-    "message": "Status response from {target_project}'s EOA relayed below.",
+    "message": "Status response from {target_project}'s AMOA relayed below.",
     "data": {
       "target_project": "{target_project_name}",
       "query_type": "progress|blocker|eta|deliverable",
-      "response_summary": "Summary of the target EOA's response",
-      "raw_response": "Verbatim response from the target EOA"
+      "response_summary": "Summary of the target AMOA's response",
+      "raw_response": "Verbatim response from the target AMOA"
     }
   }
 }
@@ -139,30 +139,30 @@ Need information about another project
 │   ├─ eta ─→ Ask for estimated completion date of a specific deliverable
 │   └─ deliverable ─→ Ask if a specific output artifact is ready to consume
 ├─ Include context explaining why this information is needed
-└─ Send to ECOS
+└─ Send to AMCOS
     ├─ Response received ─→ Process and plan accordingly
     └─ No response within 1 hour ─→ Resend with priority "high"
 ```
 
 ---
 
-## 3. Cross-Project Status Response (Other EOA to ECOS to EOA)
+## 3. Cross-Project Status Response (Other AMOA to AMCOS to AMOA)
 
-**When to use**: The EOA receives a status query from ECOS (forwarded from another project's EOA) and must respond with the requested information. The response goes back through ECOS, which relays it to the requesting EOA.
+**When to use**: The AMOA receives a status query from AMCOS (forwarded from another project's AMOA) and must respond with the requested information. The response goes back through AMCOS, which relays it to the requesting AMOA.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-### Send Template (Target EOA Responds to ECOS)
+### Send Template (Target AMOA Responds to AMCOS)
 
 ```json
 {
-  "from": "eoa-{target_project}-orchestrator",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-{target_project}-orchestrator",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "RE: [STATUS-REQ] Response for {requesting_project}",
   "priority": "normal",
   "content": {
     "type": "response",
-    "message": "Responding to cross-project status query from {requesting_project}. Please relay this response to the requesting EOA.",
+    "message": "Responding to cross-project status query from {requesting_project}. Please relay this response to the requesting AMOA.",
     "data": {
       "requesting_project": "{requesting_project_name}",
       "query_type": "progress|blocker|eta|deliverable",
@@ -179,7 +179,7 @@ Need information about another project
 ### Decision Tree
 
 ```
-Received a cross-project status query from ECOS
+Received a cross-project status query from AMCOS
 ├─ Identify the query type from the incoming message
 │   ├─ progress ─→ Report current phase and completion percentage
 │   ├─ blocker ─→ List all active blockers and their severity
@@ -188,14 +188,14 @@ Received a cross-project status query from ECOS
 ├─ Gather accurate information from local task tracking
 │   ├─ Information available ─→ Respond with full data fields
 │   └─ Information incomplete ─→ Respond with what is known, note unknowns
-└─ Send response to ECOS for relay
+└─ Send response to AMCOS for relay
 ```
 
 ---
 
-## 4. Human Developer Task Assignment (EOA to GitHub)
+## 4. Human Developer Task Assignment (AMOA to GitHub)
 
-**When to use**: The EOA determines that a task requires a human developer (not an AI agent). The EOA creates a GitHub issue with a specific format that human developers can pick up, including acceptance criteria, deadline, and the label `assigned-to-human` to distinguish it from AI agent tasks.
+**When to use**: The AMOA determines that a task requires a human developer (not an AI agent). The AMOA creates a GitHub issue with a specific format that human developers can pick up, including acceptance criteria, deadline, and the label `assigned-to-human` to distinguish it from AI agent tasks.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -223,7 +223,7 @@ gh issue create \
 
 ## Context
 
-- Assigned by: EOA ({project_name} Orchestrator)
+- Assigned by: AMOA ({project_name} Orchestrator)
 - Related issues: {related_issue_numbers}
 - Priority: {priority}
 
@@ -236,19 +236,19 @@ gh issue create \
 5. Open a Pull Request referencing this issue (use `Closes #{issue_number}`)
 6. Request review if required
 
-**Note**: When the PR is merged and this issue is closed, the EOA will automatically detect the completion and integrate the deliverable.
+**Note**: When the PR is merged and this issue is closed, the AMOA will automatically detect the completion and integrate the deliverable.
 ISSUE_BODY
 )" \
   --assignee "{github_username}" \
   --label "assigned-to-human,{priority_label},{component_label}"
 ```
 
-### Send Template (EOA Notifies ECOS of Human Assignment)
+### Send Template (AMOA Notifies AMCOS of Human Assignment)
 
 ```json
 {
-  "from": "eoa-{project}-orchestrator",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-{project}-orchestrator",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[HUMAN-ASSIGN] Task assigned to human developer: {github_username}",
   "priority": "normal",
   "content": {
@@ -275,9 +275,9 @@ Task requires human developer (not AI agent)
 │   └─ No ─→ Create new issue using the template above
 ├─ Assign to the correct human developer
 │   ├─ Developer known ─→ Use --assignee with their GitHub username
-│   └─ Developer not known ─→ Add label "help-wanted", escalate to ECOS
+│   └─ Developer not known ─→ Add label "help-wanted", escalate to AMCOS
 ├─ Add the "assigned-to-human" label to distinguish from AI tasks
-├─ Notify ECOS of the human assignment
+├─ Notify AMCOS of the human assignment
 └─ Set up monitoring for issue close events
     ├─ Poll periodically: gh issue view {number} --json state
     └─ When state changes to "closed" ─→ Proceed to Section 5
@@ -285,9 +285,9 @@ Task requires human developer (not AI agent)
 
 ---
 
-## 5. Human Developer Completion Report (GitHub to EOA)
+## 5. Human Developer Completion Report (GitHub to AMOA)
 
-**When to use**: The EOA detects that a GitHub issue assigned to a human developer has been closed. The EOA retrieves the completion details including any linked Pull Request URL and completion notes from the issue comments. This triggers the integration of the human developer's deliverable into the project workflow.
+**When to use**: The AMOA detects that a GitHub issue assigned to a human developer has been closed. The AMOA retrieves the completion details including any linked Pull Request URL and completion notes from the issue comments. This triggers the integration of the human developer's deliverable into the project workflow.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -308,12 +308,12 @@ When the issue is closed, extract the following fields:
 | `pr_url` | `linkedPullRequests[0].url` | URL of the linked Pull Request, if any |
 | `completion_notes` | Last comment body on the issue | Any notes the developer left upon closing |
 
-### Send Template (EOA Notifies ECOS of Human Completion)
+### Send Template (AMOA Notifies AMCOS of Human Completion)
 
 ```json
 {
-  "from": "eoa-{project}-orchestrator",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-{project}-orchestrator",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[HUMAN-DONE] Human developer completed GH-{issue_number}",
   "priority": "normal",
   "content": {
@@ -341,7 +341,7 @@ Human-assigned GitHub issue close event detected
 │             ├─ Commits found ─→ Pull latest code, run integration tests
 │             └─ No commits found ─→ Reopen issue, request deliverable evidence
 ├─ Were all acceptance criteria met?
-│   ├─ Yes ─→ Mark task complete, notify ECOS, unblock dependent tasks
+│   ├─ Yes ─→ Mark task complete, notify AMCOS, unblock dependent tasks
 │   └─ No ─→ Reopen issue with comment listing unmet criteria
 └─ Update local task tracking with completion timestamp
 ```
@@ -350,7 +350,7 @@ Human-assigned GitHub issue close event detected
 
 ## 6. Cross-Project Conflict Decision Tree
 
-**When to use**: The EOA detects that one of its tasks depends on a deliverable from another project. Use this decision tree to determine the correct course of action based on whether the dependency is critical-path (blocking progress) or nice-to-have (improves quality but is not strictly required).
+**When to use**: The AMOA detects that one of its tasks depends on a deliverable from another project. Use this decision tree to determine the correct course of action based on whether the dependency is critical-path (blocking progress) or nice-to-have (improves quality but is not strictly required).
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -382,7 +382,7 @@ Cross-project dependency detected
 │   │   │       │   │       Action: Set reminder to verify when dependency arrives
 │   │   │       │   │
 │   │   │       │   └─ NO (assumptions too risky or impossible)
-│   │   │       │       └─ Escalate to ECOS for cross-project priority adjustment
+│   │   │       │       └─ Escalate to AMCOS for cross-project priority adjustment
 │   │   │       │           Action: Send Section 1 template with priority "urgent"
 │   │   │       │           Action: Include impact analysis in the message
 │   │   │       │           Action: Set local task status to "blocked-escalated"

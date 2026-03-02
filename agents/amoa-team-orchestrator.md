@@ -1,5 +1,5 @@
 ---
-name: eoa-team-orchestrator
+name: amoa-team-orchestrator
 model: opus
 description: Coordinates multiple developer agents working in parallel on features using GitHub Projects and AI Maestro messaging for task management and team coordination. Requires AI Maestro installed.
 type: planner
@@ -12,9 +12,9 @@ triggers:
   - Release preparation with validation checkpoints
   - Cross-team coordination requiring formal tracking
 skills:
-  - eoa-remote-agent-coordinator
-  - eoa-messaging-templates
-  - eoa-orchestration-patterns
+  - amoa-remote-agent-coordinator
+  - amoa-messaging-templates
+  - amoa-orchestration-patterns
 memory_requirements: high
 ---
 
@@ -38,10 +38,10 @@ The Team Orchestrator Agent coordinates multi-developer workflows using GitHub P
 
 **CRITICAL**: Before orchestrating any team, read:
 
-1. **[eoa-remote-agent-coordinator SKILL.md](../skills/eoa-remote-agent-coordinator/SKILL.md)** - Complete orchestration workflow including:
+1. **[amoa-remote-agent-coordinator SKILL.md](../skills/amoa-remote-agent-coordinator/SKILL.md)** - Complete orchestration workflow including:
    - Agent onboarding and instruction verification
    - Progress monitoring through reports
-   - ECOS replacement protocol when agents fail
+   - AMCOS replacement protocol when agents fail
    - Message templates and communication patterns
    - GitHub Projects and kanban task management
 
@@ -78,13 +78,13 @@ REMOTE AGENTS (via AI Maestro)
 | 7 | Review reports | Verification decisions |
 | 8 | Integration decision | Merge authorization |
 
-> For detailed step-by-step orchestration workflow, see [eoa-remote-agent-coordinator/references/agent-onboarding.md](../skills/eoa-remote-agent-coordinator/references/agent-onboarding.md).
+> For detailed step-by-step orchestration workflow, see [amoa-remote-agent-coordinator/references/agent-onboarding.md](../skills/amoa-remote-agent-coordinator/references/agent-onboarding.md).
 
-> For ECOS replacement protocol when agents fail, see [eoa-remote-agent-coordinator/references/ecos-replacement-protocol.md](../skills/eoa-remote-agent-coordinator/references/ecos-replacement-protocol.md).
+> For AMCOS replacement protocol when agents fail, see [amoa-remote-agent-coordinator/references/amcos-replacement-protocol.md](../skills/amoa-remote-agent-coordinator/references/amcos-replacement-protocol.md).
 
-> For message templates and communication patterns, see [eoa-remote-agent-coordinator/references/messaging-protocol.md](../skills/eoa-remote-agent-coordinator/references/messaging-protocol.md) and [eoa-remote-agent-coordinator/references/task-instruction-format.md](../skills/eoa-remote-agent-coordinator/references/task-instruction-format.md).
+> For message templates and communication patterns, see [amoa-remote-agent-coordinator/references/messaging-protocol.md](../skills/amoa-remote-agent-coordinator/references/messaging-protocol.md) and [amoa-remote-agent-coordinator/references/task-instruction-format.md](../skills/amoa-remote-agent-coordinator/references/task-instruction-format.md).
 
-> For orchestrator implementation boundaries and guardrails, see [eoa-orchestration-patterns/references/orchestrator-no-implementation.md](../skills/eoa-orchestration-patterns/references/orchestrator-no-implementation.md) and [eoa-orchestration-patterns/references/orchestrator-guardrails.md](../skills/eoa-orchestration-patterns/references/orchestrator-guardrails.md).
+> For orchestrator implementation boundaries and guardrails, see [amoa-orchestration-patterns/references/orchestrator-no-implementation.md](../skills/amoa-orchestration-patterns/references/orchestrator-no-implementation.md) and [amoa-orchestration-patterns/references/orchestrator-guardrails.md](../skills/amoa-orchestration-patterns/references/orchestrator-guardrails.md).
 
 ## When to Use / When NOT to Use
 

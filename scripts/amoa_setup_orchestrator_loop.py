@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-eoa_setup_orchestrator_loop.py - Initialize orchestrator loop state file.
+amoa_setup_orchestrator_loop.py - Initialize orchestrator loop state file.
 
 Creates the state file that activates the Stop hook for continuous task-driven
 development loops. Monitors multiple task sources (Claude Tasks, GitHub Projects, task files).
@@ -9,20 +9,20 @@ NO external dependencies - Python 3.8+ stdlib only.
 
 Usage:
     # Basic usage with default settings
-    python3 eoa_setup_orchestrator_loop.py Complete all pending tasks
+    python3 amoa_setup_orchestrator_loop.py Complete all pending tasks
 
     # With custom options
-    python3 eoa_setup_orchestrator_loop.py --max-iterations 50 --task-file TODO.md
+    python3 amoa_setup_orchestrator_loop.py --max-iterations 50 --task-file TODO.md
 
     # GitHub-only mode
-    python3 eoa_setup_orchestrator_loop.py --check-tasks false --github-project 123
+    python3 amoa_setup_orchestrator_loop.py --check-tasks false --github-project 123
 
     # With completion promise
-    python3 eoa_setup_orchestrator_loop.py --completion-promise "SPRINT COMPLETE"
+    python3 amoa_setup_orchestrator_loop.py --completion-promise "SPRINT COMPLETE"
 
 Examples:
     # Start loop monitoring all sources
-    python3 eoa_setup_orchestrator_loop.py Review all open PRs
+    python3 amoa_setup_orchestrator_loop.py Review all open PRs
 
     # Cancel active loop
     rm .claude/orchestrator-loop.local.md

@@ -87,7 +87,7 @@ def get_orchestration_status_via_script() -> dict[str, Any] | None:
     """Get accurate orchestration status by calling the dedicated check script.
 
     GAP 3 FIX: The parse_frontmatter() function cannot parse nested YAML structures.
-    This function calls eoa_check_orchestration_phase.py which has full YAML parsing
+    This function calls amoa_check_orchestration_phase.py which has full YAML parsing
     via PyYAML to get accurate module counts.
 
     Returns:
@@ -101,7 +101,7 @@ def get_orchestration_status_via_script() -> dict[str, Any] | None:
     """
     # Determine script path relative to this module's location
     script_dir = Path(__file__).parent.parent
-    check_script = script_dir / "eoa_check_orchestration_phase.py"
+    check_script = script_dir / "amoa_check_orchestration_phase.py"
 
     if not check_script.exists():
         warn(f"Orchestration check script not found: {check_script}")

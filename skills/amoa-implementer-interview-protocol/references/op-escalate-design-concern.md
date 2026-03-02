@@ -28,14 +28,14 @@
 | Procedure | `proc-clarify-tasks` |
 | Workflow Step | Step 14 |
 | Trigger | Implementer raises design concern in pre-task interview |
-| Actor | Orchestrator (EOA) |
-| Target | Architect (EAA) |
+| Actor | Orchestrator (AMOA) |
+| Target | Architect (AMAA) |
 
 ---
 
 ## Purpose
 
-Escalate design-related concerns from the implementer to the Architect agent (EAA) for resolution. Design decisions are outside the orchestrator's authority and must be resolved before implementation can proceed.
+Escalate design-related concerns from the implementer to the Architect agent (AMAA) for resolution. Design decisions are outside the orchestrator's authority and must be resolved before implementation can proceed.
 
 ---
 
@@ -44,7 +44,7 @@ Escalate design-related concerns from the implementer to the Architect agent (EA
 - Pre-task interview completed
 - Implementer identified a design concern
 - Concern categorized as design-related (not requirements or capability)
-- Architect agent (EAA) is available
+- Architect agent (AMAA) is available
 
 ---
 
@@ -139,7 +139,7 @@ Please respond with your decision and rationale.
 
 | Error | Cause | Recovery |
 |-------|-------|----------|
-| Architect unavailable | Agent not registered | Escalate to EAMA for human architect involvement |
+| Architect unavailable | Agent not registered | Escalate to AMAMA for human architect involvement |
 | No response in 24h | Architect backlog | Follow up with reminder |
 | Design decision unclear | Ambiguous response | Request clarification from Architect |
 

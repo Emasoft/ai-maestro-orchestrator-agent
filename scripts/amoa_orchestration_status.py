@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EOA Orchestration Status -- Display Orchestration Phase Progress
+AMOA Orchestration Status -- Display Orchestration Phase Progress
 
 Shows the current orchestration phase progress including:
   - Current phase (plan / orchestration / unknown)
@@ -9,19 +9,19 @@ Shows the current orchestration phase progress including:
   - Verification status (loops remaining)
   - Polling schedule information
 
-This is DIFFERENT from eoa_check_orchestrator_status.py which shows the
+This is DIFFERENT from amoa_check_orchestrator_status.py which shows the
 orchestrator LOOP status (iteration count, task sources). This script shows
 the PHASE status (modules, agents, assignments, verification).
 
 NO external dependencies -- Python 3.8+ stdlib only.
 
 Usage:
-    python3 eoa_orchestration_status.py
-    python3 eoa_orchestration_status.py --project-root /path/to/project
-    python3 eoa_orchestration_status.py --verbose
-    python3 eoa_orchestration_status.py --modules-only
-    python3 eoa_orchestration_status.py --agents-only
-    python3 eoa_orchestration_status.py --format json
+    python3 amoa_orchestration_status.py
+    python3 amoa_orchestration_status.py --project-root /path/to/project
+    python3 amoa_orchestration_status.py --verbose
+    python3 amoa_orchestration_status.py --modules-only
+    python3 amoa_orchestration_status.py --agents-only
+    python3 amoa_orchestration_status.py --format json
 
 Exit codes:
     0 - Success (status displayed)
@@ -29,19 +29,19 @@ Exit codes:
 
 Examples:
     # Show full status in human-readable text:
-    python3 eoa_orchestration_status.py
+    python3 amoa_orchestration_status.py
 
     # Show only module statuses:
-    python3 eoa_orchestration_status.py --modules-only
+    python3 amoa_orchestration_status.py --modules-only
 
     # Show only agent assignments:
-    python3 eoa_orchestration_status.py --agents-only
+    python3 amoa_orchestration_status.py --agents-only
 
     # Output as JSON for programmatic use:
-    python3 eoa_orchestration_status.py --format json
+    python3 amoa_orchestration_status.py --format json
 
     # Verbose output with extra details:
-    python3 eoa_orchestration_status.py --verbose
+    python3 amoa_orchestration_status.py --verbose
 """
 
 import argparse
@@ -51,7 +51,7 @@ from pathlib import Path
 
 
 # State file location relative to the project root
-STATE_FILE_REL = ".emasoft/orchestration-state.json"
+STATE_FILE_REL = ".ai-maestro/orchestration-state.json"
 
 # Module statuses that count as "complete"
 COMPLETE_STATUSES = {"verified", "complete", "done"}
@@ -400,7 +400,7 @@ def main() -> int:
             print()
             print("Expected state file: {}".format(project_root / STATE_FILE_REL))
             print()
-            print("To start orchestration, use: /eoa-start-orchestration")
+            print("To start orchestration, use: /amoa-start-orchestration")
             print("=" * 60)
         return 0
 

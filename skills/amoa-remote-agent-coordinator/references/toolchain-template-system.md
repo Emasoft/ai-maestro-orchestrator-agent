@@ -43,7 +43,7 @@
 
 ### 1.1 Purpose
 
-The Toolchain Template System provides pre-configured, customizable templates for rapid project setup, agent coordination, and consistent reporting across the EOA ecosystem. Instead of writing configurations from scratch, orchestrators use templates to generate task instructions, development environments, and integration points.
+The Toolchain Template System provides pre-configured, customizable templates for rapid project setup, agent coordination, and consistent reporting across the AMOA ecosystem. Instead of writing configurations from scratch, orchestrators use templates to generate task instructions, development environments, and integration points.
 
 ### 1.2 Key Benefits
 

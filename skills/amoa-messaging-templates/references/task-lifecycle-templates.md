@@ -6,25 +6,25 @@ This document provides the AI Maestro message templates for task lifecycle opera
 
 ## Table of Contents
 
-- [1. Task Cancellation (EOA to Agent)](#1-task-cancellation-eoa-to-agent)
-- [2. Task Pause (EOA to Agent)](#2-task-pause-eoa-to-agent)
-- [3. Task Resume (EOA to Agent)](#3-task-resume-eoa-to-agent)
-- [4. Agent Stop Work Notification (EOA to Agent)](#4-agent-stop-work-notification-eoa-to-agent)
-- [5. Broadcast Message (EOA to All Active Agents)](#5-broadcast-message-eoa-to-all-active-agents)
+- [1. Task Cancellation (AMOA to Agent)](#1-task-cancellation-amoa-to-agent)
+- [2. Task Pause (AMOA to Agent)](#2-task-pause-amoa-to-agent)
+- [3. Task Resume (AMOA to Agent)](#3-task-resume-amoa-to-agent)
+- [4. Agent Stop Work Notification (AMOA to Agent)](#4-agent-stop-work-notification-amoa-to-agent)
+- [5. Broadcast Message (AMOA to All Active Agents)](#5-broadcast-message-amoa-to-all-active-agents)
 - [6. Cancel vs Pause vs Reassign Decision Tree](#6-cancel-vs-pause-vs-reassign-decision-tree)
 - [7. Broadcast vs Targeted Decision Tree](#7-broadcast-vs-targeted-decision-tree)
 
 ---
 
-## 1. Task Cancellation (EOA to Agent)
+## 1. Task Cancellation (AMOA to Agent)
 
-**When to use:** The Orchestrator (EOA) needs to permanently cancel a task that an agent is currently working on. Use this when the task is no longer needed at all. Common reasons include: requirements have changed and the task is obsolete, another task supersedes this one, or the entire project has been cancelled.
+**When to use:** The Orchestrator (AMOA) needs to permanently cancel a task that an agent is currently working on. Use this when the task is no longer needed at all. Common reasons include: requirements have changed and the task is obsolete, another task supersedes this one, or the entire project has been cancelled.
 
 Unlike pause (which implies the task will resume later), cancellation means the task will NOT be resumed. The agent should wrap up, report what was done, and consider the task permanently closed.
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
-### EOA Sends: Cancel Task
+### AMOA Sends: Cancel Task
 
 ```json
 {
@@ -106,15 +106,15 @@ Task needs stopping
 
 ---
 
-## 2. Task Pause (EOA to Agent)
+## 2. Task Pause (AMOA to Agent)
 
-**When to use:** The Orchestrator (EOA) needs to temporarily suspend work on a task. The task will be resumed later. Use this when there is a temporary blocker such as: a dependency is not yet available, priorities have shifted and another task must be done first, or resources (such as API rate limits or compute) are temporarily constrained.
+**When to use:** The Orchestrator (AMOA) needs to temporarily suspend work on a task. The task will be resumed later. Use this when there is a temporary blocker such as: a dependency is not yet available, priorities have shifted and another task must be done first, or resources (such as API rate limits or compute) are temporarily constrained.
 
 Unlike cancellation, a paused task is expected to resume. The agent should save its current state so that work can continue later without starting over.
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
-### EOA Sends: Pause Task
+### AMOA Sends: Pause Task
 
 ```json
 {
@@ -203,13 +203,13 @@ Task work needs to be interrupted temporarily
 
 ---
 
-## 3. Task Resume (EOA to Agent)
+## 3. Task Resume (AMOA to Agent)
 
-**When to use:** The Orchestrator (EOA) is unpausing a previously paused task. The blocker that caused the pause has been resolved and the agent should continue from where it left off. This message includes any context that may have changed during the pause period, so the agent can adjust before resuming.
+**When to use:** The Orchestrator (AMOA) is unpausing a previously paused task. The blocker that caused the pause has been resolved and the agent should continue from where it left off. This message includes any context that may have changed during the pause period, so the agent can adjust before resuming.
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
-### EOA Sends: Resume Task
+### AMOA Sends: Resume Task
 
 ```json
 {
@@ -309,20 +309,20 @@ Resume message received by agent
 │  └─ NO: Checkpoint is missing, corrupted, or the session was restarted
 │     │
 │     └─ SEND "Resume Failed" with failure_reason
-│        └─ EOA must decide: reassign task from scratch or provide new handoff
+│        └─ AMOA must decide: reassign task from scratch or provide new handoff
 ```
 
 ---
 
-## 4. Agent Stop Work Notification (EOA to Agent)
+## 4. Agent Stop Work Notification (AMOA to Agent)
 
-**When to use:** The Orchestrator (EOA) needs an agent to stop all work immediately or gracefully. This is distinct from cancellation in two ways: (1) stop work is more urgent and may not require a detailed work summary, and (2) stop work may include a handoff to another agent.
+**When to use:** The Orchestrator (AMOA) needs an agent to stop all work immediately or gracefully. This is distinct from cancellation in two ways: (1) stop work is more urgent and may not require a detailed work summary, and (2) stop work may include a handoff to another agent.
 
 Use this for situations such as: a critical bug has been discovered and all development must halt, the agent is working on the wrong branch or repository, or the agent must hand off work to a replacement agent immediately.
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
-### EOA Sends: Stop Work
+### AMOA Sends: Stop Work
 
 ```json
 {
@@ -384,7 +384,7 @@ Use this for situations such as: a critical bug has been discovered and all deve
 ### Decision Tree: Stop Work Urgency
 
 ```
-EOA determines an agent must stop work
+AMOA determines an agent must stop work
 │
 ├─ Is there imminent risk of damage (wrong branch, wrong repo, critical bug)?
 │  │
@@ -412,17 +412,17 @@ EOA determines an agent must stop work
 
 ---
 
-## 5. Broadcast Message (EOA to All Active Agents)
+## 5. Broadcast Message (AMOA to All Active Agents)
 
-**When to use:** The Orchestrator (EOA) needs to send the same information to all active agents simultaneously. Use this for announcements that affect multiple agents, such as: a repository-wide change (branch rename, dependency update), a new policy or workflow rule, a project milestone announcement, or an emergency notification.
+**When to use:** The Orchestrator (AMOA) needs to send the same information to all active agents simultaneously. Use this for announcements that affect multiple agents, such as: a repository-wide change (branch rename, dependency update), a new policy or workflow rule, a project milestone announcement, or an emergency notification.
 
 Each broadcast message has a unique `broadcast_id` so that individual agent acknowledgments can be tracked.
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content. Send one message per agent, but include the same `broadcast_id` in each so responses can be correlated.
 
-### EOA Sends: Broadcast
+### AMOA Sends: Broadcast
 
-For each active agent, EOA sends the following message (varying only the `to` field):
+For each active agent, AMOA sends the following message (varying only the `to` field):
 
 ```json
 {
@@ -476,7 +476,7 @@ Each agent sends its own acknowledgment:
 ### Decision Tree: Broadcast Construction
 
 ```
-EOA has information to share with agents
+AMOA has information to share with agents
 │
 ├─ Does the information affect ALL active agents?
 │  │

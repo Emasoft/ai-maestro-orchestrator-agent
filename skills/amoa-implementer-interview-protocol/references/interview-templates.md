@@ -81,9 +81,9 @@ Reply with evidence for each item.
 |----------|--------|
 | Clear understanding, no concerns | Send PROCEED |
 | Minor clarification needed | Clarify and send PROCEED |
-| Design concerns | Escalate to Architect (EAA) |
+| Design concerns | Escalate to Architect (AMAA) |
 | Requirement concerns (mutable) | Discuss with Architect |
-| Requirement concerns (immutable) | Escalate to Manager (EAMA) → User |
+| Requirement concerns (immutable) | Escalate to Manager (AMAMA) → User |
 | Capability issues | Consider reassignment or skill provision |
 | Blockers identified | Resolve blockers first |
 
@@ -123,9 +123,9 @@ Pre-task interview responses received from agent
 │   │       ├─ All PASS (or PASS + WARN) → Send Proceed Approval → Agent begins work
 │   │       ├─ 1 FAIL → Send REVISE with specific correction needed
 │   │       │           → Agent resubmits → Re-evaluate (max 3 REVISE cycles)
-│   │       └─ 2+ FAIL → Consider reassignment → Escalate to ECOS if needed
+│   │       └─ 2+ FAIL → Consider reassignment → Escalate to AMCOS if needed
 │   └─ No (missing answers) → Send REVISE requesting all missing answers
-│       → If agent fails to answer after 2 attempts → Escalate to ECOS
+│       → If agent fails to answer after 2 attempts → Escalate to AMCOS
 ```
 
 ### Post-Task Interview Evaluation Decision Tree
@@ -164,9 +164,9 @@ REVISE sent to agent (interview response was inadequate)
 │   │               → Explicitly state: "This is your second revision. One more attempt remains."
 │   │               → Wait for resubmission → Re-evaluate
 │   └─ 3rd REVISE (final) → Agent has failed 3 times
-│       ├─ Is failure due to misunderstanding? → Escalate to ECOS: request different agent
-│       ├─ Is failure due to task complexity? → Escalate to ECOS: request task simplification
-│       └─ Is failure due to agent capability? → Escalate to ECOS: request specialized agent
+│       ├─ Is failure due to misunderstanding? → Escalate to AMCOS: request different agent
+│       ├─ Is failure due to task complexity? → Escalate to AMCOS: request task simplification
+│       └─ Is failure due to agent capability? → Escalate to AMCOS: request specialized agent
 │
 │   In all escalation cases:
 │   → Include full interview history (all attempts + all REVISE feedback)

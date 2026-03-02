@@ -1,5 +1,5 @@
 ---
-name: eoa-module-management-commands
+name: amoa-module-management-commands
 description: "Trigger with module management tasks. Use when managing modules during Orchestration Phase (add, modify, remove, prioritize, reassign). Every module maps 1:1 to GitHub Issue."
 license: Apache-2.0
 compatibility: Cross-platform compatible. Requires Python 3.8+ and PyYAML for scripts. Requires gh CLI for GitHub Issue operations. Works with AI Maestro messaging for agent notifications. Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 1.0.0
 user-invocable: false
 context: fork
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Steps 11, 16"
 procedure: "proc-create-task-docs, proc-update-tasks"
 ---
@@ -24,7 +24,7 @@ This skill teaches orchestrators how to dynamically manage modules during the Or
 - Orchestration Phase active (Plan Phase completed and approved)
 - GitHub CLI (gh) authenticated
 - AI Maestro running for agent notifications
-- State file `design/state/exec-phase.md` exists Modules are the atomic units of work in EOA orchestration. Each module represents one feature, component, or deliverable that an agent will implement.
+- State file `design/state/exec-phase.md` exists Modules are the atomic units of work in AMOA orchestration. Each module represents one feature, component, or deliverable that an agent will implement.
 
 **CRITICAL RULE**: Every module is tied 1:1 to a GitHub Issue. When you add a module, an issue is created. When you remove a module, the issue is closed. When you modify a module, the issue is updated. This linkage ensures traceability and transparency.
 
@@ -134,7 +134,7 @@ This skill teaches orchestrators how to dynamically manage modules during the Or
 
 ## The Module-Issue Relationship
 
-Every module in EOA orchestration has a corresponding GitHub Issue. This relationship is fundamental and cannot be bypassed.
+Every module in AMOA orchestration has a corresponding GitHub Issue. This relationship is fundamental and cannot be bypassed.
 
 ### Why Modules Map to Issues
 

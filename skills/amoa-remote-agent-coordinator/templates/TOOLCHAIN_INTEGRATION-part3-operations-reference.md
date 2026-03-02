@@ -163,7 +163,7 @@ rust:1.75:linux,macos:2026-01-05
 
 **Cache Storage**:
 ```
-/tmp/eoa-toolchain-cache/{CACHE_KEY}/TOOLCHAIN.md
+/tmp/amoa-toolchain-cache/{CACHE_KEY}/TOOLCHAIN.md
 ```
 
 **Orchestrator Logic**:
@@ -264,7 +264,7 @@ bash setup.sh
 | Base template | `skills/remote-agent-coordinator/templates/toolchain/BASE_TOOLCHAIN.md` |
 | Language mappings | `skills/remote-agent-coordinator/templates/toolchain/languages/{LANGUAGE}.json` |
 | Compiled toolchains | Agent workspace (ephemeral) |
-| Toolchain cache | `/tmp/eoa-toolchain-cache/` |
+| Toolchain cache | `/tmp/amoa-toolchain-cache/` |
 
 ---
 
@@ -280,4 +280,4 @@ bash setup.sh
 
 ---
 
-**REMEMBER**: Toolchains are the bridge between EOA orchestrator's language-agnostic workflow and remote agents' language-specific execution. A well-compiled toolchain eliminates ambiguity and ensures consistent development environments across all agents.
+**REMEMBER**: Toolchains are the bridge between AMOA orchestrator's language-agnostic workflow and remote agents' language-specific execution. A well-compiled toolchain eliminates ambiguity and ensures consistent development environments across all agents.

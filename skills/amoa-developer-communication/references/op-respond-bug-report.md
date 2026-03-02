@@ -28,7 +28,7 @@
 | Procedure | `proc-handle-feedback` |
 | Workflow Step | Step 15 |
 | Trigger | Bug report received via GitHub Issue |
-| Actor | Orchestrator (EOA) or any assigned agent |
+| Actor | Orchestrator (AMOA) or any assigned agent |
 | Target | Bug reporter (human or external) |
 
 ---

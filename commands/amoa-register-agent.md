@@ -1,8 +1,8 @@
 ---
-name: eoa-register-agent
+name: amoa-register-agent
 description: "Register a remote agent (AI or human) for module assignment"
 argument-hint: "<TYPE> <AGENT_ID> [--session NAME]"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_register_agent.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_register_agent.py:*)"]
 ---
 
 # Register Agent Command
@@ -12,7 +12,7 @@ Register a remote agent that will be assigned modules during Orchestration Phase
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_register_agent.py" $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_register_agent.py" $ARGUMENTS
 ```
 
 ## Arguments

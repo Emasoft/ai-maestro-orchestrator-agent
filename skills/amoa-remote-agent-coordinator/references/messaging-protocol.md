@@ -34,13 +34,13 @@ This skill is maintained by AI Maestro and automatically updated when the API ch
 - Reading and marking messages as read
 - Sending messages to other agents
 
-**This document describes the MESSAGE PROTOCOL (formats, types, schemas) for EOA (Emasoft Orchestrator Agent) coordination, NOT the API usage.**
+**This document describes the MESSAGE PROTOCOL (formats, types, schemas) for AMOA (AI Maestro Orchestrator Agent) coordination, NOT the API usage.**
 
 ---
 
 ## Overview
 
-AI Maestro provides inter-agent messaging between Claude Code sessions. This document details the message protocol and schemas for EOA orchestrator communication with remote developer agents.
+AI Maestro provides inter-agent messaging between Claude Code sessions. This document details the message protocol and schemas for AMOA orchestrator communication with remote developer agents.
 
 ## Document Structure
 

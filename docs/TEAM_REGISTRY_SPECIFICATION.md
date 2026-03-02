@@ -23,11 +23,11 @@ This file is **git-tracked** and stored in the repository, ensuring all team mem
 
 ```
 <repository-root>/
-└── .emasoft/
+└── .ai-maestro/
     └── team-registry.json
 ```
 
-**Why `.emasoft/`**: This directory contains all Emasoft agent system configuration for the project.
+**Why `.ai-maestro/`**: This directory contains all AI Maestro agent system configuration for the project.
 
 ---
 
@@ -58,7 +58,7 @@ This file is **git-tracked** and stored in the repository, ensuring all team mem
 
 ### Uniqueness Requirement
 
-Team names must be **globally unique** across all projects managed by ECOS. ECOS maintains a master list of all team names to prevent collisions.
+Team names must be **globally unique** across all projects managed by AMCOS. AMCOS maintains a master list of all team names to prevent collisions.
 
 ---
 
@@ -73,17 +73,17 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
     "project": {
       "repository": "https://github.com/Emasoft/svgbbox",
       "github_project": "https://github.com/orgs/Emasoft/projects/12",
-      "created_by": "eama-assistant-manager",
+      "created_by": "amama-assistant-manager",
       "created_at": "2026-02-03T10:00:00Z"
     },
-    "created_by": "ecos-chief-of-staff",
+    "created_by": "amcos-chief-of-staff",
     "created_at": "2026-02-03T10:30:00Z"
   },
   "agents": [
     {
       "name": "svgbbox-orchestrator",
       "role": "orchestrator",
-      "plugin": "emasoft-orchestrator-agent",
+      "plugin": "ai-maestro-orchestrator-agent",
       "host": "macbook-dev-01",
       "ai_maestro_address": "svgbbox-orchestrator",
       "status": "active",
@@ -92,7 +92,7 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
     {
       "name": "svgbbox-architect",
       "role": "architect",
-      "plugin": "emasoft-architect-agent",
+      "plugin": "ai-maestro-architect-agent",
       "host": "macbook-dev-01",
       "ai_maestro_address": "svgbbox-architect",
       "status": "active",
@@ -101,7 +101,7 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
     {
       "name": "svgbbox-impl-01",
       "role": "implementer",
-      "plugin": "emasoft-implementer-agent",
+      "plugin": "ai-maestro-implementer-agent",
       "host": "macbook-dev-01",
       "ai_maestro_address": "svgbbox-impl-01",
       "status": "active",
@@ -110,7 +110,7 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
     {
       "name": "svgbbox-impl-02",
       "role": "implementer",
-      "plugin": "emasoft-implementer-agent",
+      "plugin": "ai-maestro-implementer-agent",
       "host": "macbook-dev-02",
       "ai_maestro_address": "svgbbox-impl-02",
       "status": "active",
@@ -119,7 +119,7 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
     {
       "name": "svgbbox-tester-01",
       "role": "tester",
-      "plugin": "emasoft-tester-agent",
+      "plugin": "ai-maestro-tester-agent",
       "host": "macbook-dev-01",
       "ai_maestro_address": "svgbbox-tester-01",
       "status": "active",
@@ -128,39 +128,39 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
   ],
   "shared_agents": [
     {
-      "name": "emasoft-integrator",
+      "name": "ai-maestro-integrator",
       "role": "integrator",
-      "plugin": "emasoft-integrator-agent",
+      "plugin": "ai-maestro-integrator-agent",
       "host": "server-ci-01",
-      "ai_maestro_address": "emasoft-integrator",
+      "ai_maestro_address": "ai-maestro-integrator",
       "note": "Shared across multiple teams"
     }
   ],
   "organization_agents": [
     {
-      "name": "eama-assistant-manager",
+      "name": "amama-assistant-manager",
       "role": "manager",
-      "plugin": "emasoft-assistant-manager-agent",
+      "plugin": "ai-maestro-assistant-manager-agent",
       "host": "macbook-main",
-      "ai_maestro_address": "eama-assistant-manager",
+      "ai_maestro_address": "amama-assistant-manager",
       "note": "Organization-wide, not team-specific"
     },
     {
-      "name": "ecos-chief-of-staff",
+      "name": "amcos-chief-of-staff",
       "role": "chief-of-staff",
-      "plugin": "emasoft-chief-of-staff",
+      "plugin": "ai-maestro-chief-of-staff",
       "host": "macbook-main",
-      "ai_maestro_address": "ecos-chief-of-staff",
+      "ai_maestro_address": "amcos-chief-of-staff",
       "note": "Organization-wide, not team-specific"
     }
   ],
   "github_bot": {
-    "username": "emasoft-bot",
+    "username": "ai-maestro-bot",
     "type": "shared-bot-account",
     "note": "All GitHub operations use this account. Real agent identity tracked in commit messages and PR bodies."
   },
   "contacts_last_updated": "2026-02-03T10:45:00Z",
-  "contacts_updated_by": "ecos-chief-of-staff"
+  "contacts_updated_by": "amcos-chief-of-staff"
 }
 ```
 
@@ -177,7 +177,7 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
 | `project.github_project` | string | No | GitHub Projects board URL |
 | `project.created_by` | string | Yes | Agent that created the project |
 | `project.created_at` | ISO8601 | Yes | Project creation timestamp |
-| `created_by` | string | Yes | Agent that created the team (always ECOS) |
+| `created_by` | string | Yes | Agent that created the team (always AMCOS) |
 | `created_at` | ISO8601 | Yes | Team creation timestamp |
 
 ### Agent Entry
@@ -197,14 +197,14 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
 
 | Role | Plugin | Count per Team | Description |
 |------|--------|----------------|-------------|
-| `manager` | emasoft-assistant-manager-agent | 0 (org-wide) | User interface, approvals |
-| `chief-of-staff` | emasoft-chief-of-staff | 0 (org-wide) | Agent lifecycle |
-| `orchestrator` | emasoft-orchestrator-agent | **Exactly 1** | Task management, kanban, agent replacement, remote coordination, messaging templates |
-| `architect` | emasoft-architect-agent | **Exactly 1** | Design documents |
-| `integrator` | emasoft-integrator-agent | 1+ (can be shared) | PR review, merge, CI/CD pipeline, release management, quality gates, kanban sync |
-| `implementer` | emasoft-implementer-agent | 1+ | Code implementation |
-| `tester` | emasoft-tester-agent | 0+ | Testing, QA |
-| `devops` | emasoft-devops-agent | 0+ | CI/CD, deployment |
+| `manager` | ai-maestro-assistant-manager-agent | 0 (org-wide) | User interface, approvals |
+| `chief-of-staff` | ai-maestro-chief-of-staff | 0 (org-wide) | Agent lifecycle |
+| `orchestrator` | ai-maestro-orchestrator-agent | **Exactly 1** | Task management, kanban, agent replacement, remote coordination, messaging templates |
+| `architect` | ai-maestro-architect-agent | **Exactly 1** | Design documents |
+| `integrator` | ai-maestro-integrator-agent | 1+ (can be shared) | PR review, merge, CI/CD pipeline, release management, quality gates, kanban sync |
+| `implementer` | ai-maestro-implementer-agent | 1+ | Code implementation |
+| `tester` | ai-maestro-tester-agent | 0+ | Testing, QA |
+| `devops` | ai-maestro-devops-agent | 0+ | CI/CD, deployment |
 
 ---
 
@@ -238,9 +238,9 @@ Team names must be **globally unique** across all projects managed by ECOS. ECOS
 
 | Agent | Name |
 |-------|------|
-| Manager | `eama-assistant-manager` |
-| Chief of Staff | `ecos-chief-of-staff` |
-| Shared Integrator | `emasoft-integrator` |
+| Manager | `amama-assistant-manager` |
+| Chief of Staff | `amcos-chief-of-staff` |
+| Shared Integrator | `ai-maestro-integrator` |
 
 ---
 
@@ -251,7 +251,7 @@ Every agent can look up contact information from `team-registry.json`:
 ```python
 import json
 
-def get_agent_address(agent_name: str, registry_path: str = ".emasoft/team-registry.json") -> str:
+def get_agent_address(agent_name: str, registry_path: str = ".ai-maestro/team-registry.json") -> str:
     """Get AI Maestro address for an agent."""
     with open(registry_path, encoding="utf-8") as f:
         registry = json.load(f)
@@ -296,7 +296,7 @@ All AI Maestro messages must include full agent identity. Send using the `agent-
   - `sender_identity`: A nested structure containing:
     - `name`: The sending agent's name (e.g., `svgbbox-impl-01`)
     - `role`: The agent's role (e.g., `implementer`)
-    - `plugin`: The plugin name (e.g., `emasoft-implementer-agent`)
+    - `plugin`: The plugin name (e.g., `ai-maestro-implementer-agent`)
     - `host`: The host machine identifier (e.g., `macbook-dev-01`)
     - `team`: The team name (e.g., `svgbbox-library-team`)
   - `task_reference`: A nested structure containing:
@@ -320,10 +320,10 @@ Fix login validation bug
 
 Agent: svgbbox-impl-01
 Role: implementer
-Plugin: emasoft-implementer-agent
+Plugin: ai-maestro-implementer-agent
 Host: macbook-dev-01
 Team: svgbbox-library-team
-GitHub-Bot: emasoft-bot
+GitHub-Bot: ai-maestro-bot
 ```
 
 ---
@@ -349,16 +349,16 @@ Fix login validation bug
 |-------|-------|
 | Agent | svgbbox-impl-01 |
 | Role | implementer |
-| Plugin | emasoft-implementer-agent |
+| Plugin | ai-maestro-implementer-agent |
 | Host | macbook-dev-01 |
 | Team | svgbbox-library-team |
 
-*PR created via emasoft-bot (shared GitHub account)*
+*PR created via ai-maestro-bot (shared GitHub account)*
 ```
 
 ---
 
-## ECOS Responsibilities for Team Registry
+## AMCOS Responsibilities for Team Registry
 
 1. **Create team-registry.json** when creating a new team
 2. **Add agents** to the registry when assigning to team
@@ -368,9 +368,9 @@ Fix login validation bug
 
 ### Registry Update Message
 
-When ECOS updates the registry, it sends a notification to all team agents using the `agent-messaging` skill:
+When AMCOS updates the registry, it sends a notification to all team agents using the `agent-messaging` skill:
 
-- **Sender**: `ecos-chief-of-staff`
+- **Sender**: `amcos-chief-of-staff`
 - **Recipient**: Each team agent (sent individually to all agents in the registry)
 - **Subject**: "[REGISTRY UPDATE] Team contacts updated"
 - **Priority**: `normal`

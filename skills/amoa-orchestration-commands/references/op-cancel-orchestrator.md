@@ -53,7 +53,7 @@ Before cancelling, consider:
 | Situation | Alternative |
 |-----------|-------------|
 | Task stuck | Send prompt to agent |
-| Agent unresponsive | Replace agent via ECOS |
+| Agent unresponsive | Replace agent via AMCOS |
 | Wrong configuration | Adjust config, let loop continue |
 | Max iterations reached | Increase limit |
 | Genuine need to stop | Proceed with cancellation |

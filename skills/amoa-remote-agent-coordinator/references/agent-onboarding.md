@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document guides new agents (AI or human developers) through the process of joining an EOA (Emasoft Orchestrator Agent) coordinated project. Proper onboarding ensures:
+This document guides new agents (AI or human developers) through the process of joining an AMOA (AI Maestro Orchestrator Agent) coordinated project. Proper onboarding ensures:
 
 - **Alignment** - Agent understands project architecture and methodology
 - **Toolchain Readiness** - Development environment configured correctly

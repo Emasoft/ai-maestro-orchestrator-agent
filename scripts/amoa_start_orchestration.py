@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-EOA Start Orchestration Script
+AMOA Start Orchestration Script
 
 Activates Orchestration Phase Mode after plan approval.
 Sets up module tracking and prepares for agent assignment.
 
 Usage:
-    python3 eoa_start_orchestration.py
-    python3 eoa_start_orchestration.py --project-id PVT_kwDOBxxxxxx
+    python3 amoa_start_orchestration.py
+    python3 amoa_start_orchestration.py --project-id PVT_kwDOBxxxxxx
 """
 
 import argparse

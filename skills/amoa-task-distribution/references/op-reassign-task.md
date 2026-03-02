@@ -24,7 +24,7 @@
 | **Procedure** | proc-populate-kanban |
 | **Workflow Instruction** | Step 13 - Kanban Population |
 | **Category** | Task Distribution |
-| **Agent** | eoa-main |
+| **Agent** | amoa-main |
 
 ## Purpose
 

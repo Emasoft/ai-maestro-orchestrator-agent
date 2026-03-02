@@ -1,5 +1,5 @@
 ---
-name: eoa-implementer-interview-protocol
+name: amoa-implementer-interview-protocol
 description: Interview protocols for task verification. Use when checking implementer readiness or approving PR creation. Trigger with task assignment.
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 1.0.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Steps 14, 19"
 procedure: "proc-clarify-tasks, proc-complete-task"
 ---
@@ -17,16 +17,16 @@ procedure: "proc-clarify-tasks, proc-complete-task"
 
 ## Overview
 
-The Orchestrator (EOA) MUST interview the Implementer agent both **before** and **after** task execution. This is NOT optional. Skipping these interviews leads to wasted work, requirement violations, and integration failures. The pre-task interview verifies understanding, capability, compatibility, and feasibility. The post-task interview verifies completeness, quality, testing, and documentation before approving PR creation.
+The Orchestrator (AMOA) MUST interview the Implementer agent both **before** and **after** task execution. This is NOT optional. Skipping these interviews leads to wasted work, requirement violations, and integration failures. The pre-task interview verifies understanding, capability, compatibility, and feasibility. The post-task interview verifies completeness, quality, testing, and documentation before approving PR creation.
 
 ## Prerequisites
 
 1. Read **AGENT_OPERATIONS.md** for orchestrator workflow
-2. Read **eoa-remote-agent-coordinator/references/rule-14-immutable-requirements.md** for immutable vs. mutable requirements
-3. Read **eoa-label-taxonomy** for status labels
-4. Read **eoa-messaging-templates** for message formats
+2. Read **amoa-remote-agent-coordinator/references/rule-14-immutable-requirements.md** for immutable vs. mutable requirements
+3. Read **amoa-label-taxonomy** for status labels
+4. Read **amoa-messaging-templates** for message formats
 5. Access to AI Maestro API for agent messaging
-6. Understanding of escalation paths (EOA → EAA for design, EOA → EAMA → User for requirements)
+6. Understanding of escalation paths (AMOA → AMAA for design, AMOA → AMAMA → User for requirements)
 
 ---
 
@@ -79,8 +79,8 @@ ORCHESTRATOR                           IMPLEMENTER
 - REVISE rejection message
 
 **Escalation triggers**:
-- Design concerns → Escalate to Architect (EAA)
-- Immutable requirement concerns → Escalate to Manager (EAMA) → User
+- Design concerns → Escalate to Architect (AMAA)
+- Immutable requirement concerns → Escalate to Manager (AMAMA) → User
 - Capability issues → Reassign or provide skills
 - Blockers → Resolve before proceeding
 
@@ -143,7 +143,7 @@ IMPLEMENTER                            ORCHESTRATOR
 After implementer creates PR and reports the number:
 
 1. Update issue status: `status:ai-review`
-2. Notify Integrator via AI Maestro (template in **eoa-messaging-templates**)
+2. Notify Integrator via AI Maestro (template in **amoa-messaging-templates**)
 3. Transfer responsibility from orchestrator to integrator
 
 ### 3.2 Responsibility Transfer
@@ -191,8 +191,8 @@ Copy this checklist and track your progress:
 - [ ] Send pre-task interview questions using the `agent-messaging` skill
 - [ ] Evaluate implementer's understanding summary
 - [ ] Check for concerns (requirements, design, capability, dependencies)
-- [ ] Escalate design concerns to Architect (EAA) if needed
-- [ ] Escalate immutable requirement concerns to Manager (EAMA) if needed
+- [ ] Escalate design concerns to Architect (AMAA) if needed
+- [ ] Escalate immutable requirement concerns to Manager (AMAMA) if needed
 - [ ] Resolve blockers before proceeding
 - [ ] Send PROCEED message after satisfactory answers
 - [ ] Log interview results in handoff document
@@ -207,7 +207,7 @@ Copy this checklist and track your progress:
 - [ ] Evaluate self-review responses
 - [ ] Send APPROVED or REVISE message
 - [ ] Wait for PR creation and PR number report
-- [ ] Notify Integrator (EIA) that PR is ready for review
+- [ ] Notify Integrator (AMIA) that PR is ready for review
 - [ ] Update issue status to `status:ai-review`
 
 ### Pre-Task Interview Steps
@@ -217,8 +217,8 @@ Copy this checklist and track your progress:
 3. Send pre-task interview questions using the `agent-messaging` skill ([interview-templates.md](./references/interview-templates.md))
 4. Evaluate implementer's understanding summary
 5. Check for concerns about requirements, design, capability, or dependencies
-6. If design concerns exist, escalate to Architect (EAA) ([escalation-messages.md](./references/escalation-messages.md))
-7. If immutable requirement concerns exist, escalate to Manager (EAMA) → User
+6. If design concerns exist, escalate to Architect (AMAA) ([escalation-messages.md](./references/escalation-messages.md))
+7. If immutable requirement concerns exist, escalate to Manager (AMAMA) → User
 8. If blockers are identified, resolve before proceeding
 9. Send PROCEED message only after satisfactory answers
 10. Log interview results in handoff document
@@ -235,7 +235,7 @@ Copy this checklist and track your progress:
 8. If verification passes, send APPROVED message ([escalation-messages.md](./references/escalation-messages.md))
 9. If verification fails, send REVISE message with specific issues
 10. Wait for PR creation and PR number report
-11. Notify Integrator (EIA) that PR is ready for review
+11. Notify Integrator (AMIA) that PR is ready for review
 12. Update issue status to `status:ai-review`
 
 ---
@@ -262,8 +262,8 @@ Copy this checklist and track your progress:
 |-------|----------------|
 | Implementer never ACKs | Reminder → escalate to progress-monitoring |
 | Misunderstands task | Clarify, update handoff, re-interview |
-| Design concerns | Escalate to Architect (EAA) |
-| Requirement concerns | Escalate to Manager (EAMA) → User |
+| Design concerns | Escalate to Architect (AMAA) |
+| Requirement concerns | Escalate to Manager (AMAMA) → User |
 | Incomplete work | REVISE with specific items |
 | Tests fail | REVISE, require passing tests |
 | PR before approval | Remind protocol, manual review |
@@ -290,12 +290,12 @@ Copy this checklist and track your progress:
 ## Resources
 
 - **[interview-templates.md](./references/interview-templates.md)** - Question templates, evaluation, and decision trees (Pre-Task, Post-Task, REVISE Cycle Escalation)
-- **[escalation-messages.md](./references/escalation-messages.md)** - Escalation and approval messages, escalation path selection decision tree, EAA/EAMA response templates
+- **[escalation-messages.md](./references/escalation-messages.md)** - Escalation and approval messages, escalation path selection decision tree, AMAA/AMAMA response templates
 - **[exception-handling.md](./references/exception-handling.md)** - Exception procedures
 - **[examples.md](./references/examples.md)** - Complete curl examples
 - **AGENT_OPERATIONS.md** - Core orchestrator workflow
-- **eoa-remote-agent-coordinator/references/rule-14-immutable-requirements.md** - Immutable vs. mutable requirements
-- **eoa-label-taxonomy** - Status label workflow
-- **eoa-messaging-templates** - Message templates for interviews and escalations
-- **eoa-task-distribution** - Task assignment protocol
-- **eoa-progress-monitoring** - Agent state tracking
+- **amoa-remote-agent-coordinator/references/rule-14-immutable-requirements.md** - Immutable vs. mutable requirements
+- **amoa-label-taxonomy** - Status label workflow
+- **amoa-messaging-templates** - Message templates for interviews and escalations
+- **amoa-task-distribution** - Task assignment protocol
+- **amoa-progress-monitoring** - Agent state tracking

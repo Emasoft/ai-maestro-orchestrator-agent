@@ -1,5 +1,5 @@
 ---
-name: eoa-remote-agent-coordinator
+name: amoa-remote-agent-coordinator
 description: "Use when coordinating remote AI agents. Trigger with task delegation or multi-agent coordination requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro messaging system (AMP, handles routing automatically). Python 3.9+ for LSP management scripts. Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 1.2.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Step 17"
 procedure: "proc-execute-task"
 ---
@@ -17,7 +17,7 @@ procedure: "proc-execute-task"
 
 ## Overview
 
-The Remote Agent Coordinator enables the EOA (Emasoft Orchestrator Agent) to delegate coding tasks to remote AI agents and human developers via the AI Maestro messaging system. This is the ONLY mechanism through which actual code is written.
+The Remote Agent Coordinator enables the AMOA (AI Maestro Orchestrator Agent) to delegate coding tasks to remote AI agents and human developers via the AI Maestro messaging system. This is the ONLY mechanism through which actual code is written.
 
 **Critical Principle**: The orchestrator NEVER writes code. It creates precise instructions and sends them to remote agents who execute the coding work.
 
@@ -334,7 +334,7 @@ Documents are NEVER embedded in AI Maestro messages - only GitHub issue comment 
 | [skill-format-comparison.md](./references/skill-format-comparison.md) | Comparing Open Spec vs Claude Code Skills |
 | [skill-authoring-best-practices.md](./references/skill-authoring-best-practices.md) | Writing new skills |
 | [skill-directory-structure.md](./references/skill-directory-structure.md) | Full skill directory structure |
-| [ecos-replacement-protocol.md](./references/ecos-replacement-protocol.md) | Agent failure or context loss replacement |
+| [amcos-replacement-protocol.md](./references/amcos-replacement-protocol.md) | Agent failure or context loss replacement |
 | [agent-types.md](./references/agent-types.md) | Worker agent types and role boundaries |
 | [assignment-workflow.md](./references/assignment-workflow.md) | Agent availability and task-agent matching |
 | [agent-communication-templates.md](./references/agent-communication-templates.md) | Standard message templates for agent communication |
@@ -422,16 +422,16 @@ This script helps locate design documents when coordinating with remote agents:
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
-| `eoa_design_search.py` | Search design documents for task delegation | `python scripts/eoa_design_search.py --type <TYPE> --status <STATUS>` |
+| `amoa_design_search.py` | Search design documents for task delegation | `python scripts/amoa_design_search.py --type <TYPE> --status <STATUS>` |
 
-Use `eoa_design_search.py` when:
+Use `amoa_design_search.py` when:
 - Looking up design specifications to include in task delegations
 - Finding related designs for context when assigning work
 - Verifying design status before creating implementation tasks
 
 ### Script Location
 
-The script is located at `../../scripts/eoa_design_search.py` relative to this skill.
+The script is located at `../../scripts/amoa_design_search.py` relative to this skill.
 
 ---
 
@@ -446,7 +446,7 @@ The script is located at `../../scripts/eoa_design_search.py` relative to this s
 - [task-instruction-format.md](./references/task-instruction-format.md) - Instruction template
 - [overnight-operation.md](./references/overnight-operation.md) - Autonomous operation
 - [lsp-servers-overview.md](./references/lsp-servers-overview.md) - LSP requirements
-- [ecos-replacement-protocol.md](./references/ecos-replacement-protocol.md) - Agent replacement
+- [amcos-replacement-protocol.md](./references/amcos-replacement-protocol.md) - Agent replacement
 - [agent-types.md](./references/agent-types.md) - Agent type definitions
 - [assignment-workflow.md](./references/assignment-workflow.md) - Agent assignment
 - [agent-communication-templates.md](./references/agent-communication-templates.md) - Communication templates

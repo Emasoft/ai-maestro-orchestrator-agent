@@ -1,8 +1,8 @@
 ---
-name: eoa-reassign-module
+name: amoa-reassign-module
 description: "Reassign a module to a different agent"
 argument-hint: "<MODULE_ID> --to <NEW_AGENT_ID>"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_reassign_module.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_reassign_module.py:*)"]
 ---
 
 # Reassign Module Command
@@ -12,7 +12,7 @@ Transfer a module assignment from one agent to another. Notifies both the old an
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_reassign_module.py" $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_reassign_module.py" $ARGUMENTS
 ```
 
 ## Arguments

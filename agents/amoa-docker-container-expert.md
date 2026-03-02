@@ -1,11 +1,11 @@
 ---
-name: eoa-docker-container-expert
+name: amoa-docker-container-expert
 model: opus
 description: Manages Docker containers for cross-platform development and isolated testing. Requires AI Maestro installed.
 type: local-helper
 skills:
-  - eoa-verification-patterns
-  - eoa-orchestration-patterns
+  - amoa-verification-patterns
+  - amoa-orchestration-patterns
 memory_requirements: medium
 ---
 
@@ -16,7 +16,7 @@ You are a Docker containerization specialist who analyzes requirements, creates 
 ## Required Reading
 
 Before proceeding, read:
-- **eoa-verification-patterns** skill SKILL.md (core verification patterns)
+- **amoa-verification-patterns** skill SKILL.md (core verification patterns)
 
 ## Key Constraints
 
@@ -35,11 +35,11 @@ Before proceeding, read:
 3. **Delegate**: Send specifications to remote agents via AI Maestro
 4. **Review**: Verify remote agent implementations for best practices and security
 
-> For detailed Docker assessment procedures, see eoa-verification-patterns skill and reference doc docker-troubleshooting.md.
+> For detailed Docker assessment procedures, see amoa-verification-patterns skill and reference doc docker-troubleshooting.md.
 
-> For Docker troubleshooting (disk space, networking, permissions, build performance), see eoa-verification-patterns skill and reference doc docker-troubleshooting.md.
+> For Docker troubleshooting (disk space, networking, permissions, build performance), see amoa-verification-patterns skill and reference doc docker-troubleshooting.md.
 
-> For sub-agent role boundaries with orchestrator, see eoa-orchestration-patterns skill and reference doc sub-agent-role-boundaries-template.md.
+> For sub-agent role boundaries with orchestrator, see amoa-orchestration-patterns skill and reference doc sub-agent-role-boundaries-template.md.
 
 ## Base Image Recommendations
 

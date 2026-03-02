@@ -20,7 +20,7 @@
 
 ---
 
-## Toolchain Lifecycle in EOA
+## Toolchain Lifecycle in AMOA
 
 ### Phase 1: Detection (Design/Specification Stage)
 

@@ -4,7 +4,7 @@
 
 - [6.1 ACK Verification](#61-ack-verification)
 - [6.2 State File Updates](#62-state-file-updates)
-- [6.3 ECOS Notification](#63-ecos-notification)
+- [6.3 AMCOS Notification](#63-amcos-notification)
 - [6.4 Audit Logging](#64-audit-logging)
 
 ---
@@ -185,18 +185,18 @@ echo "State file updated successfully"
 
 ---
 
-## 6.3 ECOS Notification
+## 6.3 AMCOS Notification
 
 ### Success Notification
 
-Send to ECOS when replacement is complete:
+Send to AMCOS when replacement is complete:
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA] Agent Replacement Complete",
+  "to": "amcos-controller",
+  "subject": "[AMOA] Agent Replacement Complete",
   "priority": "normal",
   "content": {
     "type": "replacement_confirmation",
@@ -231,8 +231,8 @@ If some tasks could not be reassigned:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA] Agent Replacement Partially Complete",
+  "to": "amcos-controller",
+  "subject": "[AMOA] Agent Replacement Partially Complete",
   "priority": "high",
   "content": {
     "type": "replacement_confirmation",
@@ -265,8 +265,8 @@ If replacement could not be completed:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA] Agent Replacement Failed",
+  "to": "amcos-controller",
+  "subject": "[AMOA] Agent Replacement Failed",
   "priority": "urgent",
   "content": {
     "type": "replacement_confirmation",
@@ -304,7 +304,7 @@ If replacement could not be completed:
 
   ecos_notification:
     received_at: "2026-01-31T14:25:00Z"
-    notification_id: "ecos-notif-uuid"
+    notification_id: "amcos-notif-uuid"
     urgency: "immediate"
 
   failed_agent:
@@ -427,7 +427,7 @@ Complete checklist before marking replacement done:
 - [ ] Audit comment added
 - [ ] PR assignee updated (if applicable)
 
-### ECOS Notification
+### AMCOS Notification
 - [ ] Confirmation message sent
 - [ ] Status correctly reported
 - [ ] All task UUIDs listed
@@ -449,7 +449,7 @@ Complete checklist before marking replacement done:
 Replacement agent confirmation check completed
 ├─ Did replacement agent pass all confirmation criteria?
 │   ├─ Full pass (all criteria met)
-│   │   → Send confirmation success to ECOS
+│   │   → Send confirmation success to AMCOS
 │   │   → Mark replacement as permanent
 │   │   → Resume normal task monitoring
 │   │
@@ -457,20 +457,20 @@ Replacement agent confirmation check completed
 │   │   → Are gaps addressable with a quick fix?
 │   │   ├─ Yes → Send targeted fix instructions to replacement agent
 │   │   │         → Re-run confirmation after fix → If pass, proceed as full pass
-│   │   └─ No → Escalate to ECOS with gap details
-│   │           → ECOS decides: accept partial / spawn another replacement
+│   │   └─ No → Escalate to AMCOS with gap details
+│   │           → AMCOS decides: accept partial / spawn another replacement
 │   │
 │   └─ Fail (critical criteria not met)
-│       → Notify ECOS: replacement agent inadequate
+│       → Notify AMCOS: replacement agent inadequate
 │       → Include: which criteria failed, agent's response quality, recommendation
-│       → ECOS options: try different agent / simplify task / escalate to EAA
+│       → AMCOS options: try different agent / simplify task / escalate to AMAA
 ```
 
-### ECOS Confirmation Notification Template
+### AMCOS Confirmation Notification Template
 
 ```json
 {
-  "to": "<ecos-session-name>",
+  "to": "<amcos-session-name>",
   "subject": "Replacement Agent Confirmation Result — Task <task_id>",
   "priority": "high",
   "content": {
@@ -487,7 +487,7 @@ Replacement agent confirmation check completed
         "initial_progress": "pass | fail"
       },
       "gaps": ["<description of any gaps>"],
-      "recommendation": "<EOA's recommended next action>"
+      "recommendation": "<AMOA's recommended next action>"
     }
   }
 }

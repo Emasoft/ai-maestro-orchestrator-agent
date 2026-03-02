@@ -1,32 +1,32 @@
 # Mid-Task Update Templates
 
-Templates for handling changes that occur while agents are actively working on assigned tasks. These templates cover three scenarios: receiving requirement updates from the Chief of Staff (ECOS), relaying module or priority modifications to working agents, and processing user decisions forwarded by the Assistant Manager (EAMA).
+Templates for handling changes that occur while agents are actively working on assigned tasks. These templates cover three scenarios: receiving requirement updates from the Chief of Staff (AMCOS), relaying module or priority modifications to working agents, and processing user decisions forwarded by the Assistant Manager (AMAMA).
 
 ---
 
 ## Table of Contents
 
-- 1. ECOS Mid-Task Requirement Update (ECOS to EOA)
+- 1. AMCOS Mid-Task Requirement Update (AMCOS to AMOA)
   - 1.1 When to use this template
-  - 1.2 Incoming message template from ECOS
+  - 1.2 Incoming message template from AMCOS
   - 1.3 Decision tree for processing the update
-- 2. EOA Acknowledgment of Requirement Update (EOA to ECOS)
+- 2. AMOA Acknowledgment of Requirement Update (AMOA to AMCOS)
   - 2.1 When to use this template
   - 2.2 Acknowledgment message template
   - 2.3 Decision tree for composing the acknowledgment
-- 3. Module Modification Notification (EOA to Agent)
+- 3. Module Modification Notification (AMOA to Agent)
   - 3.1 When to use this template
   - 3.2 Notification message template
   - 3.3 Expected agent response template
   - 3.4 Decision tree for module modification handling
-- 4. Priority Change Notification (EOA to Agent)
+- 4. Priority Change Notification (AMOA to Agent)
   - 4.1 When to use this template
   - 4.2 Notification message template
   - 4.3 Expected agent response template
   - 4.4 Decision tree for priority change handling
-- 5. EAMA User Decision Response (EAMA to EOA)
+- 5. AMAMA User Decision Response (AMAMA to AMOA)
   - 5.1 When to use this template
-  - 5.2 Incoming decision message from EAMA
+  - 5.2 Incoming decision message from AMAMA
   - 5.3 Relay message to affected agent
   - 5.4 Decision tree for processing user decisions
 - 6. Mid-Task Update Severity Decision Tree
@@ -36,22 +36,22 @@ Templates for handling changes that occur while agents are actively working on a
 
 ---
 
-## 1. ECOS Mid-Task Requirement Update (ECOS to EOA)
+## 1. AMCOS Mid-Task Requirement Update (AMCOS to AMOA)
 
 ### 1.1 When to use this template
 
-Use this template when the Chief of Staff (ECOS) sends a requirement change after task delegation has already occurred. This happens when the Architect (EAA) revises specifications, when the user changes scope through EAMA, or when external constraints force a requirement adjustment.
+Use this template when the Chief of Staff (AMCOS) sends a requirement change after task delegation has already occurred. This happens when the Architect (AMAA) revises specifications, when the user changes scope through AMAMA, or when external constraints force a requirement adjustment.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-### 1.2 Incoming message template from ECOS
+### 1.2 Incoming message template from AMCOS
 
-This is the message format EOA receives from ECOS. EOA does not send this message; EOA receives and processes it.
+This is the message format AMOA receives from AMCOS. AMOA does not send this message; AMOA receives and processes it.
 
 ```json
 {
-  "from": "ecos-chief-of-staff-main-agent",
-  "to": "eoa-orchestrator-main-agent",
+  "from": "amcos-chief-of-staff-main-agent",
+  "to": "amoa-orchestrator-main-agent",
   "subject": "Mid-Task Requirement Update - [task identifier]",
   "priority": "high",
   "content": {
@@ -70,53 +70,53 @@ This is the message format EOA receives from ECOS. EOA does not send this messag
 ```
 
 Field definitions for `data`:
-- `task_id`: The identifier of the task being modified. Must match a task that EOA has already delegated to an agent.
+- `task_id`: The identifier of the task being modified. Must match a task that AMOA has already delegated to an agent.
 - `change_type`: One of three severity levels:
   - `minor_clarification`: Small detail added or corrected. Does not change the scope or interfaces. Example: clarifying a field name format.
   - `scope_change`: The boundaries of the task expand, shrink, or shift. Interfaces or modules may be added or removed. Example: adding OAuth2 support to an auth module.
   - `breaking_change`: Fundamental assumptions of the current implementation are invalidated. The agent may need to discard significant work. Example: switching from REST to GraphQL API architecture.
-- `affected_modules`: Array of module identifiers that are impacted by the change. EOA uses this list to determine which agents to notify.
+- `affected_modules`: Array of module identifiers that are impacted by the change. AMOA uses this list to determine which agents to notify.
 - `new_requirements`: Plain text description of what the updated requirements are.
-- `old_requirements`: Plain text description of what the requirements were before the change. Included so EOA and agents can understand what shifted.
-- `justification`: Explanation of why the change is happening. EOA relays this to agents so they understand the reasoning.
+- `old_requirements`: Plain text description of what the requirements were before the change. Included so AMOA and agents can understand what shifted.
+- `justification`: Explanation of why the change is happening. AMOA relays this to agents so they understand the reasoning.
 
 ### 1.3 Decision tree for processing the update
 
 ```
-Requirement update received from ECOS
+Requirement update received from AMCOS
 │
 ├─ Is the task_id recognized?
 │   ├─ Yes → Identify assigned agent(s) for affected_modules
 │   │         │
 │   │         ├─ change_type is "minor_clarification"
 │   │         │   └─ Relay to agent immediately (Section 3)
-│   │         │       └─ Send ACK to ECOS (Section 2)
+│   │         │       └─ Send ACK to AMCOS (Section 2)
 │   │         │
 │   │         ├─ change_type is "scope_change"
 │   │         │   ├─ Send pause instruction to agent
 │   │         │   ├─ Assess impact on timeline
-│   │         │   ├─ Send ACK to ECOS with impact assessment (Section 2)
+│   │         │   ├─ Send ACK to AMCOS with impact assessment (Section 2)
 │   │         │   └─ Send module modification to agent (Section 3)
 │   │         │
 │   │         └─ change_type is "breaking_change"
 │   │             ├─ Send stop instruction to agent immediately
-│   │             ├─ Escalate to EAA for re-planning if needed
-│   │             ├─ Send ACK to ECOS with severity assessment (Section 2)
-│   │             └─ Wait for EAA re-plan before sending new instructions
+│   │             ├─ Escalate to AMAA for re-planning if needed
+│   │             ├─ Send ACK to AMCOS with severity assessment (Section 2)
+│   │             └─ Wait for AMAA re-plan before sending new instructions
 │   │
-│   └─ No → Reply to ECOS with error: task_id not found in active assignments
+│   └─ No → Reply to AMCOS with error: task_id not found in active assignments
 │
 └─ Is the message malformed or missing required fields?
-    └─ Yes → Reply to ECOS requesting corrected message
+    └─ Yes → Reply to AMCOS requesting corrected message
 ```
 
 ---
 
-## 2. EOA Acknowledgment of Requirement Update (EOA to ECOS)
+## 2. AMOA Acknowledgment of Requirement Update (AMOA to AMCOS)
 
 ### 2.1 When to use this template
 
-Send this acknowledgment after receiving and processing a mid-task requirement update from ECOS (Section 1). ECOS expects an acknowledgment confirming that EOA has understood the change and has begun relaying it to affected agents.
+Send this acknowledgment after receiving and processing a mid-task requirement update from AMCOS (Section 1). AMCOS expects an acknowledgment confirming that AMOA has understood the change and has begun relaying it to affected agents.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -124,8 +124,8 @@ Send this acknowledgment after receiving and processing a mid-task requirement u
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-orchestrator-main-agent",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "ACK: Mid-Task Requirement Update - [task identifier]",
   "priority": "normal",
   "content": {
@@ -143,16 +143,16 @@ Send this acknowledgment after receiving and processing a mid-task requirement u
 ```
 
 Field definitions for `data`:
-- `task_id`: Echoes back the task identifier from the original ECOS message.
-- `change_type_received`: Echoes back the change type so ECOS can confirm EOA interpreted the severity correctly.
-- `agents_notified`: Array of agent session names that EOA has contacted or will contact about this change.
-- `impact_assessment`: EOA's analysis of how this change affects the current work in progress. Includes estimated completion percentage and time impact.
-- `action_taken`: What EOA has done or is doing in response. One of: "Relayed to agent, no pause needed", "Agent paused, updated instructions being prepared", "Agent stopped, awaiting EAA re-plan".
+- `task_id`: Echoes back the task identifier from the original AMCOS message.
+- `change_type_received`: Echoes back the change type so AMCOS can confirm AMOA interpreted the severity correctly.
+- `agents_notified`: Array of agent session names that AMOA has contacted or will contact about this change.
+- `impact_assessment`: AMOA's analysis of how this change affects the current work in progress. Includes estimated completion percentage and time impact.
+- `action_taken`: What AMOA has done or is doing in response. One of: "Relayed to agent, no pause needed", "Agent paused, updated instructions being prepared", "Agent stopped, awaiting AMAA re-plan".
 
 ### 2.3 Decision tree for composing the acknowledgment
 
 ```
-Composing ACK for ECOS
+Composing ACK for AMCOS
 │
 ├─ change_type is "minor_clarification"
 │   ├─ action_taken = "Relayed to agent, no pause needed"
@@ -165,18 +165,18 @@ Composing ACK for ECOS
 │   └─ priority = "normal"
 │
 └─ change_type is "breaking_change"
-    ├─ action_taken = "Agent stopped, awaiting EAA re-plan"
+    ├─ action_taken = "Agent stopped, awaiting AMAA re-plan"
     ├─ impact_assessment = include whether existing work is salvageable
     └─ priority = "high"
 ```
 
 ---
 
-## 3. Module Modification Notification (EOA to Agent)
+## 3. Module Modification Notification (AMOA to Agent)
 
 ### 3.1 When to use this template
 
-Use this template when EOA needs to inform a working agent that one or more modules in their assignment have changed. This is the message EOA sends after receiving and acknowledging a requirement update from ECOS (Sections 1 and 2).
+Use this template when AMOA needs to inform a working agent that one or more modules in their assignment have changed. This is the message AMOA sends after receiving and acknowledging a requirement update from AMCOS (Sections 1 and 2).
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -184,7 +184,7 @@ Use this template when EOA needs to inform a working agent that one or more modu
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "svgbbox-programmer-001",
   "subject": "Module Modification - [module identifier]",
   "priority": "high",
@@ -211,11 +211,11 @@ Field definitions for `data`:
   - `interface_change`: The module's inputs, outputs, or API contracts have changed. The agent must update how their module connects to other modules.
   - `dependency_change`: A module that this module depends on has changed. The agent must verify their code still works with the updated dependency.
 - `changes_summary`: Plain text description of exactly what changed. Must be specific enough for the agent to act on without asking clarifying questions.
-- `impact_assessment`: EOA's analysis of how this change affects the agent's current work. Helps the agent understand what they can keep and what they must modify.
+- `impact_assessment`: AMOA's analysis of how this change affects the agent's current work. Helps the agent understand what they can keep and what they must modify.
 - `action_required`: One of three directives:
   - `continue_adapted`: The agent should adjust their current work to incorporate the changes and continue without stopping. Used for minor modifications.
   - `pause_for_review`: The agent should stop coding, review the full scope of changes, and confirm understanding before resuming. Used for significant modifications.
-  - `restart`: The agent should stop current work entirely. EOA will send new task instructions. Used when existing work is incompatible with the changes.
+  - `restart`: The agent should stop current work entirely. AMOA will send new task instructions. Used when existing work is incompatible with the changes.
 
 ### 3.3 Expected agent response template
 
@@ -224,7 +224,7 @@ The agent should reply with this format to confirm they have processed the modif
 ```json
 {
   "from": "svgbbox-programmer-001",
-  "to": "eoa-orchestrator-main-agent",
+  "to": "amoa-orchestrator-main-agent",
   "subject": "ACK: Module Modification - [module identifier]",
   "priority": "normal",
   "content": {
@@ -241,19 +241,19 @@ The agent should reply with this format to confirm they have processed the modif
 }
 ```
 
-If the agent has questions or blockers, the `questions_or_blockers` field should contain the specific question text instead of "none". EOA must address blockers before the agent can resume.
+If the agent has questions or blockers, the `questions_or_blockers` field should contain the specific question text instead of "none". AMOA must address blockers before the agent can resume.
 
 ### 3.4 Decision tree for module modification handling
 
 ```
-EOA sends module modification to agent
+AMOA sends module modification to agent
 │
 ├─ action_required is "continue_adapted"
 │   ├─ Agent ACKs with understanding_confirmed = true
 │   │   └─ Continue monitoring progress as normal
 │   ├─ Agent ACKs with questions_or_blockers != "none"
-│   │   ├─ EOA can answer → Send clarification message
-│   │   └─ EOA cannot answer → Escalate to ECOS or EAA
+│   │   ├─ AMOA can answer → Send clarification message
+│   │   └─ AMOA cannot answer → Escalate to AMCOS or AMAA
 │   └─ Agent does not ACK within 5 minutes
 │       └─ Re-send notification, escalate if still no response
 │
@@ -274,11 +274,11 @@ EOA sends module modification to agent
 
 ---
 
-## 4. Priority Change Notification (EOA to Agent)
+## 4. Priority Change Notification (AMOA to Agent)
 
 ### 4.1 When to use this template
 
-Use this template when the priority of an active task changes. Priority changes come from ECOS (who receives them from the user via EAMA or from project-level decisions). EOA must relay the new priority to the working agent so the agent adjusts their pace and resource allocation.
+Use this template when the priority of an active task changes. Priority changes come from AMCOS (who receives them from the user via AMAMA or from project-level decisions). AMOA must relay the new priority to the working agent so the agent adjusts their pace and resource allocation.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -286,7 +286,7 @@ Use this template when the priority of an active task changes. Priority changes 
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "svgbbox-programmer-001",
   "subject": "Priority Change - [task identifier]",
   "priority": "high",
@@ -319,7 +319,7 @@ Field definitions for `data`:
 ```json
 {
   "from": "svgbbox-programmer-001",
-  "to": "eoa-orchestrator-main-agent",
+  "to": "amoa-orchestrator-main-agent",
   "subject": "ACK: Priority Change - [task identifier]",
   "priority": "normal",
   "content": {
@@ -336,19 +336,19 @@ Field definitions for `data`:
 }
 ```
 
-If the agent has concerns about meeting the new timeline, the `concerns` field should contain specific details about what may prevent timely completion. EOA must evaluate whether to escalate these concerns to ECOS.
+If the agent has concerns about meeting the new timeline, the `concerns` field should contain specific details about what may prevent timely completion. AMOA must evaluate whether to escalate these concerns to AMCOS.
 
 ### 4.4 Decision tree for priority change handling
 
 ```
-EOA sends priority change to agent
+AMOA sends priority change to agent
 │
 ├─ action_required is "accelerate"
 │   ├─ Agent ACKs with concerns = "none"
 │   │   └─ Increase polling frequency to monitor progress
 │   ├─ Agent ACKs with concerns != "none"
-│   │   ├─ Concerns are resolvable by EOA → Provide assistance
-│   │   └─ Concerns require ECOS intervention → Escalate to ECOS
+│   │   ├─ Concerns are resolvable by AMOA → Provide assistance
+│   │   └─ Concerns require AMCOS intervention → Escalate to AMCOS
 │   └─ Agent does not ACK within 3 minutes (shorter for urgent)
 │       └─ Re-send with priority "urgent", escalate if still no response
 │
@@ -367,22 +367,22 @@ EOA sends priority change to agent
 
 ---
 
-## 5. EAMA User Decision Response (EAMA to EOA)
+## 5. AMAMA User Decision Response (AMAMA to AMOA)
 
 ### 5.1 When to use this template
 
-Use this template when the Assistant Manager (EAMA) forwards a user decision back to EOA. This happens after EOA (or another agent via EOA) escalated a question or decision to the user. EAMA collects the user's answer and sends it to EOA, who must then relay it to the agent that originally needed the decision.
+Use this template when the Assistant Manager (AMAMA) forwards a user decision back to AMOA. This happens after AMOA (or another agent via AMOA) escalated a question or decision to the user. AMAMA collects the user's answer and sends it to AMOA, who must then relay it to the agent that originally needed the decision.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-### 5.2 Incoming decision message from EAMA
+### 5.2 Incoming decision message from AMAMA
 
-This is the message format EOA receives from EAMA. EOA does not send this message; EOA receives and processes it.
+This is the message format AMOA receives from AMAMA. AMOA does not send this message; AMOA receives and processes it.
 
 ```json
 {
-  "from": "eama-assistant-manager-main-agent",
-  "to": "eoa-orchestrator-main-agent",
+  "from": "amama-assistant-manager-main-agent",
+  "to": "amoa-orchestrator-main-agent",
   "subject": "User Decision - Escalation [escalation identifier]",
   "priority": "high",
   "content": {
@@ -399,7 +399,7 @@ This is the message format EOA receives from EAMA. EOA does not send this messag
 ```
 
 Field definitions for `data`:
-- `escalation_id`: The identifier of the original escalation that was sent to the user. EOA uses this to look up which agent and task the decision applies to.
+- `escalation_id`: The identifier of the original escalation that was sent to the user. AMOA uses this to look up which agent and task the decision applies to.
 - `user_decision`: The option the user selected. One of:
   - `option_a`, `option_b`, `option_c`: Corresponds to predefined options that were presented in the original escalation.
   - `custom`: The user provided a response that does not match any predefined option. The full response is in `decision_details`.
@@ -408,11 +408,11 @@ Field definitions for `data`:
 
 ### 5.3 Relay message to affected agent
 
-After receiving the user decision, EOA relays it to the agent that originally requested the escalation.
+After receiving the user decision, AMOA relays it to the agent that originally requested the escalation.
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "svgbbox-programmer-001",
   "subject": "User Decision Received - Escalation [escalation identifier]",
   "priority": "high",
@@ -435,7 +435,7 @@ The agent should respond with a standard acknowledgment confirming they have und
 ### 5.4 Decision tree for processing user decisions
 
 ```
-User decision received from EAMA
+User decision received from AMAMA
 │
 ├─ Is the escalation_id recognized?
 │   ├─ Yes → Look up the original requesting agent and task
@@ -447,13 +447,13 @@ User decision received from EAMA
 │   │         ├─ user_decision is "custom"
 │   │         │   ├─ Parse decision_details for actionable instructions
 │   │         │   ├─ If clear → Relay to agent (Section 5.3)
-│   │         │   └─ If ambiguous → Ask EAMA for clarification before relaying
+│   │         │   └─ If ambiguous → Ask AMAMA for clarification before relaying
 │   │         │
 │   │         └─ Are there constraints?
 │   │             ├─ Yes → Include constraints as mandatory requirements in relay
 │   │             └─ No → Relay decision without additional constraints
 │   │
-│   └─ No → Reply to EAMA with error: escalation_id not found
+│   └─ No → Reply to AMAMA with error: escalation_id not found
 │
 └─ Is the requesting agent still active?
     ├─ Yes → Relay as described above
@@ -485,8 +485,8 @@ Mid-task update received
 │   │   └─ Continue normal progress monitoring
 │   │
 │   └─ Agent responds with confusion or questions
-│       ├─ Provide additional context from ECOS message
-│       ├─ If still unclear → Ask ECOS for more detail
+│       ├─ Provide additional context from AMCOS message
+│       ├─ If still unclear → Ask AMCOS for more detail
 │       └─ Once resolved → Agent continues
 │
 ├─ Scope change
@@ -510,7 +510,7 @@ Mid-task update received
 │   │       ├─ If adaptable → Send modification, resume
 │   │       └─ If not adaptable → Treat as breaking change (below)
 │   │
-│   └─ Send ACK to ECOS with impact assessment (Section 2)
+│   └─ Send ACK to AMCOS with impact assessment (Section 2)
 │
 └─ Breaking change
     │   (change_type = "breaking_change")
@@ -523,23 +523,23 @@ Mid-task update received
     ├─ Assess whether old work is salvageable
     │   │
     │   ├─ Old work is salvageable
-    │   │   ├─ Request EAA to re-plan affected modules only
+    │   │   ├─ Request AMAA to re-plan affected modules only
     │   │   ├─ Identify which completed work can be reused
     │   │   ├─ Send new instructions incorporating salvaged work
     │   │   └─ Resume agent with updated task assignment
     │   │
     │   └─ Old work is incompatible
     │       ├─ Cancel the current task assignment
-    │       ├─ Request EAA for complete re-architecture
+    │       ├─ Request AMAA for complete re-architecture
     │       ├─ Create new task assignment from scratch
     │       └─ Assign to same agent (or new agent if re-assignment needed)
     │
-    └─ Send ACK to ECOS with severity assessment (Section 2)
+    └─ Send ACK to AMCOS with severity assessment (Section 2)
 ```
 
 ### 6.2 Severity classification rules
 
-When ECOS does not explicitly set the `change_type` field, or when EOA needs to independently assess severity, use these rules:
+When AMCOS does not explicitly set the `change_type` field, or when AMOA needs to independently assess severity, use these rules:
 
 - **Minor clarification**: The change can be described in one sentence. No module boundaries change. No interfaces change. No new dependencies are introduced. Example: "The date format should be ISO 8601, not Unix timestamp."
 - **Scope change**: The change adds, removes, or modifies a module or its interfaces. The agent's task list grows or shrinks. New files or components are needed. Example: "Add OAuth2 support alongside API keys."
@@ -551,8 +551,8 @@ If uncertain between two severity levels, always choose the higher severity. It 
 
 Response time expectations vary by severity:
 
-- **Minor clarification**: Relay to agent within 2 minutes of receiving from ECOS. Agent should ACK within 5 minutes.
+- **Minor clarification**: Relay to agent within 2 minutes of receiving from AMCOS. Agent should ACK within 5 minutes.
 - **Scope change**: Send pause instruction within 1 minute. Complete assessment and relay within 10 minutes. Agent should ACK within 5 minutes of receiving updated instructions.
-- **Breaking change**: Send stop instruction within 30 seconds. Assessment may take longer (up to 30 minutes if EAA re-planning is needed). Agent should ACK stop within 2 minutes.
+- **Breaking change**: Send stop instruction within 30 seconds. Assessment may take longer (up to 30 minutes if AMAA re-planning is needed). Agent should ACK stop within 2 minutes.
 
-If any timeout is exceeded, escalate to ECOS with a status update explaining the delay.
+If any timeout is exceeded, escalate to AMCOS with a status update explaining the delay.

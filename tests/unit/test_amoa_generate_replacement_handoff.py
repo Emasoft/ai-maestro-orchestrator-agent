@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for eoa_generate_replacement_handoff.py -- Generate replacement handoff documents.
+"""Tests for amoa_generate_replacement_handoff.py -- Generate replacement handoff documents.
 
 These tests verify that the script correctly compiles handoff documents
 for agent replacement scenarios by gathering task context, git state,
@@ -16,7 +16,7 @@ from pathlib import Path
 import pytest
 
 # Path to the script under test
-SCRIPT_PATH = Path(__file__).resolve().parents[2] / "OUTPUT_SKILLS" / "emasoft-orchestrator-agent" / "scripts" / "eoa_generate_replacement_handoff.py"
+SCRIPT_PATH = Path(__file__).resolve().parents[2] / "OUTPUT_SKILLS" / "ai-maestro-orchestrator-agent" / "scripts" / "amoa_generate_replacement_handoff.py"
 
 
 def run_script(args, cwd, extra_env=None):

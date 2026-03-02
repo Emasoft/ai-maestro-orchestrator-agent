@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-EOA Notify Agent -- Send AI Maestro Message to a Specific Agent
+AMOA Notify Agent -- Send AI Maestro Message to a Specific Agent
 
 Sends an arbitrary message to a specific agent via the AI Maestro messaging
 API. This is a general-purpose notification utility, unlike the poll-specific
-scripts (eoa_poll_agent.py, eoa_check_remote_agents.py).
+scripts (amoa_poll_agent.py, amoa_check_remote_agents.py).
 
 NO external dependencies -- Python 3.8+ stdlib only.
 Uses curl subprocess to send HTTP requests to the AI Maestro API.
 
 Usage:
-    python3 eoa_notify_agent.py AGENT_ID --subject "Subject" --message "Body"
-    python3 eoa_notify_agent.py AGENT_ID --subject "Task Update" --message "Module X complete" --priority high
-    python3 eoa_notify_agent.py AGENT_ID --subject "Question" --message "Need clarification" --type request
+    python3 amoa_notify_agent.py AGENT_ID --subject "Subject" --message "Body"
+    python3 amoa_notify_agent.py AGENT_ID --subject "Task Update" --message "Module X complete" --priority high
+    python3 amoa_notify_agent.py AGENT_ID --subject "Question" --message "Need clarification" --type request
 
 Exit codes:
     0 - Message sent successfully
@@ -20,18 +20,18 @@ Exit codes:
 
 Examples:
     # Send a normal-priority info message:
-    python3 eoa_notify_agent.py implementer-1 \
+    python3 amoa_notify_agent.py implementer-1 \
         --subject "Module assignment" \
         --message "You have been assigned module auth-login"
 
     # Send a high-priority request:
-    python3 eoa_notify_agent.py ecos-chief-of-staff-one \
+    python3 amoa_notify_agent.py amcos-chief-of-staff-one \
         --subject "Agent replacement needed" \
         --message "implementer-3 is unresponsive, requesting replacement" \
         --priority high --type request
 
     # Send an urgent status update:
-    python3 eoa_notify_agent.py eama-main-manager \
+    python3 amoa_notify_agent.py amama-main-manager \
         --subject "Orchestration complete" \
         --message "All modules verified, ready for user review" \
         --priority urgent --type status
@@ -161,7 +161,7 @@ def main() -> int:
     )
     parser.add_argument(
         "agent_id",
-        help="Target agent identifier (full session name, e.g. 'implementer-1' or 'ecos-chief-of-staff-one')",
+        help="Target agent identifier (full session name, e.g. 'implementer-1' or 'amcos-chief-of-staff-one')",
     )
     parser.add_argument(
         "--subject",

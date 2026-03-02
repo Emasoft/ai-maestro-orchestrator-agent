@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-EOA Poll Agent Script
+AMOA Poll Agent Script
 
 Sends a MANDATORY progress poll with all 6 required questions.
 Tracks poll history and issues reported.
 
 Usage:
-    python3 eoa_poll_agent.py implementer-1
-    python3 eoa_poll_agent.py implementer-1 --record-response --issues "Token expiry unclear"
+    python3 amoa_poll_agent.py implementer-1
+    python3 amoa_poll_agent.py implementer-1 --record-response --issues "Token expiry unclear"
 """
 
 import argparse

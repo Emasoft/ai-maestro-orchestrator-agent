@@ -28,7 +28,7 @@
 | Procedure | `proc-handle-feedback` |
 | Workflow Step | Step 15 |
 | Trigger | Feature request received via GitHub Issue |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Target | Feature requester (human or external) |
 
 ---

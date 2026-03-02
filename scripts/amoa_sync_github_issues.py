@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-EOA Sync GitHub Issues Script
+AMOA Sync GitHub Issues Script
 
 Synchronizes modules from orchestration state with GitHub Issues lifecycle.
-Reads module data from .emasoft/orchestration-state.json and uses the gh CLI
+Reads module data from .ai-maestro/orchestration-state.json and uses the gh CLI
 to create, update, and close GitHub issues to keep them in sync with module
 status.
 
@@ -16,11 +16,11 @@ Label mapping for module statuses:
     complete    -> status:complete
 
 Usage:
-    python3 eoa_sync_github_issues.py
-    python3 eoa_sync_github_issues.py --dry-run
-    python3 eoa_sync_github_issues.py --create-missing --update-labels --close-completed
-    python3 eoa_sync_github_issues.py --repo owner/repo --dry-run
-    python3 eoa_sync_github_issues.py --project-root /path/to/project
+    python3 amoa_sync_github_issues.py
+    python3 amoa_sync_github_issues.py --dry-run
+    python3 amoa_sync_github_issues.py --create-missing --update-labels --close-completed
+    python3 amoa_sync_github_issues.py --repo owner/repo --dry-run
+    python3 amoa_sync_github_issues.py --project-root /path/to/project
 
 Exit codes:
     0 - Success (all sync operations completed or dry-run finished)
@@ -28,17 +28,17 @@ Exit codes:
 
 Examples:
     # Dry-run to preview what would be synced:
-    python3 eoa_sync_github_issues.py --dry-run --create-missing --update-labels
+    python3 amoa_sync_github_issues.py --dry-run --create-missing --update-labels
 
     # Create missing issues and update labels:
-    python3 eoa_sync_github_issues.py --create-missing --update-labels
+    python3 amoa_sync_github_issues.py --create-missing --update-labels
 
     # Full sync including closing completed modules:
-    python3 eoa_sync_github_issues.py \
+    python3 amoa_sync_github_issues.py \
         --create-missing --update-labels --close-completed
 
     # Sync for a specific repo:
-    python3 eoa_sync_github_issues.py \
+    python3 amoa_sync_github_issues.py \
         --repo Emasoft/my-project --create-missing --update-labels
 """
 
@@ -51,7 +51,7 @@ from pathlib import Path
 
 
 # State file location relative to the project root
-STATE_FILE_PATH = ".emasoft/orchestration-state.json"
+STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 
 # Module status to GitHub label mapping
 STATUS_LABEL_MAP = {
@@ -312,7 +312,7 @@ def create_issue_for_module(module, project_root, repo=None, dry_run=False):
     body_lines.extend([
         "---",
         "",
-        "*This issue was created by the EOA orchestration system.*",
+        "*This issue was created by the AMOA orchestration system.*",
     ])
     body = "\n".join(body_lines)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-eoa_check_orchestrator_status.py - Check orchestrator loop status and pending tasks.
+amoa_check_orchestrator_status.py - Check orchestrator loop status and pending tasks.
 
 Displays the current state of the orchestrator loop including:
 - Whether a loop is active
@@ -11,8 +11,8 @@ Displays the current state of the orchestrator loop including:
 NO external dependencies - Python 3.8+ stdlib only.
 
 Usage:
-    python3 eoa_check_orchestrator_status.py
-    python3 eoa_check_orchestrator_status.py --verbose
+    python3 amoa_check_orchestrator_status.py
+    python3 amoa_check_orchestrator_status.py --verbose
 
 Exit codes:
     0 - Success (status displayed)

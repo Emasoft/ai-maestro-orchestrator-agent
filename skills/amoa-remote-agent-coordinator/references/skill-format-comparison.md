@@ -208,7 +208,7 @@ Same-name skills: higher priority wins.
 Subagents don't inherit skills. Grant explicitly:
 
 ```yaml
-# .claude/agents/eia-code-reviewer/AGENT.md
+# .claude/agents/amia-code-reviewer/AGENT.md
 ---
 name: code-reviewer
 skills: pr-review, security-check

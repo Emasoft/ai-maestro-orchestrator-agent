@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for eoa_orchestrator_stop_check.py -- Phase-aware stop hook enforcement.
+"""Tests for amoa_orchestrator_stop_check.py -- Phase-aware stop hook enforcement.
 
 These tests verify that the standalone stop check script correctly reads
 orchestration state and makes allow/block decisions based on phase status.
@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 # Path to the script under test
-SCRIPT_PATH = Path(__file__).resolve().parents[2] / "OUTPUT_SKILLS" / "emasoft-orchestrator-agent" / "scripts" / "eoa_orchestrator_stop_check.py"
+SCRIPT_PATH = Path(__file__).resolve().parents[2] / "OUTPUT_SKILLS" / "ai-maestro-orchestrator-agent" / "scripts" / "amoa_orchestrator_stop_check.py"
 
 
 def run_script(cwd, extra_env=None):
@@ -46,7 +46,7 @@ class TestNoStateFile:
     """When no orchestration state file exists, the script should allow stop."""
 
     def test_allows_stop_when_no_state_file(self, tmp_path):
-        """Allow stop (exit 0) when no .emasoft/orchestration-state.json exists."""
+        """Allow stop (exit 0) when no .ai-maestro/orchestration-state.json exists."""
         code, parsed, stdout, stderr = run_script(tmp_path)
         assert code == 0
         if parsed is not None:
@@ -57,7 +57,7 @@ class TestPlanPhaseBlocking:
     """When in Plan Phase and plan is incomplete, the script should block stop."""
 
     def _write_state(self, tmp_path, state_data):
-        state_dir = tmp_path / ".emasoft"
+        state_dir = tmp_path / ".ai-maestro"
         state_dir.mkdir(exist_ok=True)
         state_file = state_dir / "orchestration-state.json"
         state_file.write_text(json.dumps(state_data), encoding="utf-8")
@@ -91,7 +91,7 @@ class TestOrchestrationPhaseBlocking:
     """When in Orchestration Phase, block if modules are incomplete."""
 
     def _write_state(self, tmp_path, state_data):
-        state_dir = tmp_path / ".emasoft"
+        state_dir = tmp_path / ".ai-maestro"
         state_dir.mkdir(exist_ok=True)
         state_file = state_dir / "orchestration-state.json"
         state_file.write_text(json.dumps(state_data), encoding="utf-8")
@@ -150,7 +150,7 @@ class TestUnknownPhase:
     """When phase is unknown, the script should allow stop."""
 
     def _write_state(self, tmp_path, state_data):
-        state_dir = tmp_path / ".emasoft"
+        state_dir = tmp_path / ".ai-maestro"
         state_dir.mkdir(exist_ok=True)
         state_file = state_dir / "orchestration-state.json"
         state_file.write_text(json.dumps(state_data), encoding="utf-8")
@@ -171,7 +171,7 @@ class TestOutputFormat:
     """Verify the JSON output contains all required fields."""
 
     def _write_state(self, tmp_path, state_data):
-        state_dir = tmp_path / ".emasoft"
+        state_dir = tmp_path / ".ai-maestro"
         state_dir.mkdir(exist_ok=True)
         state_file = state_dir / "orchestration-state.json"
         state_file.write_text(json.dumps(state_data), encoding="utf-8")
@@ -205,7 +205,7 @@ class TestCorruptStateFile:
 
     def test_allows_stop_on_corrupt_json(self, tmp_path):
         """Allow stop (exit 0) when state file contains invalid JSON."""
-        state_dir = tmp_path / ".emasoft"
+        state_dir = tmp_path / ".ai-maestro"
         state_dir.mkdir(exist_ok=True)
         state_file = state_dir / "orchestration-state.json"
         state_file.write_text("this is not json {{{", encoding="utf-8")
@@ -214,7 +214,7 @@ class TestCorruptStateFile:
 
     def test_allows_stop_on_empty_state(self, tmp_path):
         """Allow stop (exit 0) when state file is empty."""
-        state_dir = tmp_path / ".emasoft"
+        state_dir = tmp_path / ".ai-maestro"
         state_dir.mkdir(exist_ok=True)
         state_file = state_dir / "orchestration-state.json"
         state_file.write_text("", encoding="utf-8")

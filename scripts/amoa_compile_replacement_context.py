@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 """
-EOA Compile Replacement Context Script
+AMOA Compile Replacement Context Script
 
 Gathers ALL information about a FAILED agent's work for agent replacement.
-This is DIFFERENT from eoa_compile_handoff.py (which compiles module specs
+This is DIFFERENT from amoa_compile_handoff.py (which compiles module specs
 for new assignments). This script compiles the full context of what a failed
 agent was working on, including task state, git history, GitHub issues, design
 docs, and known blockers, so the replacement agent can pick up exactly where
 the failed agent left off.
 
 Data sources:
-  1. State file (.emasoft/orchestration-state.json) - task assignments, progress, blockers
+  1. State file (.ai-maestro/orchestration-state.json) - task assignments, progress, blockers
   2. Git branch analysis (git log, git diff --stat)
   3. GitHub Issues (gh issue list --assignee)
   4. Design docs in design/ directory
 
 Usage:
-    python3 eoa_compile_replacement_context.py --failed-agent NAME --output FILE
-    python3 eoa_compile_replacement_context.py --failed-agent impl-1 --output context.md
-    python3 eoa_compile_replacement_context.py --failed-agent impl-1 --output context.md --project-root /path/to/project
+    python3 amoa_compile_replacement_context.py --failed-agent NAME --output FILE
+    python3 amoa_compile_replacement_context.py --failed-agent impl-1 --output context.md
+    python3 amoa_compile_replacement_context.py --failed-agent impl-1 --output context.md --project-root /path/to/project
 
 Exit codes:
     0 - Success
@@ -26,11 +26,11 @@ Exit codes:
 
 Examples:
     # Compile context for a failed implementer agent:
-    python3 eoa_compile_replacement_context.py \
+    python3 amoa_compile_replacement_context.py \
         --failed-agent implementer-1 --output replacement-context.md
 
     # Compile context with explicit project root:
-    python3 eoa_compile_replacement_context.py \
+    python3 amoa_compile_replacement_context.py \
         --failed-agent implementer-1 --output context.md \
         --project-root /home/user/myproject
 """
@@ -44,7 +44,7 @@ from pathlib import Path
 
 
 # State file location relative to the project root
-STATE_FILE_PATH = ".emasoft/orchestration-state.json"
+STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 
 
 def load_state(project_root):

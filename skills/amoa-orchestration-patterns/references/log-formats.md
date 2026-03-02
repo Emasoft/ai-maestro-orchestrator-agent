@@ -1,6 +1,6 @@
 # Log Formats Reference
 
-This document specifies all log entry formats, progress report structures, and status update templates used by the Emasoft Orchestrator Agent (EOA).
+This document specifies all log entry formats, progress report structures, and status update templates used by the AI Maestro Orchestrator Agent (AMOA).
 
 ## Table of Contents
 
@@ -272,7 +272,7 @@ archive/
 
 ## Output Report Format
 
-**Purpose:** Minimal report format returned to task sender (ECOS/EAMA)
+**Purpose:** Minimal report format returned to task sender (AMCOS/AMAMA)
 
 **Format:**
 
@@ -315,14 +315,14 @@ All AI Maestro messages follow JSON format with required fields: `from`, `to`, `
 
 ### Message Type: Assignment
 
-**From ECOS or EAMA to EOA:**
+**From AMCOS or AMAMA to AMOA:**
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
 ```json
 {
-  "from": "ecos-main",
-  "to": "eoa-[project-name]",
+  "from": "amcos-main",
+  "to": "amoa-[project-name]",
   "subject": "Task Assignment: [Task Name]",
   "priority": "normal|high|urgent",
   "content": {
@@ -338,10 +338,10 @@ All AI Maestro messages follow JSON format with required fields: `from`, `to`, `
 }
 ```
 
-**EOA Response (ACK):**
+**AMOA Response (ACK):**
 
 Send an acknowledgment using the `agent-messaging` skill:
-- **Recipient**: `ecos-main`
+- **Recipient**: `amcos-main`
 - **Subject**: "ACK: Task Assignment [Task Name]"
 - **Content**: "Task received and logged. UUID: [task-uuid]. Expected completion: [timestamp]."
 - **Type**: `acknowledgment`, **Priority**: `normal`
@@ -351,7 +351,7 @@ Send an acknowledgment using the `agent-messaging` skill:
 
 ### Message Type: Delegation
 
-**EOA to Sub-Agent:**
+**AMOA to Sub-Agent:**
 
 Send a task assignment using the `agent-messaging` skill:
 - **Recipient**: the sub-agent session name
@@ -369,7 +369,7 @@ Send a task assignment using the `agent-messaging` skill:
 ```json
 {
   "from": "[sub-agent-name]",
-  "to": "eoa-[project-name]",
+  "to": "amoa-[project-name]",
   "subject": "ACK: Task Assignment [Task Name]",
   "content": {
     "type": "acknowledgment",
@@ -382,7 +382,7 @@ Send a task assignment using the `agent-messaging` skill:
 
 ### Message Type: Status Request
 
-**EOA to Sub-Agent:**
+**AMOA to Sub-Agent:**
 
 Send a status request using the `agent-messaging` skill:
 - **Recipient**: the sub-agent session name
@@ -400,7 +400,7 @@ Send a status request using the `agent-messaging` skill:
 ```json
 {
   "from": "[sub-agent-name]",
-  "to": "eoa-[project-name]",
+  "to": "amoa-[project-name]",
   "subject": "Status Update: [Task Name]",
   "content": {
     "type": "status_update",
@@ -415,10 +415,10 @@ Send a status request using the `agent-messaging` skill:
 
 ### Message Type: Completion Report
 
-**EOA to ECOS:**
+**AMOA to AMCOS:**
 
 Send a completion report using the `agent-messaging` skill:
-- **Recipient**: `ecos-main`
+- **Recipient**: `amcos-main`
 - **Subject**: "Task Complete: [Task Name]"
 - **Content**: "[1-2 line summary]. Key finding: [one-line summary]. Details: docs_dev/orchestration/reports/[task-uuid].md"
 - **Type**: `completion`, **Priority**: `normal`
@@ -428,10 +428,10 @@ Send a completion report using the `agent-messaging` skill:
 
 ### Message Type: Escalation
 
-**EOA to ECOS:**
+**AMOA to AMCOS:**
 
 Send an escalation using the `agent-messaging` skill:
-- **Recipient**: `ecos-main`
+- **Recipient**: `amcos-main`
 - **Subject**: "ESCALATION: [Issue Description]"
 - **Type**: `escalation`, **Priority**: `urgent`
 - **Content and Data**: include relevant escalation details such as `{

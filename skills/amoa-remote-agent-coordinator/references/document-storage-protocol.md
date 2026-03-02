@@ -105,35 +105,35 @@ When receiving documents, verify integrity:
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/eoa_orchestrator_init.py <!-- TODO: Rename to eoa_orchestrator_init.py -->` | Initialize orchestrator storage structure |
-| `scripts/eoa_register_agent.py <!-- TODO: Rename to eoa_register_agent.py -->` | Register new agents, list registered agents |
-| `scripts/eoa_orchestrator_download.py <!-- TODO: Rename to eoa_orchestrator_download.py -->` | Download documents from agents to per-agent folders |
-| `scripts/eoa_search.py <!-- TODO: Rename to eoa_search.py -->` | Search across all agents by task, agent, date, category |
+| `scripts/amoa_orchestrator_init.py <!-- TODO: Rename to amoa_orchestrator_init.py -->` | Initialize orchestrator storage structure |
+| `scripts/amoa_register_agent.py <!-- TODO: Rename to amoa_register_agent.py -->` | Register new agents, list registered agents |
+| `scripts/amoa_orchestrator_download.py <!-- TODO: Rename to amoa_orchestrator_download.py -->` | Download documents from agents to per-agent folders |
+| `scripts/amoa_search.py <!-- TODO: Rename to amoa_search.py -->` | Search across all agents by task, agent, date, category |
 
 ### 4.2 Usage Examples
 
 ```bash
 # Initialize orchestrator storage
-python scripts/eoa_orchestrator_init.py <!-- TODO: Rename to eoa_orchestrator_init.py --> --project-root .
+python scripts/amoa_orchestrator_init.py <!-- TODO: Rename to amoa_orchestrator_init.py --> --project-root .
 
 # Register a new agent
-python scripts/eoa_register_agent.py <!-- TODO: Rename to eoa_register_agent.py --> register \
+python scripts/amoa_register_agent.py <!-- TODO: Rename to amoa_register_agent.py --> register \
   --name helper-agent-macos-arm64 \
   --platform macos \
   --architecture arm64
 
 # Download document from agent
-python scripts/eoa_orchestrator_download.py <!-- TODO: Rename to eoa_orchestrator_download.py --> download \
+python scripts/amoa_orchestrator_download.py <!-- TODO: Rename to amoa_orchestrator_download.py --> download \
   --url "https://github.com/.../issues/42#issuecomment-123456" \
   --agent helper-agent-macos-arm64 \
   --task-id GH-42 \
   --category reports
 
 # Search for blockers across all agents
-python scripts/eoa_search.py <!-- TODO: Rename to eoa_search.py --> blockers
+python scripts/amoa_search.py <!-- TODO: Rename to amoa_search.py --> blockers
 
 # Find all documents for a task
-python scripts/eoa_search.py <!-- TODO: Rename to eoa_search.py --> by-task GH-42
+python scripts/amoa_search.py <!-- TODO: Rename to amoa_search.py --> by-task GH-42
 ```
 
 ---
@@ -142,7 +142,7 @@ python scripts/eoa_search.py <!-- TODO: Rename to eoa_search.py --> by-task GH-4
 
 ### 5.1 What the Skill Provides
 
-Remote agents should install the `eoa-agent-storage` skill for managing their local document storage. This skill provides:
+Remote agents should install the `amoa-agent-storage` skill for managing their local document storage. This skill provides:
 
 - Download script for receiving documents from orchestrator
 - Read-only enforcement
@@ -152,7 +152,7 @@ Remote agents should install the `eoa-agent-storage` skill for managing their lo
 ### 5.2 Installation on Remote Agent
 
 ```bash
-cp -r eoa-agent-storage ~/.claude/skills/
+cp -r amoa-agent-storage ~/.claude/skills/
 ```
 
 See `templates/protocols/DOCUMENT_STORAGE_PROTOCOL.md` for complete protocol specification.

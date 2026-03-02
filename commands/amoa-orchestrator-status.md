@@ -1,7 +1,7 @@
 ---
-name: eoa-orchestrator-status
+name: amoa-orchestrator-status
 description: "Check orchestrator loop status and pending tasks"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_check_orchestrator_status.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_orchestrator_status.py:*)"]
 ---
 
 # Orchestrator Status
@@ -9,7 +9,7 @@ allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_check_orchestrat
 Check the current state of the orchestrator loop:
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_check_orchestrator_status.py"
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_orchestrator_status.py"
 ```
 
 This shows:

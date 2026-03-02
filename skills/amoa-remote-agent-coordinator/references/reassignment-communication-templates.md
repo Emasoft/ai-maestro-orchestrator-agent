@@ -6,43 +6,43 @@ This document provides complete message templates for the full reassignment flow
 
 ## Table of Contents
 
-- 1. Reassignment Notification to Old Agent (EOA to Old Agent)
+- 1. Reassignment Notification to Old Agent (AMOA to Old Agent)
   - 1.1 When to send a reassignment notification
   - 1.2 Reassignment notification message template
   - 1.3 Expected acknowledgment from old agent
   - 1.4 Decision tree for reassignment notification outcomes
-- 2. Old Agent Work Summary Response (Old Agent to EOA)
+- 2. Old Agent Work Summary Response (Old Agent to AMOA)
   - 2.1 When to expect a work summary response
   - 2.2 Work summary response message template
   - 2.3 Work summary data fields explained
   - 2.4 Decision tree for work summary outcomes
-- 3. Reassignment Assignment to New Agent (EOA to New Agent)
+- 3. Reassignment Assignment to New Agent (AMOA to New Agent)
   - 3.1 When to send a reassignment assignment
   - 3.2 Reassignment assignment message template
   - 3.3 Expected acknowledgment from new agent
   - 3.4 Decision tree for new agent assignment outcomes
-- 4. Agent Recovery Decision Notification (EOA to Both Agents)
+- 4. Agent Recovery Decision Notification (AMOA to Both Agents)
   - 4.1 When a recovery decision notification is needed
   - 4.2 Recovery decision notification message template
   - 4.3 Graceful stop message template for removed agent
   - 4.4 Continuation confirmation message template for kept agent
   - 4.5 Decision tree for recovery decision outcomes
-- 5. EOA Response to Agent Recovery Decision
-  - 5.1 When EOA must respond to ECOS recovery report
-  - 5.2 EOA response to keep replacement agent template
-  - 5.3 EOA response to revert to original agent template
-  - 5.4 Decision tree for EOA recovery response
+- 5. AMOA Response to Agent Recovery Decision
+  - 5.1 When AMOA must respond to AMCOS recovery report
+  - 5.2 AMOA response to keep replacement agent template
+  - 5.3 AMOA response to revert to original agent template
+  - 5.4 Decision tree for AMOA recovery response
 - 6. Reassignment Flow Decision Tree
   - 6.1 Complete reassignment decision tree
   - 6.2 Timeout thresholds reference
 
 ---
 
-## 1. Reassignment Notification to Old Agent (EOA to Old Agent)
+## 1. Reassignment Notification to Old Agent (AMOA to Old Agent)
 
 ### 1.1 When to send a reassignment notification
 
-Send this message when the Orchestrator (EOA) decides to remove an agent from a task and replace it with a different agent. Reasons for reassignment include performance issues, agent unavailability, skill mismatch between the agent and the task requirements, or changing project needs that require a different agent profile.
+Send this message when the Orchestrator (AMOA) decides to remove an agent from a task and replace it with a different agent. Reasons for reassignment include performance issues, agent unavailability, skill mismatch between the agent and the task requirements, or changing project needs that require a different agent profile.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -50,7 +50,7 @@ Send this message when the Orchestrator (EOA) decides to remove an agent from a 
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "<old-agent-session-name>",
   "subject": "[REASSIGN] Task <task-uuid> - You Are Being Reassigned",
   "priority": "high",
@@ -83,7 +83,7 @@ The old agent should respond with a brief acknowledgment and then follow up with
 ```json
 {
   "from": "<old-agent-session-name>",
-  "to": "eoa-orchestrator-main-agent",
+  "to": "amoa-orchestrator-main-agent",
   "subject": "[ACK] Reassignment Notification Received - Task <task-uuid>",
   "priority": "high",
   "content": {
@@ -110,13 +110,13 @@ Send reassignment notification to old agent
 │   │       └─ MARK agent as unresponsive, proceed to Section 6
 │   │          (assign new agent with partial or reconstructed context)
 └─ Old agent responds with error or refusal
-    └─ ESCALATE to ECOS for agent status investigation
+    └─ ESCALATE to AMCOS for agent status investigation
        PROCEED with reassignment using available context
 ```
 
 ---
 
-## 2. Old Agent Work Summary Response (Old Agent to EOA)
+## 2. Old Agent Work Summary Response (Old Agent to AMOA)
 
 ### 2.1 When to expect a work summary response
 
@@ -129,7 +129,7 @@ After the old agent acknowledges the reassignment notification, it should provid
 ```json
 {
   "from": "<old-agent-session-name>",
-  "to": "eoa-orchestrator-main-agent",
+  "to": "amoa-orchestrator-main-agent",
   "subject": "[SUMMARY] Work Summary for Task <task-uuid>",
   "priority": "high",
   "content": {
@@ -203,7 +203,7 @@ Wait for work summary from old agent
 
 ---
 
-## 3. Reassignment Assignment to New Agent (EOA to New Agent)
+## 3. Reassignment Assignment to New Agent (AMOA to New Agent)
 
 ### 3.1 When to send a reassignment assignment
 
@@ -215,7 +215,7 @@ Send this message after receiving and processing the old agent's work summary (o
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "<new-agent-session-name>",
   "subject": "[TASK] Reassignment - Continue Task <task-uuid>",
   "priority": "high",
@@ -265,7 +265,7 @@ Send this message after receiving and processing the old agent's work summary (o
 ```json
 {
   "from": "<new-agent-session-name>",
-  "to": "eoa-orchestrator-main-agent",
+  "to": "amoa-orchestrator-main-agent",
   "subject": "[ACK] Reassignment Accepted - Task <task-uuid>",
   "priority": "high",
   "content": {
@@ -298,15 +298,15 @@ Send reassignment assignment to new agent
 │          ├─ Another agent available
 │          │   └─ REPEAT Section 3 with the new candidate agent
 │          └─ No other agents available
-│              └─ ESCALATE to ECOS requesting a new agent be spawned
+│              └─ ESCALATE to AMCOS requesting a new agent be spawned
 ├─ New agent does not respond within 10 minutes
 │   ├─ RETRY once with urgent priority
 │   │   ├─ Response received
 │   │   │   └─ PROCESS as above
 │   │   └─ No response
 │   │       └─ MARK new agent as unresponsive
-│   │          ESCALATE to ECOS for agent health check
-│   │          REQUEST alternative agent from ECOS
+│   │          ESCALATE to AMCOS for agent health check
+│   │          REQUEST alternative agent from AMCOS
 └─ New agent responds with error
     └─ DIAGNOSE error (missing handoff doc, unreadable path, etc.)
        FIX issue and RESEND assignment
@@ -314,11 +314,11 @@ Send reassignment assignment to new agent
 
 ---
 
-## 4. Agent Recovery Decision Notification (EOA to Both Agents)
+## 4. Agent Recovery Decision Notification (AMOA to Both Agents)
 
 ### 4.1 When a recovery decision notification is needed
 
-This notification is needed when ECOS reports that the original agent (the one that was replaced) has recovered and is available again. The Orchestrator must decide whether to keep the replacement agent on the task or revert to the original agent. This decision is then communicated to both agents: the agent being removed receives a graceful stop message, and the agent continuing receives a confirmation.
+This notification is needed when AMCOS reports that the original agent (the one that was replaced) has recovered and is available again. The Orchestrator must decide whether to keep the replacement agent on the task or revert to the original agent. This decision is then communicated to both agents: the agent being removed receives a graceful stop message, and the agent continuing receives a confirmation.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -330,7 +330,7 @@ Send this to both agents simultaneously. The `decision` field tells each agent w
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "<both-agent-session-names>",
   "subject": "[RECOVERY] Agent Recovery Decision - Task <task-uuid>",
   "priority": "high",
@@ -361,7 +361,7 @@ Send this to whichever agent is being removed from the task (either the original
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "<removed-agent-session-name>",
   "subject": "[STOP] Graceful Release from Task <task-uuid>",
   "priority": "normal",
@@ -383,7 +383,7 @@ Send this to the agent that will continue working on the task:
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
+  "from": "amoa-orchestrator-main-agent",
   "to": "<continuing-agent-session-name>",
   "subject": "[CONFIRMED] Continue Task <task-uuid>",
   "priority": "normal",
@@ -402,7 +402,7 @@ Send this to the agent that will continue working on the task:
 ### 4.5 Decision tree for recovery decision outcomes
 
 ```
-ECOS reports original agent recovered
+AMCOS reports original agent recovered
 ├─ Evaluate current state of replacement agent
 │   ├─ Replacement agent has made significant progress (over 50%)
 │   │   └─ DECISION: keep_replacement
@@ -431,25 +431,25 @@ ECOS reports original agent recovered
     └─ DECISION: keep_replacement
        MONITOR original agent for 30 minutes
        IF stable → consider for future assignments
-       IF unstable → REPORT to ECOS for decommission
+       IF unstable → REPORT to AMCOS for decommission
 ```
 
 ---
 
-## 5. EOA Response to Agent Recovery Decision
+## 5. AMOA Response to Agent Recovery Decision
 
-### 5.1 When EOA must respond to ECOS recovery report
+### 5.1 When AMOA must respond to AMCOS recovery report
 
-When ECOS sends a recovery report indicating that a previously failed or removed agent is now available again, the Orchestrator must evaluate the situation and respond to ECOS with the decision and its rationale.
+When AMCOS sends a recovery report indicating that a previously failed or removed agent is now available again, the Orchestrator must evaluate the situation and respond to AMCOS with the decision and its rationale.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-### 5.2 EOA response to keep replacement agent template
+### 5.2 AMOA response to keep replacement agent template
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-orchestrator-main-agent",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[DECISION] Recovery Decision - Keep Replacement - Task <task-uuid>",
   "priority": "normal",
   "content": {
@@ -466,12 +466,12 @@ When ECOS sends a recovery report indicating that a previously failed or removed
 }
 ```
 
-### 5.3 EOA response to revert to original agent template
+### 5.3 AMOA response to revert to original agent template
 
 ```json
 {
-  "from": "eoa-orchestrator-main-agent",
-  "to": "ecos-chief-of-staff-main-agent",
+  "from": "amoa-orchestrator-main-agent",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[DECISION] Recovery Decision - Revert to Original - Task <task-uuid>",
   "priority": "normal",
   "content": {
@@ -488,21 +488,21 @@ When ECOS sends a recovery report indicating that a previously failed or removed
 }
 ```
 
-### 5.4 Decision tree for EOA recovery response
+### 5.4 Decision tree for AMOA recovery response
 
 ```
-Receive ECOS recovery report for original agent
+Receive AMCOS recovery report for original agent
 ├─ Task is still in progress
 │   ├─ Evaluate replacement agent progress (see Section 4.5 decision tree)
-│   │   ├─ Keep replacement → SEND keep response to ECOS (Section 5.2)
-│   │   └─ Revert to original → SEND revert response to ECOS (Section 5.3)
+│   │   ├─ Keep replacement → SEND keep response to AMCOS (Section 5.2)
+│   │   └─ Revert to original → SEND revert response to AMCOS (Section 5.3)
 │   └─ EXECUTE recovery notifications to both agents (Section 4)
 ├─ Task is already completed by replacement agent
-│   └─ SEND response to ECOS: "Task already completed by replacement"
+│   └─ SEND response to AMCOS: "Task already completed by replacement"
 │      MARK original agent as available for new assignments
 │      NO recovery decision needed
 └─ Task was cancelled or deprioritized while agent was down
-    └─ SEND response to ECOS: "Task no longer active"
+    └─ SEND response to AMCOS: "Task no longer active"
        MARK both agents as available for new assignments
        NO recovery decision needed
 ```
@@ -533,7 +533,7 @@ Agent needs reassignment
 │   │       │       │   │
 │   │       │       │   └─ NOTIFY old agent of release (Section 4.3 graceful stop)
 │   │       │       │      UPDATE kanban board with new assignee
-│   │       │       │      CONFIRM to ECOS that replacement is complete
+│   │       │       │      CONFIRM to AMCOS that replacement is complete
 │   │       │       │      DONE - reassignment successful
 │   │       │       │
 │   │       │       └─ New agent rejects or does not respond
@@ -542,8 +542,8 @@ Agent needs reassignment
 │   │       │           │   └─ REPEAT Section 3 with new candidate
 │   │       │           │
 │   │       │           └─ No other agents available
-│   │       │               └─ ESCALATE to ECOS requesting new agent spawn
-│   │       │                  WAIT for ECOS to provide new agent
+│   │       │               └─ ESCALATE to AMCOS requesting new agent spawn
+│   │       │                  WAIT for AMCOS to provide new agent
 │   │       │                  REPEAT Section 3 when new agent is ready
 │   │       │
 │   │       └─ Summary NOT received (timeout after 15 minutes past deadline)
@@ -569,7 +569,7 @@ Agent needs reassignment
 │               │
 │               └─ ASSIGN new agent from scratch (use standard task assignment,
 │                  not reassignment template)
-│                  ESCALATE old agent status to ECOS for investigation
+│                  ESCALATE old agent status to AMCOS for investigation
 │                  TREAT as fresh assignment with original requirements
 │                  UPDATE kanban: old agent removed, new agent assigned
 ```
@@ -582,14 +582,14 @@ Agent needs reassignment
 | Old agent work summary delivery | 15 minutes past deadline | Proceed with partial or reconstructed context |
 | New agent ACK of reassignment assignment | 10 minutes | Retry once with urgent priority, then try another agent |
 | Graceful stop confirmation from removed agent | 10 minutes | Log non-response, proceed without confirmation |
-| ECOS recovery decision response | 30 minutes | Escalate to user if ECOS does not respond |
+| AMCOS recovery decision response | 30 minutes | Escalate to user if AMCOS does not respond |
 
 ---
 
 ## See Also
 
 - [agent-communication-templates.md](./agent-communication-templates.md) - General agent communication templates
-- [ecos-replacement-protocol.md](./ecos-replacement-protocol.md) - ECOS-initiated replacement protocol
+- [amcos-replacement-protocol.md](./amcos-replacement-protocol.md) - AMCOS-initiated replacement protocol
 - [proactive-handoff-protocol.md](./proactive-handoff-protocol.md) - Automatic handoff triggers and format
 - [assignment-workflow.md](./assignment-workflow.md) - Standard task assignment workflow
 - [escalation-procedures.md](./escalation-procedures.md) - When and how to escalate issues

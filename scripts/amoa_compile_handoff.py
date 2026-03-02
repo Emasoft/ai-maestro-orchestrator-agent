@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-EOA Compile Handoff Script
+AMOA Compile Handoff Script
 
 Compiles a handoff document for an agent from module specification and context.
 Reads requirements from design/requirements/ and context from design/memory/.
 Generates compiled handoff in design/handoffs/{agent-id}/.
 
 Usage:
-    python3 eoa_compile_handoff.py MODULE_ID AGENT_ID
-    python3 eoa_compile_handoff.py auth-core implementer-1 --platform web
-    python3 eoa_compile_handoff.py auth-core implementer-1 --include-context decision-001
+    python3 amoa_compile_handoff.py MODULE_ID AGENT_ID
+    python3 amoa_compile_handoff.py auth-core implementer-1 --platform web
+    python3 amoa_compile_handoff.py auth-core implementer-1 --include-context decision-001
 """
 
 import argparse
@@ -436,7 +436,7 @@ def main() -> int:
             )
         else:
             print(f"ERROR: Design folder not found: {root}")
-            print("Run eoa_init_design_folders.py first")
+            print("Run amoa_init_design_folders.py first")
         return 1
 
     # Compile handoff

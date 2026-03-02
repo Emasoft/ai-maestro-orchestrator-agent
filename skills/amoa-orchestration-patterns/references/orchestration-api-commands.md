@@ -5,7 +5,7 @@
 - 1. AI Maestro Messaging for Remote Agents
   - 1.1 When to use AI Maestro vs Task tool
   - 1.2 Sending task assignments to remote agents
-  - 1.3 Message types for EOA
+  - 1.3 Message types for AMOA
 - 2. Claude Code Tasks API
   - 2.1 When to use TaskCreate, TaskUpdate, TaskList
   - 2.2 Creating tasks with success criteria
@@ -35,7 +35,7 @@ Send task assignments using the `agent-messaging` skill:
 
 **Verify**: confirm message delivery.
 
-### 1.3 Message types for EOA
+### 1.3 Message types for AMOA
 
 | Type | Use When |
 |------|----------|

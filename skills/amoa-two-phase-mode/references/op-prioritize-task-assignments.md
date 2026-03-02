@@ -2,8 +2,8 @@
 operation: prioritize-task-assignments
 procedure: proc-create-task-plan
 workflow-instruction: Step 12 - Task Plan Creation
-parent-skill: eoa-two-phase-mode
-parent-plugin: emasoft-orchestrator-agent
+parent-skill: amoa-two-phase-mode
+parent-plugin: ai-maestro-orchestrator-agent
 version: 1.0.0
 ---
 
@@ -198,6 +198,6 @@ Copy this checklist and track your progress:
 
 ## Related Operations
 
-- [op-identify-task-dependencies.md](../eoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies affect priority
+- [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies affect priority
 - [op-schedule-claude-tasks.md](op-schedule-claude-tasks.md) - Priority determines task order
-- [op-select-agent-for-task.md](../eoa-orchestration-patterns/references/op-select-agent-for-task.md) - Agent selection after prioritization
+- [op-select-agent-for-task.md](../amoa-orchestration-patterns/references/op-select-agent-for-task.md) - Agent selection after prioritization

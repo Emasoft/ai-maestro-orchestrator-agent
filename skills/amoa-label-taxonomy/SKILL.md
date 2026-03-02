@@ -1,5 +1,5 @@
 ---
-name: eoa-label-taxonomy
+name: amoa-label-taxonomy
 description: GitHub label taxonomy for multi-agent systems. Use when managing labels for issue tracking and coordination. Trigger with label requests.
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
@@ -8,24 +8,24 @@ metadata:
   version: 1.0.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "support"
 procedure: "support-skill"
 ---
 
-# EOA Label Taxonomy
+# AMOA Label Taxonomy
 
 ## Overview
 
-This skill defines the complete label taxonomy for the emasoft multi-agent orchestration system. Labels serve two purposes: issue classification (type, priority, component) and agent coordination (assignment, status tracking). All labels follow the `<category>:<value>` format with strict cardinality rules to prevent conflicts and enable precise filtering.
+This skill defines the complete label taxonomy for the AI Maestro multi-agent orchestration system. Labels serve two purposes: issue classification (type, priority, component) and agent coordination (assignment, status tracking). All labels follow the `<category>:<value>` format with strict cardinality rules to prevent conflicts and enable precise filtering.
 
 ## Prerequisites
 
 1. Read **AGENT_OPERATIONS.md** for orchestrator workflow context
 2. Access to GitHub CLI (`gh`) configured for the repository
-3. Understanding of the emasoft agent roles (EOA, ECOS, EIA, EAMA)
-4. Read **eoa-messaging-templates** for message formats using labels
-5. Read **eoa-task-distribution** for assignment workflow
+3. Understanding of the ai-maestro agent roles (AMOA, AMCOS, AMIA, AMAMA)
+4. Read **amoa-messaging-templates** for message formats using labels
+5. Read **amoa-task-distribution** for assignment workflow
 
 ## Instructions
 
@@ -67,7 +67,7 @@ Copy this checklist and track your progress:
 
 ### What Labels Are For
 
-Labels in the emasoft multi-agent system serve TWO purposes:
+Labels in the AI Maestro multi-agent system serve TWO purposes:
 
 1. **Issue Classification** - Categorize what the issue IS (type, priority, component)
 2. **Agent Coordination** - Track who is WORKING on the issue (assignment, status)
@@ -130,7 +130,7 @@ The full workflow uses these 8 status columns:
 | 2 | `todo` | Todo | `status:todo` | Ready to start |
 | 3 | `in-progress` | In Progress | `status:in-progress` | Active work |
 | 4 | `ai-review` | AI Review | `status:ai-review` | Integrator agent reviews ALL tasks |
-| 5 | `human-review` | Human Review | `status:human-review` | User reviews BIG tasks only (via EAMA) |
+| 5 | `human-review` | Human Review | `status:human-review` | User reviews BIG tasks only (via AMAMA) |
 | 6 | `merge-release` | Merge/Release | `status:merge-release` | Ready to merge |
 | 7 | `done` | Done | `status:done` | Completed |
 | 8 | `blocked` | Blocked | `status:blocked` | Blocked at any stage |
@@ -138,7 +138,7 @@ The full workflow uses these 8 status columns:
 **Task Routing Rules:**
 - **Small tasks**: In Progress -> AI Review -> Merge/Release -> Done
 - **Big tasks**: In Progress -> AI Review -> Human Review -> Merge/Release -> Done
-- **Human Review** is requested via EAMA (Assistant Manager asks user to test/review)
+- **Human Review** is requested via AMAMA (Assistant Manager asks user to test/review)
 - Not all tasks go through Human Review -- only significant changes requiring human judgment
 
 ---
@@ -178,7 +178,7 @@ The full workflow uses these 8 status columns:
 
 **When Work Done, AI Reviews:**
 1. Change `status:in-progress` → `status:ai-review`
-2. Integrator (EIA) reviews ALL tasks
+2. Integrator (AMIA) reviews ALL tasks
 
 **When Human Review Needed (BIG tasks only):**
 1. Change `status:ai-review` → `status:human-review`
@@ -298,6 +298,6 @@ gh issue edit 42 --remove-label "assign:implementer-1" --add-label "assign:imple
 - **[cli-commands.md](./references/cli-commands.md)** - Complete CLI reference
 - **[examples.md](./references/examples.md)** - Usage examples
 - **AGENT_OPERATIONS.md** - Core orchestrator workflow context
-- **eoa-messaging-templates** - Message templates using labels
-- **eoa-task-distribution** - Assignment workflow
-- **eoa-progress-monitoring** - Status tracking
+- **amoa-messaging-templates** - Message templates using labels
+- **amoa-task-distribution** - Assignment workflow
+- **amoa-progress-monitoring** - Status tracking

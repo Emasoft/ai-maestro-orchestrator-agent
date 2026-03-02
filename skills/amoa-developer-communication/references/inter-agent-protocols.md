@@ -20,7 +20,7 @@
 
 ---
 
-This document defines the protocols for communication between agents in the emasoft multi-agent system.
+This document defines the protocols for communication between agents in the AI Maestro multi-agent system.
 
 ---
 
@@ -45,19 +45,19 @@ This document defines the protocols for communication between agents in the emas
 
 ### 1.1 When communicating in a multi-agent system
 
-The communication hierarchy within EOA's team follows strict rules:
+The communication hierarchy within AMOA's team follows strict rules:
 
 ```
-ECOS (EOA's coordinator)
+AMCOS (AMOA's coordinator)
   ↓↑
-EOA (team orchestrator)
+AMOA (team orchestrator)
   ↓↑
 WORKER AGENTS (implementers, testers, sub-agents)
 ```
 
-**Note**: This shows EOA's internal team structure. In the overall system, EOA receives work from ECOS (Chief of Staff), not directly from the human user. EAMA is the only agent that communicates directly with the human user.
+**Note**: This shows AMOA's internal team structure. In the overall system, AMOA receives work from AMCOS (Chief of Staff), not directly from the human user. AMAMA is the only agent that communicates directly with the human user.
 
-**Rule**: Worker agents NEVER communicate directly with each other. All communication flows through EOA.
+**Rule**: Worker agents NEVER communicate directly with each other. All communication flows through AMOA.
 
 ### 1.2 Orchestrator-exclusive communications (RULE 16)
 

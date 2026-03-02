@@ -34,7 +34,7 @@
 | Procedure | `proc-update-tasks` |
 | Workflow Step | Step 16 |
 | Trigger | Sync verification or recovery from desync |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Script | `scripts/github_sync.py` |
 
 ---

@@ -28,7 +28,7 @@
 | Procedure | `proc-clarify-tasks` |
 | Workflow Step | Step 14 |
 | Trigger | Implementer responds to pre-task interview |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Input From | Implementer agent |
 
 ---
@@ -91,7 +91,7 @@ Evaluate the implementer's pre-task interview responses to determine if they cor
 |-------------|--------|
 | No concerns | Proceed if other answers pass |
 | Requirements concern | Evaluate if valid, escalate if needed |
-| Design concern | Escalate to Architect (EAA) |
+| Design concern | Escalate to Architect (AMAA) |
 | Capability concern | Assess skill gap, reassign if needed |
 | Dependency concern | Check dependency status, resolve |
 
@@ -101,7 +101,7 @@ Evaluate the implementer's pre-task interview responses to determine if they cor
 |-----------------|--------|
 | Sound approach | Mark PASS |
 | Concerning approach | Request alternative |
-| Violates architecture | Escalate to Architect (EAA) |
+| Violates architecture | Escalate to Architect (AMAA) |
 
 **Check for:**
 - Approach aligns with existing patterns

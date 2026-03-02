@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Enables EOA (Emasoft Orchestrator Agent) to delegate coding tasks to remote AI agents and human developers via AI Maestro messaging. The orchestrator NEVER writes code - it creates precise instructions for remote agents.
+Enables AMOA (AI Maestro Orchestrator Agent) to delegate coding tasks to remote AI agents and human developers via AI Maestro messaging. The orchestrator NEVER writes code - it creates precise instructions for remote agents.
 
 ## When to Use
 

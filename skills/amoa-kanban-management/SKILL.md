@@ -1,5 +1,5 @@
 ---
-name: eoa-kanban-management
+name: amoa-kanban-management
 description: GitHub Projects V2 kanban board management. Use when creating boards, adding columns, moving items. Trigger with kanban or column requests.
 license: Apache-2.0
 compatibility: Requires gh CLI authenticated with project scopes. Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 1.0.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Steps 12, 13, 14, 15"
 procedure: "proc-populate-kanban, proc-update-kanban-status, proc-add-columns, proc-sync-kanban"
 ---
@@ -17,14 +17,14 @@ procedure: "proc-populate-kanban, proc-update-kanban-status, proc-add-columns, p
 
 ## Overview
 
-This skill teaches the Orchestrator (EOA) how to manage GitHub Projects V2 kanban boards. It covers creating project boards, adding and modifying columns, moving items between columns, and synchronizing task status. This skill also documents critical pitfalls discovered during production use that can cause data loss if not followed.
+This skill teaches the Orchestrator (AMOA) how to manage GitHub Projects V2 kanban boards. It covers creating project boards, adding and modifying columns, moving items between columns, and synchronizing task status. This skill also documents critical pitfalls discovered during production use that can cause data loss if not followed.
 
 ## Prerequisites
 
 1. GitHub CLI (`gh`) installed and authenticated
 2. **OAuth scopes**: `project` and `read:project` scopes MUST be added to `gh auth`. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md) for details
-3. Read **eoa-task-distribution** for task assignment workflow
-4. Read **eoa-label-taxonomy** for label usage
+3. Read **amoa-task-distribution** for task assignment workflow
+4. Read **amoa-label-taxonomy** for label usage
 5. Understanding of the 8-column kanban system (Backlog, Todo, In Progress, AI Review, Human Review, Merge/Release, Done, Blocked)
 
 ---
@@ -86,7 +86,7 @@ If scopes are missing, the agent CANNOT proceed. See [references/gh-auth-scopes.
 **When to use:** When synchronizing label-based status with the GitHub Project board, or vice versa.
 
 **Steps:**
-1. Run the sync script: `eoa_sync_kanban.py`
+1. Run the sync script: `amoa_sync_kanban.py`
 2. Verify label status matches board column
 3. Resolve any conflicts (board takes precedence for manual moves)
 
@@ -94,12 +94,12 @@ If scopes are missing, the agent CANNOT proceed. See [references/gh-auth-scopes.
 
 ## Available Scripts
 
-The EOA plugin includes these kanban management scripts in `scripts/`:
+The AMOA plugin includes these kanban management scripts in `scripts/`:
 
 | Script | Purpose | When to Use |
 |--------|---------|-------------|
-| `eoa_kanban_manager.py` | Create tasks, assign agents, update status, check ready tasks | Day-to-day kanban operations |
-| `eoa_sync_kanban.py` | Sync label status with GitHub Project board | After manual board changes or to reconcile state |
+| `amoa_kanban_manager.py` | Create tasks, assign agents, update status, check ready tasks | Day-to-day kanban operations |
+| `amoa_sync_kanban.py` | Sync label status with GitHub Project board | After manual board changes or to reconcile state |
 | `check-github-projects.sh` | Query project board for pending items | Stop-hook checks, status queries |
 | `gh-project-add-columns.sh` | Safely add columns preserving existing assignments | When adding new columns to a live board |
 
@@ -237,7 +237,7 @@ echo "OK: Project scopes are available."
 ISSUE_URL=$(gh issue create --repo Emasoft/myproject \
   --title "Implement feature X" \
   --body "Description..." \
-  --label "assign:epa-impl-01,priority:high,status:todo")
+  --label "assign:ampa-impl-01,priority:high,status:todo")
 
 ISSUE_NUMBER=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
 
@@ -279,9 +279,9 @@ fi
 - [GitHub CLI Authentication and OAuth Scopes](references/gh-auth-scopes.md)
 - [GitHub Projects V2 GraphQL Mutations](references/github-projects-v2-graphql.md)
 - [Kanban Pitfalls and Guards](references/kanban-pitfalls.md)
-- **eoa-task-distribution** skill - Task assignment workflow
-- **eoa-label-taxonomy** skill - Label categories and cardinality
-- **eoa-progress-monitoring** skill - Agent tracking and escalation
+- **amoa-task-distribution** skill - Task assignment workflow
+- **amoa-label-taxonomy** skill - Label categories and cardinality
+- **amoa-progress-monitoring** skill - Agent tracking and escalation
 
 ---
 

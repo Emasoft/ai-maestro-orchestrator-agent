@@ -91,7 +91,7 @@ This template is split into multiple files for better organization:
 ### Part 3: Patterns and Verification
 **File**: [GO_TOOLCHAIN-part3-patterns.md](./GO_TOOLCHAIN-part3-patterns.md)
 - Verification checklist for Go toolchain setup
-- Common Go patterns for EOA Compliance
+- Common Go patterns for AMOA Compliance
 - Error handling patterns
 - JSON handling patterns
 - CLI structure with Cobra
@@ -106,7 +106,7 @@ This template is split into multiple files for better organization:
 template:
   name: GO_TOOLCHAIN
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   language: go
   language_version: "1.22+"
   requires:

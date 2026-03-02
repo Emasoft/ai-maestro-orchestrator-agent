@@ -1,8 +1,8 @@
 ---
-name: eoa-check-agents
+name: amoa-check-agents
 description: "Poll all active remote agents for progress with MANDATORY questions"
 argument-hint: "[--agent AGENT_ID]"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_check_remote_agents.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_remote_agents.py:*)"]
 ---
 
 # Check Agents Command
@@ -12,7 +12,7 @@ Poll all active remote agents for progress updates. Implements the MANDATORY Pro
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_check_remote_agents.py" $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_remote_agents.py" $ARGUMENTS
 ```
 
 ## Options

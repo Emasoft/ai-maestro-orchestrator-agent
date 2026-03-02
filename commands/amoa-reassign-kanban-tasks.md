@@ -1,8 +1,8 @@
 ---
-name: eoa-reassign-kanban-tasks
+name: amoa-reassign-kanban-tasks
 description: "Reassign GitHub Project kanban tasks from one agent to another"
 argument-hint: "--from-agent <ID> --to-agent <ID> --project-id <ID> [--dry-run]"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_reassign_kanban_tasks.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_reassign_kanban_tasks.py:*)"]
 ---
 
 # Reassign Kanban Tasks Command
@@ -12,7 +12,7 @@ Reassign all GitHub Project tasks from a failed agent to a replacement agent. Up
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_reassign_kanban_tasks.py" $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_reassign_kanban_tasks.py" $ARGUMENTS
 ```
 
 ## Arguments
@@ -32,7 +32,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_reassign_kanban_tasks.py" $ARGUMENTS
 | Scenario | Use This Command |
 |----------|------------------|
 | After generating replacement handoff | Yes |
-| Agent replaced by ECOS | Yes |
+| Agent replaced by AMCOS | Yes |
 | Manual task redistribution | Yes |
 | Load balancing between agents | Yes |
 | Agent going offline | Yes |
@@ -77,7 +77,7 @@ Adds a comment to each issue documenting the reassignment:
 ### Handoff Document
 Full context for new agent (include the handoff document path here)
 
-*Automated reassignment by EOA*
+*Automated reassignment by AMOA*
 ```
 
 ### 5. Logs Reassignment
@@ -94,7 +94,7 @@ Records all changes for audit:
 
 ```bash
 # Reassign all tasks from implementer-1 to implementer-2
-/eoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2
 
 # Output:
 # Reassigning tasks from implementer-1 to implementer-2
@@ -107,21 +107,21 @@ Records all changes for audit:
 
 ```bash
 # Specify project explicitly
-/eoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --project-id 12345
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --project-id 12345
 ```
 
 ### With Handoff URL
 
 ```bash
 # Include handoff document link in comments
-/eoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --handoff-url "https://github.com/owner/repo/issues/42#issuecomment-123456"
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --handoff-url "https://github.com/owner/repo/issues/42#issuecomment-123456"
 ```
 
 ### Dry Run (Preview Changes)
 
 ```bash
 # See what would be changed without making changes
-/eoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --dry-run
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --dry-run
 
 # Output:
 # [DRY RUN] Would reassign tasks from implementer-1 to implementer-2:
@@ -134,7 +134,7 @@ Records all changes for audit:
 
 ```bash
 # Specify custom reason for reassignment
-/eoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --reason "load_balancing"
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --reason "load_balancing"
 ```
 
 ## What Gets Preserved
@@ -230,7 +230,7 @@ Failed:
 - #43: GitHub API rate limit exceeded
 
 Retry failed issues with:
-/eoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --issues "#43"
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --issues "#43"
 ```
 
 ## Error Handling
@@ -262,10 +262,10 @@ gh issue list --assignee "@new-agent" --label "reassigned"
 This command is typically used after generating a handoff:
 
 ```
-1. /eoa-generate-replacement-handoff --failed-agent X --new-agent Y
+1. /amoa-generate-replacement-handoff --failed-agent X --new-agent Y
    → Creates: handoff document
 
-2. /eoa-reassign-kanban-tasks --from-agent X --to-agent Y --handoff-url URL
+2. /amoa-reassign-kanban-tasks --from-agent X --to-agent Y --handoff-url URL
    → Updates: GitHub Issues
 
 3. Send AI Maestro message to new agent with handoff using the `agent-messaging` skill
@@ -274,13 +274,13 @@ This command is typically used after generating a handoff:
 
 ## Related Commands
 
-- `/eoa-generate-replacement-handoff` - Generate handoff document
-- `/eoa-reassign-module` - Reassign a single module
-- `/eoa-check-agents` - Monitor agent status
-- `/eoa-orchestrator-status` - View all assignments
+- `/amoa-generate-replacement-handoff` - Generate handoff document
+- `/amoa-reassign-module` - Reassign a single module
+- `/amoa-check-agents` - Monitor agent status
+- `/amoa-orchestrator-status` - View all assignments
 
 ## Related Skills
 
-- `eoa-agent-replacement` - Full replacement workflow
-- `eoa-module-management` - Module operations
-- `eoa-remote-agent-coordinator` - GitHub integration
+- `amoa-agent-replacement` - Full replacement workflow
+- `amoa-module-management` - Module operations
+- `amoa-remote-agent-coordinator` - GitHub integration

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-EOA Orchestrator Download Manager
+AMOA Orchestrator Download Manager
 
 Downloads .md files from GitHub issue comments and stores them in the
 orchestrator's agent-specific folder structure. Updates cross-agent indexes.
 
 Usage:
-    python eoa_orchestrator_download.py download --url URL --agent AGENT --task-id TASK_ID --category CATEGORY
-    python eoa_orchestrator_download.py index-rebuild [--design-root PATH]
+    python amoa_orchestrator_download.py download --url URL --agent AGENT --task-id TASK_ID --category CATEGORY
+    python amoa_orchestrator_download.py index-rebuild [--design-root PATH]
 """
 
 from __future__ import annotations
@@ -486,7 +486,7 @@ def rebuild_indexes(design_root: Path | None = None) -> dict[str, Any]:
 def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="EOA Orchestrator Download Manager"
+        description="AMOA Orchestrator Download Manager"
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")

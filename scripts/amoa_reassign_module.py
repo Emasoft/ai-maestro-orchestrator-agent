@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-EOA Reassign Module Script
+AMOA Reassign Module Script
 
 Reassigns a module from one agent to another.
 Notifies both old and new agents.
 
 Usage:
-    python3 eoa_reassign_module.py auth-core --to implementer-2
+    python3 amoa_reassign_module.py auth-core --to implementer-2
 """
 
 import argparse

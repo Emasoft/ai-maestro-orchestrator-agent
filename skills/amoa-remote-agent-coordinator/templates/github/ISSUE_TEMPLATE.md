@@ -6,7 +6,7 @@
 [{{TASK_ID}}] {{TITLE}}
 ```
 
-Example: `[EOA-001] Implement remote Docker agent deployment`
+Example: `[AMOA-001] Implement remote Docker agent deployment`
 
 ## Issue Body Template
 
@@ -124,7 +124,7 @@ Before creating this issue, verify:
 ```markdown
 ## Task Overview
 
-**Task ID:** EOA-042
+**Task ID:** AMOA-042
 **Component:** remote-agent-coordinator
 **Priority:** high
 **Complexity:** Medium
@@ -207,7 +207,7 @@ Use paramiko or fabric for SSH operations. Store keys in `~/design/keys/` with 0
 ```markdown
 ## Task Overview
 
-**Task ID:** EOA-087
+**Task ID:** AMOA-087
 **Component:** task-router
 **Priority:** critical
 **Complexity:** Simple
@@ -260,7 +260,7 @@ system_dependencies:
 
 ## Implementation Notes
 
-Check if `EOA_PLATFORM_OVERRIDE` environment variable is set before detecting platform from host OS. Docker containers should explicitly set this variable in their startup script.
+Check if `AMOA_PLATFORM_OVERRIDE` environment variable is set before detecting platform from host OS. Docker containers should explicitly set this variable in their startup script.
 
 ## Testing Requirements
 
@@ -294,7 +294,7 @@ EOF
 # Create issue with all metadata
 gh issue create \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --title "[EOA-042] Implement SSH key management" \
+  --title "[AMOA-042] Implement SSH key management" \
   --body "$(cat issue-body.md)" \
   --label "status:backlog" \
   --label "priority:high" \
@@ -360,13 +360,13 @@ gh project item-edit \
 
 ## Automated Issue Creation Script
 
-Save as `scripts/create-eoa-issue.sh`:
+Save as `scripts/create-amoa-issue.sh`:
 
 ```bash
 #!/bin/bash
 set -e
 
-# Usage: ./create-eoa-issue.sh TASK_ID TITLE PLATFORM PRIORITY
+# Usage: ./create-amoa-issue.sh TASK_ID TITLE PLATFORM PRIORITY
 
 TASK_ID="$1"
 TITLE="$2"

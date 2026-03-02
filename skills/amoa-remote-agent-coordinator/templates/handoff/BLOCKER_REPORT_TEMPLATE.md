@@ -1,6 +1,6 @@
 # Blocker Report: {{TASK_ID}}
 
-**Extends**: [handoff-protocols.md](../../../eoa-agent-replacement/references/handoff-protocols.md)
+**Extends**: [handoff-protocols.md](../../../amoa-agent-replacement/references/handoff-protocols.md)
 
 ---
 

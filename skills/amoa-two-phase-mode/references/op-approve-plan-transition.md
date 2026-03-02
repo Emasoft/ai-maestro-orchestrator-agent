@@ -2,8 +2,8 @@
 operation: approve-plan-transition
 procedure: proc-create-task-plan
 workflow-instruction: Step 12 - Task Plan Creation
-parent-skill: eoa-two-phase-mode
-parent-plugin: emasoft-orchestrator-agent
+parent-skill: amoa-two-phase-mode
+parent-plugin: ai-maestro-orchestrator-agent
 version: 1.0.0
 ---
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EOA Reassign Kanban Tasks Script
+AMOA Reassign Kanban Tasks Script
 
 Reassigns GitHub Issues from one agent to another during agent replacement.
 Updates issue assignees, labels, and adds audit comments for traceability.
@@ -9,10 +9,10 @@ This script uses the gh CLI tool to interact with GitHub Issues. It supports
 dry-run mode to preview changes without making them.
 
 Usage:
-    python3 eoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2
-    python3 eoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2 --dry-run
-    python3 eoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2 --handoff-url URL
-    python3 eoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2 --reason "load_balancing"
+    python3 amoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2
+    python3 amoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2 --dry-run
+    python3 amoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2 --handoff-url URL
+    python3 amoa_reassign_kanban_tasks.py --from-agent impl-1 --to-agent impl-2 --reason "load_balancing"
 
 Exit codes:
     0 - Success (or dry-run completed)
@@ -20,16 +20,16 @@ Exit codes:
 
 Examples:
     # Preview what would be reassigned:
-    python3 eoa_reassign_kanban_tasks.py \\
+    python3 amoa_reassign_kanban_tasks.py \\
         --from-agent implementer-1 --to-agent implementer-2 --dry-run
 
     # Reassign with handoff URL in audit comments:
-    python3 eoa_reassign_kanban_tasks.py \\
+    python3 amoa_reassign_kanban_tasks.py \\
         --from-agent implementer-1 --to-agent implementer-2 \\
         --handoff-url "https://github.com/owner/repo/issues/42#issuecomment-123456"
 
     # Reassign within a specific project:
-    python3 eoa_reassign_kanban_tasks.py \\
+    python3 amoa_reassign_kanban_tasks.py \\
         --from-agent implementer-1 --to-agent implementer-2 \\
         --project-name "Auth System v2"
 """
@@ -215,7 +215,7 @@ def add_audit_comment(issue_number, old_agent, new_agent, reason, handoff_url=No
         comment_lines.append("Full context for new agent: {}".format(handoff_url))
         comment_lines.append("")
 
-    comment_lines.append("*Automated reassignment by EOA*")
+    comment_lines.append("*Automated reassignment by AMOA*")
 
     comment_body = "\n".join(comment_lines)
 

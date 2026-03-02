@@ -379,7 +379,7 @@ def cmd_validate(args: argparse.Namespace, data: dict[str, Any], body: str) -> b
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Module operations for EOA orchestration"
+        description="Module operations for AMOA orchestration"
     )
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")
 

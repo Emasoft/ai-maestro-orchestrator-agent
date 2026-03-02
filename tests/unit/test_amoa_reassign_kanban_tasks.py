@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for eoa_reassign_kanban_tasks.py -- Reassign GitHub Issues between agents.
+"""Tests for amoa_reassign_kanban_tasks.py -- Reassign GitHub Issues between agents.
 
 These tests verify that the script correctly handles argument parsing,
 dry-run mode, and JSON output format. Integration tests with GitHub
@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 # Path to the script under test
-SCRIPT_PATH = Path(__file__).resolve().parents[2] / "OUTPUT_SKILLS" / "emasoft-orchestrator-agent" / "scripts" / "eoa_reassign_kanban_tasks.py"
+SCRIPT_PATH = Path(__file__).resolve().parents[2] / "OUTPUT_SKILLS" / "ai-maestro-orchestrator-agent" / "scripts" / "amoa_reassign_kanban_tasks.py"
 
 
 def run_script(args, cwd, extra_env=None):

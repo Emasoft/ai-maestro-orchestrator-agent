@@ -3,7 +3,7 @@ procedure: support-skill
 workflow-instruction: support
 ---
 
-# Operation: Receive ECOS Notification
+# Operation: Receive AMCOS Notification
 
 
 ## Contents
@@ -11,7 +11,7 @@ workflow-instruction: support
 - [When to Use](#when-to-use)
 - [Prerequisites](#prerequisites)
 - [Procedure](#procedure)
-  - [Step 1: Detect ECOS Notification](#step-1-detect-ecos-notification)
+  - [Step 1: Detect AMCOS Notification](#step-1-detect-amcos-notification)
   - [Step 2: Check Message Queue](#step-2-check-message-queue)
   - [Step 3: Identify Notification Type](#step-3-identify-notification-type)
   - [Step 4: Acknowledge Notification](#step-4-acknowledge-notification)
@@ -24,19 +24,19 @@ workflow-instruction: support
 
 ## When to Use
 
-Use this operation when ECOS (Emergency Context-loss Operations System) sends a notification about agent failure or replacement.
+Use this operation when AMCOS (Emergency Context-loss Operations System) sends a notification about agent failure or replacement.
 
 ## Prerequisites
 
 - AI Maestro running and accessible
-- ECOS system operational
+- AMCOS system operational
 - Orchestrator in active state
 
 ## Procedure
 
-### Step 1: Detect ECOS Notification
+### Step 1: Detect AMCOS Notification
 
-ECOS notifications arrive via AI Maestro with specific message format:
+AMCOS notifications arrive via AI Maestro with specific message format:
 
 ```json
 {
@@ -55,7 +55,7 @@ ECOS notifications arrive via AI Maestro with specific message format:
 
 ### Step 2: Check Message Queue
 
-Use the `agent-messaging` skill to check your inbox for unread messages, then filter for messages from ECOS (where `from` equals `ecos`).
+Use the `agent-messaging` skill to check your inbox for unread messages, then filter for messages from AMCOS (where `from` equals `ecos`).
 
 ### Step 3: Identify Notification Type
 
@@ -90,7 +90,7 @@ Do NOT assign any new work to any agent until replacement is complete:
 
 ```bash
 # Log the replacement event
-echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) ECOS_NOTIFICATION: Failed=$failed_agent Replacement=$replacement_agent Reason=$failure_reason" >> orchestrator.log
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) AMCOS_NOTIFICATION: Failed=$failed_agent Replacement=$replacement_agent Reason=$failure_reason" >> orchestrator.log
 ```
 
 ## Output
@@ -106,9 +106,9 @@ echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) ECOS_NOTIFICATION: Failed=$failed_agent Rep
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| No ECOS message found | Network issue or false alarm | Check AI Maestro status |
-| Invalid message format | ECOS version mismatch | Check ECOS compatibility |
-| Replacement agent unavailable | Agent not registered | Request alternative from ECOS |
+| No AMCOS message found | Network issue or false alarm | Check AI Maestro status |
+| Invalid message format | AMCOS version mismatch | Check AMCOS compatibility |
+| Replacement agent unavailable | Agent not registered | Request alternative from AMCOS |
 | AI Maestro unreachable | Service down | Restart AI Maestro service |
 
 ## Example
@@ -116,19 +116,19 @@ echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) ECOS_NOTIFICATION: Failed=$failed_agent Rep
 ```bash
 # Full notification handling sequence
 
-# 1. Check for ECOS notifications
+# 1. Check for AMCOS notifications
 # Use the agent-messaging skill to check your inbox for unread messages,
 # then filter for messages where content.type == "replacement_required"
-ECOS_MSG=$(# retrieve unread messages and filter by content type)
+AMCOS_MSG=$(# retrieve unread messages and filter by content type)
 
-if [ -n "$ECOS_MSG" ]; then
+if [ -n "$AMCOS_MSG" ]; then
   # 2. Extract details
-  FAILED=$(echo "$ECOS_MSG" | jq -r '.content.failed_agent')
-  REPLACEMENT=$(echo "$ECOS_MSG" | jq -r '.content.replacement_agent')
-  REASON=$(echo "$ECOS_MSG" | jq -r '.content.failure_reason')
+  FAILED=$(echo "$AMCOS_MSG" | jq -r '.content.failed_agent')
+  REPLACEMENT=$(echo "$AMCOS_MSG" | jq -r '.content.replacement_agent')
+  REASON=$(echo "$AMCOS_MSG" | jq -r '.content.failure_reason')
 
   # 3. Log
-  echo "ECOS: Replacing $FAILED with $REPLACEMENT due to $REASON"
+  echo "AMCOS: Replacing $FAILED with $REPLACEMENT due to $REASON"
 
   # 4. Acknowledge
   # Use the agent-messaging skill to send acknowledgment:
@@ -146,9 +146,9 @@ fi
 ## Checklist
 
 - [ ] Check AI Maestro message queue
-- [ ] Identify ECOS notification
+- [ ] Identify AMCOS notification
 - [ ] Parse notification details (failed agent, replacement, reason)
-- [ ] Send acknowledgment to ECOS
+- [ ] Send acknowledgment to AMCOS
 - [ ] Pause new agent assignments
 - [ ] Log the replacement event
 - [ ] Proceed to context compilation

@@ -40,10 +40,10 @@ The following table lists ALL OAuth scopes required for the full agent ecosystem
 | Scope | Required By | Purpose |
 |-------|------------|---------|
 | `repo` | All agents | Repository access (issues, PRs, code, actions) |
-| `project` | EOA, ECOS | Create, modify, and delete GitHub Projects V2 boards |
-| `read:project` | EOA, ECOS | Read GitHub Projects V2 data (items, fields, columns) |
-| `read:org` | ECOS (if org) | Read organization data for org-level projects |
-| `workflow` | EIA | Trigger and manage GitHub Actions workflows |
+| `project` | AMOA, AMCOS | Create, modify, and delete GitHub Projects V2 boards |
+| `read:project` | AMOA, AMCOS | Read GitHub Projects V2 data (items, fields, columns) |
+| `read:org` | AMCOS (if org) | Read organization data for org-level projects |
+| `workflow` | AMIA | Trigger and manage GitHub Actions workflows |
 
 **Minimum scopes for kanban operations:** `repo`, `project`, `read:project`
 
@@ -153,7 +153,7 @@ Scope provisioning CANNOT be automated by agents because:
 
 **Deployment procedure:**
 
-Before deploying ANY agent that manages GitHub Project boards (EOA, ECOS), the human operator MUST:
+Before deploying ANY agent that manages GitHub Project boards (AMOA, AMCOS), the human operator MUST:
 
 1. Open a terminal with browser access (NOT inside tmux or SSH)
 2. Run: `gh auth refresh -h github.com -s project,read:project`

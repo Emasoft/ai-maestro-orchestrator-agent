@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-EOA Agent Registration
+AMOA Agent Registration
 
 Registers a new remote agent in the orchestrator's tracking system.
 Creates the agent folder structure and metadata file.
 
 Usage:
-    python eoa_register_agent.py --name AGENT_NAME --platform PLATFORM --architecture ARCH
-    python eoa_register_agent.py --name helper-agent-macos-arm64 --platform macos --architecture arm64
+    python amoa_register_agent.py --name AGENT_NAME --platform PLATFORM --architecture ARCH
+    python amoa_register_agent.py --name helper-agent-macos-arm64 --platform macos --architecture arm64
 """
 
 from __future__ import annotations
@@ -144,7 +144,7 @@ def list_agents(design_root: Path | None = None) -> list[dict]:
 def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Register a remote agent in EOA orchestrator"
+        description="Register a remote agent in AMOA orchestrator"
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")

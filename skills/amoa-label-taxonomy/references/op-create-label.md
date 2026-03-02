@@ -22,7 +22,7 @@ workflow-instruction: support
 
 ## When to Use
 
-Use this operation when you need to create a new GitHub label following the emasoft label taxonomy.
+Use this operation when you need to create a new GitHub label following the AI Maestro label taxonomy.
 
 ## Prerequisites
 

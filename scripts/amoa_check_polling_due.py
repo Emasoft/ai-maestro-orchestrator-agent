@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EOA: Proactive Progress Polling Check
+AMOA: Proactive Progress Polling Check
 MANDATORY ENFORCEMENT HOOK
 
 This UserPromptSubmit hook checks if any active assignments have overdue
@@ -31,7 +31,7 @@ def log_error(message: str) -> None:
     """Log error message to stderr."""
     import sys
 
-    print(f"[ERROR] eoa_check_polling_due: {message}", file=sys.stderr)
+    print(f"[ERROR] amoa_check_polling_due: {message}", file=sys.stderr)
 
 
 def parse_frontmatter(file_path: Path) -> tuple[dict, bool]:

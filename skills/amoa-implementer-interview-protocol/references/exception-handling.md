@@ -34,7 +34,7 @@ If user approves changing an immutable requirement:
 **Solution**:
 1. Send reminder after 5 minutes
 2. Check AI Maestro agent status
-3. Escalate to **eoa-progress-monitoring**
+3. Escalate to **amoa-progress-monitoring**
 4. Consider reassignment if no response after 3 attempts
 
 ## 5. Implementer Misunderstands Task
@@ -52,7 +52,7 @@ If user approves changing an immutable requirement:
 **Cause**: Architectural incompatibility
 
 **Solution**:
-1. Escalate to Architect (EAA) for review
+1. Escalate to Architect (AMAA) for review
 2. Follow escalation-messages.md templates
 3. Wait for architect decision
 4. Update design if needed

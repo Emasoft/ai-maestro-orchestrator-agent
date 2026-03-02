@@ -1,6 +1,6 @@
 ---
-name: eoa-messaging-templates
-description: AI Maestro message templates for emasoft plugins. Use when sending task assignments, status reports, or escalations between agents. Trigger with messaging requests.
+name: amoa-messaging-templates
+description: AI Maestro message templates for ai-maestro plugins. Use when sending task assignments, status reports, or escalations between agents. Trigger with messaging requests.
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:
@@ -8,23 +8,23 @@ metadata:
   version: 1.0.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Step 20"
 procedure: "proc-request-pr-review"
 ---
 
-# EOA Shared Communication Templates
+# AMOA Shared Communication Templates
 
 ## Overview
 
-This skill provides shared AI Maestro message templates and communication protocols used across all emasoft plugins for agent coordination, task assignment, status reporting, and escalation.
+This skill provides shared AI Maestro message templates and communication protocols used across all ai-maestro plugins for agent coordination, task assignment, status reporting, and escalation.
 
 ## Prerequisites
 
 1. AI Maestro messaging system (AMP) running
-2. Understanding of emasoft agent roles (EOA, ECOS, EIA, EAMA)
+2. Understanding of ai-maestro agent roles (AMOA, AMCOS, AMIA, AMAMA)
 3. Access to AI Maestro API for sending/receiving messages
-4. Read **eoa-label-taxonomy** for GitHub label usage
+4. Read **amoa-label-taxonomy** for GitHub label usage
 5. Understanding of communication hierarchy and authority rules
 
 ## Instructions
@@ -102,17 +102,17 @@ Check your inbox using the `agent-messaging` skill. Retrieve all unread messages
 
 For complete JSON templates with all fields, see **[references/message-templates.md](references/message-templates.md)**:
 
-- **2.1 Task Assignment (EOA → Remote Agent)** - Assigning implementation task to remote agent
-- **2.2 Task Completion Report (Agent → EOA)** - Agent reporting task completion
-- **2.3 Status Request (EOA → Agent)** - Orchestrator polling agent for status
-- **2.4 Status Response (Agent → EOA)** - Agent responding to status request
-- **2.5 Approval Request (ECOS → EAMA)** - Chief of Staff requesting approval
-- **2.6 Approval Response (EAMA → ECOS)** - Assistant Manager responding to approval
-- **2.7 Escalation (Any Agent → ECOS/EAMA)** - Agent encountering blocker requiring escalation
+- **2.1 Task Assignment (AMOA → Remote Agent)** - Assigning implementation task to remote agent
+- **2.2 Task Completion Report (Agent → AMOA)** - Agent reporting task completion
+- **2.3 Status Request (AMOA → Agent)** - Orchestrator polling agent for status
+- **2.4 Status Response (Agent → AMOA)** - Agent responding to status request
+- **2.5 Approval Request (AMCOS → AMAMA)** - Chief of Staff requesting approval
+- **2.6 Approval Response (AMAMA → AMCOS)** - Assistant Manager responding to approval
+- **2.7 Escalation (Any Agent → AMCOS/AMAMA)** - Agent encountering blocker requiring escalation
 - **2.8 Acknowledgment (Any Agent)** - Acknowledging receipt of message
-- **2.9 Design Handoff (EAA → EOA)** - Architect handing off design to Orchestrator
-- **2.10 Integration Request (EOA → EIA)** - Orchestrator requesting code integration/review
-- **2.11 Integration Result (EIA → EOA)** - Integrator reporting integration/review result
+- **2.9 Design Handoff (AMAA → AMOA)** - Architect handing off design to Orchestrator
+- **2.10 Integration Request (AMOA → AMIA)** - Orchestrator requesting code integration/review
+- **2.11 Integration Result (AMIA → AMOA)** - Integrator reporting integration/review result
 
 For AI Maestro curl command templates with all message types, see **[references/ai-maestro-message-templates.md](references/ai-maestro-message-templates.md)**:
 
@@ -122,19 +122,19 @@ For AI Maestro curl command templates with all message types, see **[references/
 
 ### Extended Communication Templates
 
-For response templates FROM other agents TO EOA, see **[references/ecos-response-templates.md](references/ecos-response-templates.md)**:
+For response templates FROM other agents TO AMOA, see **[references/amcos-response-templates.md](references/amcos-response-templates.md)**:
 
-- ECOS response to EOA Task Completion Report (accept/rework/clarify)
-- EAMA response to EOA Blocker Escalation (user decision delivered/deferred/rejected)
-- EAA response to Design Issue Escalation (guidance/revised design/investigate)
+- AMCOS response to AMOA Task Completion Report (accept/rework/clarify)
+- AMAMA response to AMOA Blocker Escalation (user decision delivered/deferred/rejected)
+- AMAA response to Design Issue Escalation (guidance/revised design/investigate)
 - Decision trees for each response type
 
 For session lifecycle messages (wake/hibernate/terminate), see **[references/session-lifecycle-templates.md](references/session-lifecycle-templates.md)**:
 
-- ECOS Wake message to EOA + EOA Wake ACK
-- ECOS Hibernate directive + EOA Hibernate ACK
-- ECOS Terminate directive + EOA Final Termination Report
-- EOA Periodic Status Report (30-min scheduled summary)
+- AMCOS Wake message to AMOA + AMOA Wake ACK
+- AMCOS Hibernate directive + AMOA Hibernate ACK
+- AMCOS Terminate directive + AMOA Final Termination Report
+- AMOA Periodic Status Report (30-min scheduled summary)
 - Decision trees for each lifecycle event
 
 For task lifecycle commands (cancel/pause/resume/broadcast/stop), see **[references/task-lifecycle-templates.md](references/task-lifecycle-templates.md)**:
@@ -147,10 +147,10 @@ For task lifecycle commands (cancel/pause/resume/broadcast/stop), see **[referen
 
 For agent resource and skill requests, see **[references/resource-request-templates.md](references/resource-request-templates.md)**:
 
-- Agent Resource Request (tools/access/credentials) → EOA response (grant/deny/escalate)
-- Agent Skill Request (different capability) → EOA response
-- EOA formal ACK of ECOS Task assignment (JSON template)
-- Decision tree: Grant directly / Escalate to ECOS / Deny with alternative
+- Agent Resource Request (tools/access/credentials) → AMOA response (grant/deny/escalate)
+- Agent Skill Request (different capability) → AMOA response
+- AMOA formal ACK of AMCOS Task assignment (JSON template)
+- Decision tree: Grant directly / Escalate to AMCOS / Deny with alternative
 
 ---
 
@@ -161,27 +161,27 @@ For agent resource and skill requests, see **[references/resource-request-templa
 ```
 USER
   ↓
-EAMA (Assistant Manager) - User's interface, approval authority
+AMAMA (Assistant Manager) - User's interface, approval authority
   ↓
-ECOS (Chief of Staff) - Agent lifecycle, team management
+AMCOS (Chief of Staff) - Agent lifecycle, team management
   ↓ ↓ ↓
-EAA (Architect)  EOA (Orchestrator)  EIA (Integrator)
+AMAA (Architect)  AMOA (Orchestrator)  AMIA (Integrator)
 ```
 
 ### 3.2 Who Messages Whom
 
 | From | To | Purpose |
 |------|-----|---------|
-| EAMA | ECOS | Project creation, approval decisions, status requests |
-| ECOS | EAMA | Approval requests, status reports, escalations |
-| ECOS | EOA | Agent availability notifications, team assignments |
-| ECOS | EAA | Design requests (via EOA typically) |
-| EOA | EAA | Design requests, requirements handoff |
-| EOA | EIA | Integration/review requests |
-| EOA | Remote Agents | Task assignments, status requests |
-| EAA | EOA | Design handoffs |
-| EIA | EOA | Integration results, quality reports |
-| Any Agent | ECOS | Escalations, resource requests |
+| AMAMA | AMCOS | Project creation, approval decisions, status requests |
+| AMCOS | AMAMA | Approval requests, status reports, escalations |
+| AMCOS | AMOA | Agent availability notifications, team assignments |
+| AMCOS | AMAA | Design requests (via AMOA typically) |
+| AMOA | AMAA | Design requests, requirements handoff |
+| AMOA | AMIA | Integration/review requests |
+| AMOA | Remote Agents | Task assignments, status requests |
+| AMAA | AMOA | Design handoffs |
+| AMIA | AMOA | Integration results, quality reports |
+| Any Agent | AMCOS | Escalations, resource requests |
 
 ### 3.3 Label Prefix for GitHub (Single-Account Mode)
 
@@ -210,7 +210,7 @@ gh issue list --label "assign:<agent-name>"
 When multiple agents need to modify the same resources (labels, issues), follow conflict resolution protocol.
 
 **See [references/conflict-resolution.md](references/conflict-resolution.md) for:**
-- Authority hierarchy (EAMA > ECOS > EOA > EIA > EAA)
+- Authority hierarchy (AMAMA > AMCOS > AMOA > AMIA > AMAA)
 - Label conflict resolution rules
 - Label change request protocol with message template
 - Emergency override cases (agent terminated, unresponsive, critical blocker)
@@ -229,7 +229,7 @@ Escalation is based on **order**, **priority**, and **state transitions** - not 
 
 ## 4. Record-Keeping Standards
 
-All emasoft plugins follow consistent record-keeping standards for delegation logs, status reports, and handoff documents.
+All ai-maestro plugins follow consistent record-keeping standards for delegation logs, status reports, and handoff documents.
 
 **See [references/record-keeping.md](references/record-keeping.md) for:**
 - Standard `docs_dev/` directory structure for each plugin (orchestration, integration, design, chief-of-staff, projects, reports)
@@ -291,8 +291,8 @@ All emasoft plugins follow consistent record-keeping standards for delegation lo
 ## Resources
 
 - **AGENT_OPERATIONS.md** - Core orchestrator workflow
-- **eoa-label-taxonomy** - GitHub label usage
-- **eoa-task-distribution** - Task assignment protocol
-- **eoa-progress-monitoring** - Agent state tracking
+- **amoa-label-taxonomy** - GitHub label usage
+- **amoa-task-distribution** - Task assignment protocol
+- **amoa-progress-monitoring** - Agent state tracking
 - **AI Maestro AMP messaging**
 - [AI Maestro Message Templates](./references/ai-maestro-message-templates.md) - Curl command templates

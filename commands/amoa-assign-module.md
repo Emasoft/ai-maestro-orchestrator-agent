@@ -1,8 +1,8 @@
 ---
-name: eoa-assign-module
+name: amoa-assign-module
 description: "Assign a module to a registered agent with Instruction Verification Protocol"
 argument-hint: "<MODULE_ID> <AGENT_ID>"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_assign_module.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_assign_module.py:*)"]
 ---
 
 # Assign Module Command
@@ -12,7 +12,7 @@ Assign a module to a registered agent and initiate the Instruction Verification 
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_assign_module.py" $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_assign_module.py" $ARGUMENTS
 ```
 
 ## Arguments

@@ -1,6 +1,6 @@
 # Task Delegation: {{TASK_ID}}
 
-**Extends**: [handoff-protocols.md](../../../eoa-agent-replacement/references/handoff-protocols.md)
+**Extends**: [handoff-protocols.md](../../../amoa-agent-replacement/references/handoff-protocols.md)
 
 ---
 
@@ -216,7 +216,7 @@ Upon completion, submit [COMPLETION_REPORT_TEMPLATE.md](./COMPLETION_REPORT_TEMP
 ## Resources
 
 **Toolchain Template**: {{TOOLCHAIN_TEMPLATE_PATH}}
-**Handoff Protocols**: [handoff-protocols.md](../../../eoa-agent-replacement/references/handoff-protocols.md)
+**Handoff Protocols**: [handoff-protocols.md](../../../amoa-agent-replacement/references/handoff-protocols.md)
 **Project Documentation**: {{PROJECT_DOCS_PATH}}
 **Related Issues**: {{RELATED_ISSUES}}
 

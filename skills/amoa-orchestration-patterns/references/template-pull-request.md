@@ -56,7 +56,7 @@ description: "Universal pull request template for orchestrator-created PRs, used
 
 ### 1.1 When to create a pull request directly versus delegating to an implementer
 
-The orchestrator agent (EOA) uses this template in two scenarios:
+The orchestrator agent (AMOA) uses this template in two scenarios:
 
 **Scenario A: Orchestrator creates the PR directly.** This happens when:
 - The change is a configuration-only update (CI files, project settings, dependency versions)
@@ -450,7 +450,7 @@ The implementer fills in the description, checks the appropriate boxes, and crea
 
 Before approving a merge, the orchestrator verifies:
 1. All CI checks pass (automated)
-2. The integrator agent (EIA) has reviewed the code (if available)
+2. The integrator agent (AMIA) has reviewed the code (if available)
 3. The AI Disclosure section is filled out honestly
 4. The human project owner has been notified for final approval
 5. Breaking changes are documented with migration steps if applicable

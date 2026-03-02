@@ -286,5 +286,5 @@ After completing each monitoring cycle:
 
 - [ ] **Verify**: confirm all status request messages were delivered via the `agent-messaging` skill's sent messages feature
 - [ ] **Verify**: confirm agent responses were received and processed within expected timeframes
-- [ ] **Verify**: confirm any escalation messages reached ECOS or EAMA successfully
+- [ ] **Verify**: confirm any escalation messages reached AMCOS or AMAMA successfully
 - [ ] **Verify**: confirm kanban board reflects current task statuses accurately

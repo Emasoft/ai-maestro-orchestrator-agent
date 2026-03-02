@@ -41,10 +41,11 @@ env:
   #   MARKETPLACE_OWNER: 'johndoe'
   #   MARKETPLACE_REPO: 'my-claude-plugins'
   MARKETPLACE_OWNER: 'Emasoft'
-  MARKETPLACE_REPO: 'emasoft-plugins'
+  MARKETPLACE_REPO: 'ai-maestro-plugins'
 
 jobs:
   notify:
+    if: false  # Disabled - marketplace not yet configured for ai-maestro-orchestrator-agent
     runs-on: ubuntu-latest
     steps:
       - name: Get plugin info

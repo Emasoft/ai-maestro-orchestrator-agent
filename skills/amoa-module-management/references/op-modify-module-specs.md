@@ -31,7 +31,7 @@
 | Procedure | `proc-update-tasks` |
 | Workflow Step | Step 16 |
 | Trigger | Requirements change or need clarification |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Command | `/modify-module` |
 
 ---

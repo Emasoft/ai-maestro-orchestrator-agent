@@ -266,7 +266,7 @@ cargo workspaces version patch|minor|major
 template:
   name: MONOREPO_WORKSPACE
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   parent_template: MONOREPO_BASE
   requires:
     - monorepo workspace root

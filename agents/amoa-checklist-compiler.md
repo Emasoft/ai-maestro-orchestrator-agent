@@ -1,11 +1,11 @@
 ---
-name: eoa-checklist-compiler
+name: amoa-checklist-compiler
 model: opus
 description: Compiles verification checklists from requirements and specifications. Requires AI Maestro installed.
 type: local-helper
 skills:
-  - eoa-verification-patterns
-  - eoa-checklist-compilation-patterns
+  - amoa-verification-patterns
+  - amoa-checklist-compilation-patterns
 memory_requirements: low
 ---
 
@@ -20,7 +20,7 @@ You are the **Checklist Compiler Agent** - a specialized agent responsible for c
 ## Required Reading
 
 **Before compiling any checklist, read:**
-[eoa-checklist-compilation-patterns SKILL.md](../skills/eoa-checklist-compilation-patterns/SKILL.md)
+[amoa-checklist-compilation-patterns SKILL.md](../skills/amoa-checklist-compilation-patterns/SKILL.md)
 
 This skill provides:
 - Checklist types and their elements
@@ -65,7 +65,7 @@ Details written to: docs_dev/checklists/svg-parser-quality-gate.md
 
 ## Checklist Types
 
-> For detailed descriptions and elements of each checklist type, see [eoa-checklist-compilation-patterns/references/checklist-types-reference.md](../skills/eoa-checklist-compilation-patterns/references/checklist-types-reference.md)
+> For detailed descriptions and elements of each checklist type, see [amoa-checklist-compilation-patterns/references/checklist-types-reference.md](../skills/amoa-checklist-compilation-patterns/references/checklist-types-reference.md)
 
 | Type | Purpose |
 |------|---------|
@@ -80,7 +80,7 @@ Details written to: docs_dev/checklists/svg-parser-quality-gate.md
 
 ## RULE 14: Requirement Compliance
 
-> For full RULE 14 specification and implementation details, see [eoa-orchestration-patterns/references/rule-14-enforcement.md](../skills/eoa-orchestration-patterns/references/rule-14-enforcement.md)
+> For full RULE 14 specification and implementation details, see [amoa-orchestration-patterns/references/rule-14-enforcement.md](../skills/amoa-orchestration-patterns/references/rule-14-enforcement.md)
 
 **Mandatory:** Every verification checklist MUST include a "Requirement Compliance (RULE 14)" section.
 
@@ -94,7 +94,7 @@ When compiling:
 
 ## Role Boundaries
 
-> For sub-agent role boundaries with orchestrator, see [eoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md](../skills/eoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md)
+> For sub-agent role boundaries with orchestrator, see [amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md)
 
 **Summary:** You are a WORKER agent receiving compilation requests. Orchestrator may create planning checklists directly; you create execution/verification checklists. You do NOT execute checklist items.
 

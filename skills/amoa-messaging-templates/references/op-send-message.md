@@ -57,7 +57,7 @@ Send a message to another agent via AI Maestro messaging system.
 ## Example
 
 Send a review request message using the `agent-messaging` skill:
-- **Recipient**: `eia-main`
+- **Recipient**: `amia-main`
 - **Subject**: "PR #123 Review Request"
 - **Content**: "Please review PR #123 for code quality and CI compliance."
 - **Type**: `request`

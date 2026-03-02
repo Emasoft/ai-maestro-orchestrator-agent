@@ -1,6 +1,6 @@
 # Orchestration Commands Skill
 
-A comprehensive skill documenting all orchestration phase commands in the EOA Tool-Chain.
+A comprehensive skill documenting all orchestration phase commands in the AMOA Tool-Chain.
 
 ## Purpose
 
@@ -43,11 +43,11 @@ Located in `../../scripts/`:
 
 | Script | Used By |
 |--------|---------|
-| `eoa_start_orchestration.py` | `/start-orchestration` |
-| `eoa_orchestration_status.py` <!-- TODO: Script not implemented --> | `/orchestration-status` |
-| `eoa_check_orchestrator_status.py` <!-- TODO: Script not implemented --> | `/orchestrator-status` |
-| `eoa_setup_orchestrator_loop.py` | `/orchestrator-loop` |
-| `eoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented --> | Stop hook |
+| `amoa_start_orchestration.py` | `/start-orchestration` |
+| `amoa_orchestration_status.py` <!-- TODO: Script not implemented --> | `/orchestration-status` |
+| `amoa_check_orchestrator_status.py` <!-- TODO: Script not implemented --> | `/orchestrator-status` |
+| `amoa_setup_orchestrator_loop.py` | `/orchestrator-loop` |
+| `amoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented --> | Stop hook |
 
 ## Usage
 

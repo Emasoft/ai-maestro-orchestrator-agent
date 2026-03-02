@@ -73,10 +73,10 @@ if [ "$USER_AUTHORIZED" != "true" ]; then
   OVERNIGHT_MODE=$(cat orchestrator_state.json 2>/dev/null | jq -r '.overnight_mode // false')
 
   if [ "$OVERNIGHT_MODE" != "true" ]; then
-    echo "User authorization required for reassignment. Escalating to EAMA."
+    echo "User authorization required for reassignment. Escalating to AMAMA."
     # Send escalation
     # Send approval request using the agent-messaging skill:
-    # - Recipient: eama-main
+    # - Recipient: amama-main
     # - Subject: "Reassignment Approval Needed: #$TASK_ID"
     # - Content: "Agent $CURRENT_AGENT is unresponsive on task #$TASK_ID. Approval needed to reassign. Options: 1. Wait longer 2. Reassign to available agent 3. Abort task"
     # - Type: approval-request, Priority: high

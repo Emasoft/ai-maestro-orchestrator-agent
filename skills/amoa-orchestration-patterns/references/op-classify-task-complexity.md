@@ -2,8 +2,8 @@
 operation: classify-task-complexity
 procedure: proc-decompose-design
 workflow-instruction: Step 10 - Design Decomposition
-parent-skill: eoa-orchestration-patterns
-parent-plugin: emasoft-orchestrator-agent
+parent-skill: amoa-orchestration-patterns
+parent-plugin: ai-maestro-orchestrator-agent
 version: 1.0.0
 ---
 

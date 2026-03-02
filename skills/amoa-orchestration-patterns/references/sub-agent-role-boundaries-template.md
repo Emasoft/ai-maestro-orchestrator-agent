@@ -1,4 +1,4 @@
-# EOA Sub-Agent Role Boundaries Template
+# AMOA Sub-Agent Role Boundaries Template
 
 
 ## Contents
@@ -45,7 +45,7 @@
 - [Template Usage Checklist](#template-usage-checklist)
 - [Design Philosophy](#design-philosophy)
 
-**Use this template for all EOA sub-agents to maintain consistent role definitions, output formats, and communication patterns.**
+**Use this template for all AMOA sub-agents to maintain consistent role definitions, output formats, and communication patterns.**
 
 ---
 
@@ -53,7 +53,7 @@
 
 ```yaml
 ---
-name: eoa-[agent-name]
+name: amoa-[agent-name]
 model: [opus|sonnet|haiku]
 description: Brief description of agent purpose. Requires AI Maestro installed.
 type: [local-helper|local-experimenter|local-specialist]
@@ -62,14 +62,14 @@ triggers:
   - Scenario 2 when agent should be invoked
   - Scenario 3 when agent should be invoked
 skills:
-  - eoa-skill-reference-1
-  - eoa-skill-reference-2
+  - amoa-skill-reference-1
+  - amoa-skill-reference-2
 memory_requirements: [low|medium|high]
 ---
 ```
 
 **Field Definitions:**
-- `name`: Use `eoa-` prefix for all Emasoft Orchestrator Agent sub-agents
+- `name`: Use `amoa-` prefix for all AI Maestro Orchestrator Agent sub-agents
 - `model`: Choose based on task complexity (opus for complex reasoning, sonnet for balanced, haiku for simple tasks)
 - `description`: Include "Requires AI Maestro installed" if agent uses inter-agent messaging
 - `type`:
@@ -77,7 +77,7 @@ memory_requirements: [low|medium|high]
   - `local-experimenter`: Code-writing agents (ONLY for ephemeral experimental code)
   - `local-specialist`: Domain-specific agents (security auditor, performance analyzer)
 - `triggers`: List concrete scenarios when this agent should be invoked
-- `skills`: EOA skills this agent requires
+- `skills`: AMOA skills this agent requires
 - `memory_requirements`: Estimate based on typical input size
 
 ---
@@ -409,7 +409,7 @@ ACTION: what_to_do_next
 [Include 3-10 rules that are NEVER to be violated]
 ```
 
-**Example (from eoa-experimenter):**
+**Example (from amoa-experimenter):**
 
 ```markdown
 ## IRON RULES
@@ -547,10 +547,10 @@ docker run --rm \
 
 ## Template Usage Checklist
 
-When creating a new EOA sub-agent, verify:
+When creating a new AMOA sub-agent, verify:
 
 - [ ] YAML frontmatter includes all required fields
-- [ ] `name` uses `eoa-` prefix
+- [ ] `name` uses `amoa-` prefix
 - [ ] `description` mentions AI Maestro if used
 - [ ] **Purpose** section clearly states agent role
 - [ ] **Role Boundaries** defines WORKER relationship with orchestrator
@@ -579,7 +579,7 @@ When creating a new EOA sub-agent, verify:
 6. **Consistent patterns**: All agents use same output format
 7. **Tool discipline**: Agents only use tools appropriate for their role
 
-**Golden rules for all EOA sub-agents:**
+**Golden rules for all AMOA sub-agents:**
 
 - Return minimal reports (1-3 lines)
 - Write details to files (docs_dev/ or specified output dir)

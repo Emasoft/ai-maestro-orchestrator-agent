@@ -43,7 +43,7 @@ description: "Universal bug report YAML form for GitHub Issues, used by the orch
 
 ### 1.1 When to file a bug report directly versus delegating
 
-The orchestrator agent (EOA) encounters bugs in two ways:
+The orchestrator agent (AMOA) encounters bugs in two ways:
 
 **Scenario A: Orchestrator discovers the bug during task coordination.** This happens when:
 - An implementer agent reports a blocker caused by existing code

@@ -77,7 +77,7 @@ This protocol is split into multiple parts for easier navigation:
   - 6.4 State file tracking for config requests
 
 - **7. Script Usage**
-  - Commands for `eoa_update_verification.py <!-- TODO: Script not implemented -->`
+  - Commands for `amoa_update_verification.py <!-- TODO: Script not implemented -->`
   - Send updates, record receipts, resolve concerns, authorize resume
 
 - **8. Troubleshooting**
@@ -158,7 +158,7 @@ ORCHESTRATOR                              IMPLEMENTER
 
 - [Instruction Verification Protocol](instruction-verification-protocol.md) - Initial task assignment verification
 - [Proactive Progress Polling](proactive-progress-polling.md) - Regular status checks
-- [Central Configuration](../../eoa-remote-agent-coordinator/references/central-configuration.md) - Config management
+- [Central Configuration](../../amoa-remote-agent-coordinator/references/central-configuration.md) - Config management
 
 ---
 

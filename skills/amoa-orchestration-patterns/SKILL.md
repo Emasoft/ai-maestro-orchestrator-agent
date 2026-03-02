@@ -1,5 +1,5 @@
 ---
-name: eoa-orchestration-patterns
+name: amoa-orchestration-patterns
 description: "Use when coordinating work among multiple developers. Trigger with orchestration requests."
 license: Apache-2.0
 compatibility: Requires multiple developers or task agents, task tracking system (GitHub issues or similar), clear task definitions with success criteria, and communication channel for status updates. Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 2.4.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Steps 10, 12, 23, 24"
 procedure: "proc-decompose-design, proc-create-task-plan, proc-handle-successful-pr, proc-iterate"
 ---
@@ -27,7 +27,7 @@ This skill teaches how to coordinate work among multiple developers using orches
 | Task assignments | Agent assignments via AI Maestro or Task tool | Message to remote-dev-001 with task details |
 | Progress reports | Regular status updates from monitoring | "Task 1: 60% complete, Task 2: blocked on DB" |
 | Completion signals | Verification of all tasks done | "All 5 tasks completed, ready for integration" |
-| Escalation requests | Blocked task escalations to user/EAMA | "Task 3 blocked: missing API credentials" |
+| Escalation requests | Blocked task escalations to user/AMAMA | "Task 3 blocked: missing API credentials" |
 
 ## API Commands Reference
 
@@ -35,7 +35,7 @@ For AI Maestro messaging and Claude Code Tasks API, see [orchestration-api-comma
 - 1. AI Maestro Messaging for Remote Agents
   - 1.1 When to use AI Maestro vs Task tool
   - 1.2 Sending task assignments to remote agents
-  - 1.3 Message types for EOA
+  - 1.3 Message types for AMOA
 - 2. Claude Code Tasks API
   - 2.1 When to use TaskCreate, TaskUpdate, TaskList
   - 2.2 Creating tasks with success criteria
@@ -308,7 +308,7 @@ Copy this checklist and track your progress:
 
 This example shows how to decompose a feature request into tasks and delegate them.
 
-**Input:** A feature request from the user (via EAMA):
+**Input:** A feature request from the user (via AMAMA):
 
 ```
 Feature: Add user authentication module
@@ -324,19 +324,19 @@ Requirements:
 Task Plan: Authentication Module (3 parallel tasks)
 
 Task 1: OAuth2 Integration
-  Assign to: epa-backend-001
+  Assign to: ampa-backend-001
   Scope: src/auth/oauth.py, src/auth/providers/google.py
   Success criteria: Google OAuth2 flow completes end-to-end, tokens stored
   Dependencies: None
 
 Task 2: Session Management
-  Assign to: epa-backend-002
+  Assign to: ampa-backend-002
   Scope: src/auth/session.py, src/auth/jwt.py
   Success criteria: JWT issued on login, validated on protected routes, expires correctly
   Dependencies: None (uses mock OAuth response until Task 1 merges)
 
 Task 3: Rate Limiting
-  Assign to: epa-backend-003
+  Assign to: ampa-backend-003
   Scope: src/middleware/rate_limit.py, tests/test_rate_limit.py
   Success criteria: Login endpoint rejects 6th attempt within 60s window, returns 429
   Dependencies: None (uses mock login endpoint)

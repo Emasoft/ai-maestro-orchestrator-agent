@@ -423,7 +423,7 @@ Module modification detected (dependency updated / API changed / config changed)
 ### Priority Change Notification Dispatch Decision Tree
 
 ```
-Priority change received from ECOS
+Priority change received from AMCOS
 ├─ Is the change an upgrade (e.g., normal → high) or downgrade (high → normal)?
 │   ├─ Upgrade → Is affected agent currently idle on this task?
 │   │   ├─ Yes → Send Priority Change Notification → Agent resumes immediately

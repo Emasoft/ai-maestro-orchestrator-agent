@@ -4,25 +4,25 @@
   "hooks": {
     "Stop": [
       {
-        "_id": "eoa-orchestrator-stop",
+        "_id": "amoa-orchestrator-stop",
         "_description": "Blocks premature exit until all tasks are complete",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_stop_check/main.py"
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/main.py"
           }
         ]
       }
     ],
     "PreToolUse": [
       {
-        "_id": "eoa-instruction-verification-check",
+        "_id": "amoa-instruction-verification-check",
         "_description": "MANDATORY: Blocks agent work reports if instruction verification incomplete",
         "matcher": "Task",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_check_verification_status.py",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_verification_status.py",
             "timeout": 10
           }
         ]
@@ -30,12 +30,12 @@
     ],
     "UserPromptSubmit": [
       {
-        "_id": "eoa-polling-reminder",
+        "_id": "amoa-polling-reminder",
         "_description": "MANDATORY: Reminds orchestrator when progress polling is overdue",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_check_polling_due.py",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_polling_due.py",
             "timeout": 5
           }
         ]
@@ -43,13 +43,13 @@
     ],
     "PostToolUse": [
       {
-        "_id": "eoa-file-tracker",
+        "_id": "amoa-file-tracker",
         "_description": "Track file modifications for orchestration context",
         "matcher": "Edit|MultiEdit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_file_tracker.py"
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_file_tracker.py"
           }
         ]
       }

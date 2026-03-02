@@ -1,8 +1,8 @@
 ---
-name: eoa-modify-module
+name: amoa-modify-module
 description: "Modify a module's specifications during Orchestration Phase"
 argument-hint: "<MODULE_ID> [--name NAME] [--criteria TEXT] [--priority LEVEL]"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_modify_module.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py:*)"]
 ---
 
 # Modify Module Command
@@ -12,7 +12,7 @@ Change the specifications of a module during Orchestration Phase. If module is a
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_modify_module.py" modify $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py" modify $ARGUMENTS
 ```
 
 ## Arguments

@@ -28,7 +28,7 @@
 | Procedure | `proc-update-tasks` |
 | Workflow Step | Step 16 |
 | Trigger | User requests new feature during orchestration |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Command | `/add-module` |
 
 ---

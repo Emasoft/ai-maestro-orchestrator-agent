@@ -29,7 +29,7 @@ A requirement deviation occurs when:
 **Action on deviation detected:**
 1. STOP the current task
 2. Document the deviation in a Requirement Issue Report
-3. Escalate to ECOS (or directly to the user if ECOS is unavailable)
+3. Escalate to AMCOS (or directly to the user if AMCOS is unavailable)
 4. BLOCK progress on the affected requirement until user decides
 
 ## 1.3 When Technical Constraints Conflict
@@ -37,7 +37,7 @@ A requirement deviation occurs when:
 If a technical constraint makes a requirement infeasible:
 1. Document the constraint clearly (what, why, evidence)
 2. Propose alternatives that satisfy the requirement intent
-3. Send escalation to ECOS with `priority: "urgent"`
+3. Send escalation to AMCOS with `priority: "urgent"`
 4. Wait for user decision — do NOT proceed with a workaround
 
 **Forbidden actions:**

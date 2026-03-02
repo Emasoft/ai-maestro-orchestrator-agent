@@ -1,20 +1,20 @@
 {
-  "name": "emasoft-orchestrator-agent",
+  "name": "ai-maestro-orchestrator-agent",
   "version": "1.2.7",
   "description": "Task distribution, agent coordination, progress monitoring - executes plans via subagents. Requires AI Maestro for inter-agent messaging.",
   "author": {
     "name": "Emasoft",
     "email": "713559+Emasoft@users.noreply.github.com"
   },
-  "repository": "https://github.com/Emasoft/emasoft-orchestrator-agent",
+  "repository": "https://github.com/Emasoft/ai-maestro-orchestrator-agent",
   "license": "MIT",
   "agents": [
-    "./agents/eoa-orchestrator-main-agent.md",
-    "./agents/eoa-team-orchestrator.md",
-    "./agents/eoa-task-summarizer.md",
-    "./agents/eoa-checklist-compiler.md",
-    "./agents/eoa-docker-container-expert.md",
-    "./agents/eoa-experimenter.md"
+    "./agents/amoa-orchestrator-main-agent.md",
+    "./agents/amoa-team-orchestrator.md",
+    "./agents/amoa-task-summarizer.md",
+    "./agents/amoa-checklist-compiler.md",
+    "./agents/amoa-docker-container-expert.md",
+    "./agents/amoa-experimenter.md"
   ],
   "skills": "./skills/"
 }

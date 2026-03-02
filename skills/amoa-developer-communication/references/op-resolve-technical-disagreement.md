@@ -32,7 +32,7 @@
 | Procedure | `proc-handle-feedback` |
 | Workflow Step | Step 15 |
 | Trigger | Disagreement about technical approach arises |
-| Actor | Orchestrator (EOA) or involved party |
+| Actor | Orchestrator (AMOA) or involved party |
 | Target | Other party in disagreement |
 
 ---
@@ -131,7 +131,7 @@ Escalate to a third party when:
 | Situation | Escalate To |
 |-----------|-------------|
 | Blocking PR > 48 hours | Tech lead or maintainer |
-| Architectural disagreement | Architect (EAA) |
+| Architectural disagreement | Architect (AMAA) |
 | Both parties equally valid | Senior engineer |
 | Getting personal/emotional | Team lead for mediation |
 

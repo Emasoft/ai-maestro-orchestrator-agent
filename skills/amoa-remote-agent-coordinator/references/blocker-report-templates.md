@@ -8,15 +8,15 @@ Process and dependency blocker reporting templates for implementer agents. These
 
 ## Contents
 
-- [1. Agent Blocker Report (Agent to EOA)](#1-agent-blocker-report-agent-to-eoa) - When an implementer agent is blocked and needs EOA intervention
-- [2. EOA Blocker Triage Response (EOA to Agent)](#2-eoa-blocker-triage-response-eoa-to-agent) - When EOA has triaged the blocker and responds with a resolution path
-- [3. EOA Blocker Resolution Notification (EOA to Agent)](#3-eoa-blocker-resolution-notification-eoa-to-agent) - When EOA has fully resolved the blocker and the agent can resume work
-- [4. Blocker Triage Decision Tree](#4-blocker-triage-decision-tree) - How EOA decides what action to take for each blocker type
+- [1. Agent Blocker Report (Agent to AMOA)](#1-agent-blocker-report-agent-to-eoa) - When an implementer agent is blocked and needs AMOA intervention
+- [2. AMOA Blocker Triage Response (AMOA to Agent)](#2-amoa-blocker-triage-response-amoa-to-agent) - When AMOA has triaged the blocker and responds with a resolution path
+- [3. AMOA Blocker Resolution Notification (AMOA to Agent)](#3-amoa-blocker-resolution-notification-amoa-to-agent) - When AMOA has fully resolved the blocker and the agent can resume work
+- [4. Blocker Triage Decision Tree](#4-blocker-triage-decision-tree) - How AMOA decides what action to take for each blocker type
 - [5. Blocker vs Bug Report Decision Guide](#5-blocker-vs-bug-report-decision-guide) - How to determine whether to file a blocker report or a bug report
 
 ---
 
-## 1. Agent Blocker Report (Agent to EOA)
+## 1. Agent Blocker Report (Agent to AMOA)
 
 ### When to Use
 
@@ -37,7 +37,7 @@ Do NOT use this template for code bugs. Use `bug-reporting-protocol.md` for code
 ```json
 {
   "from": "{agent_session_name}",
-  "to": "{eoa_session_name}",
+  "to": "{amoa_session_name}",
   "subject": "[BLOCKED] Task {task_id}: {brief_description}",
   "priority": "high",
   "content": {
@@ -66,7 +66,7 @@ Do NOT use this template for code bugs. Use `bug-reporting-protocol.md` for code
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `{agent_session_name}` | The blocked agent's full session name | `svgbbox-programmer-001` |
-| `{eoa_session_name}` | The EOA orchestrator's full session name | `eoa-svgbbox-orchestrator` |
+| `{amoa_session_name}` | The AMOA orchestrator's full session name | `amoa-svgbbox-orchestrator` |
 | `{task_id}` | The GitHub issue or task identifier | `GH-42` |
 | `{brief_description}` | One-line summary of the blocker | `Waiting on auth module from programmer-002` |
 | `{blocker_type}` | One of: `dependency`, `access`, `resource`, `requirement`, `external_service` | `dependency` |
@@ -81,7 +81,7 @@ Do NOT use this template for code bugs. Use `bug-reporting-protocol.md` for code
 ```json
 {
   "from": "svgbbox-programmer-001",
-  "to": "eoa-svgbbox-orchestrator",
+  "to": "amoa-svgbbox-orchestrator",
   "subject": "[BLOCKED] Task GH-42: Waiting on auth module from programmer-002",
   "priority": "high",
   "content": {
@@ -107,11 +107,11 @@ Do NOT use this template for code bugs. Use `bug-reporting-protocol.md` for code
 
 ---
 
-## 2. EOA Blocker Triage Response (EOA to Agent)
+## 2. AMOA Blocker Triage Response (AMOA to Agent)
 
 ### When to Use
 
-Use this template immediately after receiving and triaging a blocker report from an implementer agent. The EOA must respond to every blocker report. This template communicates the resolution path and provides interim instructions so the agent knows what to do while waiting.
+Use this template immediately after receiving and triaging a blocker report from an implementer agent. The AMOA must respond to every blocker report. This template communicates the resolution path and provides interim instructions so the agent knows what to do while waiting.
 
 ### Response Template
 
@@ -119,7 +119,7 @@ Use this template immediately after receiving and triaging a blocker report from
 
 ```json
 {
-  "from": "{eoa_session_name}",
+  "from": "{amoa_session_name}",
   "to": "{agent_session_name}",
   "subject": "[TRIAGE] Task {task_id}: Blocker {resolution_type}",
   "priority": "high",
@@ -130,7 +130,7 @@ Use this template immediately after receiving and triaging a blocker report from
       "task_id": "{task_id}",
       "original_blocker_type": "{dependency|access|resource|requirement|external_service}",
       "resolution_type": "{unblocked|workaround_provided|escalated|reassigned}",
-      "resolution_details": "Detailed explanation of what EOA is doing to resolve the blocker",
+      "resolution_details": "Detailed explanation of what AMOA is doing to resolve the blocker",
       "estimated_resolution_time": "When the agent can expect the blocker to be fully resolved (e.g., '30 minutes', '2 hours', 'next planning cycle')",
       "interim_instructions": "Specific instructions for what the agent should do while waiting for the blocker to be resolved"
     }
@@ -152,14 +152,14 @@ Use this template immediately after receiving and triaging a blocker report from
 |-----------------|---------|--------------|
 | `unblocked` | The blocker has been resolved immediately | Resume work on the blocked task |
 | `workaround_provided` | A temporary workaround is available | Apply the workaround and continue work |
-| `escalated` | The blocker has been escalated to ECOS, EAA, EAMA, or the user | Follow interim instructions while waiting |
+| `escalated` | The blocker has been escalated to AMCOS, AMAA, AMAMA, or the user | Follow interim instructions while waiting |
 | `reassigned` | The task has been reassigned to avoid the blocker | Stop work and await new assignment |
 
 ### Example: Workaround Provided
 
 ```json
 {
-  "from": "eoa-svgbbox-orchestrator",
+  "from": "amoa-svgbbox-orchestrator",
   "to": "svgbbox-programmer-001",
   "subject": "[TRIAGE] Task GH-42: Blocker workaround_provided",
   "priority": "high",
@@ -180,7 +180,7 @@ Use this template immediately after receiving and triaging a blocker report from
 
 ---
 
-## 3. EOA Blocker Resolution Notification (EOA to Agent)
+## 3. AMOA Blocker Resolution Notification (AMOA to Agent)
 
 ### When to Use
 
@@ -192,7 +192,7 @@ Use this template after a previously reported blocker has been fully resolved. T
 
 ```json
 {
-  "from": "{eoa_session_name}",
+  "from": "{amoa_session_name}",
   "to": "{agent_session_name}",
   "subject": "[RESOLVED] Task {task_id}: Blocker resolved",
   "priority": "normal",
@@ -223,7 +223,7 @@ Use this template after a previously reported blocker has been fully resolved. T
 
 ```json
 {
-  "from": "eoa-svgbbox-orchestrator",
+  "from": "amoa-svgbbox-orchestrator",
   "to": "svgbbox-programmer-001",
   "subject": "[RESOLVED] Task GH-42: Blocker resolved",
   "priority": "normal",
@@ -245,7 +245,7 @@ Use this template after a previously reported blocker has been fully resolved. T
 
 ## 4. Blocker Triage Decision Tree
 
-When EOA receives a blocker report, follow this decision tree to determine the correct action.
+When AMOA receives a blocker report, follow this decision tree to determine the correct action.
 
 > **Note**: Use the agent-messaging skill to send messages at each step where communication is required.
 
@@ -265,7 +265,7 @@ Blocker report received
 │   │   │
 │   │   └─ NO (agent not responding after 2 poll attempts)
 │   │       ├─ Reassign the dependency to a different agent
-│   │       ├─ If no agent available, escalate to ECOS for new agent allocation
+│   │       ├─ If no agent available, escalate to AMCOS for new agent allocation
 │   │       └─ Provide interim instructions to the blocked agent
 │   │
 │   └─ Is partial output available from the other agent?
@@ -275,7 +275,7 @@ Blocker report received
 │
 ├─ ACCESS or RESOURCE (missing permissions, unavailable infrastructure)
 │   │
-│   ├─ Can EOA grant access or allocate the resource directly?
+│   ├─ Can AMOA grant access or allocate the resource directly?
 │   │   │
 │   │   ├─ YES
 │   │   │   ├─ Grant access or allocate the resource
@@ -283,7 +283,7 @@ Blocker report received
 │   │   │   └─ Send blocker resolution notification
 │   │   │
 │   │   └─ NO (requires higher authority)
-│   │       ├─ Escalate to ECOS with a security clearance or resource request
+│   │       ├─ Escalate to AMCOS with a security clearance or resource request
 │   │       ├─ Provide estimated resolution time to the agent
 │   │       └─ Provide interim instructions (e.g., work on other parts of the task)
 │   │
@@ -294,15 +294,15 @@ Blocker report received
 │
 ├─ REQUIREMENT (unclear, ambiguous, or contradictory instructions)
 │   │
-│   ├─ Is the Architect Agent (EAA) available?
+│   ├─ Is the Architect Agent (AMAA) available?
 │   │   │
 │   │   ├─ YES
-│   │   │   ├─ Escalate to EAA for requirement clarification
+│   │   │   ├─ Escalate to AMAA for requirement clarification
 │   │   │   ├─ Include the specific ambiguity and the agent's interpretation options
 │   │   │   └─ Provide interim instructions based on the most likely interpretation
 │   │   │
-│   │   └─ NO (EAA not available or not assigned to this project)
-│   │       ├─ Escalate to EAMA (Assistant Manager) for user clarification
+│   │   └─ NO (AMAA not available or not assigned to this project)
+│   │       ├─ Escalate to AMAMA (Assistant Manager) for user clarification
 │   │       ├─ Include the requirement text and the conflicting interpretations
 │   │       └─ Provide interim instructions based on the most conservative interpretation
 │   │
@@ -345,7 +345,7 @@ When an agent encounters an obstacle, use this guide to determine whether to fil
 | **Nature of the problem** | Process, dependency, access, or environment issue | Code defect, incorrect behavior, test failure |
 | **Root cause** | External to the agent's code (another agent, service, permission, requirement) | Internal to the codebase (wrong logic, missing handling, regression) |
 | **Agent can fix it** | No, the agent cannot resolve the obstacle alone | Sometimes, agent may be able to fix the code defect |
-| **Needs EOA action** | Always requires EOA to coordinate, escalate, or grant access | Sometimes requires EOA (for triage), sometimes agent fixes directly |
+| **Needs AMOA action** | Always requires AMOA to coordinate, escalate, or grant access | Sometimes requires AMOA (for triage), sometimes agent fixes directly |
 | **Has reproduction steps** | Not applicable (it is a process obstacle, not a code defect) | Required (steps to reproduce the bug in code) |
 | **Has severity levels** | Uses impact levels: `blocked_completely`, `partially_blocked`, `degraded` | Uses severity levels: `critical`, `high`, `normal`, `low` |
 | **Priority** | Always `high` or `urgent` | Varies based on severity |
@@ -364,7 +364,7 @@ Ask these questions in order:
 
 | Situation | Correct Report Type | Reasoning |
 |---|---|---|
-| Agent finds a bug in another agent's code | **Bug report** to EOA, who routes it to the responsible agent | The root cause is a code defect |
+| Agent finds a bug in another agent's code | **Bug report** to AMOA, who routes it to the responsible agent | The root cause is a code defect |
 | Agent cannot access a repository | **Blocker report** | The root cause is a permission or access issue |
 | CI/CD pipeline fails due to a code bug | **Bug report** | The root cause is a code defect, even though CI is the symptom |
 | CI/CD pipeline fails due to infrastructure | **Blocker report** | The root cause is an infrastructure or service issue |

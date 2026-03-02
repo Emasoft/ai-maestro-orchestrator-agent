@@ -2,17 +2,17 @@
 
 ## Table of Contents (Use-Case Oriented)
 
-- **1.0 When you receive a new task from ECOS/EAMA** → [Checklist: Receiving New Task](#checklist-receiving-new-task)
+- **1.0 When you receive a new task from AMCOS/AMAMA** → [Checklist: Receiving New Task](#checklist-receiving-new-task)
 - **2.0 When you need to delegate a task to a sub-agent** → [Checklist: Delegating Task](#checklist-delegating-task)
 - **3.0 When monitoring progress of delegated tasks** → [Checklist: Monitoring Delegated Task](#checklist-monitoring-delegated-task)
 - **4.0 When verifying a sub-agent's completed work** → [Checklist: Verifying Task Completion](#checklist-verifying-task-completion)
-- **5.0 When reporting results back to ECOS/EAMA** → [Checklist: Reporting Results](#checklist-reporting-results)
+- **5.0 When reporting results back to AMCOS/AMAMA** → [Checklist: Reporting Results](#checklist-reporting-results)
 
 ---
 
 ## Checklist: Receiving New Task
 
-**USE CASE:** When ECOS or EAMA sends you a task
+**USE CASE:** When AMCOS or AMAMA sends you a task
 
 ```
 - [ ] Receive AI Maestro message
@@ -47,7 +47,7 @@
 - [ ] Include required artifacts/deliverables
 - [ ] Send AI Maestro message to sub-agent using the `agent-messaging` skill
 - [ ] Wait for ACK from sub-agent (timeout: 15 minutes)
-- [ ] If no ACK, retry once, then escalate to ECOS
+- [ ] If no ACK, retry once, then escalate to AMCOS
 - [ ] Log delegation in docs_dev/orchestration/delegation-log.md
 - [ ] Create GitHub issue with assigned:[agent-name] label
 - [ ] Update task-log.md status to "DELEGATED"
@@ -75,7 +75,7 @@
 - [ ] Update status file with latest progress
 - [ ] If critical path task, poll more frequently
 - [ ] If agent overdue >50%, send reminder
-- [ ] If agent overdue >100%, escalate to ECOS
+- [ ] If agent overdue >100%, escalate to AMCOS
 ```
 
 **Polling Frequency:**
@@ -105,7 +105,7 @@
 - [ ] Update status file with completion details
 - [ ] Update task-log.md status to "COMPLETE"
 - [ ] Send ACK to agent confirming completion verified
-- [ ] Prepare summary for ECOS/EAMA
+- [ ] Prepare summary for AMCOS/AMAMA
 ```
 
 **Required Report Sections:**
@@ -125,7 +125,7 @@
 
 ## Checklist: Reporting Results
 
-**USE CASE:** When reporting back to ECOS/EAMA
+**USE CASE:** When reporting back to AMCOS/AMAMA
 
 ```
 - [ ] Prepare 1-2 line summary
@@ -166,7 +166,7 @@ Details: docs_dev/orchestration/reports/[task-uuid].md
 
 | Situation | Use This Checklist |
 |-----------|-------------------|
-| New message from ECOS/EAMA | [Receiving New Task](#checklist-receiving-new-task) |
+| New message from AMCOS/AMAMA | [Receiving New Task](#checklist-receiving-new-task) |
 | Need to assign work to sub-agent | [Delegating Task](#checklist-delegating-task) |
 | Task in progress, checking status | [Monitoring Delegated Task](#checklist-monitoring-delegated-task) |
 | Agent says task is done | [Verifying Task Completion](#checklist-verifying-task-completion) |

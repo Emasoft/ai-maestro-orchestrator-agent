@@ -8,7 +8,7 @@
 
 ## Purpose
 
-This protocol defines MANDATORY rules for sharing `.md` files between agents in the EOA (Emasoft Orchestrator Agent) system. It ensures context/token efficiency, maintains audit trails, and prevents message payload bloat.
+This protocol defines MANDATORY rules for sharing `.md` files between agents in the AMOA (AI Maestro Orchestrator Agent) system. It ensures context/token efficiency, maintains audit trails, and prevents message payload bloat.
 
 ---
 
@@ -40,7 +40,7 @@ Contents:
   - 2.1.1 Step 1: Receive AI Maestro Message
   - 2.1.2 Step 2: Download .md File from GitHub
   - 2.1.3 Step 3: Send ACK (MANDATORY)
-  - 2.1.4 Step 4: Store in EOA Design Storage (MANDATORY)
+  - 2.1.4 Step 4: Store in AMOA Design Storage (MANDATORY)
   - 2.1.5 Step 5: Process the Document
 - 2.2 ACK Requirements
   - 2.2.1 When ACK is MANDATORY

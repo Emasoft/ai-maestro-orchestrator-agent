@@ -1,12 +1,12 @@
 ---
-name: eoa-github-action-integration
+name: amoa-github-action-integration
 description: "Trigger with Claude Code action requests. Use when setting up Claude Code in GitHub Actions for automated PR reviews, @claude mention responses, and issue triage."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:
   author: Emasoft
   version: 1.0.0
-agent: eoa-main
+agent: amoa-main
 context: fork
 user-invocable: false
 workflow-instruction: "support"

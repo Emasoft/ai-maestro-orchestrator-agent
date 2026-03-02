@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EOA: Instruction Verification Status Check
+AMOA: Instruction Verification Status Check
 MANDATORY ENFORCEMENT HOOK
 
 This PreToolUse hook checks if instruction verification is complete
@@ -24,7 +24,7 @@ EXEC_PHASE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 
 def log_error(message: str) -> None:
     """Log error message to stderr for visibility."""
-    print(f"[ERROR] eoa_check_verification_status: {message}", file=sys.stderr)
+    print(f"[ERROR] amoa_check_verification_status: {message}", file=sys.stderr)
 
 
 def parse_frontmatter(file_path: Path) -> tuple[dict[str, Any], bool]:

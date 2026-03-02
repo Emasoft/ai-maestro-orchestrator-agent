@@ -13,7 +13,7 @@ AI agents collaborate asynchronously across unpredictable timeframes. Agents may
 
 ## Escalation Order
 
-All emasoft plugins follow this escalation sequence:
+All ai-maestro plugins follow this escalation sequence:
 
 | Step | Action | Trigger Condition | Priority |
 |------|--------|-------------------|----------|

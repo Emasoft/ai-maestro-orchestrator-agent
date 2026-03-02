@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """
-EOA Check Plan Phase -- Verify Plan Phase Completion
+AMOA Check Plan Phase -- Verify Plan Phase Completion
 
 Checks whether the Plan Phase is complete by examining:
-  1. The plan_phase_complete flag in .emasoft/orchestration-state.json
+  1. The plan_phase_complete flag in .ai-maestro/orchestration-state.json
   2. The existence of USER_REQUIREMENTS.md in the project root
   3. Whether modules are defined in the orchestration state
   4. Whether acceptance criteria are present in the orchestration state
 
-This script is used by the EOA stop hook to determine if the orchestrator
+This script is used by the AMOA stop hook to determine if the orchestrator
 can safely stop during the Plan Phase.
 
 NO external dependencies -- Python 3.8+ stdlib only.
 
 Usage:
-    python3 eoa_check_plan_phase.py
-    python3 eoa_check_plan_phase.py --project-root /path/to/project
-    python3 eoa_check_plan_phase.py --verbose
+    python3 amoa_check_plan_phase.py
+    python3 amoa_check_plan_phase.py --project-root /path/to/project
+    python3 amoa_check_plan_phase.py --verbose
 
 Exit codes:
     0 - Plan phase is complete (all checks pass)
@@ -25,15 +25,15 @@ Exit codes:
 
 Examples:
     # Check plan phase in current directory:
-    python3 eoa_check_plan_phase.py
+    python3 amoa_check_plan_phase.py
     # Output: {"complete": true, "reason": "All plan phase checks passed", "checks": {...}}
 
     # Check plan phase in a specific project:
-    python3 eoa_check_plan_phase.py --project-root /home/user/my-project
+    python3 amoa_check_plan_phase.py --project-root /home/user/my-project
     # Output: {"complete": false, "reason": "USER_REQUIREMENTS.md not found", "checks": {...}}
 
     # Verbose output with details printed to stderr:
-    python3 eoa_check_plan_phase.py --verbose
+    python3 amoa_check_plan_phase.py --verbose
 """
 
 import argparse
@@ -43,7 +43,7 @@ from pathlib import Path
 
 
 # State file location relative to the project root
-STATE_FILE_REL = ".emasoft/orchestration-state.json"
+STATE_FILE_REL = ".ai-maestro/orchestration-state.json"
 
 # Requirements file that must exist in the project root
 REQUIREMENTS_FILE = "USER_REQUIREMENTS.md"

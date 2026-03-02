@@ -23,7 +23,7 @@
 | Procedure | `proc-clarify-tasks` |
 | Workflow Step | Step 14 |
 | Trigger | Task assignment to implementer agent |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Target | Implementer agent |
 
 ---

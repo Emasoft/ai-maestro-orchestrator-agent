@@ -1,6 +1,6 @@
 # Cross-Plugin Conflict Resolution Protocol
 
-This document defines how to resolve conflicts when multiple emasoft agents need to modify the same GitHub labels, issues, or resources.
+This document defines how to resolve conflicts when multiple ai-maestro agents need to modify the same GitHub labels, issues, or resources.
 
 ## Table of Contents
 
@@ -15,11 +15,11 @@ This document defines how to resolve conflicts when multiple emasoft agents need
 
 When conflicts arise, authority is based on role (higher takes precedence):
 
-1. **EAMA** (Assistant Manager) - User-facing decisions, approval authority
-2. **ECOS** (Chief of Staff) - Agent lifecycle, resource management
-3. **EOA** (Orchestrator) - Task distribution, kanban management
-4. **EIA** (Integrator) - Quality gates, integration decisions
-5. **EAA** (Architect) - Design decisions (within approved scope)
+1. **AMAMA** (Assistant Manager) - User-facing decisions, approval authority
+2. **AMCOS** (Chief of Staff) - Agent lifecycle, resource management
+3. **AMOA** (Orchestrator) - Task distribution, kanban management
+4. **AMIA** (Integrator) - Quality gates, integration decisions
+5. **AMAA** (Architect) - Design decisions (within approved scope)
 
 ---
 
@@ -29,10 +29,10 @@ When multiple agents attempt to modify the same issue labels:
 
 | Conflict Type | Resolution |
 |---------------|------------|
-| Assignment conflict (EOA vs ECOS) | ECOS wins (lifecycle priority) |
-| Priority change | EAMA approval required for critical |
+| Assignment conflict (AMOA vs AMCOS) | AMCOS wins (lifecycle priority) |
+| Priority change | AMAMA approval required for critical |
 | Status conflict | Working agent has authority |
-| Review decision | EIA has final say |
+| Review decision | AMIA has final say |
 
 ---
 

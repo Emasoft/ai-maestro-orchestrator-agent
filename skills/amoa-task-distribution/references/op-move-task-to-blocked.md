@@ -10,7 +10,7 @@
 - [Input](#input)
 - [Procedure](#procedure)
 - [Commands](#commands)
-- [Escalation Message to EAMA](#escalation-message-to-eama)
+- [Escalation Message to AMAMA](#escalation-message-to-eama)
 - [Checklist](#checklist)
 - [Error Handling](#error-handling)
 - [Related Operations](#related-operations)
@@ -23,11 +23,11 @@
 | **Procedure** | proc-populate-kanban |
 | **Workflow Instruction** | Step 13 - Kanban Population |
 | **Category** | Task Distribution |
-| **Agent** | eoa-main |
+| **Agent** | amoa-main |
 
 ## Purpose
 
-Move a task to the Blocked column when an agent reports the task cannot proceed, and escalate to EAMA immediately.
+Move a task to the Blocked column when an agent reports the task cannot proceed, and escalate to AMAMA immediately.
 
 ## Preconditions
 
@@ -64,7 +64,7 @@ Move a task to the Blocked column when an agent reports the task cannot proceed,
 4. Update labels: remove current `status:*`, add `status:blocked`
 5. Add blocker details as comment on the issue (include previous status)
 6. Create a separate GitHub issue for the blocker itself (`type:blocker` label)
-7. Send blocker-escalation message to EAMA using the `agent-messaging` skill IMMEDIATELY
+7. Send blocker-escalation message to AMAMA using the `agent-messaging` skill IMMEDIATELY
 8. Check if other unblocked tasks can be assigned to the waiting agent
 
 ## Commands
@@ -95,14 +95,14 @@ gh issue create --title "BLOCKER: $BLOCKER_REASON" --label "type:blocker" \
   --body "Blocking task #$ISSUE. Category: Access/Credentials. What's needed: AWS credentials provisioned."
 ```
 
-## Escalation Message to EAMA
+## Escalation Message to AMAMA
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
 ```json
 {
-  "from": "eoa-orchestrator",
-  "to": "eama-assistant-manager",
+  "from": "amoa-orchestrator",
+  "to": "amama-assistant-manager",
   "subject": "BLOCKER: Task #42 - Missing API Credentials",
   "priority": "high",
   "content": {
@@ -131,7 +131,7 @@ gh issue create --title "BLOCKER: $BLOCKER_REASON" --label "type:blocker" \
 - [ ] Remove current `status:*` label, add `status:blocked`
 - [ ] Add blocker details as comment on the blocked task issue (include `Previous status: $CURRENT_STATUS`)
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label, referencing the blocked task)
-- [ ] Send blocker-escalation message to EAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
+- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 ## Error Handling
@@ -139,7 +139,7 @@ gh issue create --title "BLOCKER: $BLOCKER_REASON" --label "type:blocker" \
 | Error | Cause | Resolution |
 |-------|-------|------------|
 | Cannot create blocker issue | Permission denied | Check write access to repo |
-| EAMA unreachable | AI Maestro down | Log and retry, notify user directly |
+| AMAMA unreachable | AI Maestro down | Log and retry, notify user directly |
 
 ## Related Operations
 

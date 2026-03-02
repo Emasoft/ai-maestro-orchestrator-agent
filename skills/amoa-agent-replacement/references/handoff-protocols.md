@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the standard protocols for handing off tasks, documents, and communications between the orchestrator and remote agents in the EOA ecosystem.
+This document defines the standard protocols for handing off tasks, documents, and communications between the orchestrator and remote agents in the AMOA ecosystem.
 
 ---
 
@@ -18,7 +18,7 @@ This document defines the standard protocols for handing off tasks, documents, a
 
 ## Standard Handoff Format
 
-All handoffs use the EAMA standard format:
+All handoffs use the AMAMA standard format:
 - **Location**: `docs_dev/handoffs/`
 - **Naming**: `handoff-{uuid}-{from}-to-{to}.md`
 - **Delivery**: AI Maestro message with file path
@@ -75,7 +75,7 @@ When orchestrator delegates a task to a remote agent:
 
 ### Template Reference
 
-See: [TASK_DELEGATION_TEMPLATE.md](../../eoa-remote-agent-coordinator/templates/handoff/TASK_DELEGATION_TEMPLATE.md)
+See: [TASK_DELEGATION_TEMPLATE.md](../../amoa-remote-agent-coordinator/templates/handoff/TASK_DELEGATION_TEMPLATE.md)
 
 ---
 
@@ -107,7 +107,7 @@ Understanding: {{ONE_LINE_SUMMARY}}
 
 ### Template Reference
 
-See: [ACK_TEMPLATE.md](../../eoa-remote-agent-coordinator/templates/handoff/ACK_TEMPLATE.md)
+See: [ACK_TEMPLATE.md](../../amoa-remote-agent-coordinator/templates/handoff/ACK_TEMPLATE.md)
 
 ---
 
@@ -123,7 +123,7 @@ When agent completes a task:
 
 ### Template Reference
 
-See: [COMPLETION_REPORT_TEMPLATE.md](../../eoa-remote-agent-coordinator/templates/handoff/COMPLETION_REPORT_TEMPLATE.md)
+See: [COMPLETION_REPORT_TEMPLATE.md](../../amoa-remote-agent-coordinator/templates/handoff/COMPLETION_REPORT_TEMPLATE.md)
 
 ---
 
@@ -149,7 +149,7 @@ When agent encounters a blocker:
 
 ### Template Reference
 
-See: [BLOCKER_REPORT_TEMPLATE.md](../../eoa-remote-agent-coordinator/templates/handoff/BLOCKER_REPORT_TEMPLATE.md)
+See: [BLOCKER_REPORT_TEMPLATE.md](../../amoa-remote-agent-coordinator/templates/handoff/BLOCKER_REPORT_TEMPLATE.md)
 
 ---
 

@@ -1,8 +1,8 @@
 ---
-name: eoa-orchestration-status
+name: amoa-orchestration-status
 description: Display Orchestration Phase progress - module completion, assignments, verification status
 allowed-tools:
-  - "Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py:*)"
+  - "Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestration_status.py:*)"
   - "Read"
 ---
 
@@ -15,7 +15,7 @@ Display the current orchestration phase progress, including module completion, a
 Show full orchestration status in human-readable text:
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py"
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestration_status.py"
 ```
 
 ## Options
@@ -25,7 +25,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py"
 Show extra details including module descriptions, task UUIDs, and verification sub-status:
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --verbose
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestration_status.py" --verbose
 ```
 
 ### Modules Only
@@ -33,7 +33,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --verbose
 Show only module completion information:
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --modules-only
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestration_status.py" --modules-only
 ```
 
 ### Agents Only
@@ -41,7 +41,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --modules-on
 Show only active agent assignments:
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --agents-only
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestration_status.py" --agents-only
 ```
 
 ### JSON Output
@@ -49,7 +49,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --agents-onl
 Output as JSON for programmatic use:
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --format json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestration_status.py" --format json
 ```
 
 ### Custom Project Root
@@ -57,7 +57,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --format jso
 Check status for a project at a different path:
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --project-root /path/to/project
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestration_status.py" --project-root /path/to/project
 ```
 
 ## What This Shows
@@ -68,7 +68,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestration_status.py" --project-ro
 - **Verification status** including loops remaining and blocking issues
 - **Polling schedule** if configured
 
-## Difference from /eoa-orchestrator-status
+## Difference from /amoa-orchestrator-status
 
-- `/eoa-orchestrator-status` shows the orchestrator **loop** status (iteration count, task sources, configuration)
-- `/eoa-orchestration-status` shows the orchestration **phase** status (modules, agents, assignments, verification)
+- `/amoa-orchestrator-status` shows the orchestrator **loop** status (iteration count, task sources, configuration)
+- `/amoa-orchestration-status` shows the orchestration **phase** status (modules, agents, assignments, verification)

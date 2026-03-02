@@ -13,7 +13,7 @@
 
 ## 6.1 Issue Creation Format and Labels
 
-Every module in EOA orchestration has a corresponding GitHub Issue. This section explains how issues are created.
+Every module in AMOA orchestration has a corresponding GitHub Issue. This section explains how issues are created.
 
 ### Automatic Issue Creation
 
@@ -212,7 +212,7 @@ gh issue reopen 47
 
 ## 6.4 Label Conventions
 
-EOA orchestration uses a specific set of labels for module tracking.
+AMOA orchestration uses a specific set of labels for module tracking.
 
 ### Required Labels
 
@@ -244,7 +244,7 @@ If labels don't exist, create them:
 
 ```bash
 # Module identifier
-gh label create "module" --color "0052CC" --description "EOA orchestration module"
+gh label create "module" --color "0052CC" --description "AMOA orchestration module"
 
 # Priority labels
 gh label create "priority:critical" --color "B60205" --description "Critical priority - must complete first"
@@ -261,7 +261,7 @@ gh label create "status:done" --color "0E8A16" --description "Completed"
 
 ### Label Filtering
 
-Useful GitHub filters for EOA modules:
+Useful GitHub filters for AMOA modules:
 
 | Filter | Purpose |
 |--------|---------|

@@ -4,27 +4,27 @@ This document covers Orchestration Phase scripts 2.9-2.16 (advanced operations).
 
 ## Contents
 
-- 2.9 eoa_check_plan_phase.py <!-- TODO: Script not implemented --> - Checking if Plan Phase is complete
-- 2.10 eoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> - Checking if Orchestration Phase is complete
-- 2.11 eoa_sync_github_issues.py <!-- TODO: Script not implemented --> - Syncing modules with GitHub Issues
-- 2.12 eoa_verify_instructions.py - Managing Instruction Verification Protocol
-- 2.13 eoa_poll_agent.py - Sending MANDATORY progress poll
-- 2.14 eoa_update_verification.py <!-- TODO: Script not implemented --> - Managing mid-implementation changes
-- 2.15 eoa_init_design_folders.py <!-- TODO: Script not implemented --> - Initializing design folder structure
-- 2.16 eoa_compile_handoff.py <!-- TODO: Script not implemented --> - Compiling template to handoff document
+- 2.9 amoa_check_plan_phase.py <!-- TODO: Script not implemented --> - Checking if Plan Phase is complete
+- 2.10 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> - Checking if Orchestration Phase is complete
+- 2.11 amoa_sync_github_issues.py <!-- TODO: Script not implemented --> - Syncing modules with GitHub Issues
+- 2.12 amoa_verify_instructions.py - Managing Instruction Verification Protocol
+- 2.13 amoa_poll_agent.py - Sending MANDATORY progress poll
+- 2.14 amoa_update_verification.py <!-- TODO: Script not implemented --> - Managing mid-implementation changes
+- 2.15 amoa_init_design_folders.py <!-- TODO: Script not implemented --> - Initializing design folder structure
+- 2.16 amoa_compile_handoff.py <!-- TODO: Script not implemented --> - Compiling template to handoff document
 
 ---
 
-## 2.9 eoa_check_plan_phase.py <!-- TODO: Script not implemented -->
+## 2.9 amoa_check_plan_phase.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Check if Plan Phase is complete.
 
-**Location:** `scripts/eoa_check_plan_phase.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_check_plan_phase.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
-python3 eoa_check_plan_phase.py <!-- TODO: Script not implemented -->
-python3 eoa_check_plan_phase.py <!-- TODO: Script not implemented --> --json
+python3 amoa_check_plan_phase.py <!-- TODO: Script not implemented -->
+python3 amoa_check_plan_phase.py <!-- TODO: Script not implemented --> --json
 ```
 
 **Output:**
@@ -39,16 +39,16 @@ python3 eoa_check_plan_phase.py <!-- TODO: Script not implemented --> --json
 
 ---
 
-## 2.10 eoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->
+## 2.10 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Check if Orchestration Phase is complete.
 
-**Location:** `scripts/eoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
-python3 eoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->
-python3 eoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> --json
+python3 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->
+python3 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> --json
 ```
 
 **Output:**
@@ -64,16 +64,16 @@ python3 eoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> -
 
 ---
 
-## 2.11 eoa_sync_github_issues.py <!-- TODO: Script not implemented -->
+## 2.11 amoa_sync_github_issues.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Sync modules with GitHub Issues.
 
-**Location:** `scripts/eoa_sync_github_issues.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_sync_github_issues.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
-python3 eoa_sync_github_issues.py <!-- TODO: Script not implemented -->
-python3 eoa_sync_github_issues.py <!-- TODO: Script not implemented --> --dry-run
+python3 amoa_sync_github_issues.py <!-- TODO: Script not implemented -->
+python3 amoa_sync_github_issues.py <!-- TODO: Script not implemented --> --dry-run
 ```
 
 **Actions:**
@@ -87,26 +87,26 @@ python3 eoa_sync_github_issues.py <!-- TODO: Script not implemented --> --dry-ru
 
 ---
 
-## 2.12 eoa_verify_instructions.py
+## 2.12 amoa_verify_instructions.py
 
 **Purpose:** Manage Instruction Verification Protocol.
 
-**Location:** `scripts/eoa_verify_instructions.py`
+**Location:** `scripts/amoa_verify_instructions.py`
 
 **Usage:**
 ```bash
 # Check status
-python3 eoa_verify_instructions.py status <agent-id>
+python3 amoa_verify_instructions.py status <agent-id>
 
 # Record repetition received
-python3 eoa_verify_instructions.py record-repetition <agent-id> --correct
-python3 eoa_verify_instructions.py record-repetition <agent-id>  # incorrect
+python3 amoa_verify_instructions.py record-repetition <agent-id> --correct
+python3 amoa_verify_instructions.py record-repetition <agent-id>  # incorrect
 
 # Record questions
-python3 eoa_verify_instructions.py record-questions <agent-id> --count 2 --answered 2
+python3 amoa_verify_instructions.py record-questions <agent-id> --count 2 --answered 2
 
 # Authorize agent
-python3 eoa_verify_instructions.py authorize <agent-id>
+python3 amoa_verify_instructions.py authorize <agent-id>
 ```
 
 **Exit codes:**
@@ -115,23 +115,23 @@ python3 eoa_verify_instructions.py authorize <agent-id>
 
 ---
 
-## 2.13 eoa_poll_agent.py
+## 2.13 amoa_poll_agent.py
 
 **Purpose:** Send MANDATORY progress poll with 6 questions.
 
-**Location:** `scripts/eoa_poll_agent.py`
+**Location:** `scripts/amoa_poll_agent.py`
 
 **Usage:**
 ```bash
 # Send poll
-python3 eoa_poll_agent.py <agent-id>
+python3 amoa_poll_agent.py <agent-id>
 
 # Record response
-python3 eoa_poll_agent.py <agent-id> --record-response --issues "Issue description"
-python3 eoa_poll_agent.py <agent-id> --record-response --issues "Issue" --resolved
+python3 amoa_poll_agent.py <agent-id> --record-response --issues "Issue description"
+python3 amoa_poll_agent.py <agent-id> --record-response --issues "Issue" --resolved
 
 # View history
-python3 eoa_poll_agent.py <agent-id> --history
+python3 amoa_poll_agent.py <agent-id> --history
 ```
 
 **Poll message includes ALL 6 mandatory questions.**
@@ -142,38 +142,38 @@ python3 eoa_poll_agent.py <agent-id> --history
 
 ---
 
-## 2.14 eoa_update_verification.py <!-- TODO: Script not implemented -->
+## 2.14 amoa_update_verification.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Manage Instruction Update Verification Protocol for mid-implementation changes.
 
-**Location:** `scripts/eoa_update_verification.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_update_verification.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
 # Send update notification
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> send <agent-id> \
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> send <agent-id> \
   --type requirement_change \
   --description "Added OAuth2 scope requirements"
 
 # Record receipt confirmation
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> record-receipt <agent-id> <update-id>
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> record-receipt <agent-id> <update-id>
 
 # Record feasibility assessment
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> record-feasibility <agent-id> <update-id> \
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> record-feasibility <agent-id> <update-id> \
   --clear  # or --concerns "Concern description"
 
 # Resolve concerns
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> resolve-concerns <agent-id> <update-id> \
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> resolve-concerns <agent-id> <update-id> \
   --resolution "Provided additional config"
 
 # Authorize resume
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> authorize-resume <agent-id> <update-id>
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> authorize-resume <agent-id> <update-id>
 
 # View update history
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> history <agent-id>
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> history <agent-id>
 
 # View pending updates
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> pending
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> pending
 ```
 
 **Update types:**
@@ -219,12 +219,12 @@ active_assignments:
 When implementer needs configuration from orchestrator:
 ```bash
 # Implementer requests config
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> send orchestrator \
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> send orchestrator \
   --type config_request \
   --description "Need API keys for OAuth2 provider"
 
 # Orchestrator provides config
-python3 eoa_update_verification.py <!-- TODO: Script not implemented --> resolve-concerns <agent-id> <update-id> \
+python3 amoa_update_verification.py <!-- TODO: Script not implemented --> resolve-concerns <agent-id> <update-id> \
   --resolution "Config added to design/config/oauth2.env"
 ```
 
@@ -234,25 +234,25 @@ python3 eoa_update_verification.py <!-- TODO: Script not implemented --> resolve
 
 ---
 
-## 2.15 eoa_init_design_folders.py <!-- TODO: Script not implemented -->
+## 2.15 amoa_init_design_folders.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Initialize standardized design folder structure.
 
-**Location:** `scripts/eoa_init_design_folders.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_init_design_folders.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
 # Initialize for single platform
-python3 eoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web
+python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web
 
 # Initialize for multiple platforms
-python3 eoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web ios android
+python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web ios android
 
 # Initialize with custom root (default: design)
-python3 eoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web --root custom-design
+python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web --root custom-design
 
 # Skip template file creation
-python3 eoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web --no-templates
+python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web --no-templates
 ```
 
 **Arguments:**
@@ -299,23 +299,23 @@ design/
 
 ---
 
-## 2.16 eoa_compile_handoff.py <!-- TODO: Script not implemented -->
+## 2.16 amoa_compile_handoff.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Compile template to handoff document for implementer.
 
-**Location:** `scripts/eoa_compile_handoff.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_compile_handoff.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
 # Compile handoff for module assignment
-python3 eoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web
+python3 amoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web
 
 # With custom template
-python3 eoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web \
+python3 amoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web \
     --template custom-handoff-template.md
 
 # Preview without saving
-python3 eoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web --preview
+python3 amoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web --preview
 ```
 
 **Arguments:**

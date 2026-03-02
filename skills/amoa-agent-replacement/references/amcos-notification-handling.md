@@ -1,4 +1,4 @@
-# ECOS Notification Handling Reference
+# AMCOS Notification Handling Reference
 
 ## Contents
 
@@ -11,7 +11,7 @@
 
 ## 1.1 Notification Types
 
-ECOS sends different notification types for agent replacement scenarios:
+AMCOS sends different notification types for agent replacement scenarios:
 
 ### Agent Failure Notification
 
@@ -41,7 +41,7 @@ Sent when an agent has definitively failed:
 
 ### Pre-emptive Replacement Notification
 
-Sent when ECOS anticipates a failure:
+Sent when AMCOS anticipates a failure:
 
 ```json
 {
@@ -146,8 +146,8 @@ Non-critical replacement, handle when convenient:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA-ACK] Replacement Notification Received",
+  "to": "amcos-controller",
+  "subject": "[AMOA-ACK] Replacement Notification Received",
   "priority": "high",
   "content": {
     "type": "ack",
@@ -165,7 +165,7 @@ Non-critical replacement, handle when convenient:
 
 | Field | Description |
 |-------|-------------|
-| `original_notification_id` | UUID of the ECOS notification |
+| `original_notification_id` | UUID of the AMCOS notification |
 | `failed_agent` | ID of agent being replaced |
 | `replacement_agent` | ID of new agent |
 | `estimated_handoff_time` | How long until handoff complete |
@@ -175,18 +175,18 @@ Non-critical replacement, handle when convenient:
 
 | Status | Meaning | Next Step |
 |--------|---------|-----------|
-| `processing` | Working on handoff | ECOS waits |
-| `blocked` | Cannot proceed, need help | ECOS investigates |
-| `cannot_proceed` | Fatal issue | ECOS escalates to user |
-| `complete` | Handoff finished | ECOS confirms |
+| `processing` | Working on handoff | AMCOS waits |
+| `blocked` | Cannot proceed, need help | AMCOS investigates |
+| `cannot_proceed` | Fatal issue | AMCOS escalates to user |
+| `complete` | Handoff finished | AMCOS confirms |
 
 ### ACK Timeout Handling
 
-If ECOS does not receive ACK within expected time:
+If AMCOS does not receive ACK within expected time:
 
-1. ECOS sends reminder notification
-2. After 2 reminders, ECOS alerts user
-3. ECOS may attempt automatic recovery
+1. AMCOS sends reminder notification
+2. After 2 reminders, AMCOS alerts user
+3. AMCOS may attempt automatic recovery
 
 ---
 
@@ -200,8 +200,8 @@ If notification cannot be parsed:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA-ERROR] Invalid Notification",
+  "to": "amcos-controller",
+  "subject": "[AMOA-ERROR] Invalid Notification",
   "priority": "urgent",
   "content": {
     "type": "error",
@@ -220,8 +220,8 @@ If failed agent is not in orchestrator's roster:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA-ERROR] Unknown Agent",
+  "to": "amcos-controller",
+  "subject": "[AMOA-ERROR] Unknown Agent",
   "priority": "high",
   "content": {
     "type": "error",
@@ -240,8 +240,8 @@ If replacement agent is not available:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA-ERROR] Replacement Not Available",
+  "to": "amcos-controller",
+  "subject": "[AMOA-ERROR] Replacement Not Available",
   "priority": "urgent",
   "content": {
     "type": "error",
@@ -260,8 +260,8 @@ If replacement agent also fails during handoff:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA-ESCALATE] Multiple Agent Failures",
+  "to": "amcos-controller",
+  "subject": "[AMOA-ESCALATE] Multiple Agent Failures",
   "priority": "urgent",
   "content": {
     "type": "escalation",
@@ -279,7 +279,7 @@ If replacement agent also fails during handoff:
 
 ### AI Maestro Integration
 
-All ECOS notifications arrive via AI Maestro. Use the `agent-messaging` skill to check your inbox regularly for unread messages and filter for those where `content.type` equals `agent_replacement`.
+All AMCOS notifications arrive via AI Maestro. Use the `agent-messaging` skill to check your inbox regularly for unread messages and filter for those where `content.type` equals `agent_replacement`.
 
 ### State File Integration
 
@@ -301,15 +301,15 @@ ecos_notifications:
 
 ### Agent Recovery Decision Tree
 
-When ECOS notifies EOA that the original failed agent has recovered:
+When AMCOS notifies AMOA that the original failed agent has recovered:
 
 ```
-ECOS sends "Agent Recovery Notification" — original agent is back online
+AMCOS sends "Agent Recovery Notification" — original agent is back online
 ├─ Has replacement agent already started work?
 │   ├─ No (replacement not yet assigned or hasn't begun)
 │   │   → Cancel replacement assignment
 │   │   → Re-assign task to original agent (it has prior context)
-│   │   → Send ACK to ECOS: "Reverting to original agent, replacement cancelled"
+│   │   → Send ACK to AMCOS: "Reverting to original agent, replacement cancelled"
 │   │
 │   ├─ Yes, replacement is in-progress but < 25% complete
 │   │   → Compare: original agent's prior progress vs replacement's current progress
@@ -318,25 +318,25 @@ ECOS sends "Agent Recovery Notification" — original agent is back online
 │   │   │   → Send recovery context to original → Original resumes
 │   │   └─ Replacement is further along → Keep replacement
 │   │       → Notify original agent it's been superseded
-│   │       → Send ACK to ECOS: "Keeping replacement, original released"
+│   │       → Send ACK to AMCOS: "Keeping replacement, original released"
 │   │
 │   └─ Yes, replacement is > 25% complete
 │       → Keep replacement agent (switching cost too high)
 │       → Notify original agent it's been superseded
 │       → Optionally: assign original to a different pending task
-│       → Send ACK to ECOS: "Keeping replacement (>25% progress), original available for other tasks"
+│       → Send ACK to AMCOS: "Keeping replacement (>25% progress), original available for other tasks"
 ```
 
-### EOA Response to Recovery Notification Template
+### AMOA Response to Recovery Notification Template
 
 ```json
 {
-  "to": "<ecos-session-name>",
+  "to": "<amcos-session-name>",
   "subject": "Agent Recovery Decision",
   "priority": "high",
   "content": {
     "type": "response",
-    "message": "EOA has processed the agent recovery notification.",
+    "message": "AMOA has processed the agent recovery notification.",
     "data": {
       "original_agent": "<original-agent-session-name>",
       "replacement_agent": "<replacement-agent-session-name>",
@@ -345,7 +345,7 @@ ECOS sends "Agent Recovery Notification" — original agent is back online
       "reason": "<explanation of decision>",
       "replacement_progress_pct": 15,
       "original_prior_progress_pct": 40,
-      "action_taken": "<what EOA did: cancelled replacement / notified original / etc.>"
+      "action_taken": "<what AMOA did: cancelled replacement / notified original / etc.>"
     }
   }
 }

@@ -1,5 +1,5 @@
 ---
-name: eoa-progress-monitoring
+name: amoa-progress-monitoring
 description: Agent progress monitoring via state-based detection. Use when tracking task completion, detecting stalls, or escalating unresponsive agents. Trigger with progress checks.
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 1.0.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Step 17"
 procedure: "proc-execute-task"
 ---
@@ -17,13 +17,13 @@ procedure: "proc-execute-task"
 
 ## Overview
 
-This skill defines how the Orchestrator (EOA) monitors agent progress. Monitoring is based on **state transitions** and **response order** - not fixed time intervals. Agents collaborate asynchronously and may be hibernated for extended periods. The orchestrator tracks agent states (Acknowledged, Active, No Progress, Stale, Unresponsive, Blocked, Complete) and escalates through ordered steps when issues are detected.
+This skill defines how the Orchestrator (AMOA) monitors agent progress. Monitoring is based on **state transitions** and **response order** - not fixed time intervals. Agents collaborate asynchronously and may be hibernated for extended periods. The orchestrator tracks agent states (Acknowledged, Active, No Progress, Stale, Unresponsive, Blocked, Complete) and escalates through ordered steps when issues are detected.
 
 ## Prerequisites
 
 1. Read **AGENT_OPERATIONS.md** for orchestrator workflow
-2. Read **eoa-label-taxonomy** for status labels and workflow states
-3. Read **eoa-messaging-templates** for message formats and escalation templates
+2. Read **amoa-label-taxonomy** for status labels and workflow states
+3. Read **amoa-messaging-templates** for message formats and escalation templates
 4. Access to AI Maestro API for agent message history
 5. Access to GitHub CLI for issue status queries
 6. Understanding of agent lifecycle and state transitions
@@ -174,7 +174,7 @@ Suggested resolution: <if any>
 
 **IRON RULE FOR BLOCKERS**: The user must ALWAYS be informed of blockers immediately. There is NO scenario where a blocker should be "monitored quietly" for hours or days before telling the user. The user may have the solution ready in minutes — but only if they know about the problem.
 
-When an agent reports `[BLOCKED]`, EOA must verify the blocker is real (agent cannot solve it themselves), then IMMEDIATELY escalate to EAMA for user notification. There is NO waiting period for user notification — escalation happens as soon as the blocker is confirmed.
+When an agent reports `[BLOCKED]`, AMOA must verify the blocker is real (agent cannot solve it themselves), then IMMEDIATELY escalate to AMAMA for user notification. There is NO waiting period for user notification — escalation happens as soon as the blocker is confirmed.
 
 ### 5.1 Comprehensive Blocker Definition
 
@@ -199,7 +199,7 @@ When agent reports `[BLOCKED]`:
 4. **Remove** the `status:in-progress` (or whatever status it had) label
 5. **Comment** on the blocked task issue with blocker details
 6. **Create a separate GitHub issue** for the blocker itself (labeled `type:blocker`, referencing the blocked task). This makes the blocking problem visible to all agents and team members on the issue tracker.
-7. **Escalate** to EAMA IMMEDIATELY via AI Maestro blocker-escalation message (see eoa-messaging-templates). Include the blocker issue number.
+7. **Escalate** to AMAMA IMMEDIATELY via AI Maestro blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number.
 8. **Continue** monitoring for self-resolution while waiting for user response
 9. **Check** if other unblocked tasks can be assigned to the waiting agent
 
@@ -265,7 +265,7 @@ Copy this checklist and track your progress:
 - [ ] Move task to Blocked column on Kanban board
 - [ ] Add blocker details as comment on the blocked task issue (include `Previous status: $CURRENT_STATUS`)
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label, referencing the blocked task)
-- [ ] Send blocker-escalation message to EAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
+- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 **When the blocker is resolved:**
@@ -382,12 +382,12 @@ Follow these steps to monitor agent progress:
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| Agent never ACKs | Agent offline, hibernated, or unaware | Send reminder, escalate to ECOS if no response |
+| Agent never ACKs | Agent offline, hibernated, or unaware | Send reminder, escalate to AMCOS if no response |
 | Agent stops responding mid-task | Agent crashed, hibernated, or blocked | Follow escalation order (sections 3.1-3.3) |
 | Blocker reported but not resolved | Dependency on external event | Coordinate with other agents or escalate to user |
-| Completion reported but verification fails | Missing tests, failing CI, or incomplete requirements | Send REVISE message (see **eoa-implementer-interview-protocol**) |
+| Completion reported but verification fails | Missing tests, failing CI, or incomplete requirements | Send REVISE message (see **amoa-implementer-interview-protocol**) |
 | Multiple agents updating same task | Concurrent work or reassignment conflict | Check `assign:*` label, coordinate via AI Maestro |
-| Stale state but agent actually hibernated | Normal hibernation, not a failure | Distinguish hibernation from unresponsiveness via ECOS |
+| Stale state but agent actually hibernated | Normal hibernation, not a failure | Distinguish hibernation from unresponsiveness via AMCOS |
 
 ---
 
@@ -485,7 +485,7 @@ fi
 ## Resources
 
 - **AGENT_OPERATIONS.md** - Core orchestrator workflow
-- **eoa-label-taxonomy** - Status labels and workflow states
-- **eoa-messaging-templates** - Escalation message templates
-- **eoa-task-distribution** - Assignment protocol and agent states
-- **eoa-implementer-interview-protocol** - Post-task verification protocol
+- **amoa-label-taxonomy** - Status labels and workflow states
+- **amoa-messaging-templates** - Escalation message templates
+- **amoa-task-distribution** - Assignment protocol and agent states
+- **amoa-implementer-interview-protocol** - Post-task verification protocol

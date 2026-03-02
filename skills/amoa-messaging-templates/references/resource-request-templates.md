@@ -1,19 +1,19 @@
 # Resource and Skill Request Templates
 
-Templates for agents requesting resources or capabilities from EOA, and the formal JSON format for EOA acknowledging ECOS task assignments. Use the `agent-messaging` skill for all message operations.
+Templates for agents requesting resources or capabilities from AMOA, and the formal JSON format for AMOA acknowledging AMCOS task assignments. Use the `agent-messaging` skill for all message operations.
 
 ## Table of Contents
 
-- [1. Agent Resource Request (Agent to EOA)](#1-agent-resource-request-agent-to-eoa)
-- [2. EOA Resource Response (EOA to Agent)](#2-eoa-resource-response-eoa-to-agent)
-- [3. Agent Skill/Capability Request (Agent to EOA)](#3-agent-skillcapability-request-agent-to-eoa)
-- [4. EOA Skill Response (EOA to Agent)](#4-eoa-skill-response-eoa-to-agent)
-- [5. EOA Formal ACK of ECOS Task Assignment (EOA to ECOS)](#5-eoa-formal-ack-of-ecos-task-assignment-eoa-to-ecos)
+- [1. Agent Resource Request (Agent to AMOA)](#1-agent-resource-request-agent-to-eoa)
+- [2. AMOA Resource Response (AMOA to Agent)](#2-amoa-resource-response-amoa-to-agent)
+- [3. Agent Skill/Capability Request (Agent to AMOA)](#3-agent-skillcapability-request-agent-to-eoa)
+- [4. AMOA Skill Response (AMOA to Agent)](#4-amoa-skill-response-amoa-to-agent)
+- [5. AMOA Formal ACK of AMCOS Task Assignment (AMOA to AMCOS)](#5-amoa-formal-ack-of-amcos-task-assignment-amoa-to-ecos)
 - [6. Resource Request Decision Tree](#6-resource-request-decision-tree)
 
 ---
 
-## 1. Agent Resource Request (Agent to EOA)
+## 1. Agent Resource Request (Agent to AMOA)
 
 **When to use:** An agent (implementer, tester, or any sub-agent) needs a resource it does not currently have access to. A "resource" is any tool, file access permission, credential, or external service that the agent cannot obtain on its own. Examples include: access to a private repository, a database credential, a specific CLI tool not installed in the agent's environment, or access to an external API service.
 
@@ -24,7 +24,7 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 ```json
 {
   "from": "<agent-session-name>",
-  "to": "eoa-<project-name>",
+  "to": "amoa-<project-name>",
   "subject": "Resource Request: <resource-name>",
   "priority": "high",
   "content": {
@@ -56,19 +56,19 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ---
 
-## 2. EOA Resource Response (EOA to Agent)
+## 2. AMOA Resource Response (AMOA to Agent)
 
-**When to use:** EOA has evaluated an agent's resource request and is responding with the decision. EOA evaluates the request based on three possible outcomes: granted, denied, or escalated.
+**When to use:** AMOA has evaluated an agent's resource request and is responding with the decision. AMOA evaluates the request based on three possible outcomes: granted, denied, or escalated.
 
 > **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
 
 ### 2.1 Resource Granted
 
-**When to use:** EOA has the authority to grant the resource and the resource is available.
+**When to use:** AMOA has the authority to grant the resource and the resource is available.
 
 ```json
 {
-  "from": "eoa-<project-name>",
+  "from": "amoa-<project-name>",
   "to": "<agent-session-name>",
   "subject": "Resource Granted: <resource-name>",
   "priority": "normal",
@@ -92,7 +92,7 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ```json
 {
-  "from": "eoa-<project-name>",
+  "from": "amoa-<project-name>",
   "to": "<agent-session-name>",
   "subject": "Resource Denied: <resource-name>",
   "priority": "normal",
@@ -112,34 +112,34 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ### 2.3 Resource Escalated
 
-**When to use:** The resource request is outside EOA's authority (security-sensitive credentials, cross-project access, budget-impacting services). EOA forwards the request to ECOS for approval.
+**When to use:** The resource request is outside AMOA's authority (security-sensitive credentials, cross-project access, budget-impacting services). AMOA forwards the request to AMCOS for approval.
 
 ```json
 {
-  "from": "eoa-<project-name>",
+  "from": "amoa-<project-name>",
   "to": "<agent-session-name>",
   "subject": "Resource Escalated: <resource-name>",
   "priority": "normal",
   "content": {
     "type": "response",
-    "message": "Resource request escalated to ECOS for approval: <resource-name>. You will be notified when a decision is made.",
+    "message": "Resource request escalated to AMCOS for approval: <resource-name>. You will be notified when a decision is made.",
     "data": {
       "task_uuid": "<uuid>",
       "decision": "escalated",
       "resource_name": "<resource-name>",
-      "escalated_to": "ecos-main",
+      "escalated_to": "amcos-main",
       "reason": "<why-escalation-is-needed>"
     }
   }
 }
 ```
 
-**EOA also sends a forwarding message to ECOS:**
+**AMOA also sends a forwarding message to AMCOS:**
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "Resource Approval Needed: <resource-name>",
   "priority": "high",
   "content": {
@@ -160,7 +160,7 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ---
 
-## 3. Agent Skill/Capability Request (Agent to EOA)
+## 3. Agent Skill/Capability Request (Agent to AMOA)
 
 **When to use:** An agent needs a capability that is outside its current plugin's skill set. A "capability" is a skill, workflow, or specialized knowledge that the agent's plugin does not include. Examples include: an implementer needing code review skills, a tester needing deployment capabilities, or any agent needing a domain-specific skill not loaded in its plugin.
 
@@ -171,7 +171,7 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 ```json
 {
   "from": "<agent-session-name>",
-  "to": "eoa-<project-name>",
+  "to": "amoa-<project-name>",
   "subject": "Skill Request: <capability-needed>",
   "priority": "high",
   "content": {
@@ -193,13 +193,13 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 |-------|------|-------------|
 | `capability_needed` | String | Description of what the agent needs to be able to do (e.g., "run database migrations", "perform security audit", "generate API documentation") |
 | `current_limitation` | String | What the agent tried or why its current skills are insufficient (e.g., "my plugin does not include database migration skills", "I lack the security-audit skill needed for OWASP checks") |
-| `suggested_skill` | String or null | If the agent knows which skill would help, provide its name (e.g., "epa-database-migration"). Set to `null` if the agent does not know which skill is needed |
+| `suggested_skill` | String or null | If the agent knows which skill would help, provide its name (e.g., "ampa-database-migration"). Set to `null` if the agent does not know which skill is needed |
 
 ---
 
-## 4. EOA Skill Response (EOA to Agent)
+## 4. AMOA Skill Response (AMOA to Agent)
 
-**When to use:** EOA has evaluated a skill/capability request and is responding with how to proceed. EOA evaluates the request based on three possible outcomes: skill available, not available with workaround, or escalated to ECOS.
+**When to use:** AMOA has evaluated a skill/capability request and is responding with how to proceed. AMOA evaluates the request based on three possible outcomes: skill available, not available with workaround, or escalated to AMCOS.
 
 > **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
 
@@ -209,7 +209,7 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ```json
 {
-  "from": "eoa-<project-name>",
+  "from": "amoa-<project-name>",
   "to": "<agent-session-name>",
   "subject": "Skill Available: <capability-needed>",
   "priority": "normal",
@@ -233,7 +233,7 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ```json
 {
-  "from": "eoa-<project-name>",
+  "from": "amoa-<project-name>",
   "to": "<agent-session-name>",
   "subject": "Skill Not Available: <capability-needed>",
   "priority": "normal",
@@ -253,34 +253,34 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ### 4.3 Skill Escalated (Specialized Agent Needed)
 
-**When to use:** The capability requires a specialized agent that ECOS must spawn. No workaround exists within the current agent's scope.
+**When to use:** The capability requires a specialized agent that AMCOS must spawn. No workaround exists within the current agent's scope.
 
 ```json
 {
-  "from": "eoa-<project-name>",
+  "from": "amoa-<project-name>",
   "to": "<agent-session-name>",
   "subject": "Skill Escalated: <capability-needed>",
   "priority": "normal",
   "content": {
     "type": "response",
-    "message": "Capability requires specialized agent. Escalated to ECOS to spawn <suggested-agent-role>. You will be notified when the agent is available.",
+    "message": "Capability requires specialized agent. Escalated to AMCOS to spawn <suggested-agent-role>. You will be notified when the agent is available.",
     "data": {
       "task_uuid": "<uuid>",
       "decision": "escalated",
       "capability_needed": "<capability-needed>",
-      "escalated_to": "ecos-main",
+      "escalated_to": "amcos-main",
       "suggested_agent_role": "<role-name-e.g.-security-auditor>"
     }
   }
 }
 ```
 
-**EOA also sends a spawn request to ECOS:**
+**AMOA also sends a spawn request to AMCOS:**
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "Agent Spawn Request: <suggested-agent-role>",
   "priority": "high",
   "content": {
@@ -299,9 +299,9 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ---
 
-## 5. EOA Formal ACK of ECOS Task Assignment (EOA to ECOS)
+## 5. AMOA Formal ACK of AMCOS Task Assignment (AMOA to AMCOS)
 
-**When to use:** EOA receives a task assignment from ECOS (as described in [ai-maestro-message-templates.md](ai-maestro-message-templates.md) section 1.1) and must send a formal JSON acknowledgment confirming receipt. This replaces the prose-style acknowledgment with a structured, machine-parseable format.
+**When to use:** AMOA receives a task assignment from AMCOS (as described in [ai-maestro-message-templates.md](ai-maestro-message-templates.md) section 1.1) and must send a formal JSON acknowledgment confirming receipt. This replaces the prose-style acknowledgment with a structured, machine-parseable format.
 
 > **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
 
@@ -309,8 +309,8 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "ACK: Task Assignment <task-name>",
   "priority": "normal",
   "content": {
@@ -329,13 +329,13 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `task_uuid` | String | The UUID echoed back from the incoming ECOS assignment message. Must match exactly |
+| `task_uuid` | String | The UUID echoed back from the incoming AMCOS assignment message. Must match exactly |
 | `status` | String | Always `"received"` for initial acknowledgment. Other valid values in later messages: `"in-progress"`, `"complete"`, `"blocked"` |
-| `estimated_completion` | String | ISO8601 timestamp (e.g., `2026-02-10T18:00:00Z`) representing when EOA expects to deliver the completed task |
+| `estimated_completion` | String | ISO8601 timestamp (e.g., `2026-02-10T18:00:00Z`) representing when AMOA expects to deliver the completed task |
 
 **Procedure after sending ACK:**
 
-1. Log the task in EOA's local task registry (Kanban board or task tracking file)
+1. Log the task in AMOA's local task registry (Kanban board or task tracking file)
 2. Analyze the task to determine which sub-agents are needed
 3. Begin task decomposition and delegation planning
 4. Send the first delegation message to sub-agents (see [ai-maestro-message-templates.md](ai-maestro-message-templates.md) section 1.2)
@@ -344,20 +344,20 @@ Templates for agents requesting resources or capabilities from EOA, and the form
 - ACK must be sent within 5 minutes of receiving the assignment
 - The `task_uuid` must be echoed back exactly as received
 - The `estimated_completion` timestamp must be a realistic estimate, not a placeholder
-- If EOA cannot estimate completion, set `estimated_completion` to `null` and add `"estimation_pending": true` to the `data` object
+- If AMOA cannot estimate completion, set `estimated_completion` to `null` and add `"estimation_pending": true` to the `data` object
 
 ---
 
 ## 6. Resource Request Decision Tree
 
-This decision tree shows the complete evaluation process EOA follows when receiving a resource or skill request from an agent.
+This decision tree shows the complete evaluation process AMOA follows when receiving a resource or skill request from an agent.
 
 ### 6.1 Resource Request Evaluation
 
 ```
 Resource request received from agent
 │
-├─ Is resource within EOA's authority to grant?
+├─ Is resource within AMOA's authority to grant?
 │   │
 │   ├─ Yes
 │   │   │
@@ -376,7 +376,7 @@ Resource request received from agent
 │   │   │       │   │       Set alternative field with step-by-step instructions
 │   │   │       │   │
 │   │   │       │   └─ No
-│   │   │       │       └─ Escalate to ECOS (Section 2.3)
+│   │   │       │       └─ Escalate to AMCOS (Section 2.3)
 │   │   │       │           Forward full request with context
 │   │   │       │
 │   │   │       └─ (end)
@@ -390,11 +390,11 @@ Resource request received from agent
 │       │   │
 │       │   ├─ Yes
 │       │   │   └─ Deny request (Section 2.2)
-│       │   │       Escalate to ECOS with security_flag: true (Section 2.3)
-│       │   │       Reason: "Security-sensitive resource requires ECOS approval"
+│       │   │       Escalate to AMCOS with security_flag: true (Section 2.3)
+│       │   │       Reason: "Security-sensitive resource requires AMCOS approval"
 │       │   │
 │       │   └─ No
-│       │       └─ Forward request to ECOS for approval (Section 2.3)
+│       │       └─ Forward request to AMCOS for approval (Section 2.3)
 │       │           Notify agent that request was escalated
 │       │
 │       └─ (end)
@@ -419,7 +419,7 @@ Skill/capability request received from agent
 │   │   │   │       Provide access method and documentation path
 │   │   │   │
 │   │   │   └─ No
-│   │   │       └─ Escalate to ECOS to spawn specialized agent (Section 4.3)
+│   │   │       └─ Escalate to AMCOS to spawn specialized agent (Section 4.3)
 │   │   │           The skill requires a dedicated agent with the right plugin
 │   │   │
 │   │   └─ (end)
@@ -434,7 +434,7 @@ Skill/capability request received from agent
 │       │   │       Document limitations of the workaround
 │       │   │
 │       │   └─ No
-│       │       └─ Escalate to ECOS (Section 4.3)
+│       │       └─ Escalate to AMCOS (Section 4.3)
 │       │           Request spawn of specialized agent with needed capability
 │       │
 │       └─ (end)
@@ -442,11 +442,11 @@ Skill/capability request received from agent
 └─ (end)
 ```
 
-### 6.3 EOA Authority Boundaries
+### 6.3 AMOA Authority Boundaries
 
-The following table defines what EOA can grant directly versus what requires ECOS approval:
+The following table defines what AMOA can grant directly versus what requires AMCOS approval:
 
-| Resource Type | EOA Can Grant Directly | Requires ECOS Approval |
+| Resource Type | AMOA Can Grant Directly | Requires AMCOS Approval |
 |---------------|----------------------|------------------------|
 | **Tools** | CLI tools already installed in the environment | Installing new system-level packages |
 | **File Access** | Files within the current project directory | Cross-project file access, system directories |
@@ -463,4 +463,4 @@ The following table defines what EOA can grant directly versus what requires ECO
 - Session names are case-sensitive
 - Always echo back `task_uuid` from the originating task in all related messages
 - Resource requests with `urgency: blocking` should be prioritized over `non-blocking`
-- If ECOS does not respond to an escalated resource request within a reasonable time, EOA should send a reminder following the escalation protocol described in [escalation-protocol.md](escalation-protocol.md)
+- If AMCOS does not respond to an escalated resource request within a reasonable time, AMOA should send a reminder following the escalation protocol described in [escalation-protocol.md](escalation-protocol.md)

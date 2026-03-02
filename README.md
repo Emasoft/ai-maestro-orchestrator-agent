@@ -1,4 +1,4 @@
-# Orchestrator Agent (eoa-)
+# Orchestrator Agent (amoa-)
 
 **Version**: 1.0.0
 
@@ -20,58 +20,58 @@ The Orchestrator Agent handles **task distribution, agent coordination, and prog
 
 | Agent | Description |
 |-------|-------------|
-| `eoa-main.md` | Main orchestrator agent |
-| `eoa-team-orchestrator.md` | Coordinates team of agents |
-| `eoa-task-summarizer.md` | Summarizes task progress |
-| `eoa-checklist-compiler.md` | Creates verification checklists |
-| `eoa-docker-container-expert.md` | Docker and container expertise |
-| `eoa-experimenter.md` | Experimentation and prototyping |
+| `amoa-main.md` | Main orchestrator agent |
+| `amoa-team-orchestrator.md` | Coordinates team of agents |
+| `amoa-task-summarizer.md` | Summarizes task progress |
+| `amoa-checklist-compiler.md` | Creates verification checklists |
+| `amoa-docker-container-expert.md` | Docker and container expertise |
+| `amoa-experimenter.md` | Experimentation and prototyping |
 
 ### Commands
 
 | Command | Description |
 |---------|-------------|
-| `eoa-start-orchestration` | Start orchestration phase |
-| `eoa-register-agent` | Register remote agent |
-| `eoa-assign-module` | Assign module to agent |
-| `eoa-reassign-module` | Reassign module |
-| `eoa-check-agents` | Check agent status |
-| `eoa-add-module` | Add new module |
-| `eoa-modify-module` | Modify module |
-| `eoa-remove-module` | Remove module |
-| `eoa-prioritize-module` | Change module priority |
-| `eoa-orchestrator-loop` | Start orchestration loop |
-| `eoa-orchestrator-status` | Check orchestrator status |
-| `eoa-cancel-orchestrator` | Cancel orchestration |
+| `amoa-start-orchestration` | Start orchestration phase |
+| `amoa-register-agent` | Register remote agent |
+| `amoa-assign-module` | Assign module to agent |
+| `amoa-reassign-module` | Reassign module |
+| `amoa-check-agents` | Check agent status |
+| `amoa-add-module` | Add new module |
+| `amoa-modify-module` | Modify module |
+| `amoa-remove-module` | Remove module |
+| `amoa-prioritize-module` | Change module priority |
+| `amoa-orchestrator-loop` | Start orchestration loop |
+| `amoa-orchestrator-status` | Check orchestrator status |
+| `amoa-cancel-orchestrator` | Cancel orchestration |
 
 ### Skills
 
 | Skill | Description |
 |-------|-------------|
-| `eoa-two-phase-mode` | Two-phase orchestration mode |
-| `eoa-orchestration-commands` | Orchestration command patterns |
-| `eoa-orchestration-patterns` | Orchestration best practices |
-| `eoa-remote-agent-coordinator` | Remote agent coordination |
-| `eoa-module-management` | Module CRUD operations |
-| `eoa-verification-patterns` | Instruction verification |
-| `eoa-developer-communication` | Developer comm patterns |
-| `eoa-checklist-compilation-patterns` | Checklist generation |
-| `eoa-agent-replacement` | Agent replacement handoffs |
-| `eoa-task-distribution` | Task breakdown and assignment |
-| `eoa-progress-monitoring` | Progress tracking and polling |
-| `eoa-messaging-templates` | AI Maestro message formats |
-| `eoa-label-taxonomy` | GitHub label system |
-| `eoa-implementer-interview-protocol` | Interview-based requirements |
-| `eoa-github-action-integration` | GitHub Actions patterns |
+| `amoa-two-phase-mode` | Two-phase orchestration mode |
+| `amoa-orchestration-commands` | Orchestration command patterns |
+| `amoa-orchestration-patterns` | Orchestration best practices |
+| `amoa-remote-agent-coordinator` | Remote agent coordination |
+| `amoa-module-management` | Module CRUD operations |
+| `amoa-verification-patterns` | Instruction verification |
+| `amoa-developer-communication` | Developer comm patterns |
+| `amoa-checklist-compilation-patterns` | Checklist generation |
+| `amoa-agent-replacement` | Agent replacement handoffs |
+| `amoa-task-distribution` | Task breakdown and assignment |
+| `amoa-progress-monitoring` | Progress tracking and polling |
+| `amoa-messaging-templates` | AI Maestro message formats |
+| `amoa-label-taxonomy` | GitHub label system |
+| `amoa-implementer-interview-protocol` | Interview-based requirements |
+| `amoa-github-action-integration` | GitHub Actions patterns |
 
 ### Hooks
 
 | Hook | Event | Description |
 |------|-------|-------------|
-| `eoa-orchestrator-stop` | Stop | Block exit until tasks complete |
-| `eoa-instruction-verification-check` | PreToolUse | Verify instructions before work |
-| `eoa-polling-reminder` | UserPromptSubmit | Remind to poll progress |
-| `eoa-file-tracker` | PostToolUse | Track file modifications |
+| `amoa-orchestrator-stop` | Stop | Block exit until tasks complete |
+| `amoa-instruction-verification-check` | PreToolUse | Verify instructions before work |
+| `amoa-polling-reminder` | UserPromptSubmit | Remind to poll progress |
+| `amoa-file-tracker` | PostToolUse | Track file modifications |
 
 ## Workflow
 
@@ -85,24 +85,16 @@ The Orchestrator Agent handles **task distribution, agent coordination, and prog
 
 ## Installation (Production)
 
-Install from the Emasoft marketplace. Use `--scope local` to install only for this agent's directory only, or `--scope global` for all projects.
+<!-- Marketplace installation will be available once the AI Maestro marketplace is configured -->
+
+Install using `--plugin-dir` for now (marketplace coming soon). Use `--scope local` to install only for this agent's directory, or `--scope global` for all projects.
 
 Role plugins are installed with `--scope local` inside the specific agent's working directory (`~/agents/<agent-name>/`). This ensures the plugin is only available to that agent.
-
-```bash
-# Add Emasoft marketplace (first time only)
-claude plugin marketplace add emasoft-plugins --url https://github.com/Emasoft/emasoft-plugins
-
-# Install plugin (--scope local = this agent's directory only, recommended)
-claude plugin install emasoft-orchestrator-agent@emasoft-plugins --scope local
-
-# RESTART Claude Code after installing (required!)
-```
 
 Once installed, start a session with the main agent:
 
 ```bash
-claude --agent eoa-orchestrator-main-agent
+claude --agent amoa-orchestrator-main-agent
 ```
 
 ## Development Only (--plugin-dir)
@@ -110,12 +102,12 @@ claude --agent eoa-orchestrator-main-agent
 `--plugin-dir` loads a plugin directly from a local directory without marketplace installation. Use only during plugin development.
 
 ```bash
-claude --plugin-dir ./OUTPUT_SKILLS/emasoft-orchestrator-agent
+claude --plugin-dir ./OUTPUT_SKILLS/ai-maestro-orchestrator-agent
 ```
 
 ## Validation
 
 ```bash
-cd OUTPUT_SKILLS/emasoft-orchestrator-agent
+cd OUTPUT_SKILLS/ai-maestro-orchestrator-agent
 uv run python scripts/validate_plugin.py . --verbose
 ```

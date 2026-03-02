@@ -34,7 +34,7 @@
 | Procedure | `proc-update-tasks` |
 | Workflow Step | Step 16 |
 | Trigger | Agent stuck, unavailable, or reassignment needed |
-| Actor | Orchestrator (EOA) |
+| Actor | Orchestrator (AMOA) |
 | Command | `/reassign-module` |
 
 ---

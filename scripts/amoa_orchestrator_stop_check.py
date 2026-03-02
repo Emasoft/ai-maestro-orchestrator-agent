@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-EOA Orchestrator Stop Check -- Phase-Aware Stop Hook Enforcement
+AMOA Orchestrator Stop Check -- Phase-Aware Stop Hook Enforcement
 
-Reads orchestration state from .emasoft/orchestration-state.json to determine
+Reads orchestration state from .ai-maestro/orchestration-state.json to determine
 the current phase and checks if stopping is allowed.
 
 Decision logic:
@@ -18,19 +18,19 @@ Output: JSON to stdout with keys: decision, reason, systemMessage, outputToUser
 Exit codes: 0 = allow stop, 2 = block stop
 
 Usage:
-    python3 eoa_orchestrator_stop_check.py
+    python3 amoa_orchestrator_stop_check.py
 
-    # The script reads .emasoft/orchestration-state.json from the
+    # The script reads .ai-maestro/orchestration-state.json from the
     # current working directory (the project root).
 
 Examples:
     # In a project with no orchestration state (allows stop):
-    cd /path/to/project && python3 /path/to/eoa_orchestrator_stop_check.py
+    cd /path/to/project && python3 /path/to/amoa_orchestrator_stop_check.py
     # Output: {"decision": "allow", "reason": "No orchestration state found", ...}
     # Exit code: 0
 
     # In a project with incomplete plan phase (blocks stop):
-    cd /path/to/project && python3 /path/to/eoa_orchestrator_stop_check.py
+    cd /path/to/project && python3 /path/to/amoa_orchestrator_stop_check.py
     # Output: {"decision": "block", "reason": "Plan phase is not complete", ...}
     # Exit code: 2
 """
@@ -41,7 +41,7 @@ from pathlib import Path
 
 
 # State file location relative to the working directory
-STATE_FILE_PATH = ".emasoft/orchestration-state.json"
+STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 
 
 def output_allow(reason):

@@ -158,7 +158,7 @@ When cross-language dependencies exist, build in this order:
 template:
   name: MONOREPO_TOOLCHAIN_COMPOSITION
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   parent_template: MONOREPO_BASE
   requires:
     - MONOREPO_BASE

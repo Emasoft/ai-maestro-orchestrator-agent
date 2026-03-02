@@ -67,7 +67,7 @@ Complete record of all delegation events including:
 
 ### messages/
 Directory containing JSON exports of all AI Maestro messages related to the task:
-- **assignment.json**: Original task assignment from ECOS/EAMA
+- **assignment.json**: Original task assignment from AMCOS/AMAMA
 - **progress-updates.json**: Array of all status update messages
 - **completion.json**: Final completion report message
 

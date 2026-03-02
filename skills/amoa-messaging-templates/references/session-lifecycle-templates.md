@@ -1,33 +1,33 @@
 # Session Lifecycle Message Templates
 
-Complete reference for all session lifecycle message templates used between ECOS (Chief of Staff) and EOA (Orchestrator Agent). These templates cover the full agent lifecycle: waking, hibernating, terminating, and periodic status reporting.
+Complete reference for all session lifecycle message templates used between AMCOS (Chief of Staff) and AMOA (Orchestrator Agent). These templates cover the full agent lifecycle: waking, hibernating, terminating, and periodic status reporting.
 
 > All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
 
 ## Table of Contents
 
-- [1. ECOS Wake Message to EOA](#1-ecos-wake-message-to-eoa)
-- [2. EOA Wake Acknowledgment to ECOS](#2-eoa-wake-acknowledgment-to-ecos)
-- [3. ECOS Hibernate Directive to EOA](#3-ecos-hibernate-directive-to-eoa)
-- [4. EOA Hibernate Acknowledgment to ECOS](#4-eoa-hibernate-acknowledgment-to-ecos)
-- [5. ECOS Terminate Directive to EOA](#5-ecos-terminate-directive-to-eoa)
-- [6. EOA Final Termination Report to ECOS](#6-eoa-final-termination-report-to-ecos)
-- [7. EOA Periodic Status Report to ECOS (30-minute intervals)](#7-eoa-periodic-status-report-to-ecos-30-minute-intervals)
+- [1. AMCOS Wake Message to AMOA](#1-amcos-wake-message-to-eoa)
+- [2. AMOA Wake Acknowledgment to AMCOS](#2-amoa-wake-acknowledgment-to-ecos)
+- [3. AMCOS Hibernate Directive to AMOA](#3-amcos-hibernate-directive-to-eoa)
+- [4. AMOA Hibernate Acknowledgment to AMCOS](#4-amoa-hibernate-acknowledgment-to-ecos)
+- [5. AMCOS Terminate Directive to AMOA](#5-amcos-terminate-directive-to-eoa)
+- [6. AMOA Final Termination Report to AMCOS](#6-amoa-final-termination-report-to-ecos)
+- [7. AMOA Periodic Status Report to AMCOS (30-minute intervals)](#7-amoa-periodic-status-report-to-amcos-30-minute-intervals)
 
 ---
 
-## 1. ECOS Wake Message to EOA
+## 1. AMCOS Wake Message to AMOA
 
-**When to use:** ECOS sends this message to bring EOA online at the start of a session or after a hibernation period. The wake message provides EOA with everything it needs to resume operations: pending task context, session configuration, and a summary of unread messages accumulated while EOA was offline.
+**When to use:** AMCOS sends this message to bring AMOA online at the start of a session or after a hibernation period. The wake message provides AMOA with everything it needs to resume operations: pending task context, session configuration, and a summary of unread messages accumulated while AMOA was offline.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-**JSON send template (ECOS to EOA):**
+**JSON send template (AMCOS to AMOA):**
 
 ```json
 {
-  "from": "ecos-main",
-  "to": "eoa-<project-name>",
+  "from": "amcos-main",
+  "to": "amoa-<project-name>",
   "subject": "Wake Directive: Resume Operations",
   "priority": "high",
   "content": {
@@ -75,25 +75,25 @@ Complete reference for all session lifecycle message templates used between ECOS
 | `task_context.total_blocked` | Count of tasks with unresolved blockers |
 | `session_config.project_name` | Project identifier used for session naming |
 | `session_config.kanban_file` | Path to the kanban markdown file, or null if not configured |
-| `session_config.max_concurrent_agents` | Maximum number of implementer agents EOA may spawn simultaneously |
-| `session_config.status_report_interval_minutes` | How often EOA must send periodic status reports (default: 30) |
-| `inbox_summary.unread_count` | Number of messages received while EOA was offline |
-| `inbox_summary.senders` | List of agents who sent messages while EOA was offline |
+| `session_config.max_concurrent_agents` | Maximum number of implementer agents AMOA may spawn simultaneously |
+| `session_config.status_report_interval_minutes` | How often AMOA must send periodic status reports (default: 30) |
+| `inbox_summary.unread_count` | Number of messages received while AMOA was offline |
+| `inbox_summary.senders` | List of agents who sent messages while AMOA was offline |
 
 ---
 
-## 2. EOA Wake Acknowledgment to ECOS
+## 2. AMOA Wake Acknowledgment to AMCOS
 
-**When to use:** EOA sends this immediately after processing the wake directive from ECOS. This acknowledgment confirms that EOA has reviewed its pending tasks, checked its inbox, and is ready to begin orchestration.
+**When to use:** AMOA sends this immediately after processing the wake directive from AMCOS. This acknowledgment confirms that AMOA has reviewed its pending tasks, checked its inbox, and is ready to begin orchestration.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-**JSON response template (EOA to ECOS):**
+**JSON response template (AMOA to AMCOS):**
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "ACK: Wake Directive - Ready for Operations",
   "priority": "high",
   "content": {
@@ -106,7 +106,7 @@ Complete reference for all session lifecycle message templates used between ECOS
       "inbox_messages_processed": 0,
       "ready_status": "ready|degraded|blocked",
       "degraded_reason": "<reason-if-degraded-or-null>",
-      "first_action": "<description-of-what-eoa-will-do-first>"
+      "first_action": "<description-of-what-amoa-will-do-first>"
     }
   }
 }
@@ -116,21 +116,21 @@ Complete reference for all session lifecycle message templates used between ECOS
 
 | Field | Purpose |
 |-------|---------|
-| `capabilities_confirmed` | Boolean indicating EOA has verified its tools and MCP connections are operational |
-| `pending_tasks_acknowledged` | Number of pending tasks EOA has loaded into its working state |
-| `inbox_messages_processed` | Number of unread messages EOA has read and processed |
+| `capabilities_confirmed` | Boolean indicating AMOA has verified its tools and MCP connections are operational |
+| `pending_tasks_acknowledged` | Number of pending tasks AMOA has loaded into its working state |
+| `inbox_messages_processed` | Number of unread messages AMOA has read and processed |
 | `ready_status` | One of: `ready` (fully operational), `degraded` (operational with limitations), `blocked` (cannot proceed) |
 | `degraded_reason` | If status is `degraded` or `blocked`, explains why (for example, missing MCP server, unreachable agent) |
-| `first_action` | Brief description of what EOA will do first after waking (for example, "Resume task T-042 assigned to svgbbox-programmer-001") |
+| `first_action` | Brief description of what AMOA will do first after waking (for example, "Resume task T-042 assigned to svgbbox-programmer-001") |
 
-**Decision tree for EOA upon receiving Wake directive:**
+**Decision tree for AMOA upon receiving Wake directive:**
 
 ```
-EOA receives Wake directive from ECOS
+AMOA receives Wake directive from AMCOS
     │
     ├─ Check inbox for unread messages?
     │     ├─ Yes (unread_count > 0) → Process all unread messages first
-    │     │     ├─ Messages contain blockers → Report degraded status to ECOS
+    │     │     ├─ Messages contain blockers → Report degraded status to AMCOS
     │     │     └─ Messages processed OK → Continue to pending tasks check
     │     └─ No (unread_count == 0) → Continue to pending tasks check
     │
@@ -138,25 +138,25 @@ EOA receives Wake directive from ECOS
     │     ├─ Has pending tasks → Identify highest-priority task
     │     │     ├─ Task has assigned agent → Check if agent is online, resume
     │     │     └─ Task unassigned → Queue for next delegation cycle
-    │     └─ No pending tasks → Report idle status to ECOS
+    │     └─ No pending tasks → Report idle status to AMCOS
     │
-    └─ Send Wake ACK to ECOS with ready_status and first_action
+    └─ Send Wake ACK to AMCOS with ready_status and first_action
 ```
 
 ---
 
-## 3. ECOS Hibernate Directive to EOA
+## 3. AMCOS Hibernate Directive to AMOA
 
-**When to use:** ECOS sends this when EOA should enter a suspended state. Reasons include: the system is idle and resources should be conserved, scheduled maintenance is occurring, or ECOS is redistributing workloads. EOA must save its current state before acknowledging.
+**When to use:** AMCOS sends this when AMOA should enter a suspended state. Reasons include: the system is idle and resources should be conserved, scheduled maintenance is occurring, or AMCOS is redistributing workloads. AMOA must save its current state before acknowledging.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-**JSON send template (ECOS to EOA):**
+**JSON send template (AMCOS to AMOA):**
 
 ```json
 {
-  "from": "ecos-main",
-  "to": "eoa-<project-name>",
+  "from": "amcos-main",
+  "to": "amoa-<project-name>",
   "subject": "Hibernate Directive: Suspend Operations",
   "priority": "high",
   "content": {
@@ -177,25 +177,25 @@ EOA receives Wake directive from ECOS
 
 | Field | Purpose |
 |-------|---------|
-| `reason` | Why ECOS is requesting hibernation. One of: `idle` (no active work), `resource-saving` (freeing compute/tokens), `maintenance` (system maintenance window) |
+| `reason` | Why AMCOS is requesting hibernation. One of: `idle` (no active work), `resource-saving` (freeing compute/tokens), `maintenance` (system maintenance window) |
 | `expected_duration` | ISO 8601 duration (for example, `PT2H` for 2 hours, `P1D` for 1 day) or the string `unknown` if open-ended |
-| `save_state` | Boolean. When `true`, EOA must persist its full state snapshot before hibernating. When `false`, EOA may discard transient state |
-| `additional_instructions` | Optional free-text instructions from ECOS (for example, "Ensure agent svgbbox-programmer-001 commits before pausing") |
+| `save_state` | Boolean. When `true`, AMOA must persist its full state snapshot before hibernating. When `false`, AMOA may discard transient state |
+| `additional_instructions` | Optional free-text instructions from AMCOS (for example, "Ensure agent svgbbox-programmer-001 commits before pausing") |
 
 ---
 
-## 4. EOA Hibernate Acknowledgment to ECOS
+## 4. AMOA Hibernate Acknowledgment to AMCOS
 
-**When to use:** EOA sends this after it has successfully paused all active agents, saved its state snapshot to a checkpoint file, and is ready to go offline. This acknowledgment includes a complete state snapshot so that ECOS (or a future EOA session) can restore operations.
+**When to use:** AMOA sends this after it has successfully paused all active agents, saved its state snapshot to a checkpoint file, and is ready to go offline. This acknowledgment includes a complete state snapshot so that AMCOS (or a future AMOA session) can restore operations.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-**JSON response template (EOA to ECOS):**
+**JSON response template (AMOA to AMCOS):**
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "ACK: Hibernate Directive - State Saved",
   "priority": "high",
   "content": {
@@ -231,7 +231,7 @@ EOA receives Wake directive from ECOS
           }
         ]
       },
-      "checkpoint_file": "docs_dev/checkpoints/eoa-hibernate-<timestamp>.json",
+      "checkpoint_file": "docs_dev/checkpoints/amoa-hibernate-<timestamp>.json",
       "agents_paused_count": 0,
       "all_agents_acknowledged_pause": true
     }
@@ -244,16 +244,16 @@ EOA receives Wake directive from ECOS
 | Field | Purpose |
 |-------|---------|
 | `state_snapshot.current_task_states` | Array of all tasks with their exact status at hibernation time |
-| `state_snapshot.agent_statuses` | Map of every agent EOA manages, with their pause status |
+| `state_snapshot.agent_statuses` | Map of every agent AMOA manages, with their pause status |
 | `state_snapshot.pending_items` | Unresolved items (messages awaiting reply, approvals pending, reviews not started) |
 | `checkpoint_file` | Path to the JSON file where the full state snapshot is persisted on disk |
 | `agents_paused_count` | Number of sub-agents that were actively running and have been paused |
-| `all_agents_acknowledged_pause` | Boolean. `false` if any agent did not confirm its pause (requires ECOS attention) |
+| `all_agents_acknowledged_pause` | Boolean. `false` if any agent did not confirm its pause (requires AMCOS attention) |
 
-**Decision tree for EOA upon receiving Hibernate directive:**
+**Decision tree for AMOA upon receiving Hibernate directive:**
 
 ```
-EOA receives Hibernate directive from ECOS
+AMOA receives Hibernate directive from AMCOS
     │
     ├─ Are any agents currently mid-task?
     │     ├─ Yes → Send pause directive to each active agent
@@ -261,30 +261,30 @@ EOA receives Hibernate directive from ECOS
     │     │     │     └─ Save combined state snapshot to checkpoint file
     │     │     └─ Some agents do not acknowledge → Record non-responsive agents
     │     │           └─ Save state with all_agents_acknowledged_pause = false
-    │     │                 └─ Send ACK to ECOS noting unresponsive agents
+    │     │                 └─ Send ACK to AMCOS noting unresponsive agents
     │     └─ No agents mid-task → Save state snapshot immediately
     │
     ├─ Is save_state == true?
     │     ├─ Yes → Write checkpoint file to docs_dev/checkpoints/
     │     └─ No → Skip checkpoint file, include state_snapshot in ACK only
     │
-    └─ Send Hibernate ACK to ECOS with state_snapshot and checkpoint_file path
+    └─ Send Hibernate ACK to AMCOS with state_snapshot and checkpoint_file path
 ```
 
 ---
 
-## 5. ECOS Terminate Directive to EOA
+## 5. AMCOS Terminate Directive to AMOA
 
-**When to use:** ECOS sends this when EOA's session is ending permanently. Reasons include: the project is complete, an unrecoverable error requires a fresh start, or the user has requested manual shutdown. Unlike hibernate, terminate does not expect the session to resume.
+**When to use:** AMCOS sends this when AMOA's session is ending permanently. Reasons include: the project is complete, an unrecoverable error requires a fresh start, or the user has requested manual shutdown. Unlike hibernate, terminate does not expect the session to resume.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-**JSON send template (ECOS to EOA):**
+**JSON send template (AMCOS to AMOA):**
 
 ```json
 {
-  "from": "ecos-main",
-  "to": "eoa-<project-name>",
+  "from": "amcos-main",
+  "to": "amoa-<project-name>",
   "subject": "Terminate Directive: End Session",
   "priority": "urgent",
   "content": {
@@ -305,23 +305,23 @@ EOA receives Hibernate directive from ECOS
 | Field | Purpose |
 |-------|---------|
 | `reason` | Why the session is being terminated. One of: `project-complete` (all work done), `error` (unrecoverable failure), `manual` (user-requested shutdown) |
-| `final_report_required` | Boolean. When `true`, EOA must compile and send a comprehensive final report before shutting down. When `false`, EOA may shut down immediately after saving state |
+| `final_report_required` | Boolean. When `true`, AMOA must compile and send a comprehensive final report before shutting down. When `false`, AMOA may shut down immediately after saving state |
 | `additional_instructions` | Optional instructions (for example, "Ensure all branches are pushed before terminating") |
 
 ---
 
-## 6. EOA Final Termination Report to ECOS
+## 6. AMOA Final Termination Report to AMCOS
 
-**When to use:** EOA sends this as its last message before shutting down, but only when `final_report_required` was `true` in the terminate directive. This report provides a comprehensive summary of everything that happened during the session: completed work, remaining work, agent performance, and recommendations for the next session.
+**When to use:** AMOA sends this as its last message before shutting down, but only when `final_report_required` was `true` in the terminate directive. This report provides a comprehensive summary of everything that happened during the session: completed work, remaining work, agent performance, and recommendations for the next session.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
-**JSON response template (EOA to ECOS):**
+**JSON response template (AMOA to AMCOS):**
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "Final Termination Report: <project-name>",
   "priority": "urgent",
   "content": {
@@ -363,7 +363,7 @@ EOA receives Hibernate directive from ECOS
         "in_progress": 0,
         "review": 0,
         "done": 0,
-        "snapshot_file": "docs_dev/checkpoints/eoa-kanban-final-<timestamp>.md"
+        "snapshot_file": "docs_dev/checkpoints/amoa-kanban-final-<timestamp>.md"
       },
       "blockers_remaining": [
         {
@@ -393,17 +393,17 @@ EOA receives Hibernate directive from ECOS
 |-------|---------|
 | `completed_tasks` | Array of every task finished during this session, with outcomes and deliverables |
 | `pending_tasks` | Array of every unfinished task, with progress and blocker details for the next session |
-| `agent_summaries` | Performance summary for each agent EOA managed, including reliability scores |
+| `agent_summaries` | Performance summary for each agent AMOA managed, including reliability scores |
 | `kanban_snapshot` | Column counts and path to the final kanban state file |
 | `blockers_remaining` | Unresolved blockers that the next session must address |
-| `recommendations.for_next_session` | Actionable items the next EOA session should prioritize |
+| `recommendations.for_next_session` | Actionable items the next AMOA session should prioritize |
 | `recommendations.architecture_concerns` | Design or architecture issues discovered during the session |
 | `recommendations.agent_roster_suggestions` | Suggestions for which agents to spawn or retire in the next session |
 
-**Decision tree for EOA upon receiving Terminate directive:**
+**Decision tree for AMOA upon receiving Terminate directive:**
 
 ```
-EOA receives Terminate directive from ECOS
+AMOA receives Terminate directive from AMCOS
     │
     ├─ Is final_report_required == true?
     │     ├─ Yes → Compile final report
@@ -413,7 +413,7 @@ EOA receives Terminate directive from ECOS
     │     │     ├─ Snapshot kanban board to file
     │     │     ├─ List all blockers_remaining
     │     │     ├─ Formulate recommendations based on session experience
-    │     │     ├─ Send Final Termination Report to ECOS
+    │     │     ├─ Send Final Termination Report to AMCOS
     │     │     └─ Shut down all managed agents, then self-terminate
     │     └─ No → Save minimal state to checkpoint file
     │           └─ Shut down all managed agents, then self-terminate
@@ -425,20 +425,20 @@ EOA receives Terminate directive from ECOS
 
 ---
 
-## 7. EOA Periodic Status Report to ECOS (30-minute intervals)
+## 7. AMOA Periodic Status Report to AMCOS (30-minute intervals)
 
-**When to use:** EOA sends this report at regular intervals (default: every 30 minutes as configured in `session_config.status_report_interval_minutes`) to keep ECOS informed of ongoing operations. If nothing has changed since the last report, EOA sends a lightweight heartbeat-only variant instead of a full report.
+**When to use:** AMOA sends this report at regular intervals (default: every 30 minutes as configured in `session_config.status_report_interval_minutes`) to keep AMCOS informed of ongoing operations. If nothing has changed since the last report, AMOA sends a lightweight heartbeat-only variant instead of a full report.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
 ### 7a. Full Status Report (when changes occurred)
 
-**JSON send template (EOA to ECOS):**
+**JSON send template (AMOA to AMCOS):**
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "Status Report: <project-name> - <ISO8601-timestamp>",
   "priority": "normal",
   "content": {
@@ -506,12 +506,12 @@ EOA receives Terminate directive from ECOS
 
 ### 7b. Heartbeat-Only Report (when no changes occurred)
 
-**JSON send template (EOA to ECOS):**
+**JSON send template (AMOA to AMCOS):**
 
 ```json
 {
-  "from": "eoa-<project-name>",
-  "to": "ecos-main",
+  "from": "amoa-<project-name>",
+  "to": "amcos-main",
   "subject": "Heartbeat: <project-name> - <ISO8601-timestamp>",
   "priority": "low",
   "content": {
@@ -534,7 +534,7 @@ EOA receives Terminate directive from ECOS
 | Field | Purpose |
 |-------|---------|
 | `report_type` | Either `full` (changes since last report) or `heartbeat` (no changes) |
-| `active_agents.count` | Number of agents currently online and managed by EOA |
+| `active_agents.count` | Number of agents currently online and managed by AMOA |
 | `active_agents.list` | Details of each active agent including their current task and status |
 | `tasks_in_progress` | Tasks currently being worked on, with progress percentages |
 | `tasks_completed_since_last` | Tasks that finished since the previous status report |
@@ -542,7 +542,7 @@ EOA receives Terminate directive from ECOS
 | `next_milestones` | Upcoming milestones and their dependency tasks |
 | `resource_utilization` | Agent spawn and lifecycle statistics for the session |
 
-**Decision tree for EOA periodic status report:**
+**Decision tree for AMOA periodic status report:**
 
 ```
 30-minute status report timer fires
@@ -556,7 +556,7 @@ EOA receives Terminate directive from ECOS
     │     │     │     ├─ Gather current blockers
     │     │     │     ├─ Identify next_milestones
     │     │     │     ├─ Calculate resource_utilization
-    │     │     │     └─ Send full report to ECOS
+    │     │     │     └─ Send full report to AMCOS
     │     │     └─ Reset "changes since last report" counter
     │     └─ No (nothing has changed)
     │           └─ Send heartbeat-only report (section 7b)
@@ -571,10 +571,10 @@ EOA receives Terminate directive from ECOS
 
 | Problem | Likely Cause | Solution |
 |---------|-------------|----------|
-| ECOS sends Wake but EOA does not respond | EOA session not started or crashed | ECOS should verify EOA session is running before sending Wake. If no response within 60 seconds, re-spawn EOA |
-| EOA Wake ACK shows `ready_status: blocked` | Missing MCP server, unreachable dependency | Read the `degraded_reason` field. Fix the issue and send a new Wake directive |
-| Hibernate ACK has `all_agents_acknowledged_pause: false` | Sub-agent crashed or is unresponsive | ECOS should force-terminate unresponsive agents and note them for investigation |
-| Terminate report is empty | EOA had no tasks during the session | This is valid. Check `completed_tasks` and `pending_tasks` arrays are empty, not missing |
-| Heartbeat reports stop arriving | EOA crashed or lost connection | ECOS should check EOA session status. If offline, attempt Wake or re-spawn |
-| Status report shows `blockers` but no escalation was sent | EOA may not have reached escalation threshold | Check escalation protocol in [escalation-protocol.md](./escalation-protocol.md) for timing and priority rules |
+| AMCOS sends Wake but AMOA does not respond | AMOA session not started or crashed | AMCOS should verify AMOA session is running before sending Wake. If no response within 60 seconds, re-spawn AMOA |
+| AMOA Wake ACK shows `ready_status: blocked` | Missing MCP server, unreachable dependency | Read the `degraded_reason` field. Fix the issue and send a new Wake directive |
+| Hibernate ACK has `all_agents_acknowledged_pause: false` | Sub-agent crashed or is unresponsive | AMCOS should force-terminate unresponsive agents and note them for investigation |
+| Terminate report is empty | AMOA had no tasks during the session | This is valid. Check `completed_tasks` and `pending_tasks` arrays are empty, not missing |
+| Heartbeat reports stop arriving | AMOA crashed or lost connection | AMCOS should check AMOA session status. If offline, attempt Wake or re-spawn |
+| Status report shows `blockers` but no escalation was sent | AMOA may not have reached escalation threshold | Check escalation protocol in [escalation-protocol.md](./escalation-protocol.md) for timing and priority rules |
 | Checkpoint file path does not exist | Disk full or permission error | Verify `docs_dev/checkpoints/` directory exists and is writable. Create it if missing |

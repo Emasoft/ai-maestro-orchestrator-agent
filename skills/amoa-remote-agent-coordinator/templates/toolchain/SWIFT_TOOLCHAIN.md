@@ -130,7 +130,7 @@ dependencies: [
 template:
   name: SWIFT_TOOLCHAIN
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   platforms:
     - macos
     - linux

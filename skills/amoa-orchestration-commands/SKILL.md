@@ -1,5 +1,5 @@
 ---
-name: eoa-orchestration-commands
+name: amoa-orchestration-commands
 description: "Use when managing orchestration phase commands. Trigger with start, monitor, loop control, cancellation, or stop hook enforcement requests."
 license: Apache-2.0
 compatibility: "Requires Python 3.8+, PyYAML, GitHub CLI. Works with AI Maestro for remote agent communication. Requires AI Maestro installed."
@@ -8,7 +8,7 @@ metadata:
   version: 1.0.0
 user-invocable: false
 context: fork
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "support"
 procedure: "support-skill"
 ---
@@ -200,11 +200,11 @@ The following scripts implement the orchestration commands. Located in the plugi
 
 | Script | Purpose | Used By |
 |--------|---------|---------|
-| `eoa_start_orchestration.py` | Activates orchestration phase | `/start-orchestration` |
-| `eoa_orchestration_status.py` <!-- TODO: Script not implemented --> | Displays phase status | `/orchestration-status` |
-| `eoa_check_orchestrator_status.py` <!-- TODO: Script not implemented --> | Shows loop state | `/orchestrator-status` |
-| `eoa_setup_orchestrator_loop.py` | Creates loop state file | `/orchestrator-loop` |
-| `eoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented --> | Stop hook enforcement | Hook event |
+| `amoa_start_orchestration.py` | Activates orchestration phase | `/start-orchestration` |
+| `amoa_orchestration_status.py` <!-- TODO: Script not implemented --> | Displays phase status | `/orchestration-status` |
+| `amoa_check_orchestrator_status.py` <!-- TODO: Script not implemented --> | Shows loop state | `/orchestrator-status` |
+| `amoa_setup_orchestrator_loop.py` | Creates loop state file | `/orchestrator-loop` |
+| `amoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented --> | Stop hook enforcement | Hook event |
 
 ---
 
@@ -319,7 +319,7 @@ The following scripts implement the orchestration commands. Located in the plugi
 
 ## Stop Hook Behavior
 
-The orchestrator stop hook (`eoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented -->) enforces completion requirements:
+The orchestrator stop hook (`amoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented -->) enforces completion requirements:
 
 **Blocking conditions**:
 - Plan Phase incomplete (requirements not documented, plan not approved)

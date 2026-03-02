@@ -26,7 +26,7 @@ EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 
 # Required labels
 REQUIRED_LABELS = {
-    "module": {"color": "0052CC", "description": "EOA orchestration module"},
+    "module": {"color": "0052CC", "description": "AMOA orchestration module"},
     "priority:critical": {"color": "B60205", "description": "Critical priority"},
     "priority:high": {"color": "D93F0B", "description": "High priority"},
     "priority:medium": {"color": "FBCA04", "description": "Medium priority"},
@@ -483,7 +483,7 @@ def cmd_create_labels(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="GitHub Issue synchronization for EOA modules"
+        description="GitHub Issue synchronization for AMOA modules"
     )
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")
 

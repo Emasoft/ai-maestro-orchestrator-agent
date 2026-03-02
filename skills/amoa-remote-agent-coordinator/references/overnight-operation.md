@@ -12,7 +12,7 @@
 
 ## Overview
 
-The EOA (Emasoft Orchestrator Agent) can coordinate remote developer agents autonomously while the user is away. This document describes the complete autonomous operation protocol.
+The AMOA (AI Maestro Orchestrator Agent) can coordinate remote developer agents autonomously while the user is away. This document describes the complete autonomous operation protocol.
 
 ## Prerequisites Checklist
 

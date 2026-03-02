@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-EOA Register Agent Script
+AMOA Register Agent Script
 
 Registers a remote agent (AI or human) for module assignment
 during Orchestration Phase.
 
 Usage:
-    python3 eoa_register_agent.py ai implementer-1 --session helper-agent-generic
-    python3 eoa_register_agent.py human dev-alice
+    python3 amoa_register_agent.py ai implementer-1 --session helper-agent-generic
+    python3 amoa_register_agent.py human dev-alice
 """
 
 import argparse

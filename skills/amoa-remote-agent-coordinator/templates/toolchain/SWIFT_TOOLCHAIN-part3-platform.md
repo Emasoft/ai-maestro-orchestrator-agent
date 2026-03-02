@@ -103,8 +103,8 @@ Swift on Windows is experimental. Use macOS or Linux for production builds.
 - [ ] Xcode CLT installed (macOS): `xcode-select -p`
 
 ### Configuration
-- [ ] .swift-format exists with EOA standard config
-- [ ] .swiftlint.yml exists with EOA standard config
+- [ ] .swift-format exists with AMOA standard config
+- [ ] .swiftlint.yml exists with AMOA standard config
 - [ ] Package.swift has swift-argument-parser (for CLI)
 - [ ] Package.swift has swift-format plugin
 
@@ -134,7 +134,7 @@ Swift on Windows is experimental. Use macOS or Linux for production builds.
 - [ ] Uses Codable for JSON serialization
 - [ ] Uses ArgumentParser for CLI argument parsing
 
-### EOA Compliance
+### AMOA Compliance
 - [ ] Labels configured in GitHub
 - [ ] Branch follows convention: `feature/{{TASK_ID}}-*`
 - [ ] Commits follow convention: `feat({{TASK_ID}}): *`
@@ -162,7 +162,7 @@ Swift on Windows is experimental. Use macOS or Linux for production builds.
 template:
   name: SWIFT_TOOLCHAIN
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   platforms:
     - macos
     - linux

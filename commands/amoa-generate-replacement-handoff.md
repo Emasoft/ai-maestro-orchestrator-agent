@@ -1,8 +1,8 @@
 ---
-name: eoa-generate-replacement-handoff
+name: amoa-generate-replacement-handoff
 description: "Generate a comprehensive handoff document for a replacement agent"
 argument-hint: "--failed-agent <ID> --new-agent <ID> [--include-tasks] [--include-context] [--partial] [--flag-gaps]"
-allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_generate_replacement_handoff.py:*)"]
+allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_generate_replacement_handoff.py:*)"]
 ---
 
 # Generate Replacement Handoff Command
@@ -12,7 +12,7 @@ Generate a comprehensive handoff document when replacing a failed agent. Compile
 ## Usage
 
 ```!
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_generate_replacement_handoff.py" $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_generate_replacement_handoff.py" $ARGUMENTS
 ```
 
 ## Arguments
@@ -32,7 +32,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_generate_replacement_handoff.py" $ARG
 
 | Scenario | Use This Command |
 |----------|------------------|
-| ECOS sends replacement notification | Yes |
+| AMCOS sends replacement notification | Yes |
 | Agent becomes unresponsive | Yes |
 | Manual agent replacement | Yes |
 | Context loss recovery | Yes |
@@ -121,7 +121,7 @@ With `--upload`:
 
 ```bash
 # Generate full handoff
-/eoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --include-tasks --include-context
+/amoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --include-tasks --include-context
 
 # Output: replacement-handoff-implementer-1-to-implementer-2-20260131T143000Z.md
 ```
@@ -130,7 +130,7 @@ With `--upload`:
 
 ```bash
 # Generate with gaps flagged
-/eoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --partial --flag-gaps
+/amoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --partial --flag-gaps
 
 # Output includes sections like:
 # ## Technical Context
@@ -141,7 +141,7 @@ With `--upload`:
 
 ```bash
 # Generate and upload
-/eoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --upload
+/amoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --upload
 
 # Output: URL of uploaded handoff
 # https://github.com/owner/repo/issues/42#issuecomment-123456
@@ -151,7 +151,7 @@ With `--upload`:
 
 ```bash
 # Specify output filename
-/eoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --output "urgent-handoff.md"
+/amoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --output "urgent-handoff.md"
 ```
 
 ## Output Files
@@ -171,27 +171,27 @@ With `--upload`:
 | "State file missing" | State not initialized | Reconstruct from GitHub |
 | "Git error" | Cannot access branch | Use `--partial --flag-gaps` |
 
-## Integration with ECOS
+## Integration with AMCOS
 
-This command is typically triggered by an ECOS replacement notification:
+This command is typically triggered by an AMCOS replacement notification:
 
 ```
-1. ECOS → EOA: Agent replacement required
-2. EOA: /eoa-generate-replacement-handoff ...
-3. EOA: /eoa-reassign-kanban-tasks ...
-4. EOA → New Agent: Handoff document
-5. New Agent → EOA: ACK
-6. EOA → ECOS: Replacement complete
+1. AMCOS → AMOA: Agent replacement required
+2. AMOA: /amoa-generate-replacement-handoff ...
+3. AMOA: /amoa-reassign-kanban-tasks ...
+4. AMOA → New Agent: Handoff document
+5. New Agent → AMOA: ACK
+6. AMOA → AMCOS: Replacement complete
 ```
 
 ## Related Commands
 
-- `/eoa-reassign-kanban-tasks` - Reassign GitHub Project cards
-- `/eoa-check-agents` - Monitor agent status
-- `/eoa-register-agent` - Register new agent
+- `/amoa-reassign-kanban-tasks` - Reassign GitHub Project cards
+- `/amoa-check-agents` - Monitor agent status
+- `/amoa-register-agent` - Register new agent
 
 ## Related Skills
 
-- `eoa-agent-replacement` - Full replacement workflow
-- `eoa-remote-agent-coordinator` - Agent registration and assignment
-- `eoa-remote-agent-coordinator` - Remote agent communication
+- `amoa-agent-replacement` - Full replacement workflow
+- `amoa-remote-agent-coordinator` - Agent registration and assignment
+- `amoa-remote-agent-coordinator` - Remote agent communication

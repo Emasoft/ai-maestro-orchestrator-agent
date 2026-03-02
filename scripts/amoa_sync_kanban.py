@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-EOA Sync Kanban Script
+AMOA Sync Kanban Script
 
 Synchronizes modules with GitHub Projects kanban board.
 Reads active modules from orchestration state and updates GitHub Project items.
 
 Usage:
-    python3 eoa_sync_kanban.py
-    python3 eoa_sync_kanban.py --project-id PVT_kwDOBxxxxxx
-    python3 eoa_sync_kanban.py --dry-run
-    python3 eoa_sync_kanban.py --create-missing
+    python3 amoa_sync_kanban.py
+    python3 amoa_sync_kanban.py --project-id PVT_kwDOBxxxxxx
+    python3 amoa_sync_kanban.py --dry-run
+    python3 amoa_sync_kanban.py --create-missing
 """
 
 import argparse

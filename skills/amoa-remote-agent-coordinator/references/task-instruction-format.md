@@ -24,7 +24,7 @@ This document is the **index** for task instruction format documentation. Each s
 
 This document provides the complete template for task instructions sent to remote developer agents. Following this format ensures tasks are executed EXACTLY as planned with NO deviations.
 
-**CRITICAL PRINCIPLE**: Remote agents DO NOT have access to the emasoft-orchestrator-agent skill. They do not know any protocols, formats, or expectations unless the orchestrator EXPLICITLY TEACHES them in each message. Every task delegation MUST include:
+**CRITICAL PRINCIPLE**: Remote agents DO NOT have access to the ai-maestro-orchestrator-agent skill. They do not know any protocols, formats, or expectations unless the orchestrator EXPLICITLY TEACHES them in each message. Every task delegation MUST include:
 1. Complete instructions on HOW to respond
 2. Template references the agent can download
 3. Exact format for ACK, progress updates, and completion reports

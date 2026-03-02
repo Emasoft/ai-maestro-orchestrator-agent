@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-EOA Update Verification -- Instruction Update Verification Protocol Manager
+AMOA Update Verification -- Instruction Update Verification Protocol Manager
 
 Manages the Instruction Update Verification Protocol for mid-implementation
 changes. This is DIFFERENT from the initial Instruction Verification Protocol
-(managed by eoa_verify_instructions.py). This script handles changes that
+(managed by amoa_verify_instructions.py). This script handles changes that
 arrive AFTER an agent has already started working.
 
 The 5-stage verification flow:
@@ -14,7 +14,7 @@ The 5-stage verification flow:
   4. ready_to_resume      -- Concerns resolved, agent authorized to resume work
   5. resumed              -- Agent confirmed resumption of work with new instructions
 
-State is stored in: .emasoft/update-verification-state.json
+State is stored in: .ai-maestro/update-verification-state.json
 
 NO external dependencies -- Python 3.8+ stdlib only.
 
@@ -28,14 +28,14 @@ Subcommands:
     pending           -- List all updates that have not reached "resumed" stage
 
 Usage:
-    python3 eoa_update_verification.py send --update-id UV-001 --agent implementer-1 --notes "Changed auth module API"
-    python3 eoa_update_verification.py record-receipt --update-id UV-001 --agent implementer-1
-    python3 eoa_update_verification.py record-feasibility --update-id UV-001 --agent implementer-1 --notes "Feasible, no concerns"
-    python3 eoa_update_verification.py record-feasibility --update-id UV-001 --agent implementer-1 --notes "Concern: API backward compat" --has-concerns
-    python3 eoa_update_verification.py resolve-concerns --update-id UV-001 --agent implementer-1 --notes "Backward compat handled via adapter"
-    python3 eoa_update_verification.py authorize-resume --update-id UV-001 --agent implementer-1
-    python3 eoa_update_verification.py history --update-id UV-001
-    python3 eoa_update_verification.py pending
+    python3 amoa_update_verification.py send --update-id UV-001 --agent implementer-1 --notes "Changed auth module API"
+    python3 amoa_update_verification.py record-receipt --update-id UV-001 --agent implementer-1
+    python3 amoa_update_verification.py record-feasibility --update-id UV-001 --agent implementer-1 --notes "Feasible, no concerns"
+    python3 amoa_update_verification.py record-feasibility --update-id UV-001 --agent implementer-1 --notes "Concern: API backward compat" --has-concerns
+    python3 amoa_update_verification.py resolve-concerns --update-id UV-001 --agent implementer-1 --notes "Backward compat handled via adapter"
+    python3 amoa_update_verification.py authorize-resume --update-id UV-001 --agent implementer-1
+    python3 amoa_update_verification.py history --update-id UV-001
+    python3 amoa_update_verification.py pending
 
 Exit codes:
     0 - Success
@@ -45,30 +45,30 @@ Examples:
     # Full flow for a mid-implementation instruction update:
 
     # Step 1: Orchestrator sends update to agent
-    python3 eoa_update_verification.py send \
+    python3 amoa_update_verification.py send \
         --update-id UV-001 --agent implementer-1 \
         --notes "Changed auth module: use OAuth2 instead of API keys"
 
     # Step 2: Agent acknowledges receipt
-    python3 eoa_update_verification.py record-receipt \
+    python3 amoa_update_verification.py record-receipt \
         --update-id UV-001 --agent implementer-1
 
     # Step 3a: Agent reports feasibility with no concerns
-    python3 eoa_update_verification.py record-feasibility \
+    python3 amoa_update_verification.py record-feasibility \
         --update-id UV-001 --agent implementer-1 \
         --notes "OAuth2 migration feasible, estimated 4 hours"
 
     # Step 4: Orchestrator authorizes resume
-    python3 eoa_update_verification.py authorize-resume \
+    python3 amoa_update_verification.py authorize-resume \
         --update-id UV-001 --agent implementer-1
 
     # Alternative Step 3b: Agent raises concerns
-    python3 eoa_update_verification.py record-feasibility \
+    python3 amoa_update_verification.py record-feasibility \
         --update-id UV-001 --agent implementer-1 \
         --notes "OAuth2 requires new dependency" --has-concerns
 
     # Step 3c: Orchestrator resolves concerns
-    python3 eoa_update_verification.py resolve-concerns \
+    python3 amoa_update_verification.py resolve-concerns \
         --update-id UV-001 --agent implementer-1 \
         --notes "Approved: add oauth2-client library"
 
@@ -83,7 +83,7 @@ from pathlib import Path
 
 
 # State file location relative to the project root
-STATE_FILE_REL = ".emasoft/update-verification-state.json"
+STATE_FILE_REL = ".ai-maestro/update-verification-state.json"
 
 # Valid stages in order
 STAGES = [
@@ -140,7 +140,7 @@ def load_state(project_root: Path) -> dict:
 def save_state(project_root: Path, state: dict) -> bool:
     """Save update verification state to the JSON file.
 
-    Creates the .emasoft directory if it does not exist.
+    Creates the .ai-maestro directory if it does not exist.
 
     Args:
         project_root: Absolute path to the project root directory.

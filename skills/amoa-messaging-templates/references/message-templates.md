@@ -1,28 +1,28 @@
 # Message Templates by Scenario
 
-This document provides the complete AI Maestro message templates for all common agent communication scenarios across emasoft plugins.
+This document provides the complete AI Maestro message templates for all common agent communication scenarios across ai-maestro plugins.
 
 > All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
 
 ## Table of Contents
 
-- [2.1 Task Assignment (EOA → Remote Agent)](#21-task-assignment-eoa--remote-agent)
-- [2.2 Task Completion Report (Agent → EOA)](#22-task-completion-report-agent--eoa)
-- [2.3 Status Request (EOA → Agent)](#23-status-request-eoa--agent)
-- [2.4 Status Response (Agent → EOA)](#24-status-response-agent--eoa)
-- [2.5 Approval Request (ECOS → EAMA)](#25-approval-request-ecos--eama)
-- [2.6 Approval Response (EAMA → ECOS)](#26-approval-response-eama--ecos)
-- [2.7 Escalation (Any Agent → ECOS/EAMA)](#27-escalation-any-agent--ecoseama)
+- [2.1 Task Assignment (AMOA → Remote Agent)](#21-task-assignment-amoa--remote-agent)
+- [2.2 Task Completion Report (Agent → AMOA)](#22-task-completion-report-agent--eoa)
+- [2.3 Status Request (AMOA → Agent)](#23-status-request-amoa--agent)
+- [2.4 Status Response (Agent → AMOA)](#24-status-response-agent--eoa)
+- [2.5 Approval Request (AMCOS → AMAMA)](#25-approval-request-amcos--eama)
+- [2.6 Approval Response (AMAMA → AMCOS)](#26-approval-response-amama--ecos)
+- [2.7 Escalation (Any Agent → AMCOS/AMAMA)](#27-escalation-any-agent--ecoseama)
 - [2.8 Acknowledgment (Any Agent)](#28-acknowledgment-any-agent)
-- [2.9 Design Handoff (EAA → EOA)](#29-design-handoff-eaa--eoa)
-- [2.10 Integration Request (EOA → EIA)](#210-integration-request-eoa--eia)
-- [2.11 Integration Result (EIA → EOA)](#211-integration-result-eia--eoa)
+- [2.9 Design Handoff (AMAA → AMOA)](#29-design-handoff-amaa--eoa)
+- [2.10 Integration Request (AMOA → AMIA)](#210-integration-request-amoa--eia)
+- [2.11 Integration Result (AMIA → AMOA)](#211-integration-result-amia--eoa)
 
 ---
 
-## 2.1 Task Assignment (EOA → Remote Agent)
+## 2.1 Task Assignment (AMOA → Remote Agent)
 
-**When to use:** EOA assigning implementation task to remote agent
+**When to use:** AMOA assigning implementation task to remote agent
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
@@ -46,7 +46,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.2 Task Completion Report (Agent → EOA)
+## 2.2 Task Completion Report (Agent → AMOA)
 
 **When to use:** Agent reporting task completion to orchestrator
 
@@ -72,7 +72,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.3 Status Request (EOA → Agent)
+## 2.3 Status Request (AMOA → Agent)
 
 **When to use:** Orchestrator polling agent for status
 
@@ -96,7 +96,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.4 Status Response (Agent → EOA)
+## 2.4 Status Response (Agent → AMOA)
 
 **When to use:** Agent responding to status request
 
@@ -123,7 +123,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.5 Approval Request (ECOS → EAMA)
+## 2.5 Approval Request (AMCOS → AMAMA)
 
 **When to use:** Chief of Staff requesting approval from Assistant Manager
 
@@ -150,7 +150,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.6 Approval Response (EAMA → ECOS)
+## 2.6 Approval Response (AMAMA → AMCOS)
 
 **When to use:** Assistant Manager responding to approval request
 
@@ -176,7 +176,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.7 Escalation (Any Agent → ECOS/EAMA)
+## 2.7 Escalation (Any Agent → AMCOS/AMAMA)
 
 **When to use:** Agent encountering blocker requiring escalation
 
@@ -228,7 +228,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.9 Design Handoff (EAA → EOA)
+## 2.9 Design Handoff (AMAA → AMOA)
 
 **When to use:** Architect handing off design to Orchestrator
 
@@ -255,7 +255,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.10 Integration Request (EOA → EIA)
+## 2.10 Integration Request (AMOA → AMIA)
 
 **When to use:** Orchestrator requesting code integration/review
 
@@ -281,7 +281,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 ---
 
-## 2.11 Integration Result (EIA → EOA)
+## 2.11 Integration Result (AMIA → AMOA)
 
 **When to use:** Integrator reporting integration/review result
 
@@ -311,11 +311,11 @@ This document provides the complete AI Maestro message templates for all common 
 
 ## Decision Trees for Core Message Templates
 
-The following decision trees show the exact branching logic EOA follows when sending or receiving the most common message types. Each leaf node references the appropriate template from the sections above.
+The following decision trees show the exact branching logic AMOA follows when sending or receiving the most common message types. Each leaf node references the appropriate template from the sections above.
 
 ### Task Assignment Decision Tree
 
-**When EOA needs to assign a task to an agent:**
+**When AMOA needs to assign a task to an agent:**
 
 ```
 Task assignment needed
@@ -324,26 +324,26 @@ Task assignment needed
 │   │         ├─ Yes → Does task conflict with agent's other assigned files?
 │   │         │         ├─ No conflict → Send Task Assignment (template 2.1) → Wait for ACK
 │   │         │         │                 ├─ ACK received within 2 min → Mark task "in-progress" on kanban
-│   │         │         │                 └─ No ACK within 2 min → Retry once → Still no ACK → Escalate to ECOS
+│   │         │         │                 └─ No ACK within 2 min → Retry once → Still no ACK → Escalate to AMCOS
 │   │         │         └─ Conflict detected → Choose different agent or wait for current task to complete
 │   │         └─ No (agent busy) → Is task priority higher than current task?
 │   │                               ├─ Yes (urgent) → Send Priority Override message → Reassign current task
 │   │                               └─ No → Queue task, assign when agent becomes available
-│   └─ No → Request ECOS to spawn new agent for this task
+│   └─ No → Request AMCOS to spawn new agent for this task
 ```
 
 ### Task Completion Report Decision Tree
 
-**When EOA receives a completion report from an agent:**
+**When AMOA receives a completion report from an agent:**
 
 ```
 Completion report received from agent
 ├─ Does report include all required fields (task_id, summary, files_changed, tests_passed)?
 │   ├─ Yes → Do self-reported tests show 100% pass rate?
 │   │         ├─ Yes → Are all checklist items marked complete?
-│   │         │         ├─ Yes → Move task to "ai-review" on kanban → Send Integration Request to EIA
-│   │         │         │         ├─ EIA accepts → Move to "merge-release" → Notify ECOS
-│   │         │         │         └─ EIA rejects → Send Rework Assignment (template 2.7) back to agent
+│   │         │         ├─ Yes → Move task to "ai-review" on kanban → Send Integration Request to AMIA
+│   │         │         │         ├─ AMIA accepts → Move to "merge-release" → Notify AMCOS
+│   │         │         │         └─ AMIA rejects → Send Rework Assignment (template 2.7) back to agent
 │   │         │         └─ No (incomplete checklist) → Send Clarification Request (template 2.6) to agent
 │   │         └─ No (test failures) → Send Rework Assignment with failure details → Agent retries
 │   └─ No (missing fields) → Send Clarification Request listing missing fields → Agent resubmits
@@ -351,7 +351,7 @@ Completion report received from agent
 
 ### Status Request/Response Decision Tree
 
-**When EOA polls agents for status:**
+**When AMOA polls agents for status:**
 
 ```
 Scheduled status check (every 15 min per active agent)
@@ -366,5 +366,5 @@ Scheduled status check (every 15 min per active agent)
 │   │   └─ Agent reports blocker → Triage immediately (see escalation-procedures.md)
 │   └─ No response within 3 min → Retry once after 2 min
 │       ├─ Second attempt succeeds → Process response as above
-│       └─ Second attempt fails → Mark agent as unresponsive → Escalate to ECOS
+│       └─ Second attempt fails → Mark agent as unresponsive → Escalate to AMCOS
 ```

@@ -1,5 +1,5 @@
 ---
-name: eoa-task-distribution
+name: amoa-task-distribution
 description: Task distribution based on skills and availability. Use when assigning work to agents, balancing load, or resolving dependencies. Trigger with assignment requests.
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 1.0.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Steps 13, 16, 18, 22"
 procedure: "proc-populate-kanban, proc-update-tasks, proc-update-kanban-status, proc-handle-failed-pr"
 ---
@@ -17,13 +17,13 @@ procedure: "proc-populate-kanban, proc-update-tasks, proc-update-kanban-status, 
 
 ## Overview
 
-This skill defines how the Orchestrator (EOA) distributes tasks to agents. Distribution is based on **order**, **priority**, and **agent state** - not arbitrary timing. Tasks are selected from the ready queue, sorted by priority, filtered by dependencies, matched to agent capabilities, and assigned via labeled issues and AI Maestro messages.
+This skill defines how the Orchestrator (AMOA) distributes tasks to agents. Distribution is based on **order**, **priority**, and **agent state** - not arbitrary timing. Tasks are selected from the ready queue, sorted by priority, filtered by dependencies, matched to agent capabilities, and assigned via labeled issues and AI Maestro messages.
 
 ## Prerequisites
 
 1. Read **AGENT_OPERATIONS.md** for orchestrator workflow
-2. Read **eoa-label-taxonomy** for label usage and cardinality rules
-3. Read **eoa-messaging-templates** for message formats
+2. Read **amoa-label-taxonomy** for label usage and cardinality rules
+3. Read **amoa-messaging-templates** for message formats
 4. Access to GitHub CLI (`gh`) and AI Maestro API
 5. Understanding of agent states (active, hibernated, offline)
 
@@ -96,7 +96,7 @@ gh issue edit $ISSUE --remove-label "status:ready" --add-label "status:in-progre
 
 ### 3.2 Send Assignment Message
 
-Use template from eoa-messaging-templates (section 2.1):
+Use template from amoa-messaging-templates (section 2.1):
 
 > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
@@ -120,7 +120,7 @@ Use template from eoa-messaging-templates (section 2.1):
 
 ### 3.3 Wait for ACK
 
-After sending assignment, wait for agent acknowledgment. See **eoa-progress-monitoring** for response handling.
+After sending assignment, wait for agent acknowledgment. See **amoa-progress-monitoring** for response handling.
 
 ---
 
@@ -209,7 +209,7 @@ Copy this checklist and track your progress:
 
 ## 7. When a Distributed Task Becomes Blocked
 
-If an agent reports that a distributed task is blocked, EOA must take IMMEDIATE action:
+If an agent reports that a distributed task is blocked, AMOA must take IMMEDIATE action:
 
 ### 7.1 Blocker Response Steps
 
@@ -223,7 +223,7 @@ If an agent reports that a distributed task is blocked, EOA must take IMMEDIATE 
    gh issue create --title "BLOCKER: Missing AWS credentials" --label "type:blocker" \
      --body "Blocking task #42. Category: Access/Credentials. What's needed: AWS credentials provisioned."
    ```
-7. **Escalate** to EAMA IMMEDIATELY with blocker-escalation message (see eoa-messaging-templates). Include the blocker issue number.
+7. **Escalate** to AMAMA IMMEDIATELY with blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number.
    - Do NOT wait or "monitor for 24h first"
    - User must be informed immediately - they may have the solution ready
 8. **Check** if any other unblocked tasks can be assigned to the waiting agent
@@ -236,8 +236,8 @@ If an agent reports that a distributed task is blocked, EOA must take IMMEDIATE 
 
 ```json
 {
-  "from": "eoa-orchestrator",
-  "to": "eama-assistant-manager",
+  "from": "amoa-orchestrator",
+  "to": "amama-assistant-manager",
   "subject": "BLOCKER: Task #42 - Missing API Credentials",
   "priority": "high",
   "content": {
@@ -279,7 +279,7 @@ Copy this checklist and track your progress:
 - [ ] Remove current `status:*` label, add `status:blocked`
 - [ ] Add blocker details as comment on the blocked task issue (include `Previous status: $CURRENT_STATUS`)
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label, referencing the blocked task)
-- [ ] Send blocker-escalation message to EAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
+- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 ### 7.5 Checklist: Move Task Back to Original Column (Blocker Resolved)
@@ -356,9 +356,9 @@ Copy this checklist and track your progress:
 |-------|-------|----------|
 | No available agents | All agents at capacity or offline | Wait for agent capacity or escalate to user |
 | Circular dependency detected | Task A blocks B, B blocks A | Report to user for manual resolution |
-| Agent does not ACK assignment | Agent unresponsive or hibernated | Send reminder, then escalate to **eoa-progress-monitoring** |
+| Agent does not ACK assignment | Agent unresponsive or hibernated | Send reminder, then escalate to **amoa-progress-monitoring** |
 | Skill mismatch | No agent has required toolchain | Escalate to user or reassign with training |
-| Dependency never completes | Blocking task stuck | Escalate to **eoa-progress-monitoring** for blocker resolution |
+| Dependency never completes | Blocking task stuck | Escalate to **amoa-progress-monitoring** for blocker resolution |
 | Label conflict (multiple assign:*) | Concurrent update | Remove all `assign:*` labels, reapply correct one |
 
 ---
@@ -421,7 +421,7 @@ TASK_B_BLOCKS=$(gh issue view 11 --json body | jq -r '.body | match("blocks: \\[
 if echo "$TASK_A_BLOCKS" | grep -q "11" && echo "$TASK_B_BLOCKS" | grep -q "10"; then
   echo "CIRCULAR DEPENDENCY DETECTED: #10 ↔ #11"
   echo "User intervention required to break cycle."
-  # Report to user via EAMA
+  # Report to user via AMAMA
 fi
 ```
 
@@ -430,7 +430,7 @@ fi
 ## Resources
 
 - **AGENT_OPERATIONS.md** - Core orchestrator workflow
-- **eoa-label-taxonomy** - Label categories and cardinality rules
-- **eoa-messaging-templates** - Message templates for task assignment
-- **eoa-progress-monitoring** - Agent state tracking and escalation
-- **eoa-implementer-interview-protocol** - Pre-task and post-task verification
+- **amoa-label-taxonomy** - Label categories and cardinality rules
+- **amoa-messaging-templates** - Message templates for task assignment
+- **amoa-progress-monitoring** - Agent state tracking and escalation
+- **amoa-implementer-interview-protocol** - Pre-task and post-task verification

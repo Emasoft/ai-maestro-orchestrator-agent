@@ -15,17 +15,17 @@
 ## Example 1: Standard Replacement Flow
 
 ```bash
-# ECOS notification received for implementer-1 failing
+# AMCOS notification received for implementer-1 failing
 # Step 1: Compile context
-/eoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --include-tasks --include-context
+/amoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --include-tasks --include-context
 
 # Step 2: Reassign kanban
-/eoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --project-id 12345
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --project-id 12345
 
 # Step 3: Verify replacement
 # - Check AI Maestro for ACK from implementer-2
 # - Verify state file updated
-# - Confirm ECOS notified
+# - Confirm AMCOS notified
 ```
 
 ---
@@ -35,7 +35,7 @@
 ```bash
 # Context compilation partially failed (git history unavailable)
 # Generate partial handoff with gaps flagged
-/eoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --partial --flag-gaps
+/amoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --partial --flag-gaps
 
 # Instruct new agent to report discovered context
 # Monitor first status report closely

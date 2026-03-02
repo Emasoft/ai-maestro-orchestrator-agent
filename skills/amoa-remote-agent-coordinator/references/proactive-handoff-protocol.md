@@ -2,7 +2,7 @@
 
 ## Standard Handoff Format
 
-All handoffs use the EAMA standard format:
+All handoffs use the AMAMA standard format:
 - **Location**: `docs_dev/handoffs/`
 - **Naming**: `handoff-{uuid}-{from}-to-{to}.md`
 - **Delivery**: AI Maestro message with file path

@@ -12,7 +12,7 @@
 ## 1.0 Top-Level Structure
 
 ```
-eoa-remote-agent-coordinator/
+amoa-remote-agent-coordinator/
 +-- SKILL.md                              # Main skill file (map/index)
 +-- references/                           # Reference documentation
 +-- scripts/                              # Python utility scripts
@@ -63,11 +63,11 @@ eoa-remote-agent-coordinator/
 |--------|---------|
 | `install_lsp.py` | LSP installation automation |
 | `validate_skill.py` | Skill validation |
-| `eoa_orchestrator_init.py` | Initialize storage directories |
-| `eoa_register_agent.py` | Register agents in roster |
-| `eoa_orchestrator_download.py` | Download documents from agents |
-| `eoa_search.py` | Cross-agent document search |
-| `eoa_download.py` | Basic document download |
+| `amoa_orchestrator_init.py` | Initialize storage directories |
+| `amoa_register_agent.py` | Register agents in roster |
+| `amoa_orchestrator_download.py` | Download documents from agents |
+| `amoa_search.py` | Cross-agent document search |
+| `amoa_download.py` | Basic document download |
 
 ---
 

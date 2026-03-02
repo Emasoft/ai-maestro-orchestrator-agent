@@ -30,11 +30,11 @@ workflow-instruction: support
 
 ## When to Use
 
-Use this operation after receiving an ECOS notification to gather all context about the failed agent's work.
+Use this operation after receiving an AMCOS notification to gather all context about the failed agent's work.
 
 ## Prerequisites
 
-- ECOS notification acknowledged
+- AMCOS notification acknowledged
 - Failed agent's ID known
 - Access to orchestrator state files
 - Access to GitHub repository
@@ -62,7 +62,7 @@ Gather from state file:
 
 ```python
 # Using the helper script
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_compile_replacement_context.py" \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_compile_replacement_context.py" \
   --failed-agent "implementer-1" \
   --state-file "design/state/exec-phase.md" \
   --output "replacement-context.md"

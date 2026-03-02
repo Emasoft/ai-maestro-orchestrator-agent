@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines when and how the EOA (Emasoft Orchestrator Agent) escalates issues to the user or higher authority. Proper escalation ensures problems are addressed without exceeding orchestrator's decision-making scope.
+This document defines when and how the AMOA (AI Maestro Orchestrator Agent) escalates issues to the user or higher authority. Proper escalation ensures problems are addressed without exceeding orchestrator's decision-making scope.
 
 ## Contents
 
@@ -341,7 +341,7 @@ For the core Escalate vs Retry decision tree, see `decision-trees-core.md` Secti
 
 ### No Response Escalation Decision Tree
 
-When an escalation sent to ECOS, EAMA, or EAA gets no response, follow this decision tree:
+When an escalation sent to AMCOS, AMAMA, or AMAA gets no response, follow this decision tree:
 
 ```
 Escalation sent, no response received
@@ -353,32 +353,32 @@ Escalation sent, no response received
 │   ├─ 30-60 minutes → Re-send escalation with priority bumped up one level
 │   │   ├─ Was originally "normal" → Re-send as "high"
 │   │   ├─ Was originally "high" → Re-send as "urgent"
-│   │   └─ Was already "urgent" → Send to ALL available ECOS instances
+│   │   └─ Was already "urgent" → Send to ALL available AMCOS instances
 │   └─ > 60 minutes → Emergency protocol
 │       ├─ Is the blocked task critical path?
 │       │   ├─ Yes → Pause ALL dependent tasks → Document full state
-│       │   │         → Send emergency notification to ECOS with full audit trail
+│       │   │         → Send emergency notification to AMCOS with full audit trail
 │       │   └─ No → Continue other work → Log timeout incident
 │       └─ Record incident for post-mortem review
 ```
 
 ### User Response Processing Decision Tree
 
-When EOA receives a user decision relayed through EAMA or ECOS, follow this decision tree:
+When AMOA receives a user decision relayed through AMAMA or AMCOS, follow this decision tree:
 
 ```
-User decision received via ECOS/EAMA relay
+User decision received via AMCOS/AMAMA relay
 ├─ Is the decision clear and actionable?
-│   ├─ Yes → Does it match one of the options EOA presented?
+│   ├─ Yes → Does it match one of the options AMOA presented?
 │   │         ├─ Yes → Execute the chosen option
-│   │         │         → Send confirmation to ECOS: "Executing option X as directed"
+│   │         │         → Send confirmation to AMCOS: "Executing option X as directed"
 │   │         │         → Update affected agents with new direction
 │   │         │         → Resume paused tasks if applicable
 │   │         └─ No (user chose something different) → Is the alternative feasible?
 │   │             ├─ Yes → Adapt plan to user's choice → Execute
 │   │             └─ No → Send back explanation of why it's not feasible
 │   │                     → Provide revised options → Wait for new decision
-│   └─ No (ambiguous or incomplete) → Send clarification request through ECOS
+│   └─ No (ambiguous or incomplete) → Send clarification request through AMCOS
 │       → Include: what was understood, what needs clarification, specific questions
 │       → Continue other unblocked work while waiting
 ```

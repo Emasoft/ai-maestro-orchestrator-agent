@@ -150,7 +150,7 @@ CONFIG_FILES_LIST: "CMakeLists.txt, conanfile.txt, .clang-format, .clang-tidy"
 template:
   name: CPP_TOOLCHAIN
   version: 1.0.0
-  eoa_compatible: true
+  amoa_compatible: true
   requires:
     - git
     - cmake 3.25+

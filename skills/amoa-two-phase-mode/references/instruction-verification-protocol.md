@@ -313,23 +313,23 @@ If verification fails:
 
 ## Script Usage
 
-Use `eoa_verify_instructions.py` to manage verification:
+Use `amoa_verify_instructions.py` to manage verification:
 
 ```bash
 # Check verification status
-python3 eoa_verify_instructions.py status implementer-1
+python3 amoa_verify_instructions.py status implementer-1
 
 # Record that agent repeated correctly
-python3 eoa_verify_instructions.py record-repetition implementer-1 --correct
+python3 amoa_verify_instructions.py record-repetition implementer-1 --correct
 
 # Record that agent repeated incorrectly
-python3 eoa_verify_instructions.py record-repetition implementer-1
+python3 amoa_verify_instructions.py record-repetition implementer-1
 
 # Record questions asked/answered
-python3 eoa_verify_instructions.py record-questions implementer-1 --count 2 --answered 2
+python3 amoa_verify_instructions.py record-questions implementer-1 --count 2 --answered 2
 
 # Authorize agent to proceed
-python3 eoa_verify_instructions.py authorize implementer-1
+python3 amoa_verify_instructions.py authorize implementer-1
 ```
 
 ---

@@ -25,7 +25,7 @@ Example usage:
     # With timeout
     python with_server.py --server "npm run dev" --port 3000 --timeout 60 -- npm test
 
-Part of EOA (Emasoft Orchestrator Agent) verification-patterns skill.
+Part of AMOA (AI Maestro Orchestrator Agent) verification-patterns skill.
 """
 
 # WHY: Future annotations for forward reference compatibility in type hints

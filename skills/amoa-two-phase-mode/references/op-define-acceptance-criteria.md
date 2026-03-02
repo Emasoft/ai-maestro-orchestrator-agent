@@ -2,8 +2,8 @@
 operation: define-acceptance-criteria
 procedure: proc-decompose-design
 workflow-instruction: Step 10 - Design Decomposition
-parent-skill: eoa-two-phase-mode
-parent-plugin: emasoft-orchestrator-agent
+parent-skill: amoa-two-phase-mode
+parent-plugin: ai-maestro-orchestrator-agent
 version: 1.0.0
 ---
 

@@ -44,17 +44,17 @@ Send an acknowledgment using the `agent-messaging` skill:
 
 **Verify**: confirm acknowledgment delivery.
 
-### 2.1.4 Step 4: Store in EOA Design Storage (MANDATORY)
+### 2.1.4 Step 4: Store in AMOA Design Storage (MANDATORY)
 
-Downloaded documents MUST be stored in the standardized EOA Document Storage folder structure.
+Downloaded documents MUST be stored in the standardized AMOA Document Storage folder structure.
 See **DOCUMENT_STORAGE_PROTOCOL.md** for complete details.
 
 ```bash
 # Initialize storage (if not already done)
-python scripts/eoa_download.py <!-- TODO: Rename to eoa_download.py --> init --project-root .
+python scripts/amoa_download.py <!-- TODO: Rename to amoa_download.py --> init --project-root .
 
 # Download and store with proper categorization
-python scripts/eoa_download.py <!-- TODO: Rename to eoa_download.py --> download \
+python scripts/amoa_download.py <!-- TODO: Rename to amoa_download.py --> download \
   --url "$COMMENT_URL" \
   --task-id {{TASK_ID}} \
   --category tasks \

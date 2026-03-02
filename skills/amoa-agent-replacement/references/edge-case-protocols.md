@@ -37,7 +37,7 @@
 
 ---
 
-This document defines standardized protocols for handling edge cases and failure scenarios in the Orchestrator Agent (eoa-) plugin.
+This document defines standardized protocols for handling edge cases and failure scenarios in the Orchestrator Agent (amoa-) plugin.
 
 ## Table of Contents
 
@@ -460,7 +460,7 @@ Recovery checkpoint location: `.claude/recovery/checkpoint-{timestamp}.json`
 
 ## Related Documents
 
-- [error-handling-protocol.md](../../eoa-remote-agent-coordinator/references/error-handling-protocol.md) - Detailed error handling
-- [escalation-procedures.md](../../eoa-remote-agent-coordinator/references/escalation-procedures.md) - Escalation ladder
-- [progress-monitoring-protocol.md](../../eoa-remote-agent-coordinator/references/progress-monitoring-protocol.md) - Monitoring patterns
-- [messaging-protocol.md](../../eoa-remote-agent-coordinator/references/messaging-protocol.md) - AI Maestro messaging
+- [error-handling-protocol.md](../../amoa-remote-agent-coordinator/references/error-handling-protocol.md) - Detailed error handling
+- [escalation-procedures.md](../../amoa-remote-agent-coordinator/references/escalation-procedures.md) - Escalation ladder
+- [progress-monitoring-protocol.md](../../amoa-remote-agent-coordinator/references/progress-monitoring-protocol.md) - Monitoring patterns
+- [messaging-protocol.md](../../amoa-remote-agent-coordinator/references/messaging-protocol.md) - AI Maestro messaging

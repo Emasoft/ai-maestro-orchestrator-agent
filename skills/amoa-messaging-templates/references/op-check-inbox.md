@@ -55,8 +55,8 @@ JSON array of messages with fields:
 ## Example
 
 Check your inbox using the `agent-messaging` skill:
-- **Retrieve unread messages**: list all unread messages for session `eoa-main`
-- **Get unread count**: query the unread count for session `eoa-main`
+- **Retrieve unread messages**: list all unread messages for session `amoa-main`
+- **Get unread count**: query the unread count for session `amoa-main`
 
 **Verify**: confirm messages were retrieved successfully.
 

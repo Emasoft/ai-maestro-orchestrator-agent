@@ -26,7 +26,7 @@
 | **Procedure** | proc-populate-kanban |
 | **Workflow Instruction** | Step 13 - Kanban Population |
 | **Category** | Task Distribution |
-| **Agent** | eoa-main |
+| **Agent** | amoa-main |
 
 ## Purpose
 
@@ -133,7 +133,7 @@ gh issue edit $ISSUE --remove-label "status:ready" --add-label "status:in-progre
 
 ## Post-Assignment
 
-After sending assignment, wait for agent acknowledgment. See eoa-progress-monitoring for response handling.
+After sending assignment, wait for agent acknowledgment. See amoa-progress-monitoring for response handling.
 
 ## Error Handling
 

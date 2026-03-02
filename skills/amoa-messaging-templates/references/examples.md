@@ -14,19 +14,19 @@ This document provides intent-based examples for common AI Maestro messaging sce
 ## Full Task Assignment Flow
 
 ```
-1. EAMA receives user request
-2. EAMA creates project, spawns ECOS
-3. ECOS spawns EOA for project
-4. EOA receives requirements from EAA (via ECOS)
-5. EOA breaks down into tasks
-6. EOA assigns tasks to agents using message template 2.1
+1. AMAMA receives user request
+2. AMAMA creates project, spawns AMCOS
+3. AMCOS spawns AMOA for project
+4. AMOA receives requirements from AMAA (via AMCOS)
+5. AMOA breaks down into tasks
+6. AMOA assigns tasks to agents using message template 2.1
 7. Agents report progress using template 2.4
 8. Agents report completion using template 2.2
-9. EOA requests EIA verification using template 2.10
-10. EIA reports result using template 2.11
-11. EOA reports to ECOS
-12. ECOS reports to EAMA
-13. EAMA reports to user
+9. AMOA requests AMIA verification using template 2.10
+10. AMIA reports result using template 2.11
+11. AMOA reports to AMCOS
+12. AMCOS reports to AMAMA
+13. AMAMA reports to user
 ```
 
 ---

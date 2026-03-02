@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-EOA Check Remote Agents Script
+AMOA Check Remote Agents Script
 
 Polls all active remote agents for progress updates using the
 MANDATORY Proactive Progress Polling Protocol.
 
 Usage:
-    python3 eoa_check_remote_agents.py
-    python3 eoa_check_remote_agents.py --agent implementer-1
+    python3 amoa_check_remote_agents.py
+    python3 amoa_check_remote_agents.py --agent implementer-1
 """
 
 import argparse

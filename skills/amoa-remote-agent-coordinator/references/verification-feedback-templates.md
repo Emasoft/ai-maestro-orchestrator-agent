@@ -6,16 +6,16 @@ This document provides differentiated feedback message templates for verificatio
 
 ## Contents
 
-- 1. Verification Loop 2 Feedback (EOA sends to Agent) - when loop 1 found issues that need targeted re-verification
-- 2. Verification Loop 3 Feedback (EOA sends to Agent) - when deeper review of edge cases and error handling is needed
-- 3. Verification Loop 4 Feedback (EOA sends to Agent) - when final pre-PR quality gate on code style, docs, and security is needed
-- 4. Verification Restart Notification (EOA sends to Agent) - when the 5th check still finds unresolved issues and the cycle must restart
-- 5. Verification Completion Summary (EOA sends to ECOS) - when all loops pass and the task is ready for PR
+- 1. Verification Loop 2 Feedback (AMOA sends to Agent) - when loop 1 found issues that need targeted re-verification
+- 2. Verification Loop 3 Feedback (AMOA sends to Agent) - when deeper review of edge cases and error handling is needed
+- 3. Verification Loop 4 Feedback (AMOA sends to Agent) - when final pre-PR quality gate on code style, docs, and security is needed
+- 4. Verification Restart Notification (AMOA sends to Agent) - when the 5th check still finds unresolved issues and the cycle must restart
+- 5. Verification Completion Summary (AMOA sends to AMCOS) - when all loops pass and the task is ready for PR
 - 6. Verification Loop Outcome Decision Tree - when deciding the next action after any loop completes
 
 ---
 
-## 1. Verification Loop 2 Feedback (EOA sends to Agent)
+## 1. Verification Loop 2 Feedback (AMOA sends to Agent)
 
 ### When to Use
 
@@ -27,7 +27,7 @@ Send this message when the agent requests PR permission for the second time, aft
 
 ```json
 {
-  "from": "eoa-orchestrator",
+  "from": "amoa-orchestrator",
   "to": "<agent-session-name>",
   "subject": "VERIFICATION LOOP 2/4: {task_id} - FIX VERIFICATION AND REGRESSION CHECK",
   "priority": "high",
@@ -55,7 +55,7 @@ Send this message when the agent requests PR permission for the second time, aft
 ```json
 {
   "from": "<agent-session-name>",
-  "to": "eoa-orchestrator",
+  "to": "amoa-orchestrator",
   "subject": "VERIFICATION LOOP 2 COMPLETE: {task_id}",
   "priority": "normal",
   "content": {
@@ -98,7 +98,7 @@ Loop 2 report received
 
 ---
 
-## 2. Verification Loop 3 Feedback (EOA sends to Agent)
+## 2. Verification Loop 3 Feedback (AMOA sends to Agent)
 
 ### When to Use
 
@@ -110,7 +110,7 @@ Send this message when the agent requests PR permission for the third time, afte
 
 ```json
 {
-  "from": "eoa-orchestrator",
+  "from": "amoa-orchestrator",
   "to": "<agent-session-name>",
   "subject": "VERIFICATION LOOP 3/4: {task_id} - EDGE CASES AND ERROR HANDLING",
   "priority": "high",
@@ -139,7 +139,7 @@ Send this message when the agent requests PR permission for the third time, afte
 ```json
 {
   "from": "<agent-session-name>",
-  "to": "eoa-orchestrator",
+  "to": "amoa-orchestrator",
   "subject": "VERIFICATION LOOP 3 COMPLETE: {task_id}",
   "priority": "normal",
   "content": {
@@ -181,14 +181,14 @@ Loop 3 report received
 │           └─ No → Require detailed breakdown
 ├─ Are any cumulative issues from loops 1-2 still unresolved?
 │   ├─ Yes → Is the issue design-related (requires architectural change)?
-│   │   ├─ Yes → Escalate to EAA (Architect Agent) for guidance
+│   │   ├─ Yes → Escalate to AMAA (Architect Agent) for guidance
 │   │   └─ No → Provide specific guidance, agent must fix before next PR request
 │   └─ No → Proceed normally
 ```
 
 ---
 
-## 3. Verification Loop 4 Feedback (EOA sends to Agent)
+## 3. Verification Loop 4 Feedback (AMOA sends to Agent)
 
 ### When to Use
 
@@ -200,7 +200,7 @@ Send this message when the agent requests PR permission for the fourth time, aft
 
 ```json
 {
-  "from": "eoa-orchestrator",
+  "from": "amoa-orchestrator",
   "to": "<agent-session-name>",
   "subject": "VERIFICATION LOOP 4/4: {task_id} - FINAL QUALITY GATE",
   "priority": "high",
@@ -231,7 +231,7 @@ Send this message when the agent requests PR permission for the fourth time, aft
 ```json
 {
   "from": "<agent-session-name>",
-  "to": "eoa-orchestrator",
+  "to": "amoa-orchestrator",
   "subject": "VERIFICATION LOOP 4 COMPLETE: {task_id}",
   "priority": "normal",
   "content": {
@@ -277,7 +277,7 @@ Loop 4 report received
 
 ---
 
-## 4. Verification Restart Notification (EOA sends to Agent)
+## 4. Verification Restart Notification (AMOA sends to Agent)
 
 ### When to Use
 
@@ -289,7 +289,7 @@ Send this message when the 5th PR request (the approval decision point) reveals 
 
 ```json
 {
-  "from": "eoa-orchestrator",
+  "from": "amoa-orchestrator",
   "to": "<agent-session-name>",
   "subject": "VERIFICATION RESTART: {task_id} - UNRESOLVED ISSUES REQUIRE NEW CYCLE",
   "priority": "high",
@@ -312,7 +312,7 @@ Send this message when the 5th PR request (the approval decision point) reveals 
 ```json
 {
   "from": "<agent-session-name>",
-  "to": "eoa-orchestrator",
+  "to": "amoa-orchestrator",
   "subject": "ACK: VERIFICATION RESTART FOR {task_id}",
   "priority": "normal",
   "content": {
@@ -341,11 +341,11 @@ Send this message when the 5th PR request (the approval decision point) reveals 
 
 ---
 
-## 5. Verification Completion Summary (EOA sends to ECOS)
+## 5. Verification Completion Summary (AMOA sends to AMCOS)
 
 ### When to Use
 
-Send this message to the Chief of Staff (ECOS) after all verification loops pass and the PR is approved (or created). This provides ECOS with a summary of the verification process for task tracking and team health metrics.
+Send this message to the Chief of Staff (AMCOS) after all verification loops pass and the PR is approved (or created). This provides AMCOS with a summary of the verification process for task tracking and team health metrics.
 
 > **Note**: Use the agent-messaging skill to send messages.
 
@@ -353,8 +353,8 @@ Send this message to the Chief of Staff (ECOS) after all verification loops pass
 
 ```json
 {
-  "from": "eoa-orchestrator",
-  "to": "ecos-chief-of-staff",
+  "from": "amoa-orchestrator",
+  "to": "amcos-chief-of-staff",
   "subject": "VERIFICATION COMPLETE: {task_id} - {module_id}",
   "priority": "normal",
   "content": {
@@ -390,7 +390,7 @@ Verification approved
 │       └─ Include note: "Agent may benefit from clearer task specifications or smaller scope"
 ├─ Was the PR already created by the agent?
 │   ├─ Yes → Include pr_url in summary
-│   └─ No → Set pr_url to "pending creation", update ECOS when PR URL is available
+│   └─ No → Set pr_url to "pending creation", update AMCOS when PR URL is available
 ```
 
 ---
@@ -422,16 +422,16 @@ Verification loop N complete (agent submitted report)
 │   │   │   │       └─ Agent cannot fix some issues
 │   │   │   │           │
 │   │   │   │           ├─ Is the issue design-related (requires architectural change)?
-│   │   │   │           │   ├─ YES → Escalate to EAA (Architect Agent)
-│   │   │   │           │   │   ├─ Pause verification until EAA responds
-│   │   │   │           │   │   └─ Resume with EAA guidance incorporated
+│   │   │   │           │   ├─ YES → Escalate to AMAA (Architect Agent)
+│   │   │   │           │   │   ├─ Pause verification until AMAA responds
+│   │   │   │           │   │   └─ Resume with AMAA guidance incorporated
 │   │   │   │           │   │
 │   │   │   │           │   └─ NO → Provide specific step-by-step guidance
 │   │   │   │           │       ├─ Agent retries with guidance
 │   │   │   │           │       └─ If still stuck after guidance → Escalate to user
 │   │   │   │           │
 │   │   │   │           └─ Is the issue a dependency on another module?
-│   │   │   │               ├─ YES → Notify ECOS, pause verification
+│   │   │   │               ├─ YES → Notify AMCOS, pause verification
 │   │   │   │               └─ NO → Agent must resolve before proceeding
 │   │   │   │
 │   │   │   └─ NO: This is loop 4 (final loop)

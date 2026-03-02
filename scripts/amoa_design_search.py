@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-EOA Design Search Script
+AMOA Design Search Script
 
 Searches design documents by UUID, type, status, or keyword.
 Supports all design/*/ subfolders.
 
 Usage:
-    python3 eoa_design_search.py --keyword "auth"
-    python3 eoa_design_search.py --uuid abc12345
-    python3 eoa_design_search.py --type requirements
-    python3 eoa_design_search.py --type handoffs --agent implementer-1
-    python3 eoa_design_search.py --recent 5
+    python3 amoa_design_search.py --keyword "auth"
+    python3 amoa_design_search.py --uuid abc12345
+    python3 amoa_design_search.py --type requirements
+    python3 amoa_design_search.py --type handoffs --agent implementer-1
+    python3 amoa_design_search.py --recent 5
 """
 
 import argparse

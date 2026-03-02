@@ -1,7 +1,7 @@
 # GitHub Project Setup Template
 
 ## Overview
-This template provides commands and configuration for setting up a GitHub project board with EOA orchestrator integration.
+This template provides commands and configuration for setting up a GitHub project board with AMOA orchestrator integration.
 
 ## Project Creation
 
@@ -25,10 +25,10 @@ gh project list --owner {{GITHUB_OWNER}} --format json | jq '.projects[] | selec
 # Store the ID as {{PROJECT_ID}}
 ```
 
-## Standard EOA Columns
+## Standard AMOA Columns
 
 ### Column Structure
-The EOA orchestrator uses a standard eight-column workflow:
+The AMOA orchestrator uses a standard eight-column workflow:
 
 1. **Backlog** - Tasks awaiting triage or prioritization
 2. **Todo** - Tasks ready to start, assigned and prioritized
@@ -271,8 +271,8 @@ gh project field-list {{PROJECT_NUMBER}} --owner {{GITHUB_OWNER}} --format json 
 # Full setup example
 export GITHUB_OWNER="myorg"
 export REPO_NAME="myrepo"
-export PROJECT_NAME="EOA Development"
-export PROJECT_DESCRIPTION="EOA orchestrator task tracking"
+export PROJECT_NAME="AMOA Development"
+export PROJECT_DESCRIPTION="AMOA orchestrator task tracking"
 
 # 1. Create project
 gh project create --owner $GITHUB_OWNER --title "$PROJECT_NAME" --body "$PROJECT_DESCRIPTION"

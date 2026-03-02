@@ -315,7 +315,7 @@ If AI Maestro messages cannot be retrieved:
 If agent's branch doesn't exist:
 1. Check if work was done on main/master
 2. Check for branches with alternative naming
-3. Ask ECOS if agent ever committed
+3. Ask AMCOS if agent ever committed
 4. Flag gap in handoff document
 
 ---

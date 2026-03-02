@@ -4,15 +4,15 @@ This document covers the modified scripts for Two-Phase Mode.
 
 ## Contents
 
-- 3.1 eoa_orchestrator_stop_check.py <!-- TODO: Script not implemented --> - Phase-aware stop hook for completion enforcement
+- 3.1 amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented --> - Phase-aware stop hook for completion enforcement
 
 ---
 
-## 3.1 eoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->
+## 3.1 amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Phase-aware stop hook for completion enforcement.
 
-**Location:** `scripts/eoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->`
 
 **Modifications for Two-Phase Mode:**
 

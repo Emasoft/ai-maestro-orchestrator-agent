@@ -208,7 +208,7 @@ Wait for ACK (timeout period based on urgency)
                         ↓
                    [ACK Received?]
                         ├─ Yes → Process ACK, continue
-                        └─ No → Escalate to ECOS
+                        └─ No → Escalate to AMCOS
 ```
 
 ### Reminder Message
@@ -231,7 +231,7 @@ Wait for ACK (timeout period based on urgency)
 }
 ```
 
-### Escalation to ECOS
+### Escalation to AMCOS
 
 After 2 reminders with no response:
 
@@ -239,8 +239,8 @@ After 2 reminders with no response:
 
 ```json
 {
-  "to": "ecos-controller",
-  "subject": "[EOA-ESCALATE] Replacement Agent Not Responding",
+  "to": "amcos-controller",
+  "subject": "[AMOA-ESCALATE] Replacement Agent Not Responding",
   "priority": "urgent",
   "content": {
     "type": "escalation",
@@ -275,7 +275,7 @@ Before marking delivery complete:
 - [ ] AI Maestro message sent
 - [ ] Message includes correct handoff URL
 - [ ] Message includes all task UUIDs
-- [ ] Urgency level matches ECOS notification
+- [ ] Urgency level matches AMCOS notification
 - [ ] ACK timeout timer started
 
 After ACK received:
@@ -285,7 +285,7 @@ After ACK received:
 - [ ] `starting_from` matches documented checkpoint
 - [ ] All questions answered
 - [ ] State file updated
-- [ ] ECOS notified of successful handoff
+- [ ] AMCOS notified of successful handoff
 
 ---
 
@@ -352,14 +352,14 @@ Handoff document compiled, ready to deliver to new agent
 │
 In all cases:
 → Wait for new agent ACK confirming handoff received and understood
-→ If no ACK within 5 min → Retry delivery → If still no ACK → Escalate to ECOS
+→ If no ACK within 5 min → Retry delivery → If still no ACK → Escalate to AMCOS
 ```
 
 ### New Agent Handoff ACK Template
 
 ```json
 {
-  "to": "<eoa-session-name>",
+  "to": "<amoa-session-name>",
   "subject": "Handoff ACK — Task <task_id>",
   "priority": "high",
   "content": {

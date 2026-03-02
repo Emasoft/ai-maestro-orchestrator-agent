@@ -435,7 +435,7 @@ ACK received from agent
 │       │   → Include: "Your understanding: X. Correct understanding: Y"
 │       │   → Request new ACK with corrected understanding
 │       │   ├─ Corrected ACK received → Proceed
-│       │   └─ Still wrong after 2 corrections → Escalate to ECOS
+│       │   └─ Still wrong after 2 corrections → Escalate to AMCOS
 │       │       → Possible agent capability mismatch
 │       └─ Partial summary (some items missing) → Send supplement with missing items
 │           → Request updated ACK confirming full scope

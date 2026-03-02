@@ -222,7 +222,7 @@ After this mutation, existing items retain their column assignments because the 
 5. Re-queries the field to verify existing assignments survived
 6. Reports success or failure with details
 
-**The script is located at:** `scripts/gh-project-add-columns.sh` in the EOA plugin directory.
+**The script is located at:** `scripts/gh-project-add-columns.sh` in the AMOA plugin directory.
 
 ---
 

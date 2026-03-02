@@ -100,7 +100,7 @@ Verification complete. You may now create the Pull Request.
 
 After PR creation, report the PR number to me.
 Your responsibility ends when the PR is created.
-The Integrator (EIA) will handle review and merge.
+The Integrator (AMIA) will handle review and merge.
 ```
 
 ## REVISE Message
@@ -132,7 +132,7 @@ Report `[DONE]` again when ready for re-verification.
 Agent reports concern during interview that requires escalation
 ├─ What type of concern?
 │   ├─ Design concern (architecture, patterns, component boundaries)
-│   │   → Route to: ECOS → EAA (Architect Agent)
+│   │   → Route to: AMCOS → AMAA (Architect Agent)
 │   │   → Message type: "request", priority: "high"
 │   │   → Include: agent's concern text, task context, affected components
 │   │   → Expected response: architectural guidance or revised design
@@ -140,41 +140,41 @@ Agent reports concern during interview that requires escalation
 │   │
 │   ├─ Requirement concern (ambiguous spec, contradictory requirements)
 │   │   → Is it an immutable requirement (user-specified, cannot change)?
-│   │   │   ├─ Yes → Route to: ECOS → EAMA → User
+│   │   │   ├─ Yes → Route to: AMCOS → AMAMA → User
 │   │   │   │         → Priority: "urgent" (blocks agent work)
 │   │   │   │         → Include: exact ambiguity, proposed interpretations, impact of each
-│   │   │   └─ No (flexible requirement) → EOA decides pragmatically
+│   │   │   └─ No (flexible requirement) → AMOA decides pragmatically
 │   │   │       → Document decision rationale in task notes
 │   │   │       → Inform agent of decision → Agent continues
 │   │   │
 │   └─ Capability concern (agent lacks tools/skills/access needed)
-│       → Route to: ECOS
+│       → Route to: AMCOS
 │       → Priority: "high"
 │       → Include: what capability is needed, why, alternatives considered
-│       → ECOS options: provide access / spawn specialized agent / adjust task scope
+│       → AMCOS options: provide access / spawn specialized agent / adjust task scope
 ```
 
-### EAA Response Template (Design Issue Resolution)
+### AMAA Response Template (Design Issue Resolution)
 
-When EAA responds to a design escalation, EOA should expect this format and relay to the agent:
+When AMAA responds to a design escalation, AMOA should expect this format and relay to the agent:
 
 ```json
 {
   "type": "response",
-  "message": "EAA has reviewed your design concern and provided guidance.",
+  "message": "AMAA has reviewed your design concern and provided guidance.",
   "data": {
     "original_concern": "<the concern text from agent>",
     "decision": "APPROVED | REVISED | INVESTIGATE",
-    "guidance": "<EAA's architectural guidance text>",
+    "guidance": "<AMAA's architectural guidance text>",
     "revised_approach": "<if decision=REVISED, the new approach to follow>",
-    "investigation_questions": "<if decision=INVESTIGATE, questions EAA needs answered>"
+    "investigation_questions": "<if decision=INVESTIGATE, questions AMAA needs answered>"
   }
 }
 ```
 
-### EAMA Response Template (Immutable Requirement Resolution)
+### AMAMA Response Template (Immutable Requirement Resolution)
 
-When EAMA relays user's decision on an immutable requirement question:
+When AMAMA relays user's decision on an immutable requirement question:
 
 ```json
 {

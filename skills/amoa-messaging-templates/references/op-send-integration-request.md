@@ -8,7 +8,7 @@ operation-id: op-send-integration-request
 
 ## Purpose
 
-Send a request from Orchestrator (EOA) to Integrator (EIA) for code integration or PR review.
+Send a request from Orchestrator (AMOA) to Integrator (AMIA) for code integration or PR review.
 
 ## When to Use
 
@@ -19,8 +19,8 @@ Send a request from Orchestrator (EOA) to Integrator (EIA) for code integration 
 
 ## Prerequisites
 
-- EOA has a PR number ready for integration/review
-- EIA agent is available and running
+- AMOA has a PR number ready for integration/review
+- AMIA agent is available and running
 - AI Maestro messaging system operational
 
 ## Steps
@@ -36,8 +36,8 @@ Send a request from Orchestrator (EOA) to Integrator (EIA) for code integration 
 
    ```json
    {
-     "from": "eoa-main",
-     "to": "eia-main",
+     "from": "amoa-main",
+     "to": "amia-main",
      "subject": "Integration Request: PR #<number>",
      "priority": "high",
      "content": {
@@ -58,7 +58,7 @@ Send a request from Orchestrator (EOA) to Integrator (EIA) for code integration 
 
 4. **Log the request** in orchestration log
 
-5. **Set polling schedule** to check for EIA response
+5. **Set polling schedule** to check for AMIA response
 
 ## Output
 
@@ -71,13 +71,13 @@ Send a request from Orchestrator (EOA) to Integrator (EIA) for code integration 
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| EIA not responding | Agent offline or hibernated | Check EIA status, escalate if needed |
+| AMIA not responding | Agent offline or hibernated | Check AMIA status, escalate if needed |
 | Invalid PR number | PR not found | Verify PR exists in repository |
 
 ## Example
 
 Send an integration request using the `agent-messaging` skill:
-- **Recipient**: `eia-main`
+- **Recipient**: `amia-main`
 - **Subject**: "Integration Request: PR #456"
 - **Content**: "Please perform code review and CI verification on PR #456"
 - **Type**: `request`

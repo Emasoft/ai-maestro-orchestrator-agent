@@ -1,6 +1,6 @@
 # Record-Keeping Standards
 
-This document defines the standard directory structure, filename conventions, and log entry format for all emasoft plugins.
+This document defines the standard directory structure, filename conventions, and log entry format for all ai-maestro plugins.
 
 ## Table of Contents
 
@@ -16,23 +16,23 @@ Each plugin maintains records in `docs_dev/`:
 
 ```
 docs_dev/
-├── orchestration/          # EOA records
+├── orchestration/          # AMOA records
 │   ├── task-log.md
 │   ├── delegation-log.md
 │   └── status/
-├── integration/            # EIA records
+├── integration/            # AMIA records
 │   ├── routing-log.md
 │   ├── reports/
 │   └── status/
-├── design/                 # EAA records
+├── design/                 # AMAA records
 │   ├── requirements-log.md
 │   ├── adrs/
 │   └── handoffs/
-├── chief-of-staff/         # ECOS records
+├── chief-of-staff/         # AMCOS records
 │   ├── agent-lifecycle.log
 │   ├── approvals/
 │   └── team-assignments.md
-├── projects/               # EAMA records
+├── projects/               # AMAMA records
 │   ├── project-registry.md
 │   └── user-interactions.md
 └── reports/                # Shared reports

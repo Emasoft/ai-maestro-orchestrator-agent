@@ -341,23 +341,23 @@ poll_history:
 
 ## Script Usage
 
-Use `eoa_poll_agent.py` to manage polling:
+Use `amoa_poll_agent.py` to manage polling:
 
 ```bash
 # Send poll to specific agent
-python3 eoa_poll_agent.py implementer-1
+python3 amoa_poll_agent.py implementer-1
 
 # Record poll response with issues
-python3 eoa_poll_agent.py implementer-1 --record-response --issues "Token expiry unclear"
+python3 amoa_poll_agent.py implementer-1 --record-response --issues "Token expiry unclear"
 
 # Record poll response with issues resolved
-python3 eoa_poll_agent.py implementer-1 --record-response --issues "Token expiry unclear" --resolved
+python3 amoa_poll_agent.py implementer-1 --record-response --issues "Token expiry unclear" --resolved
 
 # Record poll response with clarifications needed
-python3 eoa_poll_agent.py implementer-1 --record-response --clarifications "Need edge case examples"
+python3 amoa_poll_agent.py implementer-1 --record-response --clarifications "Need edge case examples"
 
 # View poll history
-python3 eoa_poll_agent.py implementer-1 --history
+python3 amoa_poll_agent.py implementer-1 --history
 ```
 
 ---

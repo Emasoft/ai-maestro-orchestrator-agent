@@ -2,7 +2,7 @@
 
 **Parent**: [GO_TOOLCHAIN.md](./GO_TOOLCHAIN.md)
 
-This file contains verification checklists and common Go patterns for EOA Compliance.
+This file contains verification checklists and common Go patterns for AMOA Compliance.
 
 ---
 
@@ -19,7 +19,7 @@ This file contains verification checklists and common Go patterns for EOA Compli
 ### Configuration
 - [ ] go.mod exists with correct module path
 - [ ] go.sum exists (after dependencies installed)
-- [ ] .golangci.yml exists with EOA standard config
+- [ ] .golangci.yml exists with AMOA standard config
 - [ ] Standard directory structure: cmd/, pkg/, internal/, test/
 
 ### Verification Commands Pass
@@ -38,7 +38,7 @@ This file contains verification checklists and common Go patterns for EOA Compli
 - [ ] Coverage job configured
 - [ ] go.mod tidy check present
 
-### EOA Compliance
+### AMOA Compliance
 - [ ] Labels configured in GitHub
 - [ ] Branch follows convention
 - [ ] Commits follow convention
@@ -49,7 +49,7 @@ This file contains verification checklists and common Go patterns for EOA Compli
 
 ---
 
-## Common Go Patterns for EOA
+## Common Go Patterns for AMOA
 
 ### Error Handling Pattern
 

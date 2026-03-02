@@ -4,26 +4,26 @@ This document covers Orchestration Phase scripts 2.1-2.8 (basic operations).
 
 ## Contents
 
-- 2.1 eoa_start_orchestration.py - Initializing Orchestration Phase Mode
-- 2.2 eoa_orchestration_status.py <!-- TODO: Script not implemented --> - Displaying Orchestration Phase progress
-- 2.3 eoa_register_agent.py - Registering remote agents
-- 2.4 eoa_assign_module.py - Assigning module to registered agent
-- 2.5 eoa_modify_module.py - Modifying modules during orchestration
-- 2.6 eoa_reassign_module.py - Reassigning module to different agent
-- 2.7 eoa_check_remote_agents.py - Polling active AI agents for status
-- 2.8 eoa_notify_agent.py <!-- TODO: Script not implemented --> - Sending AI Maestro message to specific agent
+- 2.1 amoa_start_orchestration.py - Initializing Orchestration Phase Mode
+- 2.2 amoa_orchestration_status.py <!-- TODO: Script not implemented --> - Displaying Orchestration Phase progress
+- 2.3 amoa_register_agent.py - Registering remote agents
+- 2.4 amoa_assign_module.py - Assigning module to registered agent
+- 2.5 amoa_modify_module.py - Modifying modules during orchestration
+- 2.6 amoa_reassign_module.py - Reassigning module to different agent
+- 2.7 amoa_check_remote_agents.py - Polling active AI agents for status
+- 2.8 amoa_notify_agent.py <!-- TODO: Script not implemented --> - Sending AI Maestro message to specific agent
 
 ---
 
-## 2.1 eoa_start_orchestration.py
+## 2.1 amoa_start_orchestration.py
 
 **Purpose:** Initialize Orchestration Phase Mode.
 
-**Location:** `scripts/eoa_start_orchestration.py`
+**Location:** `scripts/amoa_start_orchestration.py`
 
 **Usage:**
 ```bash
-python3 eoa_start_orchestration.py
+python3 amoa_start_orchestration.py
 ```
 
 **Prerequisites:**
@@ -41,16 +41,16 @@ python3 eoa_start_orchestration.py
 
 ---
 
-## 2.2 eoa_orchestration_status.py <!-- TODO: Script not implemented -->
+## 2.2 amoa_orchestration_status.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Display Orchestration Phase progress.
 
-**Location:** `scripts/eoa_orchestration_status.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_orchestration_status.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
-python3 eoa_orchestration_status.py <!-- TODO: Script not implemented -->
-python3 eoa_orchestration_status.py <!-- TODO: Script not implemented --> --json
+python3 amoa_orchestration_status.py <!-- TODO: Script not implemented -->
+python3 amoa_orchestration_status.py <!-- TODO: Script not implemented --> --json
 ```
 
 **Output:**
@@ -66,16 +66,16 @@ python3 eoa_orchestration_status.py <!-- TODO: Script not implemented --> --json
 
 ---
 
-## 2.3 eoa_register_agent.py
+## 2.3 amoa_register_agent.py
 
 **Purpose:** Register remote agents (AI or human).
 
-**Location:** `scripts/eoa_register_agent.py`
+**Location:** `scripts/amoa_register_agent.py`
 
 **Usage:**
 ```bash
-python3 eoa_register_agent.py ai helper-agent-generic
-python3 eoa_register_agent.py human dev-alice
+python3 amoa_register_agent.py ai helper-agent-generic
+python3 amoa_register_agent.py human dev-alice
 ```
 
 **Arguments:**
@@ -94,15 +94,15 @@ python3 eoa_register_agent.py human dev-alice
 
 ---
 
-## 2.4 eoa_assign_module.py
+## 2.4 amoa_assign_module.py
 
 **Purpose:** Assign module to registered agent.
 
-**Location:** `scripts/eoa_assign_module.py`
+**Location:** `scripts/amoa_assign_module.py`
 
 **Usage:**
 ```bash
-python3 eoa_assign_module.py auth-core implementer-1
+python3 amoa_assign_module.py auth-core implementer-1
 ```
 
 **Arguments:**
@@ -123,25 +123,25 @@ python3 eoa_assign_module.py auth-core implementer-1
 
 ---
 
-## 2.5 eoa_modify_module.py
+## 2.5 amoa_modify_module.py
 
 **Purpose:** Modify modules during orchestration.
 
-**Location:** `scripts/eoa_modify_module.py`
+**Location:** `scripts/amoa_modify_module.py`
 
 **Usage:**
 ```bash
 # Add module
-python3 eoa_modify_module.py add --name "Module Name" --priority high
+python3 amoa_modify_module.py add --name "Module Name" --priority high
 
 # Modify module
-python3 eoa_modify_module.py modify <module-id> --add-criteria "New criteria"
+python3 amoa_modify_module.py modify <module-id> --add-criteria "New criteria"
 
 # Remove module
-python3 eoa_modify_module.py remove <module-id>
+python3 amoa_modify_module.py remove <module-id>
 
 # Prioritize module
-python3 eoa_modify_module.py prioritize <module-id> --priority critical
+python3 amoa_modify_module.py prioritize <module-id> --priority critical
 ```
 
 **Actions vary by subcommand** - see individual command documentation.
@@ -152,15 +152,15 @@ python3 eoa_modify_module.py prioritize <module-id> --priority critical
 
 ---
 
-## 2.6 eoa_reassign_module.py
+## 2.6 amoa_reassign_module.py
 
 **Purpose:** Reassign module to different agent.
 
-**Location:** `scripts/eoa_reassign_module.py`
+**Location:** `scripts/amoa_reassign_module.py`
 
 **Usage:**
 ```bash
-python3 eoa_reassign_module.py auth-core --to implementer-2
+python3 amoa_reassign_module.py auth-core --to implementer-2
 ```
 
 **Arguments:**
@@ -180,15 +180,15 @@ python3 eoa_reassign_module.py auth-core --to implementer-2
 
 ---
 
-## 2.7 eoa_check_remote_agents.py
+## 2.7 amoa_check_remote_agents.py
 
 **Purpose:** Poll all active AI agents for status.
 
-**Location:** `scripts/eoa_check_remote_agents.py`
+**Location:** `scripts/amoa_check_remote_agents.py`
 
 **Usage:**
 ```bash
-python3 eoa_check_remote_agents.py
+python3 amoa_check_remote_agents.py
 ```
 
 **Actions:**
@@ -202,15 +202,15 @@ python3 eoa_check_remote_agents.py
 
 ---
 
-## 2.8 eoa_notify_agent.py <!-- TODO: Script not implemented -->
+## 2.8 amoa_notify_agent.py <!-- TODO: Script not implemented -->
 
 **Purpose:** Send AI Maestro message to specific agent.
 
-**Location:** `scripts/eoa_notify_agent.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_notify_agent.py <!-- TODO: Script not implemented -->`
 
 **Usage:**
 ```bash
-python3 eoa_notify_agent.py <!-- TODO: Script not implemented --> implementer-1 --subject "Subject" --message "Message body" --priority high
+python3 amoa_notify_agent.py <!-- TODO: Script not implemented --> implementer-1 --subject "Subject" --message "Message body" --priority high
 ```
 
 **Arguments:**

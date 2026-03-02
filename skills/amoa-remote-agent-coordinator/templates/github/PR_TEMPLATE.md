@@ -1,6 +1,6 @@
 # Pull Request Template with Toolchain Verification
 
-This document provides the standard PR template for EOA projects with toolchain verification.
+This document provides the standard PR template for AMOA projects with toolchain verification.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ For complete examples and automation:
 [{{TASK_ID}}] {{TITLE}}
 ```
 
-Example: `[EOA-001] Implement remote Docker agent deployment`
+Example: `[AMOA-001] Implement remote Docker agent deployment`
 
 ## PR Body Template
 

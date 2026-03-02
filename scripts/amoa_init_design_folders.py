@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-EOA Initialize Design Folders Script
+AMOA Initialize Design Folders Script
 
 Creates the standardized design folder structure for orchestration.
 Includes design/memory/, design/handoffs/, design/requirements/ with templates.
 
 Usage:
-    python3 eoa_init_design_folders.py
-    python3 eoa_init_design_folders.py --platforms web ios android
-    python3 eoa_init_design_folders.py --root design --platforms web
+    python3 amoa_init_design_folders.py
+    python3 amoa_init_design_folders.py --platforms web ios android
+    python3 amoa_init_design_folders.py --root design --platforms web
 """
 
 import argparse

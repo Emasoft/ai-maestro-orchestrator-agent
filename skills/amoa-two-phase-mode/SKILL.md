@@ -1,5 +1,5 @@
 ---
-name: eoa-two-phase-mode
+name: amoa-two-phase-mode
 description: "Use when orchestrating complex projects. Trigger with multi-module or two-phase planning requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro messaging system, GitHub CLI (gh), remote agents registered by user, and YAML frontmatter state files. Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 2.6.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "Step 10"
 procedure: "proc-decompose-design"
 ---
@@ -242,10 +242,10 @@ Complete reference for all Two-Phase Mode Python scripts.
 
 | Section | Scripts |
 |---------|---------|
-| 1. Plan Phase Scripts (4) | eoa_start_planning.py, eoa_planning_status.py, eoa_modify_requirement.py, eoa_approve_plan.py |
-| 2. Orchestration Phase Scripts (14) | eoa_start_orchestration.py, eoa_orchestration_status.py, eoa_register_agent.py, eoa_assign_module.py, eoa_modify_module.py, eoa_reassign_module.py, eoa_check_remote_agents.py, eoa_notify_agent.py, eoa_check_plan_phase.py, eoa_check_orchestration_phase.py, eoa_sync_github_issues.py, eoa_verify_instructions.py, eoa_poll_agent.py, eoa_update_verification.py |
-| 3. Design & GitHub Scripts (5) | eoa_init_design_folders.py, eoa_compile_handoff.py, eoa_design_search.py, eoa_sync_kanban.py, eoa_create_module_issues.py |
-| 4. Modified Scripts (1) | eoa_orchestrator_stop_check.py (phase-aware) |
+| 1. Plan Phase Scripts (4) | amoa_start_planning.py, amoa_planning_status.py, amoa_modify_requirement.py, amoa_approve_plan.py |
+| 2. Orchestration Phase Scripts (14) | amoa_start_orchestration.py, amoa_orchestration_status.py, amoa_register_agent.py, amoa_assign_module.py, amoa_modify_module.py, amoa_reassign_module.py, amoa_check_remote_agents.py, amoa_notify_agent.py, amoa_check_plan_phase.py, amoa_check_orchestration_phase.py, amoa_sync_github_issues.py, amoa_verify_instructions.py, amoa_poll_agent.py, amoa_update_verification.py |
+| 3. Design & GitHub Scripts (5) | amoa_init_design_folders.py, amoa_compile_handoff.py, amoa_design_search.py, amoa_sync_kanban.py, amoa_create_module_issues.py |
+| 4. Modified Scripts (1) | amoa_orchestrator_stop_check.py (phase-aware) |
 
 **When to use:** Understanding script functionality, debugging, learning parameters.
 
@@ -278,7 +278,7 @@ Complete workflow for handling implementer-reported issues.
 |---------|--------|
 | 1. When to Trigger | AI Maestro messages, progress polls, code review, test failures |
 | 2. Issue Categories | BUG, BLOCKER, QUESTION, ENHANCEMENT, CONFIG, INVESTIGATION |
-| 3. Creating Issue Tasks | /create-issue-tasks command, eoa_create_issue_tasks.py <!-- TODO: Script not implemented --> |
+| 3. Creating Issue Tasks | /create-issue-tasks command, amoa_create_issue_tasks.py <!-- TODO: Script not implemented --> |
 | 4. Standard Task Workflow | Assessment, triage, investigation, test creation, GitHub workflow, resolution |
 | 5. Category-Specific Workflows | BUG, BLOCKER, QUESTION, ENHANCEMENT, CONFIG, INVESTIGATION workflows |
 | 6. Integration with Stop Hook | Issue task file checking, open issue blocking |
@@ -348,7 +348,7 @@ Solutions for common issues in Two-Phase Mode.
 
 ## Stop Hook Enforcement
 
-The stop hook (`eoa_orchestrator_stop_check.py`) is **phase-aware** and enforces:
+The stop hook (`amoa_orchestrator_stop_check.py`) is **phase-aware** and enforces:
 
 | Phase | Blocks Exit If |
 |-------|---------------|

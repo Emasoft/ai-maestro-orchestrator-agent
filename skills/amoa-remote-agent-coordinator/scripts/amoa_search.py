@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-EOA Cross-Agent Search
+AMOA Cross-Agent Search
 
 Searches across all agents' documents using the pre-built indexes.
 
 Usage:
-    python eoa_search.py by-task TASK_ID
-    python eoa_search.py by-agent AGENT_NAME
-    python eoa_search.py by-date 2024-01-15
-    python eoa_search.py by-category reports
-    python eoa_search.py blockers
+    python amoa_search.py by-task TASK_ID
+    python amoa_search.py by-agent AGENT_NAME
+    python amoa_search.py by-date 2024-01-15
+    python amoa_search.py by-category reports
+    python amoa_search.py blockers
 """
 
 from __future__ import annotations
@@ -198,7 +198,7 @@ def search_fulltext(pattern: str, design_root: Path) -> dict[str, Any]:
 def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="EOA Cross-Agent Document Search"
+        description="AMOA Cross-Agent Document Search"
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Search commands")

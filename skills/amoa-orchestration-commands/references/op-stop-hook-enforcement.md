@@ -46,11 +46,11 @@ The stop hook fires when:
 
 ### Step 2: Hook Script Execution
 
-The hook runs `eoa_orchestrator_stop_check.py`:
+The hook runs `amoa_orchestrator_stop_check.py`:
 
 ```bash
 # Script path
-${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestrator_stop_check.py
+${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py
 ```
 
 ### Step 3: Blocking Conditions
@@ -128,7 +128,7 @@ The hook includes fail-safes:
 cat hooks/hooks.json | jq '.hooks.Stop'
 
 # Manually run hook check
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/eoa_orchestrator_stop_check.py
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py
 
 # Check orchestrator log
 tail -50 orchestrator.log | grep "STOP_HOOK"

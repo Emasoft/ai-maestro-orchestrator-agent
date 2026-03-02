@@ -3,7 +3,7 @@
 ## Table of Contents
 
 - 1. Authentication Module Implementation
-  - 1.1 When you receive a plan handoff from EAMA for authentication
+  - 1.1 When you receive a plan handoff from AMAMA for authentication
   - 1.2 Task creation pattern for multi-component modules
 - 2. CI Failure Coordination
   - 2.1 When CI tests fail and need coordinated fixes
@@ -19,16 +19,16 @@
 
 ## 1. Authentication Module Implementation
 
-### 1.1 When you receive a plan handoff from EAMA for authentication
+### 1.1 When you receive a plan handoff from AMAMA for authentication
 
-EAMA hands off an approved authentication plan. You create modules and assign tasks.
+AMAMA hands off an approved authentication plan. You create modules and assign tasks.
 
 **Orchestration transcript:**
 
 ```
-EAMA: Implement the user authentication module according to the approved plan
+AMAMA: Implement the user authentication module according to the approved plan
 
-EOA (You): Creating modules and assigning tasks...
+AMOA (You): Creating modules and assigning tasks...
 
 Module: user-authentication
 Created TaskCreate(subject="Implement password hashing with bcrypt",
@@ -68,9 +68,9 @@ Build failures need investigation before fixes can be assigned.
 **Orchestration transcript:**
 
 ```
-EAMA: The build module CI tests are failing. Coordinate the fix across affected components.
+AMAMA: The build module CI tests are failing. Coordinate the fix across affected components.
 
-EOA (You): Breaking down failure investigation...
+AMOA (You): Breaking down failure investigation...
 
 Module: build-ci-fixes
 Created TaskCreate(subject="Investigate test failures in build pipeline",
@@ -86,7 +86,7 @@ Created TaskCreate(subject="Update CI workflow to pin Node 20.x",
                    activeForm="Updating CI workflow")
 
 Assigning to remote-dev-001 and remote-dev-002...
-Monitoring for completion. Will report to EAMA when all tests pass.
+Monitoring for completion. Will report to AMAMA when all tests pass.
 ```
 
 ### 2.2 Investigation-first pattern for unknown root causes
@@ -95,7 +95,7 @@ Monitoring for completion. Will report to EAMA when all tests pass.
 - Start with investigation task before assigning fixes
 - Wait for root cause before creating fix tasks
 - Create parallel fix tasks after root cause is known
-- Report to EAMA only after all tests pass
+- Report to AMAMA only after all tests pass
 
 ---
 

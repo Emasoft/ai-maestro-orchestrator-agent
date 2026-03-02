@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-EOA Kanban Manager
+AMOA Kanban Manager
 
 Manages GitHub Project kanban for task assignment and tracking.
-Only EOA (Orchestrator) should use this script.
+Only AMOA (Orchestrator) should use this script.
 
 Usage:
-    python eoa_kanban_manager.py create-task --title <title> --body <body> --agent <name> [--priority <p>]
-    python eoa_kanban_manager.py assign-task --issue <number> --agent <name>
-    python eoa_kanban_manager.py update-status --issue <number> --status <status>
-    python eoa_kanban_manager.py set-dependency --issue <number> --blocked-by <issue>
-    python eoa_kanban_manager.py check-ready-tasks
-    python eoa_kanban_manager.py notify-agent --issue <number> --agent <name>
-    python eoa_kanban_manager.py sync-from-github
+    python amoa_kanban_manager.py create-task --title <title> --body <body> --agent <name> [--priority <p>]
+    python amoa_kanban_manager.py assign-task --issue <number> --agent <name>
+    python amoa_kanban_manager.py update-status --issue <number> --status <status>
+    python amoa_kanban_manager.py set-dependency --issue <number> --blocked-by <issue>
+    python amoa_kanban_manager.py check-ready-tasks
+    python amoa_kanban_manager.py notify-agent --issue <number> --agent <name>
+    python amoa_kanban_manager.py sync-from-github
 """
 
 import argparse
@@ -92,10 +92,10 @@ def check_gh_project_scopes() -> bool:
 def load_team_registry(repo_path: str | None = None) -> dict[str, Any]:
     """Load team registry from repository."""
     if repo_path:
-        registry_path = Path(repo_path) / ".emasoft" / "team-registry.json"
+        registry_path = Path(repo_path) / ".ai-maestro" / "team-registry.json"
     else:
         # Try current directory
-        registry_path = Path(".emasoft") / "team-registry.json"
+        registry_path = Path(".ai-maestro") / "team-registry.json"
 
     if not registry_path.exists():
         raise FileNotFoundError(f"Team registry not found: {registry_path}")
@@ -124,7 +124,7 @@ def send_ai_maestro_message(
     subject: str,
     content: dict[str, Any],
     priority: str = "normal",
-    from_agent: str = "eoa-orchestrator",
+    from_agent: str = "amoa-orchestrator",
 ) -> bool:
     """Send a message via AI Maestro AMP CLI."""
     try:
@@ -184,7 +184,7 @@ def create_task_issue(
 | Assigned Agent | `{assigned_agent}` |
 | Priority | {priority} |
 | Assigned At | {get_timestamp()} |
-| Assigned By | eoa-orchestrator |
+| Assigned By | amoa-orchestrator |
 
 """
 
@@ -575,9 +575,9 @@ def notify_agent_of_task(
             "title": task_title,
         },
         "sender_identity": {
-            "name": "eoa-orchestrator",
+            "name": "amoa-orchestrator",
             "role": "orchestrator",
-            "plugin": "emasoft-orchestrator-agent",
+            "plugin": "ai-maestro-orchestrator-agent",
             "team": team_name,
         },
         "recipient_identity": {
@@ -633,9 +633,9 @@ def request_pr_review(
         },
         "submitting_agent": submitting_agent,
         "sender_identity": {
-            "name": "eoa-orchestrator",
+            "name": "amoa-orchestrator",
             "role": "orchestrator",
-            "plugin": "emasoft-orchestrator-agent",
+            "plugin": "ai-maestro-orchestrator-agent",
             "team": team_name,
         },
         "instructions": "Review the PR for compliance with task requirements. Run tests. Merge if approved, reject with detailed feedback if not.",
@@ -650,21 +650,21 @@ def request_pr_review(
 
 
 def report_to_manager(message_type: str, message: str, details: dict[str, Any]) -> bool:
-    """Report to the manager (EAMA)."""
+    """Report to the manager (AMAMA)."""
 
     content = {
         "type": message_type,
         "message": message,
         "details": details,
         "sender_identity": {
-            "name": "eoa-orchestrator",
+            "name": "amoa-orchestrator",
             "role": "orchestrator",
-            "plugin": "emasoft-orchestrator-agent",
+            "plugin": "ai-maestro-orchestrator-agent",
         },
     }
 
     return send_ai_maestro_message(
-        to="eama-assistant-manager",
+        to="amama-assistant-manager",
         subject=f"[{message_type.upper()}] {message[:50]}...",
         content=content,
         priority="normal",
@@ -673,7 +673,7 @@ def report_to_manager(message_type: str, message: str, details: dict[str, Any]) 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="EOA Kanban Manager",
+        description="AMOA Kanban Manager",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 

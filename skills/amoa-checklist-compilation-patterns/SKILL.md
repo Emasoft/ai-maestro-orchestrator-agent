@@ -1,5 +1,5 @@
 ---
-name: eoa-checklist-compilation-patterns
+name: amoa-checklist-compilation-patterns
 description: "Use when compiling verification checklists from requirements including module completion, quality gates, and test coverage checklists. Trigger with checklist compilation requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
@@ -8,7 +8,7 @@ metadata:
   version: 1.0.0
 context: fork
 user-invocable: false
-agent: eoa-main
+agent: amoa-main
 workflow-instruction: "support"
 procedure: "support-skill"
 ---

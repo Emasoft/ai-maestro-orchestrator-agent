@@ -148,7 +148,7 @@ Orchestrator commits fix
 - [RULE 15: Orchestrator No Implementation](./orchestrator-no-implementation.md)
 - [delegation-checklist.md](./delegation-checklist.md)
 - [agent-selection-guide.md](./agent-selection-guide.md)
-- [task-instruction-format.md](../../eoa-remote-agent-coordinator/references/task-instruction-format.md)
+- [task-instruction-format.md](../../amoa-remote-agent-coordinator/references/task-instruction-format.md)
 
 ---
 

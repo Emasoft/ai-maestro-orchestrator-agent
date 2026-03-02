@@ -1,12 +1,12 @@
-# EOA Agent Replacement Skill
+# AMOA Agent Replacement Skill
 
-Handle agent replacement scenarios triggered by ECOS (Emergency Context-loss Operations System).
+Handle agent replacement scenarios triggered by AMCOS (Emergency Context-loss Operations System).
 
 ## Purpose
 
 When an agent fails, becomes unresponsive, or experiences context loss, this skill guides the orchestrator through:
 
-1. Receiving and processing ECOS replacement notifications
+1. Receiving and processing AMCOS replacement notifications
 2. Compiling all task context for the failed agent
 3. Generating comprehensive handoff documents
 4. Reassigning GitHub Project kanban tasks
@@ -18,7 +18,7 @@ When an agent fails, becomes unresponsive, or experiences context loss, this ski
 | File | Purpose |
 |------|---------|
 | `SKILL.md` | Main skill instructions |
-| `references/ecos-notification-handling.md` | ECOS message handling |
+| `references/amcos-notification-handling.md` | AMCOS message handling |
 | `references/context-compilation-workflow.md` | Gathering task context |
 | `references/handoff-document-format.md` | Handoff document structure |
 | `references/kanban-reassignment-protocol.md` | GitHub Project updates |
@@ -28,20 +28,20 @@ When an agent fails, becomes unresponsive, or experiences context loss, this ski
 
 ## Quick Start
 
-When ECOS notifies about a replacement:
+When AMCOS notifies about a replacement:
 
 ```bash
 # Generate handoff for replacement agent
-/eoa-generate-replacement-handoff --failed-agent <old> --new-agent <new> --include-tasks --include-context
+/amoa-generate-replacement-handoff --failed-agent <old> --new-agent <new> --include-tasks --include-context
 
 # Reassign GitHub Project tasks
-/eoa-reassign-kanban-tasks --from-agent <old> --to-agent <new> --project-id <id>
+/amoa-reassign-kanban-tasks --from-agent <old> --to-agent <new> --project-id <id>
 ```
 
 ## Related Commands
 
-- `/eoa-generate-replacement-handoff` - Generate handoff document
-- `/eoa-reassign-kanban-tasks` - Reassign GitHub Project cards
+- `/amoa-generate-replacement-handoff` - Generate handoff document
+- `/amoa-reassign-kanban-tasks` - Reassign GitHub Project cards
 
 ## Version
 

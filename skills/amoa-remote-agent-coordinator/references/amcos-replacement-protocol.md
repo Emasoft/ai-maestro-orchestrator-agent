@@ -1,13 +1,13 @@
-# ECOS Agent Replacement Protocol
+# AMCOS Agent Replacement Protocol
 
 
 ## Contents
 
 - [Overview](#overview)
-- [ECOS Notification Format](#ecos-notification-format)
+- [AMCOS Notification Format](#amcos-notification-format)
   - [Urgency Levels](#urgency-levels)
 - [Replacement Protocol Steps](#replacement-protocol-steps)
-  - [Step 1: Acknowledge ECOS Notification](#step-1-acknowledge-ecos-notification)
+  - [Step 1: Acknowledge AMCOS Notification](#step-1-acknowledge-amcos-notification)
   - [Step 2: Compile Context for Failed Agent](#step-2-compile-context-for-failed-agent)
   - [Step 3: Generate Handoff Document](#step-3-generate-handoff-document)
 - [Task Assignment](#task-assignment)
@@ -20,7 +20,7 @@
   - [Step 4: Reassign GitHub Project Tasks](#step-4-reassign-github-project-tasks)
   - [Step 5: Send Handoff to Replacement Agent](#step-5-send-handoff-to-replacement-agent)
   - [Step 6: Wait for Acknowledgment](#step-6-wait-for-acknowledgment)
-  - [Step 7: Confirm to ECOS](#step-7-confirm-to-ecos)
+  - [Step 7: Confirm to AMCOS](#step-7-confirm-to-ecos)
 - [Quick Command Reference](#quick-command-reference)
 - [Critical Rules](#critical-rules)
   - [Rule 1: Preserve Task UUIDs](#rule-1-preserve-task-uuids)
@@ -43,11 +43,11 @@
 
 ## Overview
 
-When ECOS (Emergency Context-loss Operations System) detects an agent failure or initiates a replacement, the orchestrator must execute a structured handoff protocol to transfer tasks and context to a replacement agent without losing work progress.
+When AMCOS (Emergency Context-loss Operations System) detects an agent failure or initiates a replacement, the orchestrator must execute a structured handoff protocol to transfer tasks and context to a replacement agent without losing work progress.
 
-## ECOS Notification Format
+## AMCOS Notification Format
 
-ECOS sends replacement notifications via AI Maestro with message type `agent_replacement`:
+AMCOS sends replacement notifications via AI Maestro with message type `agent_replacement`:
 
 ```json
 {
@@ -77,10 +77,10 @@ ECOS sends replacement notifications via AI Maestro with message type `agent_rep
 
 ## Replacement Protocol Steps
 
-### Step 1: Acknowledge ECOS Notification
+### Step 1: Acknowledge AMCOS Notification
 
-**Immediately** send an acknowledgment message to ECOS using the `agent-messaging` skill:
-- **Recipient**: `ecos-monitor`
+**Immediately** send an acknowledgment message to AMCOS using the `agent-messaging` skill:
+- **Recipient**: `amcos-monitor`
 - **Subject**: "ACK: Agent Replacement"
 - **Content**: "Replacement protocol initiated for [failed_agent_session]"
 - **Type**: `acknowledgment`
@@ -118,7 +118,7 @@ Gather all information about the failed agent's work:
 Use the command:
 
 ```bash
-/eoa-generate-replacement-handoff \
+/amoa-generate-replacement-handoff \
   --failed-agent implementer-1 \
   --new-agent implementer-2 \
   --include-tasks \
@@ -183,7 +183,7 @@ The replacement agent MUST complete Instruction Verification Protocol:
 Update kanban board to reflect the replacement:
 
 ```bash
-/eoa-reassign-kanban-tasks \
+/amoa-reassign-kanban-tasks \
   --from-agent implementer-1 \
   --to-agent implementer-2 \
   --handoff-url [URL to handoff doc]
@@ -218,12 +218,12 @@ The replacement agent MUST send acknowledgment confirming:
 
 **Do NOT proceed** until acknowledgment received.
 
-### Step 7: Confirm to ECOS
+### Step 7: Confirm to AMCOS
 
 After replacement agent acknowledges:
 
-Send a completion confirmation to ECOS using the `agent-messaging` skill:
-- **Recipient**: `ecos-monitor`
+Send a completion confirmation to AMCOS using the `agent-messaging` skill:
+- **Recipient**: `amcos-monitor`
 - **Subject**: "Replacement Complete"
 - **Content**: "Replacement protocol completed. New agent [replacement_agent_session] acknowledged and ready. Task UUID [task_uuid] preserved."
 - **Type**: `completion`
@@ -235,10 +235,10 @@ Send a completion confirmation to ECOS using the `agent-messaging` skill:
 
 | Command | Purpose |
 |---------|---------|
-| `/eoa-generate-replacement-handoff` | Generate comprehensive handoff document |
-| `/eoa-reassign-kanban-tasks` | Update GitHub Project assignments |
-| `/eoa-verify-replacement-ready` | Check if replacement agent is ready |
-| `/eoa-abort-replacement` | Cancel replacement (emergency only) |
+| `/amoa-generate-replacement-handoff` | Generate comprehensive handoff document |
+| `/amoa-reassign-kanban-tasks` | Update GitHub Project assignments |
+| `/amoa-verify-replacement-ready` | Check if replacement agent is ready |
+| `/amoa-abort-replacement` | Cancel replacement (emergency only) |
 
 ## Critical Rules
 
@@ -343,18 +343,18 @@ If replacement agent cannot understand what the failed agent was implementing:
 Every replacement must be fully documented for audit:
 
 **Documents to Preserve:**
-- ECOS notification (original message)
+- AMCOS notification (original message)
 - Handoff document with timestamp
 - Replacement agent acknowledgment
 - GitHub issue reassignment comment
 - Orchestration state file update
-- Completion confirmation to ECOS
+- Completion confirmation to AMCOS
 
 **Storage Location:**
 ```
 docs_dev/replacements/
 ├── [timestamp]-[failed_agent]-to-[replacement_agent]/
-│   ├── ecos-notification.json
+│   ├── amcos-notification.json
 │   ├── handoff.md
 │   ├── acknowledgment.json
 │   └── state-diff.json
@@ -373,7 +373,7 @@ Before sending handoff to replacement agent, verify:
 - [ ] Integration points identified
 - [ ] GitHub issue reassigned
 - [ ] Orchestrator state file updated
-- [ ] ECOS acknowledged
+- [ ] AMCOS acknowledged
 - [ ] Handoff URL accessible to replacement agent
 
 ## Context Transfer Best Practices

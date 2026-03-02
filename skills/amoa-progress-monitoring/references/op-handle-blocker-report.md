@@ -23,7 +23,7 @@ operation: handle-blocker-report
   - [Step 5: Create Blocker Tracking Issue](#step-5-create-blocker-tracking-issue)
 - [Resolution](#resolution)
 - [Notes](#notes)
-  - [Step 6: Escalate to EAMA Immediately](#step-6-escalate-to-eama-immediately)
+  - [Step 6: Escalate to AMAMA Immediately](#step-6-escalate-to-amama-immediately)
   - [Step 7: Check for Alternative Work](#step-7-check-for-alternative-work)
 - [Blocker Lifecycle Checklist](#blocker-lifecycle-checklist)
   - [When a task becomes blocked:](#when-a-task-becomes-blocked)
@@ -60,7 +60,7 @@ The user must ALWAYS be informed of blockers immediately. There is NO scenario w
 |--------|------|-------------|
 | blocker_issue_number | Integer | Created blocker tracking issue |
 | task_status_updated | Boolean | Task moved to blocked |
-| user_notified | Boolean | EAMA escalation sent |
+| user_notified | Boolean | AMAMA escalation sent |
 
 ## Blocker Categories
 
@@ -173,12 +173,12 @@ echo "Created blocker issue: #$BLOCKER_ISSUE"
 gh issue comment $TASK_ID --body "Blocker tracked in #$BLOCKER_ISSUE"
 ```
 
-### Step 6: Escalate to EAMA Immediately
+### Step 6: Escalate to AMAMA Immediately
 
 ```bash
 # CRITICAL: Immediate user notification - no waiting period
 # Send blocker escalation using the agent-messaging skill:
-# - Recipient: eama-main
+# - Recipient: amama-main
 # - Subject: "[BLOCKER] Task #$TASK_ID blocked - User action required"
 # - Content: "Task Blocked - Immediate Attention Required. Task: #$TASK_ID, Agent: $AGENT_NAME, Blocker: $BLOCKER_DESCRIPTION, Category: $BLOCKER_CATEGORY, What is needed: $WAITING_ON, Impact: $IMPACT, Blocker tracking issue: #$BLOCKER_ISSUE. Please provide resolution or guidance."
 # - Type: blocker-escalation, Priority: urgent
@@ -211,7 +211,7 @@ fi
 - [ ] Add `status:blocked` label to the blocked task
 - [ ] Add blocker details as comment on the blocked task issue
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label)
-- [ ] Send blocker-escalation message to EAMA via AI Maestro using the `agent-messaging` skill IMMEDIATELY
+- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill IMMEDIATELY
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 ## Success Criteria
@@ -220,7 +220,7 @@ fi
 - [ ] Previous status recorded
 - [ ] Task status updated to blocked
 - [ ] Blocker tracking issue created
-- [ ] EAMA notified immediately
+- [ ] AMAMA notified immediately
 - [ ] Agent offered alternative work (if available)
 
 ## Error Handling
@@ -229,7 +229,7 @@ fi
 |-------|-------|----------|
 | Blocker already reported | Duplicate message | Check if blocker issue exists |
 | Category unclear | Vague blocker description | Ask agent for clarification |
-| EAMA unavailable | Agent offline | Queue escalation, retry |
+| AMAMA unavailable | Agent offline | Queue escalation, retry |
 
 ## Related Operations
 

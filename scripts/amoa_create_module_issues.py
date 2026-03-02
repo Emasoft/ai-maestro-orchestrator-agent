@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-EOA Create Module Issues Script
+AMOA Create Module Issues Script
 
 Creates GitHub issues for modules from orchestration state.
 Updates module records with issue numbers.
 Optionally adds issues to GitHub Project.
 
 Usage:
-    python3 eoa_create_module_issues.py
-    python3 eoa_create_module_issues.py --module auth-core
-    python3 eoa_create_module_issues.py --all --project-id PVT_kwDOBxxxxxx
-    python3 eoa_create_module_issues.py --dry-run
+    python3 amoa_create_module_issues.py
+    python3 amoa_create_module_issues.py --module auth-core
+    python3 amoa_create_module_issues.py --all --project-id PVT_kwDOBxxxxxx
+    python3 amoa_create_module_issues.py --dry-run
 """
 
 import argparse
@@ -205,7 +205,7 @@ def build_issue_body(module: dict[str, Any]) -> str:
     lines.extend([
         "---",
         "",
-        "*This issue was created by the EOA orchestration system.*",
+        "*This issue was created by the AMOA orchestration system.*",
     ])
 
     return "\n".join(lines)

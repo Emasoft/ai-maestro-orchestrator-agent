@@ -19,28 +19,28 @@ operation-id: op-receive-integration-result
 
 ## Purpose
 
-Process integration/review results received from Integrator (EIA) after a review request.
+Process integration/review results received from Integrator (AMIA) after a review request.
 
 ## When to Use
 
-- After sending integration request to EIA
-- When polling reveals new message from EIA
-- When inbox notification shows EIA response
+- After sending integration request to AMIA
+- When polling reveals new message from AMIA
+- When inbox notification shows AMIA response
 
 ## Prerequisites
 
-- Integration request was previously sent to EIA
-- Message from EIA received in inbox
+- Integration request was previously sent to AMIA
+- Message from AMIA received in inbox
 
 ## Steps
 
-1. **Check inbox for EIA response** using the `agent-messaging` skill. Retrieve unread messages for your session and filter for messages from the EIA agent.
+1. **Check inbox for AMIA response** using the `agent-messaging` skill. Retrieve unread messages for your session and filter for messages from the AMIA agent.
 
 2. **Parse the response content**:
    - `content.type`: Should be "response"
    - `content.data.status`: "passed", "failed", "blocked"
    - `content.data.issues`: Array of issues found (if any)
-   - `content.data.recommendation`: EIA's recommendation
+   - `content.data.recommendation`: AMIA's recommendation
 
 3. **Handle by status**:
 
@@ -50,14 +50,14 @@ Process integration/review results received from Integrator (EIA) after a review
    | failed | Delegate fixes to implementation subagent |
    | blocked | Escalate to user with details |
 
-4. **Send acknowledgment** to EIA:
+4. **Send acknowledgment** to AMIA:
 
    > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
 
    ```json
    {
-     "from": "eoa-main",
-     "to": "eia-main",
+     "from": "amoa-main",
+     "to": "amia-main",
      "subject": "ACK: Integration Result PR #<number>",
      "priority": "low",
      "content": {
@@ -75,14 +75,14 @@ Parsed integration result with fields:
 - `pr_number`: The reviewed PR
 - `status`: passed/failed/blocked
 - `issues`: List of issues (if any)
-- `recommendation`: EIA's recommendation
+- `recommendation`: AMIA's recommendation
 
 ## Error Handling
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| No response | EIA still processing | Continue polling |
-| Malformed response | Message format issue | Request clarification from EIA |
+| No response | AMIA still processing | Continue polling |
+| Malformed response | Message format issue | Request clarification from AMIA |
 | Unknown status | Unexpected status value | Treat as "blocked" and escalate |
 
 ## Example Response Format
@@ -91,8 +91,8 @@ Parsed integration result with fields:
 
 ```json
 {
-  "from": "eia-main",
-  "to": "eoa-main",
+  "from": "amia-main",
+  "to": "amoa-main",
   "subject": "Integration Result: PR #456",
   "priority": "high",
   "content": {

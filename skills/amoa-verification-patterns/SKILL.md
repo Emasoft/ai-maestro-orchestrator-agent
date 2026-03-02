@@ -1,19 +1,19 @@
 ---
-name: eoa-verification-patterns
+name: amoa-verification-patterns
 description: "Use when verifying implementations. Trigger with verification, testing, or evidence requests."
 license: Apache-2.0
 compatibility: "Requires Python 3.8+, Bash shell, Git. Supports Windows, macOS, and Linux. Optional dependencies: Selenium for E2E browser testing, Docker for service orchestration, SQLite/PostgreSQL for database examples. Requires AI Maestro installed."
 metadata:
   author: Emasoft
   version: "1.0.0"
-agent: eoa-main
+agent: amoa-main
 context: fork
 user-invocable: false
 workflow-instruction: "Step 19"
 procedure: "proc-complete-task"
 ---
 
-# Verification Patterns for EOA (Emasoft Orchestrator Agent)
+# Verification Patterns for AMOA (AI Maestro Orchestrator Agent)
 
 ## Overview
 

@@ -86,7 +86,7 @@ gh issue edit <ISSUE_NUM> \
 
 ### Step 4: Move to AI Review
 
-Once work is complete, the Integrator (EIA) reviews the deliverables.
+Once work is complete, the Integrator (AMIA) reviews the deliverables.
 
 ```bash
 # Move from in-progress to ai-review
@@ -99,7 +99,7 @@ The Integrator will review the code, run quality gates, and either approve or re
 
 ### Step 5: Move to Human Review (BIG tasks only)
 
-For BIG tasks (tasks labeled `size:big` or `size:epic`), the user reviews the work via EAMA (Assistant Manager) before it can proceed.
+For BIG tasks (tasks labeled `size:big` or `size:epic`), the user reviews the work via AMAMA (Assistant Manager) before it can proceed.
 
 ```bash
 # After AI review passes, move to human-review (BIG tasks only)
@@ -239,7 +239,7 @@ gh issue comment 42 --body "**Blocked**
 - [ ] Verify code reviewed (if required)
 - [ ] Handle PR review labels if applicable
 - [ ] Move to `status:ai-review` (Integrator reviews)
-- [ ] Move to `status:human-review` (BIG tasks only, user reviews via EAMA)
+- [ ] Move to `status:human-review` (BIG tasks only, user reviews via AMAMA)
 - [ ] Move to `status:merge-release` (ready to merge)
 - [ ] Remove `assign:<agent>` label
 - [ ] Add `status:done`

@@ -237,7 +237,7 @@ If sync appears broken:
 The `/start-orchestration` command executes:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/eoa_start_orchestration.py" $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_start_orchestration.py" $ARGUMENTS
 ```
 
 **Script behavior**:
