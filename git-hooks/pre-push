@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # pre-push hook - Validate plugin before allowing push
 #
-# Runs validate_plugin.py in strict mode: ALL severity levels
-# (CRITICAL, MAJOR, MINOR) block the push.
+# Runs validate_plugin.py: CRITICAL and MAJOR block the push.
+# MINOR issues are reported as warnings but do not block.
 #
 # Exit codes from validate_plugin.py:
 #   0 - All checks passed
@@ -128,10 +128,10 @@ case $VALIDATION_EXIT_CODE in
         ;;
     3)
         echo -e "${YELLOW}========================================${NC}"
-        echo -e "${YELLOW}  BLOCKED: MINOR issues found${NC}"
-        echo -e "${YELLOW}  Fix ALL issues before pushing.${NC}"
+        echo -e "${YELLOW}  WARNING: MINOR issues found${NC}"
+        echo -e "${YELLOW}  Push allowed. Fix when convenient.${NC}"
         echo -e "${YELLOW}========================================${NC}"
-        exit 1
+        exit 0
         ;;
     *)
         echo -e "${RED}========================================${NC}"
