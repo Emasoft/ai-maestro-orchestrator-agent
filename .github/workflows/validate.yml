@@ -1,6 +1,7 @@
 name: Plugin Validation
 
 on:
+  workflow_dispatch:
   push:
     branches: [main, master]
     paths:
