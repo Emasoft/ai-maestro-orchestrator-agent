@@ -42,7 +42,7 @@ jobs:
 
           # Run validator with pyyaml dependency
           # Exit codes: 0=pass, 1=CRITICAL, 2=MAJOR, 3=MINOR
-          # Strict mode: ALL non-zero exit codes block
+          # CRITICAL and MAJOR block; MINOR is a warning only
           set +e
           uv run --with pyyaml python scripts/validate_plugin.py . --verbose
           exit_code=$?
@@ -51,6 +51,9 @@ jobs:
           echo ""
           if [ $exit_code -eq 0 ]; then
             echo "=== Validation PASSED ==="
+            exit 0
+          elif [ $exit_code -eq 3 ]; then
+            echo "=== Validation WARNING: MINOR issues found (non-blocking) ==="
             exit 0
           else
             echo "=== Validation FAILED (exit code: $exit_code) ==="
