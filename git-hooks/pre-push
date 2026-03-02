@@ -71,6 +71,13 @@ while read -r LOCAL_REF LOCAL_SHA REMOTE_REF REMOTE_SHA; do
     fi
 done
 
+# Sync validation scripts from CPV (if gh CLI available and online)
+if command -v gh &> /dev/null; then
+  echo -e "${BLUE}Syncing validation scripts from CPV...${NC}"
+  bash "$REPO_ROOT/scripts/sync_cpv_validators.sh" 2>/dev/null || \
+    echo -e "${YELLOW}Warning: CPV sync skipped (offline or gh unavailable)${NC}"
+fi
+
 echo -e "${BLUE}Running plugin validation...${NC}"
 echo ""
 

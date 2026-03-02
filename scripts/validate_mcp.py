@@ -30,82 +30,10 @@ import os
 import re
 import shutil
 import sys
-from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
-# Validation result levels
-Level = Literal["CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"]
-
-
-@dataclass
-class ValidationResult:
-    """Single validation result."""
-
-    level: Level
-    message: str
-    file: str | None = None
-    line: int | None = None
-
-
-@dataclass
-class ValidationReport:
-    """Complete validation report."""
-
-    results: list[ValidationResult] = field(default_factory=list)
-
-    def add(
-        self,
-        level: Level,
-        message: str,
-        file: str | None = None,
-        line: int | None = None,
-    ) -> None:
-        """Add a validation result."""
-        self.results.append(ValidationResult(level, message, file, line))
-
-    def passed(self, message: str, file: str | None = None) -> None:
-        """Add a passed check."""
-        self.add("PASSED", message, file)
-
-    def info(self, message: str, file: str | None = None) -> None:
-        """Add an info message."""
-        self.add("INFO", message, file)
-
-    def minor(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a minor issue."""
-        self.add("MINOR", message, file, line)
-
-    def major(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a major issue."""
-        self.add("MAJOR", message, file, line)
-
-    def critical(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a critical issue."""
-        self.add("CRITICAL", message, file, line)
-
-    @property
-    def has_critical(self) -> bool:
-        return any(r.level == "CRITICAL" for r in self.results)
-
-    @property
-    def has_major(self) -> bool:
-        return any(r.level == "MAJOR" for r in self.results)
-
-    @property
-    def has_minor(self) -> bool:
-        return any(r.level == "MINOR" for r in self.results)
-
-    @property
-    def exit_code(self) -> int:
-        if self.has_critical:
-            return 1
-        if self.has_major:
-            return 2
-        if self.has_minor:
-            return 3
-        return 0
-
+from cpv_validation_common import ValidationReport
 
 # Valid transport types
 VALID_TRANSPORTS = {"stdio", "sse", "http"}
@@ -120,6 +48,7 @@ KNOWN_SERVER_FIELDS = {
     "url",  # Required for http/sse servers
     "headers",  # HTTP headers for authentication
     "timeout",  # Connection timeout
+    "oauth",  # OAuth config object with clientId and callbackPort
 }
 
 # Environment variable pattern: ${VAR} or ${VAR:-default}
@@ -221,7 +150,7 @@ def validate_mcp_server(
     # Check for unknown fields
     for key in config.keys():
         if key not in KNOWN_SERVER_FIELDS:
-            report.info(f"Unknown field '{key}' in server {server_name}")
+            report.warning(f"Unknown field '{key}' in server {server_name}")
 
     # Determine transport type
     transport = config.get("type", "stdio")
@@ -249,12 +178,23 @@ def validate_mcp_server(
                         report.passed(f"Server {server_name} command is executable")
             elif shutil.which(command):
                 report.passed(f"Server {server_name} command '{command}' found in PATH")
-            elif command == "npx":
-                report.passed(f"Server {server_name} uses npx (will resolve at runtime)")
             else:
                 report.info(f"Server {server_name} command '{command}' not found (may be resolved at runtime)")
 
-        # Warn about SSE deprecation
+            # Security warning for package executors running remote packages
+            package_executors = {"npx", "bunx", "uvx", "pipx", "pnpx"}
+            if command in package_executors:
+                # Check args to see if it's running a non-local package
+                cmd_args = config.get("args", [])
+                pkg_name = cmd_args[0] if cmd_args and isinstance(cmd_args[0], str) else None
+                if pkg_name and not pkg_name.startswith((".", "/", "${")):
+                    report.warning(
+                        f"Server {server_name} uses {command} to execute remote package "
+                        f"'{pkg_name}' — this downloads and runs code from a registry. "
+                        f"Verify the package is trusted and consider pinning a version."
+                    )
+
+        # Warn about url field ignored for stdio transport
         if "url" in config and transport == "stdio":
             report.info(f"Server {server_name} has 'url' but transport is stdio - url will be ignored")
 
@@ -269,6 +209,33 @@ def validate_mcp_server(
             # Basic URL validation
             if not url.startswith("${") and not url.startswith(("http://", "https://")):
                 report.major(f"Server {server_name} url should be http(s):// : {url}")
+
+            # Security warning for remote MCP servers
+            if not url.startswith("${"):
+                is_localhost = any(
+                    url.startswith(prefix)
+                    for prefix in (
+                        "http://localhost",
+                        "https://localhost",
+                        "http://127.0.0.1",
+                        "https://127.0.0.1",
+                        "http://[::1]",
+                        "https://[::1]",
+                        "http://0.0.0.0",
+                        "https://0.0.0.0",
+                    )
+                )
+                if not is_localhost:
+                    report.warning(
+                        f"Server {server_name} connects to remote URL '{url}' — "
+                        f"remote MCP servers can access tool results and conversation data. "
+                        f"Ensure the server is trusted and uses HTTPS."
+                    )
+                    if url.startswith("http://") and not is_localhost:
+                        report.major(
+                            f"Server {server_name} uses unencrypted HTTP for remote server — "
+                            f"use HTTPS to protect data in transit."
+                        )
 
         # SSE is deprecated
         if transport == "sse":
@@ -334,6 +301,29 @@ def validate_mcp_server(
                                 f"Server {server_name} has hardcoded credential in "
                                 f"headers[{key}] - use environment variables"
                             )
+
+    # Validate timeout field
+    if "timeout" in config:
+        timeout = config["timeout"]
+        if not isinstance(timeout, (int, float)):
+            report.major(f"Server {server_name} 'timeout' must be a number, got {type(timeout).__name__}")
+        elif timeout <= 0:
+            report.major(f"Server {server_name} 'timeout' must be positive")
+        else:
+            report.passed(f"Server {server_name} timeout: {timeout}")
+
+    # Validate oauth field structure
+    if "oauth" in config:
+        oauth = config["oauth"]
+        if not isinstance(oauth, dict):
+            report.major(f"Server {server_name} 'oauth' must be an object, got {type(oauth).__name__}")
+        else:
+            # clientId is the key field for OAuth
+            if "clientId" in oauth and not isinstance(oauth["clientId"], str):
+                report.major(f"Server {server_name} 'oauth.clientId' must be a string")
+            if "callbackPort" in oauth and not isinstance(oauth["callbackPort"], int):
+                report.major(f"Server {server_name} 'oauth.callbackPort' must be an integer")
+            report.passed(f"Server {server_name} has OAuth configuration")
 
     report.passed(f"Server {server_name} configuration validated")
 
@@ -494,12 +484,14 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
         "CRITICAL": "\033[91m",
         "MAJOR": "\033[93m",
         "MINOR": "\033[94m",
+        "NIT": "\033[96m",
+        "WARNING": "\033[95m",
         "INFO": "\033[90m",
         "PASSED": "\033[92m",
         "RESET": "\033[0m",
     }
 
-    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "INFO": 0, "PASSED": 0}
+    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
     for r in report.results:
         counts[r.level] += 1
 
@@ -511,6 +503,8 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
     print(f"  {colors['CRITICAL']}CRITICAL: {counts['CRITICAL']}{colors['RESET']}")
     print(f"  {colors['MAJOR']}MAJOR:    {counts['MAJOR']}{colors['RESET']}")
     print(f"  {colors['MINOR']}MINOR:    {counts['MINOR']}{colors['RESET']}")
+    print(f"  {colors['NIT']}NIT:      {counts['NIT']}{colors['RESET']}")
+    print(f"  {colors['WARNING']}WARNING:  {counts['WARNING']}{colors['RESET']}")
     if verbose:
         print(f"  {colors['INFO']}INFO:     {counts['INFO']}{colors['RESET']}")
         print(f"  {colors['PASSED']}PASSED:   {counts['PASSED']}{colors['RESET']}")
@@ -532,7 +526,7 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
     if report.exit_code == 0:
         print(f"{colors['PASSED']}✓ All MCP checks passed{colors['RESET']}")
     else:
-        status_color = colors[["PASSED", "CRITICAL", "MAJOR", "MINOR"][report.exit_code]]
+        status_color = colors[["PASSED", "CRITICAL", "MAJOR", "MINOR", "NIT"][min(report.exit_code, 4)]]
         print(f"{status_color}✗ Issues found{colors['RESET']}")
 
     print()
@@ -542,6 +536,7 @@ def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Validate MCP configuration")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all results")
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument(
         "path",
@@ -550,15 +545,29 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    # Determine path
+    # Determine path — always resolve to absolute so relative_to() works
     if args.path:
-        path = Path(args.path)
+        path = Path(args.path).resolve()
     else:
-        path = Path.cwd()
+        path = Path.cwd().resolve()
 
     if not path.exists():
         print(f"Error: {path} does not exist", file=sys.stderr)
         return 1
+
+    # Verify content type — must be .mcp.json file or directory containing one
+    if path.is_file() and not path.name.endswith(".mcp.json"):
+        print(f"Error: {path} is not an MCP config file (expected .mcp.json)", file=sys.stderr)
+        return 1
+    if path.is_dir():
+        has_mcp = (path / ".mcp.json").exists() or (path / ".claude-plugin").is_dir()
+        if not has_mcp:
+            print(
+                f"Error: No MCP configuration found at {path}\n"
+                f"Expected .mcp.json file or a plugin directory with .claude-plugin/.",
+                file=sys.stderr,
+            )
+            return 1
 
     # Determine if it's a file or directory
     if path.is_file():
@@ -576,6 +585,8 @@ def main() -> int:
                 "minor": sum(1 for r in report.results if r.level == "MINOR"),
                 "info": sum(1 for r in report.results if r.level == "INFO"),
                 "passed": sum(1 for r in report.results if r.level == "PASSED"),
+                "nit": sum(1 for r in report.results if r.level == "NIT"),
+                "warning": sum(1 for r in report.results if r.level == "WARNING"),
             },
             "results": [
                 {
@@ -591,6 +602,8 @@ def main() -> int:
     else:
         print_results(report, args.verbose)
 
+    if args.strict:
+        return report.exit_code_strict()
     return report.exit_code
 
 

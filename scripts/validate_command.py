@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from validation_common import (
+from cpv_validation_common import (
     COLORS,
     EXIT_CRITICAL,
     EXIT_MAJOR,
@@ -175,7 +175,7 @@ def validate_frontmatter_exists(content: str, report: CommandValidationReport, f
     # Check for unknown fields
     for key in frontmatter.keys():
         if key not in KNOWN_FRONTMATTER_FIELDS:
-            report.info(
+            report.warning(
                 f"Unknown frontmatter field '{key}' (may be ignored by CLI)",
                 filename,
             )
@@ -653,12 +653,21 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
-    path = Path(args.path)
+    path = Path(args.path).resolve()
 
     if not path.exists():
         print(f"Error: {path} does not exist", file=sys.stderr)
+        return 1
+
+    # Verify content type — must be .md file or directory containing .md files
+    if path.is_file() and path.suffix != ".md":
+        print(f"Error: {path} is not a Markdown (.md) command file", file=sys.stderr)
+        return 1
+    if path.is_dir() and not list(path.glob("*.md")):
+        print(f"Error: No command definition files (.md) found in {path}", file=sys.stderr)
         return 1
 
     # Handle directory vs file
@@ -698,7 +707,9 @@ def main() -> int:
         for report in reports:
             print_results(report, args.verbose)
 
-    # Return worst exit code
+    # Return worst exit code — in strict mode NIT issues also block
+    if args.strict:
+        return max(r.exit_code_strict() for r in reports)
     return max(r.exit_code for r in reports)
 
 

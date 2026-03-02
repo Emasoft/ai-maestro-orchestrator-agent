@@ -25,7 +25,7 @@ import stat
 import sys
 from pathlib import Path
 
-from validation_common import (
+from cpv_validation_common import (
     DANGEROUS_FILES,
     SECRET_PATTERNS,
     SKIP_DIRS,
@@ -204,7 +204,7 @@ def is_validator_script(file_path: str) -> bool:
     """
     file_lower = file_path.lower()
     # Validator scripts that contain intentional pattern definitions
-    return ("validate_" in file_lower and file_lower.endswith(".py")) or "validation_common" in file_lower
+    return ("validate_" in file_lower and file_lower.endswith(".py")) or "cpv_validation_common" in file_lower
 
 
 def scan_for_injection(content: str, file_path: str, report: ValidationReport) -> int:
@@ -590,21 +590,38 @@ Exit Codes:
     parser.add_argument("plugin_path", type=Path, help="Path to the plugin directory to validate")
     parser.add_argument("-v", "--verbose", action="store_true", help="Show all results including INFO and PASSED")
     parser.add_argument("--json", action="store_true", help="Output results as JSON")
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
 
     args = parser.parse_args()
 
+    # Resolve to absolute path so relative_to() works correctly
+    plugin_path = args.plugin_path.resolve()
+
+    # Verify this is a plugin directory
+    if not plugin_path.is_dir():
+        print(f"Error: {plugin_path} is not a directory", file=sys.stderr)
+        return 1
+    if not (plugin_path / ".claude-plugin").is_dir():
+        print(
+            f"Error: No Claude Code plugin found at {plugin_path}\nExpected a .claude-plugin/ directory.",
+            file=sys.stderr,
+        )
+        return 1
+
     # Run validation
-    report = validate_security(args.plugin_path)
+    report = validate_security(plugin_path)
 
     # Output results
     if args.json:
         output = report.to_dict()
-        output["plugin_path"] = str(args.plugin_path)
+        output["plugin_path"] = str(plugin_path)
         print(json.dumps(output, indent=2))
     else:
         print_results_by_level(report, verbose=args.verbose)
-        print_report_summary(report, title=f"Security Validation: {args.plugin_path.name}")
+        print_report_summary(report, title=f"Security Validation: {plugin_path.name}")
 
+    if args.strict:
+        return report.exit_code_strict()
     return report.exit_code
 
 

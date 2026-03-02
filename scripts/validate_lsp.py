@@ -30,82 +30,10 @@ import os
 import re
 import shutil
 import sys
-from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
-# Validation result levels
-Level = Literal["CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"]
-
-
-@dataclass
-class ValidationResult:
-    """Single validation result."""
-
-    level: Level
-    message: str
-    file: str | None = None
-    line: int | None = None
-
-
-@dataclass
-class ValidationReport:
-    """Complete validation report."""
-
-    results: list[ValidationResult] = field(default_factory=list)
-
-    def add(
-        self,
-        level: Level,
-        message: str,
-        file: str | None = None,
-        line: int | None = None,
-    ) -> None:
-        """Add a validation result."""
-        self.results.append(ValidationResult(level, message, file, line))
-
-    def passed(self, message: str, file: str | None = None) -> None:
-        """Add a passed check."""
-        self.add("PASSED", message, file)
-
-    def info(self, message: str, file: str | None = None) -> None:
-        """Add an info message."""
-        self.add("INFO", message, file)
-
-    def minor(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a minor issue."""
-        self.add("MINOR", message, file, line)
-
-    def major(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a major issue."""
-        self.add("MAJOR", message, file, line)
-
-    def critical(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a critical issue."""
-        self.add("CRITICAL", message, file, line)
-
-    @property
-    def has_critical(self) -> bool:
-        return any(r.level == "CRITICAL" for r in self.results)
-
-    @property
-    def has_major(self) -> bool:
-        return any(r.level == "MAJOR" for r in self.results)
-
-    @property
-    def has_minor(self) -> bool:
-        return any(r.level == "MINOR" for r in self.results)
-
-    @property
-    def exit_code(self) -> int:
-        if self.has_critical:
-            return 1
-        if self.has_major:
-            return 2
-        if self.has_minor:
-            return 3
-        return 0
-
+from cpv_validation_common import ValidationReport
 
 # Known LSP server configuration fields
 KNOWN_LSP_FIELDS = {
@@ -118,6 +46,12 @@ KNOWN_LSP_FIELDS = {
     "env",  # Environment variables
     "cwd",  # Working directory
     "transport",  # Transport type (stdio, pipe, socket)
+    "extensionToLanguage",  # Maps file extensions to language IDs
+    "workspaceFolder",  # Workspace folder path
+    "startupTimeout",  # Timeout in ms for server startup
+    "shutdownTimeout",  # Timeout in ms for server shutdown
+    "restartOnCrash",  # Whether to restart server on crash
+    "maxRestarts",  # Maximum number of automatic restarts
 }
 
 # Common language servers and their expected commands
@@ -203,7 +137,7 @@ def validate_lsp_server(
     # Check for unknown fields
     for key in config.keys():
         if key not in KNOWN_LSP_FIELDS:
-            report.info(f"Unknown field '{key}' in server {server_name}")
+            report.warning(f"Unknown field '{key}' in server {server_name}")
 
     # Validate command (required for local servers)
     if "command" not in config:
@@ -234,6 +168,31 @@ def validate_lsp_server(
                 report.info(f"Server {server_name} command '{command}' not found in PATH")
 
             validate_path_value(command, report, f"{ctx}:command", plugin_root)
+
+    # Validate extensionToLanguage (recommended field per official docs)
+    if "extensionToLanguage" not in config:
+        report.minor(
+            f"Server '{server_name}' missing recommended 'extensionToLanguage' field - "
+            f'maps file extensions to language IDs (e.g., {{".go": "go"}})',
+        )
+    else:
+        etl = config["extensionToLanguage"]
+        if not isinstance(etl, dict):
+            report.critical(
+                f"Server '{server_name}' 'extensionToLanguage' must be an object mapping extensions to language IDs",
+            )
+        else:
+            for ext, lang in etl.items():
+                if not ext.startswith("."):
+                    report.minor(
+                        f"Server '{server_name}' extension '{ext}' should start with '.'",
+                    )
+                if not isinstance(lang, str):
+                    report.major(
+                        f"Server '{server_name}' language for '{ext}' must be a string",
+                    )
+            if etl:
+                report.passed(f"Server '{server_name}' has extensionToLanguage with {len(etl)} mapping(s)")
 
     # Validate args
     if "args" in config:
@@ -300,6 +259,37 @@ def validate_lsp_server(
             report.major(f"Server {server_name} 'cwd' must be a string")
         else:
             validate_path_value(cwd, report, f"{ctx}:cwd", plugin_root)
+
+    # Validate transport field
+    if "transport" in config:
+        transport = config["transport"]
+        if transport not in ("stdio", "socket"):
+            report.major(
+                f"Server '{server_name}' 'transport' must be 'stdio' or 'socket', got '{transport}'",
+            )
+
+    # Validate numeric timeout fields
+    for timeout_field in ("startupTimeout", "shutdownTimeout"):
+        if timeout_field in config:
+            val = config[timeout_field]
+            if not isinstance(val, (int, float)):
+                report.major(f"Server '{server_name}' '{timeout_field}' must be a number (milliseconds)")
+            elif val <= 0:
+                report.major(f"Server '{server_name}' '{timeout_field}' must be positive")
+
+    # Validate maxRestarts
+    if "maxRestarts" in config:
+        val = config["maxRestarts"]
+        if not isinstance(val, int):
+            report.major(f"Server '{server_name}' 'maxRestarts' must be an integer")
+        elif val < 0:
+            report.major(f"Server '{server_name}' 'maxRestarts' must be non-negative")
+
+    # Validate restartOnCrash
+    if "restartOnCrash" in config:
+        val = config["restartOnCrash"]
+        if not isinstance(val, bool):
+            report.major(f"Server '{server_name}' 'restartOnCrash' must be a boolean")
 
     report.passed(f"Server {server_name} configuration validated")
 
@@ -418,12 +408,14 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
         "CRITICAL": "\033[91m",
         "MAJOR": "\033[93m",
         "MINOR": "\033[94m",
+        "NIT": "\033[96m",
+        "WARNING": "\033[95m",
         "INFO": "\033[90m",
         "PASSED": "\033[92m",
         "RESET": "\033[0m",
     }
 
-    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "INFO": 0, "PASSED": 0}
+    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
     for r in report.results:
         counts[r.level] += 1
 
@@ -435,6 +427,8 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
     print(f"  {colors['CRITICAL']}CRITICAL: {counts['CRITICAL']}{colors['RESET']}")
     print(f"  {colors['MAJOR']}MAJOR:    {counts['MAJOR']}{colors['RESET']}")
     print(f"  {colors['MINOR']}MINOR:    {counts['MINOR']}{colors['RESET']}")
+    print(f"  {colors['NIT']}NIT:      {counts['NIT']}{colors['RESET']}")
+    print(f"  {colors['WARNING']}WARNING:  {counts['WARNING']}{colors['RESET']}")
     if verbose:
         print(f"  {colors['INFO']}INFO:     {counts['INFO']}{colors['RESET']}")
         print(f"  {colors['PASSED']}PASSED:   {counts['PASSED']}{colors['RESET']}")
@@ -455,9 +449,14 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
     print("\n" + "-" * 60)
     if report.exit_code == 0:
         print(f"{colors['PASSED']}✓ All LSP checks passed{colors['RESET']}")
+    elif report.exit_code == 1:
+        print(f"{colors['CRITICAL']}✗ CRITICAL issues found{colors['RESET']}")
+    elif report.exit_code == 2:
+        print(f"{colors['MAJOR']}✗ MAJOR issues found{colors['RESET']}")
+    elif report.exit_code == 3:
+        print(f"{colors['MINOR']}! MINOR issues found{colors['RESET']}")
     else:
-        status_color = colors[["PASSED", "CRITICAL", "MAJOR", "MINOR"][report.exit_code]]
-        print(f"{status_color}✗ Issues found{colors['RESET']}")
+        print(f"{colors['NIT']}~ NIT issues found (--strict mode){colors['RESET']}")
 
     print()
 
@@ -467,6 +466,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate LSP configuration")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all results")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     parser.add_argument(
         "path",
         nargs="?",
@@ -474,15 +474,29 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    # Determine path
+    # Determine path — always resolve to absolute so relative_to() works
     if args.path:
-        path = Path(args.path)
+        path = Path(args.path).resolve()
     else:
-        path = Path.cwd()
+        path = Path.cwd().resolve()
 
     if not path.exists():
         print(f"Error: {path} does not exist", file=sys.stderr)
         return 1
+
+    # Verify content type — must be LSP config file or plugin directory
+    if path.is_file() and path.suffix != ".json":
+        print(f"Error: {path} is not a JSON config file", file=sys.stderr)
+        return 1
+    if path.is_dir():
+        has_lsp = (path / ".claude-plugin").is_dir() or any(path.glob("*.lsp.json")) or (path / "lsp").is_dir()
+        if not has_lsp:
+            print(
+                f"Error: No LSP configuration found at {path}\n"
+                f"Expected a plugin directory with .claude-plugin/ or LSP config files.",
+                file=sys.stderr,
+            )
+            return 1
 
     # Determine if it's a file or directory
     if path.is_file():
@@ -500,6 +514,8 @@ def main() -> int:
                 "minor": sum(1 for r in report.results if r.level == "MINOR"),
                 "info": sum(1 for r in report.results if r.level == "INFO"),
                 "passed": sum(1 for r in report.results if r.level == "PASSED"),
+                "nit": sum(1 for r in report.results if r.level == "NIT"),
+                "warning": sum(1 for r in report.results if r.level == "WARNING"),
             },
             "results": [
                 {
@@ -514,6 +530,9 @@ def main() -> int:
         print(json.dumps(output, indent=2))
     else:
         print_results(report, args.verbose)
+
+    if args.strict:
+        return report.exit_code_strict()
 
     return report.exit_code
 

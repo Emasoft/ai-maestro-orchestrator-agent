@@ -24,21 +24,15 @@ import json
 import os
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 import yaml
-
-# Validation result levels
-Level = Literal["CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"]
+from cpv_validation_common import BUILTIN_AGENT_TYPES, VALID_CONTEXT_VALUES, ValidationReport
 
 # Maximum recommended SKILL.md line count per Anthropic docs
 MAX_SKILL_LINES = 500
-
-# Valid values for frontmatter fields per official docs
-VALID_CONTEXT_VALUES = {"fork"}  # Only "fork" is documented as valid
-BUILTIN_AGENT_TYPES = {"Explore", "Plan", "general-purpose"}
 
 # Known frontmatter fields per official docs
 KNOWN_FRONTMATTER_FIELDS = {
@@ -56,73 +50,10 @@ KNOWN_FRONTMATTER_FIELDS = {
 
 
 @dataclass
-class ValidationResult:
-    """Single validation result."""
+class SkillValidationReport(ValidationReport):
+    """Skill validation report with skill-specific metadata."""
 
-    level: Level
-    message: str
-    file: str | None = None
-    line: int | None = None
-
-
-@dataclass
-class ValidationReport:
-    """Complete validation report for a skill."""
-
-    skill_path: str
-    results: list[ValidationResult] = field(default_factory=list)
-
-    def add(
-        self,
-        level: Level,
-        message: str,
-        file: str | None = None,
-        line: int | None = None,
-    ) -> None:
-        """Add a validation result."""
-        self.results.append(ValidationResult(level, message, file, line))
-
-    def passed(self, message: str, file: str | None = None) -> None:
-        """Add a passed check."""
-        self.add("PASSED", message, file)
-
-    def info(self, message: str, file: str | None = None) -> None:
-        """Add an info message."""
-        self.add("INFO", message, file)
-
-    def minor(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a minor issue."""
-        self.add("MINOR", message, file, line)
-
-    def major(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a major issue."""
-        self.add("MAJOR", message, file, line)
-
-    def critical(self, message: str, file: str | None = None, line: int | None = None) -> None:
-        """Add a critical issue."""
-        self.add("CRITICAL", message, file, line)
-
-    @property
-    def has_critical(self) -> bool:
-        return any(r.level == "CRITICAL" for r in self.results)
-
-    @property
-    def has_major(self) -> bool:
-        return any(r.level == "MAJOR" for r in self.results)
-
-    @property
-    def has_minor(self) -> bool:
-        return any(r.level == "MINOR" for r in self.results)
-
-    @property
-    def exit_code(self) -> int:
-        if self.has_critical:
-            return 1
-        if self.has_major:
-            return 2
-        if self.has_minor:
-            return 3
-        return 0
+    skill_path: str = ""
 
 
 def validate_skill_md_exists(skill_path: Path, report: ValidationReport) -> bool:
@@ -190,7 +121,7 @@ def validate_frontmatter(skill_path: Path, content: str, report: ValidationRepor
     # Validate known fields
     for key in frontmatter.keys():
         if key not in KNOWN_FRONTMATTER_FIELDS:
-            report.info(
+            report.warning(
                 f"Unknown frontmatter field '{key}' (may be ignored by CLI)",
                 "SKILL.md",
             )
@@ -527,7 +458,7 @@ def validate_supporting_files(skill_path: Path, report: ValidationReport) -> Non
             report.passed(f"Referenced file exists: {link_target}", "SKILL.md")
 
 
-def validate_skill(skill_path: Path) -> ValidationReport:
+def validate_skill(skill_path: Path) -> SkillValidationReport:
     """Validate a complete skill directory.
 
     Args:
@@ -536,7 +467,7 @@ def validate_skill(skill_path: Path) -> ValidationReport:
     Returns:
         ValidationReport with all results
     """
-    report = ValidationReport(skill_path=str(skill_path))
+    report = SkillValidationReport(skill_path=str(skill_path))
 
     # Check skill directory exists
     if not skill_path.is_dir():
@@ -579,20 +510,22 @@ def validate_skill(skill_path: Path) -> ValidationReport:
     return report
 
 
-def print_results(report: ValidationReport, verbose: bool = False) -> None:
+def print_results(report: SkillValidationReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
     # ANSI colors
     colors = {
         "CRITICAL": "\033[91m",  # Red
         "MAJOR": "\033[93m",  # Yellow
         "MINOR": "\033[94m",  # Blue
+        "NIT": "\033[96m",  # Cyan — blocks only in --strict
+        "WARNING": "\033[95m",  # Magenta — never blocks, always reported
         "INFO": "\033[90m",  # Gray
         "PASSED": "\033[92m",  # Green
         "RESET": "\033[0m",
     }
 
     # Count by level
-    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "INFO": 0, "PASSED": 0}
+    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
     for r in report.results:
         counts[r.level] += 1
 
@@ -606,6 +539,8 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
     print(f"  {colors['CRITICAL']}CRITICAL: {counts['CRITICAL']}{colors['RESET']}")
     print(f"  {colors['MAJOR']}MAJOR:    {counts['MAJOR']}{colors['RESET']}")
     print(f"  {colors['MINOR']}MINOR:    {counts['MINOR']}{colors['RESET']}")
+    print(f"  {colors['NIT']}NIT:      {counts['NIT']}{colors['RESET']}")
+    print(f"  {colors['WARNING']}WARNING:  {counts['WARNING']}{colors['RESET']}")
     if verbose:
         print(f"  {colors['INFO']}INFO:     {counts['INFO']}{colors['RESET']}")
         print(f"  {colors['PASSED']}PASSED:   {counts['PASSED']}{colors['RESET']}")
@@ -644,7 +579,7 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
     print()
 
 
-def print_json(report: ValidationReport) -> None:
+def print_json(report: SkillValidationReport) -> None:
     """Print validation results as JSON."""
     output = {
         "skill_path": report.skill_path,
@@ -653,6 +588,8 @@ def print_json(report: ValidationReport) -> None:
             "critical": sum(1 for r in report.results if r.level == "CRITICAL"),
             "major": sum(1 for r in report.results if r.level == "MAJOR"),
             "minor": sum(1 for r in report.results if r.level == "MINOR"),
+            "warning": sum(1 for r in report.results if r.level == "WARNING"),
+            "nit": sum(1 for r in report.results if r.level == "NIT"),
             "info": sum(1 for r in report.results if r.level == "INFO"),
             "passed": sum(1 for r in report.results if r.level == "PASSED"),
         },
@@ -672,12 +609,25 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
-    skill_path = Path(args.skill_path)
+    skill_path = Path(args.skill_path).resolve()
 
     if not skill_path.exists():
         print(f"Error: {skill_path} does not exist", file=sys.stderr)
+        return 1
+
+    if not skill_path.is_dir():
+        print(f"Error: {skill_path} is not a directory (expected a skill directory)", file=sys.stderr)
+        return 1
+
+    # Verify content type — skill directory must contain SKILL.md
+    if not (skill_path / "SKILL.md").exists() and not (skill_path / "skill.md").exists():
+        print(
+            f"Error: No SKILL.md found in {skill_path}\nA valid skill directory must contain a SKILL.md file.",
+            file=sys.stderr,
+        )
         return 1
 
     report = validate_skill(skill_path)
@@ -687,6 +637,8 @@ def main() -> int:
     else:
         print_results(report, args.verbose)
 
+    if args.strict:
+        return report.exit_code_strict()
     return report.exit_code
 
 

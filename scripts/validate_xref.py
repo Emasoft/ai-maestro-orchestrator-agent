@@ -33,7 +33,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from validation_common import (
+from cpv_validation_common import (
     COLORS,
     SKIP_DIRS,
     ValidationReport,
@@ -717,8 +717,22 @@ Exit codes:
 
     args = parser.parse_args()
 
+    # Resolve to absolute path so relative_to() works correctly
+    plugin_path = Path(args.plugin_path).resolve()
+
+    # Verify this is a plugin directory
+    if not plugin_path.is_dir():
+        print(f"Error: {plugin_path} is not a directory", file=sys.stderr)
+        return 1
+    if not (plugin_path / ".claude-plugin").is_dir():
+        print(
+            f"Error: No Claude Code plugin found at {plugin_path}\nExpected a .claude-plugin/ directory.",
+            file=sys.stderr,
+        )
+        return 1
+
     # Run validation
-    report = validate_cross_references(args.plugin_path)
+    report = validate_cross_references(plugin_path)
 
     # Output results
     if args.json:

@@ -40,7 +40,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from validation_common import ValidationReport
+from cpv_validation_common import ValidationReport
 
 # =============================================================================
 # Documentation Validation Report
@@ -829,12 +829,25 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
-    plugin_path = Path(args.plugin_path)
+    plugin_path = Path(args.plugin_path).resolve()
 
     if not plugin_path.exists():
         print(f"Error: {plugin_path} does not exist", file=sys.stderr)
+        return 1
+
+    if not plugin_path.is_dir():
+        print(f"Error: {plugin_path} is not a directory", file=sys.stderr)
+        return 1
+
+    # Verify this is a plugin directory
+    if not (plugin_path / ".claude-plugin").is_dir():
+        print(
+            f"Error: No Claude Code plugin found at {plugin_path}\nExpected a .claude-plugin/ directory.",
+            file=sys.stderr,
+        )
         return 1
 
     report = validate_documentation(plugin_path)
@@ -844,6 +857,8 @@ def main() -> int:
     else:
         print_results(report, args.verbose)
 
+    if args.strict:
+        return report.exit_code_strict()
     return report.exit_code
 
 

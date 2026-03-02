@@ -29,59 +29,74 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from cpv_validation_common import (
+    SEMVER_PATTERN,
+    Level,
+)
+from cpv_validation_common import (
+    ValidationReport as BaseValidationReport,
+)
+from cpv_validation_common import (
+    ValidationResult as BaseValidationResult,
+)
+
 # =============================================================================
-# Data Classes
+# Data Classes — extend canonical cpv_validation_common types
 # =============================================================================
 
 
 @dataclass
-class ValidationResult:
-    """Result of a single validation check."""
+class MarketplaceValidationResult(BaseValidationResult):
+    """Extended validation result with marketplace-specific fields."""
 
-    level: str  # "critical", "major", "minor", "info"
-    category: str  # "structure", "manifest", "plugin", "config"
-    message: str
-    file_path: str | None = None
-    line_number: int | None = None
+    category: str = ""
     suggestion: str | None = None
 
+    @property
+    def file_path(self) -> str | None:
+        """Alias for backward compatibility — maps to canonical 'file' field."""
+        return self.file
+
+    @property
+    def line_number(self) -> int | None:
+        """Alias for backward compatibility — maps to canonical 'line' field."""
+        return self.line
+
 
 @dataclass
-class ValidationReport:
-    """Complete validation report for a marketplace."""
+class MarketplaceValidationReport(BaseValidationReport):
+    """Extended marketplace validation report with marketplace-specific fields."""
 
-    marketplace_path: Path
+    marketplace_path: Path = field(default_factory=lambda: Path("."))
     marketplace_name: str | None = None
-    results: list[ValidationResult] = field(default_factory=list)
     plugins_found: list[str] = field(default_factory=list)
     plugins_validated: int = 0
     plugins_failed: int = 0
 
-    def add(self, result: ValidationResult) -> None:
-        """Add a validation result."""
+    def add_marketplace_result(
+        self,
+        level: Level,
+        message: str,
+        file: str | None = None,
+        line: int | None = None,
+        category: str = "",
+        suggestion: str | None = None,
+    ) -> None:
+        """Add a marketplace-specific validation result with category/suggestion."""
+        result = MarketplaceValidationResult(
+            level=level,
+            message=message,
+            file=file,
+            line=line,
+            category=category,
+            suggestion=suggestion,
+        )
         self.results.append(result)
 
-    def has_critical(self) -> bool:
-        """Check if there are critical issues."""
-        return any(r.level == "critical" for r in self.results)
 
-    def has_major(self) -> bool:
-        """Check if there are major issues."""
-        return any(r.level == "major" for r in self.results)
-
-    def has_minor(self) -> bool:
-        """Check if there are minor issues."""
-        return any(r.level == "minor" for r in self.results)
-
-    def exit_code(self) -> int:
-        """Return appropriate exit code based on results."""
-        if self.has_critical():
-            return 1
-        if self.has_major():
-            return 2
-        if self.has_minor():
-            return 3
-        return 0
+# Backward-compatibility aliases — existing code can still use these names
+ValidationResult = MarketplaceValidationResult
+ValidationReport = MarketplaceValidationReport
 
 
 # =============================================================================
@@ -89,13 +104,13 @@ class ValidationReport:
 # =============================================================================
 
 # Valid source types for plugins in a marketplace
-VALID_SOURCE_TYPES = {"github", "url", "npm"}
+VALID_SOURCE_TYPES = {"github", "url", "npm", "pip"}
 
 # Required fields in marketplace.json
-REQUIRED_MARKETPLACE_FIELDS = {"name", "plugins"}
+REQUIRED_MARKETPLACE_FIELDS = {"name", "owner", "plugins"}
 
 # Required fields for each plugin entry
-REQUIRED_PLUGIN_FIELDS = {"name"}
+REQUIRED_PLUGIN_FIELDS = {"name", "source"}
 
 # Optional plugin fields
 OPTIONAL_PLUGIN_FIELDS = {
@@ -111,6 +126,15 @@ OPTIONAL_PLUGIN_FIELDS = {
     "category",
     "dependencies",
     "enabled",
+    "strict",
+    "homepage",
+    "commands",
+    "agents",
+    "skills",
+    "hooks",
+    "mcpServers",
+    "lspServers",
+    "outputStyles",
 }
 
 # Source-specific required fields
@@ -118,13 +142,24 @@ SOURCE_REQUIRED_FIELDS = {
     "github": {"repo"},
     "url": {"url"},
     "npm": {"package"},
+    "pip": {"package"},
+}
+
+# Reserved marketplace names that cannot be used
+RESERVED_MARKETPLACE_NAMES = {
+    "claude-code-marketplace",
+    "claude-code-plugins",
+    "claude-plugins-official",
+    "anthropic-marketplace",
+    "anthropic-plugins",
+    "agent-skills",
+    "life-sciences",
 }
 
 # Name validation pattern (kebab-case)
 NAME_PATTERN = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
 
-# Version pattern (semver-like)
-VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$")
+# VERSION_PATTERN imported from cpv_validation_common as SEMVER_PATTERN
 
 # Required README sections for GitHub deployment
 # These patterns match common section header formats (# Section, ## Section, ### Section)
@@ -202,10 +237,10 @@ def validate_marketplace_file(
     if not json_path.exists():
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="structure",
                 message=f"Marketplace configuration not found: {json_path}",
-                file_path=str(json_path),
+                file=str(json_path),
                 suggestion="Create a marketplace.json file with name and plugins fields",
             )
         )
@@ -218,11 +253,11 @@ def validate_marketplace_file(
     except json.JSONDecodeError as e:
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="manifest",
                 message=f"Invalid JSON in marketplace.json: {e}",
-                file_path=str(json_path),
-                line_number=e.lineno,
+                file=str(json_path),
+                line=e.lineno,
                 suggestion="Fix JSON syntax error",
             )
         )
@@ -230,10 +265,10 @@ def validate_marketplace_file(
     except Exception as e:
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="manifest",
                 message=f"Error reading marketplace.json: {e}",
-                file_path=str(json_path),
+                file=str(json_path),
             )
         )
         return None, results
@@ -242,10 +277,10 @@ def validate_marketplace_file(
     if not isinstance(data, dict):
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="manifest",
                 message="marketplace.json must be a JSON object",
-                file_path=str(json_path),
+                file=str(json_path),
                 suggestion="Root element should be a JSON object with name and plugins fields",
             )
         )
@@ -265,10 +300,10 @@ def validate_marketplace_name(name: Any, json_path: str) -> list[ValidationResul
     if not isinstance(name, str):
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="manifest",
                 message=f"Marketplace name must be a string, got {type(name).__name__}",
-                file_path=json_path,
+                file=json_path,
             )
         )
         return results
@@ -276,10 +311,10 @@ def validate_marketplace_name(name: Any, json_path: str) -> list[ValidationResul
     if not name:
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="manifest",
                 message="Marketplace name cannot be empty",
-                file_path=json_path,
+                file=json_path,
             )
         )
         return results
@@ -288,11 +323,22 @@ def validate_marketplace_name(name: Any, json_path: str) -> list[ValidationResul
     if not NAME_PATTERN.match(name):
         results.append(
             ValidationResult(
-                level="minor",
+                level="MINOR",
                 category="manifest",
                 message=f"Marketplace name '{name}' should use kebab-case (lowercase with hyphens)",
-                file_path=json_path,
+                file=json_path,
                 suggestion="Use format: my-marketplace-name",
+            )
+        )
+
+    # Check reserved marketplace names
+    if name in RESERVED_MARKETPLACE_NAMES:
+        results.append(
+            ValidationResult(
+                level="CRITICAL",
+                category="marketplace",
+                message=f"Marketplace name '{name}' is reserved and cannot be used",
+                file=json_path,
             )
         )
 
@@ -314,10 +360,10 @@ def validate_plugin_entry(
         if field_name not in plugin:
             results.append(
                 ValidationResult(
-                    level="critical",
+                    level="CRITICAL",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' missing required field: {field_name}",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
 
@@ -327,10 +373,10 @@ def validate_plugin_entry(
         if not NAME_PATTERN.match(name):
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="plugin",
                     message=f"Plugin name '{name}' should use kebab-case",
-                    file_path=json_path,
+                    file=json_path,
                     suggestion="Use format: my-plugin-name",
                 )
             )
@@ -341,19 +387,19 @@ def validate_plugin_entry(
         if not isinstance(version, str):
             results.append(
                 ValidationResult(
-                    level="major",
+                    level="MAJOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' version must be a string",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
-        elif not VERSION_PATTERN.match(version):
+        elif not SEMVER_PATTERN.match(version):
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' version '{version}' should follow semver format",
-                    file_path=json_path,
+                    file=json_path,
                     suggestion="Use format: X.Y.Z (e.g., 1.0.0)",
                 )
             )
@@ -379,10 +425,10 @@ def validate_plugin_entry(
         if field_name not in known_fields:
             results.append(
                 ValidationResult(
-                    level="info",
+                    level="INFO",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' has unknown field: {field_name}",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
 
@@ -392,19 +438,19 @@ def validate_plugin_entry(
         if not isinstance(tags, list):
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' tags must be an array",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
         elif not all(isinstance(t, str) for t in tags):
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' tags must be strings",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
 
@@ -414,19 +460,19 @@ def validate_plugin_entry(
         if not isinstance(deps, list):
             results.append(
                 ValidationResult(
-                    level="major",
+                    level="MAJOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' dependencies must be an array",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
         elif not all(isinstance(d, str) for d in deps):
             results.append(
                 ValidationResult(
-                    level="major",
+                    level="MAJOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' dependencies must be strings",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
 
@@ -453,20 +499,20 @@ def validate_plugin_source(
                 if not resolved.exists():
                     results.append(
                         ValidationResult(
-                            level="major",
+                            level="MAJOR",
                             category="plugin",
                             message=f"Plugin '{plugin_id}' source path does not exist: {resolved}",
-                            file_path=json_path,
+                            file=json_path,
                             suggestion="Ensure the plugin directory exists at the specified path",
                         )
                     )
             elif source not in VALID_SOURCE_TYPES:
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="plugin",
                         message=f"Plugin '{plugin_id}' has invalid source type: {source}",
-                        file_path=json_path,
+                        file=json_path,
                         suggestion=(
                             f"Valid source types: {', '.join(sorted(VALID_SOURCE_TYPES))} or relative path (./path)"
                         ),
@@ -475,10 +521,10 @@ def validate_plugin_source(
         else:
             results.append(
                 ValidationResult(
-                    level="major",
+                    level="MAJOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' source must be a string or object",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
         return results
@@ -488,20 +534,20 @@ def validate_plugin_source(
     if source_type is None:
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' source missing 'source' field",
-                file_path=json_path,
+                file=json_path,
                 suggestion=f"Add source: {', '.join(sorted(VALID_SOURCE_TYPES))}",
             )
         )
     elif source_type not in VALID_SOURCE_TYPES:
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' has invalid source type: {source_type}",
-                file_path=json_path,
+                file=json_path,
                 suggestion=f"Valid source types: {', '.join(sorted(VALID_SOURCE_TYPES))}",
             )
         )
@@ -512,10 +558,23 @@ def validate_plugin_source(
             if field_name not in source and field_name not in plugin:
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="plugin",
                         message=f"Plugin '{plugin_id}' with source type '{source_type}' requires '{field_name}'",
-                        file_path=json_path,
+                        file=json_path,
+                    )
+                )
+
+        # Validate SHA format for GitHub sources
+        if "sha" in source:
+            sha = source["sha"]
+            if not isinstance(sha, str) or not re.match(r"^[0-9a-f]{40}$", sha):
+                results.append(
+                    ValidationResult(
+                        level="MINOR",
+                        category="source",
+                        message=f"Plugin '{plugin_id}' source 'sha' must be a 40-character hex string",
+                        file=json_path,
                     )
                 )
 
@@ -528,10 +587,10 @@ def validate_plugin_source(
             if local_plugin_path.exists() and local_plugin_path.is_dir() and git_marker.exists():
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="plugin",
                         message=f"Plugin '{plugin_id}' uses remote source but exists as local submodule",
-                        file_path=json_path,
+                        file=json_path,
                         suggestion=(
                             f"Remove the local submodule checkout at './{plugin_name}' "
                             f"or change source to a relative path string"
@@ -554,10 +613,10 @@ def validate_local_path(
     if not isinstance(local_path, str):
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' path must be a string",
-                file_path=json_path,
+                file=json_path,
             )
         )
         return results
@@ -569,10 +628,10 @@ def validate_local_path(
         resolved = Path(local_path)
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' uses absolute path: {local_path}",
-                file_path=json_path,
+                file=json_path,
                 suggestion=(
                     "Absolute paths expose local filesystem structure and may contain usernames. "
                     "Use relative paths (starting with ./) for local plugin references. "
@@ -588,20 +647,20 @@ def validate_local_path(
     if not resolved.exists():
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' local path does not exist: {resolved}",
-                file_path=json_path,
+                file=json_path,
                 suggestion="Ensure the path is relative to the marketplace directory or use absolute path",
             )
         )
     elif not resolved.is_dir():
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' local path is not a directory: {resolved}",
-                file_path=json_path,
+                file=json_path,
             )
         )
     else:
@@ -613,10 +672,10 @@ def validate_local_path(
             if not alt_plugin_json.exists():
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="plugin",
                         message=f"Plugin '{plugin_id}' directory missing plugin.json",
-                        file_path=str(resolved),
+                        file=str(resolved),
                         suggestion="Add .claude-plugin/plugin.json to the plugin directory",
                     )
                 )
@@ -625,10 +684,10 @@ def validate_local_path(
     if ".." in local_path:
         results.append(
             ValidationResult(
-                level="minor",
+                level="MINOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' path contains '..' (path traversal)",
-                file_path=json_path,
+                file=json_path,
                 suggestion="Use absolute paths or paths without parent directory references",
             )
         )
@@ -647,10 +706,10 @@ def validate_repository_url(
     if not isinstance(repository, str):
         results.append(
             ValidationResult(
-                level="minor",
+                level="MINOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' repository must be a string",
-                file_path=json_path,
+                file=json_path,
             )
         )
         return results
@@ -665,29 +724,29 @@ def validate_repository_url(
             else:
                 results.append(
                     ValidationResult(
-                        level="minor",
+                        level="MINOR",
                         category="plugin",
                         message=f"Plugin '{plugin_id}' repository URL may be invalid: {repository}",
-                        file_path=json_path,
+                        file=json_path,
                         suggestion="Use full URL or GitHub shorthand (owner/repo)",
                     )
                 )
         elif parsed.scheme not in ("http", "https", "git", "ssh"):
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="plugin",
                     message=f"Plugin '{plugin_id}' repository has unusual scheme: {parsed.scheme}",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
     except Exception:
         results.append(
             ValidationResult(
-                level="minor",
+                level="MINOR",
                 category="plugin",
                 message=f"Plugin '{plugin_id}' repository URL could not be parsed",
-                file_path=json_path,
+                file=json_path,
             )
         )
 
@@ -706,10 +765,10 @@ def validate_plugins_array(
     if not isinstance(plugins, list):
         results.append(
             ValidationResult(
-                level="critical",
+                level="CRITICAL",
                 category="manifest",
                 message="plugins field must be an array",
-                file_path=json_path,
+                file=json_path,
                 suggestion="plugins: [{name: 'plugin-a'}, {name: 'plugin-b'}]",
             )
         )
@@ -718,10 +777,10 @@ def validate_plugins_array(
     if len(plugins) == 0:
         results.append(
             ValidationResult(
-                level="minor",
+                level="MINOR",
                 category="manifest",
                 message="plugins array is empty",
-                file_path=json_path,
+                file=json_path,
             )
         )
         return plugin_names, results
@@ -732,10 +791,10 @@ def validate_plugins_array(
         if not isinstance(plugin, dict):
             results.append(
                 ValidationResult(
-                    level="critical",
+                    level="CRITICAL",
                     category="plugin",
                     message=f"plugins[{i}] must be an object, got {type(plugin).__name__}",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
             continue
@@ -749,10 +808,10 @@ def validate_plugins_array(
             if name in seen_names:
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="plugin",
                         message=f"Duplicate plugin name: {name}",
-                        file_path=json_path,
+                        file=json_path,
                         suggestion="Each plugin must have a unique name",
                     )
                 )
@@ -795,10 +854,10 @@ def validate_github_deployment(
     if not readme_path.exists():
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="deployment",
                 message="Missing README.md at marketplace root",
-                file_path=str(marketplace_dir),
+                file=str(marketplace_dir),
                 suggestion="Create a README.md with installation instructions for users",
             )
         )
@@ -833,10 +892,10 @@ def validate_github_deployment(
             if not plugin_readme.exists():
                 results.append(
                     ValidationResult(
-                        level="minor",
+                        level="MINOR",
                         category="deployment",
                         message=f"Plugin '{plugin_name}' subfolder missing README.md",
-                        file_path=str(plugin_path),
+                        file=str(plugin_path),
                         suggestion="Add README.md to plugin subfolder describing the plugin",
                     )
                 )
@@ -861,10 +920,10 @@ def validate_readme_content(readme_path: Path) -> list[ValidationResult]:
     except Exception as e:
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="deployment",
                 message=f"Could not read README.md: {e}",
-                file_path=str(readme_path),
+                file=str(readme_path),
             )
         )
         return results
@@ -878,10 +937,10 @@ def validate_readme_content(readme_path: Path) -> list[ValidationResult]:
     if missing_sections:
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="deployment",
                 message=f"README.md missing required sections: {', '.join(missing_sections)}",
-                file_path=str(readme_path),
+                file=str(readme_path),
                 suggestion="Add sections: ## Installation, ## Update, ## Uninstall, ## Troubleshooting",
             )
         )
@@ -896,10 +955,10 @@ def validate_readme_content(readme_path: Path) -> list[ValidationResult]:
         if missing_steps:
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="deployment",
                     message=(f"README.md Installation section may be incomplete. Missing: {', '.join(missing_steps)}"),
-                    file_path=str(readme_path),
+                    file=str(readme_path),
                     suggestion=(
                         "Include steps for: add marketplace, install plugin, verify installation, restart Claude Code"
                     ),
@@ -918,10 +977,10 @@ def validate_readme_content(readme_path: Path) -> list[ValidationResult]:
         if re.search(placeholder_pattern, content, re.IGNORECASE):
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="deployment",
                     message="README.md contains placeholder content",
-                    file_path=str(readme_path),
+                    file=str(readme_path),
                     suggestion="Replace all placeholders with actual content before publishing",
                 )
             )
@@ -937,10 +996,10 @@ def validate_readme_content(readme_path: Path) -> list[ValidationResult]:
         if missing_topics:
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="deployment",
                     message=f"README.md Troubleshooting section missing important topics: {', '.join(missing_topics)}",
-                    file_path=str(readme_path),
+                    file=str(readme_path),
                     suggestion=(
                         "Document common issues: hook path not found after update, "
                         "old version after update, restart required after install/update"
@@ -978,10 +1037,10 @@ def validate_git_submodules(
     if not git_dir.exists():
         results.append(
             ValidationResult(
-                level="info",
+                level="INFO",
                 category="submodule",
                 message="Marketplace is not a git repository, skipping submodule validation",
-                file_path=str(marketplace_dir),
+                file=str(marketplace_dir),
             )
         )
         return results
@@ -1006,20 +1065,20 @@ def validate_git_submodules(
             # All plugins use URL-based git sources, submodules are not needed
             results.append(
                 ValidationResult(
-                    level="info",
+                    level="INFO",
                     category="submodule",
                     message="All plugins use URL-based git sources, no submodules required",
-                    file_path=str(marketplace_dir),
+                    file=str(marketplace_dir),
                 )
             )
         elif has_local_dirs:
             # Some plugins have local directories but no .gitmodules - likely misconfigured
             results.append(
                 ValidationResult(
-                    level="major",
+                    level="MAJOR",
                     category="submodule",
                     message="Missing .gitmodules file - local plugin directories exist but are not git submodules",
-                    file_path=str(marketplace_dir),
+                    file=str(marketplace_dir),
                     suggestion=(
                         "Either convert local directories to git submodules with "
                         "'git submodule add <repo-url> <plugin-name>', "
@@ -1036,10 +1095,10 @@ def validate_git_submodules(
     except Exception as e:
         results.append(
             ValidationResult(
-                level="major",
+                level="MAJOR",
                 category="submodule",
                 message=f"Could not parse .gitmodules file: {e}",
-                file_path=str(gitmodules_path),
+                file=str(gitmodules_path),
             )
         )
         return results
@@ -1077,12 +1136,12 @@ def validate_git_submodules(
             if expected_repo:
                 results.append(
                     ValidationResult(
-                        level="info",
+                        level="INFO",
                         category="submodule",
                         message=(
                             f"Plugin '{plugin_name}' has git source but no local directory (acceptable for remote-only)"
                         ),
-                        file_path=str(plugin_path),
+                        file=str(plugin_path),
                     )
                 )
             continue
@@ -1099,10 +1158,10 @@ def validate_git_submodules(
             if not found:
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="submodule",
                         message=f"Plugin '{plugin_name}' directory exists but is not a git submodule",
-                        file_path=str(plugin_path),
+                        file=str(plugin_path),
                         suggestion=(
                             f"Convert to submodule: 'git rm -r {plugin_name} && "
                             f"git submodule add <repo-url> {plugin_name}'"
@@ -1121,10 +1180,10 @@ def validate_git_submodules(
             if norm_submod != norm_expected:
                 results.append(
                     ValidationResult(
-                        level="minor",
+                        level="MINOR",
                         category="submodule",
                         message=f"Plugin '{plugin_name}' submodule URL differs from source repository",
-                        file_path=str(gitmodules_path),
+                        file=str(gitmodules_path),
                         suggestion=f"Submodule: {submod_url}, Source: {expected_repo}",
                     )
                 )
@@ -1145,10 +1204,10 @@ def validate_git_submodules(
                 if result.stdout.startswith("-"):
                     results.append(
                         ValidationResult(
-                            level="minor",
+                            level="MINOR",
                             category="submodule",
                             message=f"Plugin '{plugin_name}' submodule is not initialized",
-                            file_path=str(plugin_path),
+                            file=str(plugin_path),
                             suggestion="Run 'git submodule update --init --recursive' to initialize",
                         )
                     )
@@ -1156,15 +1215,15 @@ def validate_git_submodules(
                 pass  # Git command failed, skip this check
 
     # Info message if all checks passed
-    if not any(r.level in ("critical", "major") for r in results):
+    if not any(r.level in ("CRITICAL", "MAJOR") for r in results):
         submod_count = len([p for p in plugins if p.get("name") in submodules])
         if submod_count > 0:
             results.append(
                 ValidationResult(
-                    level="info",
+                    level="INFO",
                     category="submodule",
                     message=f"Found {submod_count} plugin(s) configured as git submodules",
-                    file_path=str(gitmodules_path),
+                    file=str(gitmodules_path),
                 )
             )
 
@@ -1197,7 +1256,7 @@ def validate_marketplace_private_info(
 
     # Import the shared scanning functions
     try:
-        from validation_common import (
+        from cpv_validation_common import (
             ABSOLUTE_PATH_PATTERNS,
             ALLOWED_DOC_PATH_PREFIXES,
             EXAMPLE_USERNAMES,
@@ -1207,13 +1266,13 @@ def validate_marketplace_private_info(
             build_private_path_patterns,
         )
     except ImportError:
-        # Fallback if validation_common is not available
+        # Fallback if cpv_validation_common is not available
         results.append(
             ValidationResult(
-                level="info",
+                level="INFO",
                 category="private-info",
-                message="Could not import validation_common, skipping private info scan",
-                file_path=str(marketplace_dir),
+                message="Could not import cpv_validation_common, skipping private info scan",
+                file=str(marketplace_dir),
             )
         )
         return results
@@ -1239,12 +1298,12 @@ def validate_marketplace_private_info(
                 line_num = content[: match.start()].count("\n") + 1
                 results.append(
                     ValidationResult(
-                        level="critical",
+                        level="CRITICAL",
                         category="private-info",
                         message=f"Private path leaked: {desc} - '{matched_text}' "
                         "(use relative path or ${CLAUDE_PLUGIN_ROOT})",
-                        file_path=rel_path,
-                        line_number=line_num,
+                        file=rel_path,
+                        line=line_num,
                     )
                 )
 
@@ -1276,12 +1335,12 @@ def validate_marketplace_private_info(
                 line_num = content[: match.start()].count("\n") + 1
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="private-info",
                         message=f"Absolute path found: '{matched_text[:60]}...' "
                         "(use relative path, ${CLAUDE_PLUGIN_ROOT}, or ${HOME})",
-                        file_path=rel_path,
-                        line_number=line_num,
+                        file=rel_path,
+                        line=line_num,
                     )
                 )
 
@@ -1340,16 +1399,16 @@ def validate_marketplace_private_info(
             total_files += scan_directory(plugin_path, plugin_name)
 
     # Summary
-    critical_count = sum(1 for r in results if r.level == "critical")
-    major_count = sum(1 for r in results if r.level == "major")
+    critical_count = sum(1 for r in results if r.level == "CRITICAL")
+    major_count = sum(1 for r in results if r.level == "MAJOR")
 
     if critical_count == 0 and major_count == 0:
         results.append(
             ValidationResult(
-                level="info",
+                level="INFO",
                 category="private-info",
                 message=f"No private info found in marketplace ({total_files} files scanned)",
-                file_path=str(marketplace_dir),
+                file=str(marketplace_dir),
             )
         )
 
@@ -1386,11 +1445,11 @@ def validate_github_source_required(
         if not repository:
             results.append(
                 ValidationResult(
-                    level="major",
+                    level="MAJOR",
                     category="github-source",
                     message=f"Plugin '{plugin_name}' missing 'repository' field - "
                     "required for GitHub marketplace publishing",
-                    file_path=json_path,
+                    file=json_path,
                     suggestion=f'Add: "repository": "https://github.com/OWNER/{plugin_name}"',
                 )
             )
@@ -1400,10 +1459,10 @@ def validate_github_source_required(
         if not isinstance(repository, str):
             results.append(
                 ValidationResult(
-                    level="major",
+                    level="MAJOR",
                     category="github-source",
                     message=f"Plugin '{plugin_name}' repository must be a string URL",
-                    file_path=json_path,
+                    file=json_path,
                 )
             )
             continue
@@ -1416,10 +1475,10 @@ def validate_github_source_required(
         ):  # Allow shorthand owner/repo
             results.append(
                 ValidationResult(
-                    level="minor",
+                    level="MINOR",
                     category="github-source",
                     message=f"Plugin '{plugin_name}' repository doesn't look like a GitHub URL: {repository}",
-                    file_path=json_path,
+                    file=json_path,
                     suggestion="Use format: https://github.com/OWNER/REPO",
                 )
             )
@@ -1431,21 +1490,21 @@ def validate_github_source_required(
                 # Remote source - this is OK but submodule is preferred
                 results.append(
                     ValidationResult(
-                        level="info",
+                        level="INFO",
                         category="github-source",
                         message=f"Plugin '{plugin_name}' uses remote source instead of local submodule",
-                        file_path=json_path,
+                        file=json_path,
                         suggestion="Consider using git submodules with source: './{plugin_name}'",
                     )
                 )
 
-    if not any(r.level in ("critical", "major") for r in results):
+    if not any(r.level in ("CRITICAL", "MAJOR") for r in results):
         results.append(
             ValidationResult(
-                level="info",
+                level="INFO",
                 category="github-source",
                 message=f"All {len(plugins)} plugins have valid repository URLs",
-                file_path=json_path,
+                file=json_path,
             )
         )
 
@@ -1520,14 +1579,14 @@ def validate_workflow_inline_python(
 
                 results.append(
                     ValidationResult(
-                        level="major",
+                        level="MAJOR",
                         category="workflow",
                         message=(
                             f"Inline Python uses dict bracket access in f-string: {snippet} "
                             "-- shell quoting will strip inner quotes causing NameError at runtime"
                         ),
-                        file_path=rel_path,
-                        line_number=line_num,
+                        file=rel_path,
+                        line=line_num,
                         suggestion=(
                             "Extract dict value into a local variable before using it in an f-string. "
                             "Example: val = mydict.get('key', ''); print(f'value: {val}')"
@@ -1538,10 +1597,10 @@ def validate_workflow_inline_python(
     if not results:
         results.append(
             ValidationResult(
-                level="info",
+                level="INFO",
                 category="workflow",
                 message=f"No dangerous inline Python patterns found in {len(yaml_files)} workflow file(s)",
-                file_path=str(workflows_dir),
+                file=str(workflows_dir),
             )
         )
 
@@ -1573,14 +1632,30 @@ def validate_marketplace(marketplace_path: Path) -> ValidationReport:
     # Check required fields
     for field_name in REQUIRED_MARKETPLACE_FIELDS:
         if field_name not in data:
-            report.add(
-                ValidationResult(
-                    level="critical",
-                    category="manifest",
-                    message=f"Missing required field: {field_name}",
-                    file_path=json_path,
-                )
+            report.add_marketplace_result(
+                level="CRITICAL",
+                category="manifest",
+                message=f"Missing required field: {field_name}",
+                file=json_path,
             )
+
+    # Validate owner field structure
+    owner = data.get("owner")
+    if isinstance(owner, dict):
+        if "name" not in owner:
+            report.add_marketplace_result(
+                level="MAJOR",
+                category="marketplace",
+                message="'owner' object missing required 'name' field",
+                file=json_path,
+            )
+    elif owner is not None:
+        report.add_marketplace_result(
+            level="MAJOR",
+            category="marketplace",
+            message=f"'owner' must be an object with a 'name' field, got {type(owner).__name__}",
+            file=json_path,
+        )
 
     # Validate name
     name = data.get("name")
@@ -1619,34 +1694,28 @@ def validate_marketplace(marketplace_path: Path) -> ValidationReport:
 
     # Validate optional fields
     if "description" in data and not isinstance(data["description"], str):
-        report.add(
-            ValidationResult(
-                level="minor",
-                category="manifest",
-                message="description field must be a string",
-                file_path=json_path,
-            )
+        report.add_marketplace_result(
+            level="MINOR",
+            category="manifest",
+            message="description field must be a string",
+            file=json_path,
         )
 
     if "version" in data:
         version = data["version"]
         if not isinstance(version, str):
-            report.add(
-                ValidationResult(
-                    level="minor",
-                    category="manifest",
-                    message="version field must be a string",
-                    file_path=json_path,
-                )
+            report.add_marketplace_result(
+                level="MINOR",
+                category="manifest",
+                message="version field must be a string",
+                file=json_path,
             )
-        elif not VERSION_PATTERN.match(version):
-            report.add(
-                ValidationResult(
-                    level="minor",
-                    category="manifest",
-                    message=f"Marketplace version '{version}' should follow semver format",
-                    file_path=json_path,
-                )
+        elif not SEMVER_PATTERN.match(version):
+            report.add_marketplace_result(
+                level="MINOR",
+                category="manifest",
+                message=f"Marketplace version '{version}' should follow semver format",
+                file=json_path,
             )
 
     return report
@@ -1674,10 +1743,10 @@ def format_report(report: ValidationReport, verbose: bool = False) -> str:
     lines.append("")
 
     # Group results by level
-    critical = [r for r in report.results if r.level == "critical"]
-    major = [r for r in report.results if r.level == "major"]
-    minor = [r for r in report.results if r.level == "minor"]
-    info = [r for r in report.results if r.level == "info"]
+    critical = [r for r in report.results if r.level == "CRITICAL"]
+    major = [r for r in report.results if r.level == "MAJOR"]
+    minor = [r for r in report.results if r.level == "MINOR"]
+    info = [r for r in report.results if r.level == "INFO"]
 
     # Summary
     lines.append(f"Critical Issues: {len(critical)}")
@@ -1688,15 +1757,20 @@ def format_report(report: ValidationReport, verbose: bool = False) -> str:
     lines.append("")
 
     # Details
-    def format_result(r: ValidationResult) -> list[str]:
-        result_lines = [f"  [{r.level.upper()}] [{r.category}] {r.message}"]
-        if r.file_path:
-            loc = r.file_path
-            if r.line_number:
-                loc += f":{r.line_number}"
+    def format_result(r: BaseValidationResult) -> list[str]:
+        category = getattr(r, "category", "")
+        category_str = f" [{category}]" if category else ""
+        result_lines = [f"  [{r.level}]{category_str} {r.message}"]
+        file_val = getattr(r, "file", None) or getattr(r, "file_path", None)
+        line_val = getattr(r, "line", None) or getattr(r, "line_number", None)
+        if file_val:
+            loc = str(file_val)
+            if line_val:
+                loc += f":{line_val}"
             result_lines.append(f"    Location: {loc}")
-        if r.suggestion:
-            result_lines.append(f"    Suggestion: {r.suggestion}")
+        suggestion = getattr(r, "suggestion", None)
+        if suggestion:
+            result_lines.append(f"    Suggestion: {suggestion}")
         return result_lines
 
     if critical:
@@ -1725,11 +1799,11 @@ def format_report(report: ValidationReport, verbose: bool = False) -> str:
 
     # Final status
     lines.append("=" * 60)
-    if report.has_critical():
+    if report.has_critical:
         lines.append("RESULT: FAILED (critical issues found)")
-    elif report.has_major():
+    elif report.has_major:
         lines.append("RESULT: FAILED (major issues found)")
-    elif report.has_minor():
+    elif report.has_minor:
         lines.append("RESULT: PASSED with warnings")
     else:
         lines.append("RESULT: PASSED")
@@ -1772,11 +1846,30 @@ Examples:
         action="store_true",
         help="Output results as JSON",
     )
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
 
     args = parser.parse_args()
 
+    # Resolve to absolute path so relative_to() works correctly
+    marketplace_path = args.marketplace_path.resolve()
+
+    # Verify path exists and contains marketplace content
+    if not marketplace_path.exists():
+        print(f"Error: {marketplace_path} does not exist", file=sys.stderr)
+        return 1
+    if marketplace_path.is_dir() and not (marketplace_path / "marketplace.json").exists():
+        print(
+            f"Error: No marketplace.json found at {marketplace_path}\n"
+            f"Expected a marketplace directory with marketplace.json.",
+            file=sys.stderr,
+        )
+        return 1
+    if marketplace_path.is_file() and marketplace_path.name != "marketplace.json":
+        print(f"Error: {marketplace_path} is not a marketplace.json file", file=sys.stderr)
+        return 1
+
     # Run validation
-    report = validate_marketplace(args.marketplace_path)
+    report = validate_marketplace(marketplace_path)
 
     # Output results
     if args.json:
@@ -1794,20 +1887,21 @@ Examples:
                     "suggestion": r.suggestion,
                 }
                 for r in report.results
+                if isinstance(r, MarketplaceValidationResult)
             ],
             "summary": {
-                "critical": sum(1 for r in report.results if r.level == "critical"),
-                "major": sum(1 for r in report.results if r.level == "major"),
-                "minor": sum(1 for r in report.results if r.level == "minor"),
-                "info": sum(1 for r in report.results if r.level == "info"),
+                "critical": sum(1 for r in report.results if r.level == "CRITICAL"),
+                "major": sum(1 for r in report.results if r.level == "MAJOR"),
+                "minor": sum(1 for r in report.results if r.level == "MINOR"),
+                "info": sum(1 for r in report.results if r.level == "INFO"),
             },
-            "exit_code": report.exit_code(),
+            "exit_code": report.exit_code_strict() if args.strict else report.exit_code,
         }
         print(json.dumps(output, indent=2))
     else:
         print(format_report(report, args.verbose))
 
-    return report.exit_code()
+    return report.exit_code_strict() if args.strict else report.exit_code
 
 
 if __name__ == "__main__":

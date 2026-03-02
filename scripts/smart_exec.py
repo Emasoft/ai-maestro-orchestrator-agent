@@ -42,12 +42,11 @@ import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
-
 
 # ----------------------------
 # Data model
 # ----------------------------
+
 
 @dataclass(frozen=True)
 class ToolSpec:
@@ -56,17 +55,17 @@ class ToolSpec:
     # ecosystem hint: "python", "node", "deno_builtin", "powershell_module", "native"
     ecosystem: str
     # package to fetch (PyPI or npm); None for built-ins
-    package: Optional[str] = None
+    package: str | None = None
     # actual command/binary to invoke (may differ from package)
-    command: Optional[str] = None
+    command: str | None = None
     # whether to prefer "latest" (where supported)
     prefer_latest: bool = True
     # optional docker fallback: (image, argv_prefix)
-    docker: Optional[Tuple[str, List[str]]] = None
+    docker: tuple[str, list[str]] | None = None
 
 
 # A starting tool database. Extend freely.
-TOOL_DB: Dict[str, ToolSpec] = {
+TOOL_DB: dict[str, ToolSpec] = {
     # ---- Python tools (PyPI) ----
     "ruff": ToolSpec("ruff", "python", package="ruff", command="ruff"),
     "mypy": ToolSpec("mypy", "python", package="mypy", command="mypy"),
@@ -75,13 +74,14 @@ TOOL_DB: Dict[str, ToolSpec] = {
     "pyright": ToolSpec("pyright", "python", package="pyright", command="pyright"),
     "sqlfluff": ToolSpec("sqlfluff", "python", package="sqlfluff", command="sqlfluff"),
     "yamllint": ToolSpec("yamllint", "python", package="yamllint", command="yamllint"),
-
     # ---- Node tools (npm) ----
     "eslint": ToolSpec("eslint", "node", package="eslint", command="eslint"),
     "prettier": ToolSpec("prettier", "node", package="prettier", command="prettier"),
     "stylelint": ToolSpec("stylelint", "node", package="stylelint", command="stylelint"),
     "htmlhint": ToolSpec("htmlhint", "node", package="htmlhint", command="htmlhint"),
-    "markdownlint-cli2": ToolSpec("markdownlint-cli2", "node", package="markdownlint-cli2", command="markdownlint-cli2"),
+    "markdownlint-cli2": ToolSpec(
+        "markdownlint-cli2", "node", package="markdownlint-cli2", command="markdownlint-cli2"
+    ),
     "textlint": ToolSpec("textlint", "node", package="textlint", command="textlint"),
     "jsonlint": ToolSpec("jsonlint", "node", package="jsonlint", command="jsonlint"),
     "yaml-lint": ToolSpec("yaml-lint", "node", package="yaml-lint", command="yaml-lint"),
@@ -90,16 +90,18 @@ TOOL_DB: Dict[str, ToolSpec] = {
     "spectral": ToolSpec("spectral", "node", package="@stoplight/spectral", command="spectral"),
     "@stoplight/spectral": ToolSpec("@stoplight/spectral", "node", package="@stoplight/spectral", command="spectral"),
     # npm-package-json-lint: CLI name != package name
-    "npm-package-json-lint": ToolSpec("npm-package-json-lint", "node", package="npm-package-json-lint", command="npmPkgJsonLint"),
+    "npm-package-json-lint": ToolSpec(
+        "npm-package-json-lint", "node", package="npm-package-json-lint", command="npmPkgJsonLint"
+    ),
     "npmPkgJsonLint": ToolSpec("npmPkgJsonLint", "node", package="npm-package-json-lint", command="npmPkgJsonLint"),
-    "sort-package-json": ToolSpec("sort-package-json", "node", package="sort-package-json", command="sort-package-json"),
+    "sort-package-json": ToolSpec(
+        "sort-package-json", "node", package="sort-package-json", command="sort-package-json"
+    ),
     "tsc": ToolSpec("tsc", "node", package="typescript", command="tsc"),
-
     # ---- Deno built-ins ----
     "deno-lint": ToolSpec("deno-lint", "deno_builtin", package=None, command="lint", prefer_latest=False),
     "deno-fmt": ToolSpec("deno-fmt", "deno_builtin", package=None, command="fmt", prefer_latest=False),
     "deno-check": ToolSpec("deno-check", "deno_builtin", package=None, command="check", prefer_latest=False),
-
     # ---- Native-ish tools (prefer wrappers; docker fallback included) ----
     "shellcheck": ToolSpec(
         "shellcheck",
@@ -122,15 +124,18 @@ TOOL_DB: Dict[str, ToolSpec] = {
         command="xmllint",
         docker=("alpine", ["sh", "-lc", "apk add --no-cache libxml2-utils >/dev/null && xmllint --noout"]),
     ),
-
     # ---- PowerShell module tools ----
-    "PSScriptAnalyzer": ToolSpec("PSScriptAnalyzer", "powershell_module", package="PSScriptAnalyzer", command="Invoke-ScriptAnalyzer"),
-    "Invoke-ScriptAnalyzer": ToolSpec("Invoke-ScriptAnalyzer", "powershell_module", package="PSScriptAnalyzer", command="Invoke-ScriptAnalyzer"),
+    "PSScriptAnalyzer": ToolSpec(
+        "PSScriptAnalyzer", "powershell_module", package="PSScriptAnalyzer", command="Invoke-ScriptAnalyzer"
+    ),
+    "Invoke-ScriptAnalyzer": ToolSpec(
+        "Invoke-ScriptAnalyzer", "powershell_module", package="PSScriptAnalyzer", command="Invoke-ScriptAnalyzer"
+    ),
 }
 
 
 # Executor preference per ecosystem
-PRIORITY: Dict[str, List[str]] = {
+PRIORITY: dict[str, list[str]] = {
     "python": ["uvx", "uv", "pipx"],
     "node": ["bunx", "pnpm", "npx", "npm", "yarn", "deno"],
     "deno_builtin": ["deno"],
@@ -143,7 +148,8 @@ PRIORITY: Dict[str, List[str]] = {
 # Executor detection
 # ----------------------------
 
-def which(cmd: str) -> Optional[str]:
+
+def which(cmd: str) -> str | None:
     return shutil.which(cmd)
 
 
@@ -151,7 +157,7 @@ def have(cmd: str) -> bool:
     return which(cmd) is not None
 
 
-def detect_executors() -> Dict[str, bool]:
+def detect_executors() -> dict[str, bool]:
     # bunx may be an executable, or `bun x` is available via bun itself
     bunx_ok = have("bunx") or have("bun")
     return {
@@ -170,7 +176,7 @@ def detect_executors() -> Dict[str, bool]:
     }
 
 
-def get_version(cmd: List[str]) -> Optional[str]:
+def get_version(cmd: list[str]) -> str | None:
     try:
         p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         if p.returncode != 0:
@@ -181,8 +187,8 @@ def get_version(cmd: List[str]) -> Optional[str]:
         return None
 
 
-def executor_versions() -> Dict[str, Optional[str]]:
-    v: Dict[str, Optional[str]] = {}
+def executor_versions() -> dict[str, str | None]:
+    v: dict[str, str | None] = {}
     if have("uvx"):
         v["uvx"] = get_version(["uvx", "--version"])
     elif have("uv"):
@@ -214,7 +220,8 @@ def executor_versions() -> Dict[str, Optional[str]]:
 # Command builders
 # ----------------------------
 
-def bunx_argv(pkg: str, cmd: str, tool_args: List[str]) -> List[str]:
+
+def bunx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
     # Bun supports -p/--package for package != command. (see: https://bun.com/docs/pm/bunx )
     base = ["bunx"] if have("bunx") else ["bun", "x"]
     if cmd == pkg:
@@ -222,37 +229,37 @@ def bunx_argv(pkg: str, cmd: str, tool_args: List[str]) -> List[str]:
     return base + ["-p", pkg, cmd] + tool_args
 
 
-def pnpm_dlx_argv(pkg: str, cmd: str, tool_args: List[str]) -> List[str]:
+def pnpm_dlx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
     # pnpm dlx runs the default bin; if cmd differs, place cmd explicitly.
     if cmd == pkg:
         return ["pnpm", "dlx", pkg] + tool_args
     return ["pnpm", "dlx", pkg, cmd] + tool_args
 
 
-def yarn_dlx_argv(pkg: str, cmd: str, tool_args: List[str]) -> List[str]:
+def yarn_dlx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
     if cmd == pkg:
         return ["yarn", "dlx", pkg] + tool_args
     return ["yarn", "dlx", "-p", pkg, cmd] + tool_args
 
 
-def npx_argv(pkg: str, cmd: str, tool_args: List[str]) -> List[str]:
+def npx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
     if cmd == pkg:
         return ["npx", "--yes", pkg] + tool_args
     return ["npx", "--yes", "-p", pkg, cmd] + tool_args
 
 
-def npm_exec_argv(pkg: str, cmd: str, tool_args: List[str]) -> List[str]:
+def npm_exec_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
     # npm exec --package=<pkg> -- <cmd> [args...]   (see: https://docs.npmjs.com/cli/v8/commands/npm-exec )
     return ["npm", "exec", "--yes", f"--package={pkg}", "--", cmd] + tool_args
 
 
-def deno_npm_argv(pkg: str, cmd: str, tool_args: List[str], latest: bool = True) -> List[str]:
+def deno_npm_argv(pkg: str, cmd: str, tool_args: list[str], latest: bool = True) -> list[str]:
     ver = "@latest" if latest else ""
     spec = f"npm:{pkg}{ver}"
     return ["deno", "run", "-A", spec, "--", cmd] + tool_args
 
 
-def uvx_argv(pkg: str, cmd: str, tool_args: List[str], latest: bool = True) -> List[str]:
+def uvx_argv(pkg: str, cmd: str, tool_args: list[str], latest: bool = True) -> list[str]:
     # uvx TOOL@latest ... (when pkg==cmd), else uvx --from <pkg> <cmd> ...
     if have("uvx"):
         if pkg == cmd:
@@ -269,16 +276,16 @@ def uvx_argv(pkg: str, cmd: str, tool_args: List[str], latest: bool = True) -> L
     raise RuntimeError("uvx/uv not available")
 
 
-def pipx_run_argv(pkg: str, tool_args: List[str]) -> List[str]:
+def pipx_run_argv(pkg: str, tool_args: list[str]) -> list[str]:
     # pipx can't reliably pick an arbitrary bin from a package; best effort:
     return ["pipx", "run", pkg] + tool_args
 
 
-def deno_builtin_argv(subcmd: str, tool_args: List[str]) -> List[str]:
+def deno_builtin_argv(subcmd: str, tool_args: list[str]) -> list[str]:
     return ["deno", subcmd] + tool_args
 
 
-def docker_argv(image: str, prefix: List[str], tool_args: List[str]) -> List[str]:
+def docker_argv(image: str, prefix: list[str], tool_args: list[str]) -> list[str]:
     cwd = os.getcwd()
     return ["docker", "run", "--rm", "-v", f"{cwd}:/w", "-w", "/w", image] + prefix + tool_args
 
@@ -288,7 +295,7 @@ def ps_quote(s: str) -> str:
     return "'" + s.replace("'", "''") + "'"
 
 
-def powershell_module_argv(module: str, cmdlet: str, cmdlet_args: List[str]) -> List[str]:
+def powershell_module_argv(module: str, cmdlet: str, cmdlet_args: list[str]) -> list[str]:
     """
     Download module to temp dir, import it, run cmdlet.
     """
@@ -312,6 +319,7 @@ Import-Module $psd1 -Force | Out-Null
 # Selection logic
 # ----------------------------
 
+
 def resolve_tool(tool_name: str) -> ToolSpec:
     if tool_name in TOOL_DB:
         return TOOL_DB[tool_name]
@@ -319,7 +327,7 @@ def resolve_tool(tool_name: str) -> ToolSpec:
     return ToolSpec(name=tool_name, ecosystem="node", package=tool_name, command=tool_name)
 
 
-def build_argv_for_executor(executor: str, spec: ToolSpec, tool_args: List[str]) -> Optional[List[str]]:
+def build_argv_for_executor(executor: str, spec: ToolSpec, tool_args: list[str]) -> list[str] | None:
     cmd = spec.command or spec.name
     pkg = spec.package or spec.name
 
@@ -389,7 +397,7 @@ def build_argv_for_executor(executor: str, spec: ToolSpec, tool_args: List[str])
     return None
 
 
-def choose_best(spec: ToolSpec, tool_args: List[str], executors: Dict[str, bool]) -> Tuple[List[str], str]:
+def choose_best(spec: ToolSpec, tool_args: list[str], executors: dict[str, bool]) -> tuple[list[str], str]:
     # Prefer direct if already available (fast, avoids downloads)
     direct_cmd = spec.command or spec.name
     if have(direct_cmd):
@@ -413,7 +421,8 @@ def choose_best(spec: ToolSpec, tool_args: List[str], executors: Dict[str, bool]
 # CLI
 # ----------------------------
 
-def parse_args(argv: List[str]) -> argparse.Namespace:
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
     p = argparse.ArgumentParser(prog="smart_exec.py")
     sub = p.add_subparsers(dest="subcmd", required=True)
 
@@ -445,7 +454,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     return p.parse_args(argv)
 
 
-def main(argv: List[str]) -> int:
+def main(argv: list[str]) -> int:
     ns = parse_args(argv)
     ex = detect_executors()
 

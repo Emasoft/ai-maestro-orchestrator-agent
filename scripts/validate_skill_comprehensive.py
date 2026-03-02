@@ -42,13 +42,28 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
+from cpv_validation_common import (
+    BUILTIN_AGENT_TYPES,
+    EXIT_CRITICAL,
+    EXIT_MAJOR,
+    EXIT_MINOR,
+    EXIT_OK,
+    VALID_CONTEXT_VALUES,
+    Level,
+    validate_toc_embedding,
+)
+from cpv_validation_common import (
+    ValidationReport as BaseValidationReport,
+)
+from cpv_validation_common import (
+    ValidationResult as BaseValidationResult,
+)
 
 # =============================================================================
 # Constants from Multiple Validation Sources
 # =============================================================================
 
-# Severity levels
-Level = Literal["CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"]
+# Level type imported from cpv_validation_common
 
 # Multi-scale scoring (0-3) from agent-validator
 Score = Literal[0, 1, 2, 3]
@@ -102,8 +117,7 @@ MAX_FRONTMATTER_CHARS_WARN = 12000
 MAX_FRONTMATTER_CHARS_ERROR = 15000
 
 # --- Valid Values ---
-VALID_CONTEXT_VALUES = {"fork"}
-BUILTIN_AGENT_TYPES = {"Explore", "Plan", "general-purpose"}
+# VALID_CONTEXT_VALUES and BUILTIN_AGENT_TYPES imported from cpv_validation_common
 VALID_MODEL_VALUES = {"sonnet", "opus", "haiku", "inherit"}
 
 # Valid Claude Code tools (2025)
@@ -112,15 +126,23 @@ VALID_TOOLS = {
     "Write",
     "Edit",
     "Bash",
-    "Glob",
     "Grep",
+    "Glob",
     "WebFetch",
     "WebSearch",
     "Task",
-    "TodoWrite",
     "NotebookEdit",
-    "AskUserQuestion",
     "Skill",
+    "AskUserQuestion",
+    "EnterPlanMode",
+    "ExitPlanMode",
+    "EnterWorktree",
+    "TaskCreate",
+    "TaskUpdate",
+    "TaskList",
+    "TaskGet",
+    "TaskStop",
+    "ToolSearch",
 }
 
 # --- Nixtla Strict Mode Required Sections ---
@@ -277,13 +299,13 @@ REPL_CENTRIC_LANGUAGES = {"clojure", "elixir", "erlang", "haskell", "fsharp", "f
 
 
 @dataclass
-class ValidationResult:
-    """Single validation result with multi-scale score support."""
+class ComprehensiveValidationResult(BaseValidationResult):
+    """Extended validation result with category and scoring.
 
-    level: Level
-    message: str
-    file: str | None = None
-    line: int | None = None
+    Extends the canonical ValidationResult (which has level, message, file, line,
+    phase, fixable, fix_id) with category grouping and multi-scale scoring.
+    """
+
     category: str | None = None  # For grouping in reports
     score: int = 0  # 0-3 multi-scale score (0=missing, 1=inadequate, 2=adequate, 3=excellent)
 
@@ -298,11 +320,15 @@ class PillarScore:
 
 
 @dataclass
-class ValidationReport:
-    """Complete validation report for a skill with scoring."""
+class ComprehensiveSkillReport(BaseValidationReport):
+    """Extended validation report with comprehensive skill scoring.
 
-    skill_path: str
-    results: list[ValidationResult] = field(default_factory=list)
+    Extends the canonical ValidationReport (which has results, fixable_issues,
+    valid_items, failed_items, and all base convenience methods) with skill-specific
+    fields: skill_path, pillar_scores, category_scores, overall_score, grade.
+    """
+
+    skill_path: str = ""
     pillar_scores: list[PillarScore] = field(default_factory=list)
     category_scores: dict[str, float] = field(default_factory=dict)
     overall_score: float = 0.0
@@ -314,57 +340,83 @@ class ValidationReport:
         message: str,
         file: str | None = None,
         line: int | None = None,
+        phase: str | None = None,
+        fixable: bool = False,
+        fix_id: str | None = None,
+        *,
         category: str | None = None,
         score: int = 0,
     ) -> None:
-        """Add a validation result."""
-        self.results.append(ValidationResult(level, message, file, line, category, score))
+        """Add a validation result with optional category and score."""
+        result = ComprehensiveValidationResult(
+            level=level,
+            message=message,
+            file=file,
+            line=line,
+            phase=phase,
+            fixable=fixable,
+            fix_id=fix_id,
+            category=category,
+            score=score,
+        )
+        self.results.append(result)
 
     def passed(self, message: str, file: str | None = None, category: str | None = None) -> None:
+        """Add a passed check with optional category."""
         self.add("PASSED", message, file, category=category, score=3)
 
     def info(self, message: str, file: str | None = None, category: str | None = None) -> None:
+        """Add an info message with optional category."""
         self.add("INFO", message, file, category=category, score=2)
+
+    def nit(self, message: str, file: str | None = None, line: int | None = None, category: str | None = None) -> None:
+        """Add a nit issue -- blocks only in --strict mode."""
+        self.add("NIT", message, file, line, category=category)
+
+    def warning(
+        self, message: str, file: str | None = None, line: int | None = None, category: str | None = None
+    ) -> None:
+        """Add a warning -- never blocks validation, always reported."""
+        self.add("WARNING", message, file, line, category=category)
 
     def minor(
         self, message: str, file: str | None = None, line: int | None = None, category: str | None = None
     ) -> None:
+        """Add a minor issue with optional category."""
         self.add("MINOR", message, file, line, category=category, score=1)
 
     def major(
         self, message: str, file: str | None = None, line: int | None = None, category: str | None = None
     ) -> None:
+        """Add a major issue with optional category."""
         self.add("MAJOR", message, file, line, category=category, score=0)
 
     def critical(
         self, message: str, file: str | None = None, line: int | None = None, category: str | None = None
     ) -> None:
+        """Add a critical issue with optional category."""
         self.add("CRITICAL", message, file, line, category=category, score=0)
 
     @property
-    def has_critical(self) -> bool:
-        return any(r.level == "CRITICAL" for r in self.results)
-
-    @property
-    def has_major(self) -> bool:
-        return any(r.level == "MAJOR" for r in self.results)
-
-    @property
-    def has_minor(self) -> bool:
-        return any(r.level == "MINOR" for r in self.results)
-
-    @property
     def exit_code(self) -> int:
+        """Get appropriate exit code based on highest severity issue.
+
+        Uses the canonical exit code constants from cpv_validation_common.
+        """
         if self.has_critical:
-            return 1
+            return EXIT_CRITICAL
         if self.has_major:
-            return 2
+            return EXIT_MAJOR
         if self.has_minor:
-            return 3
-        return 0
+            return EXIT_MINOR
+        return EXIT_OK
 
     def calculate_grade(self) -> None:
-        """Calculate letter grade based on overall score."""
+        """Calculate letter grade based on overall score.
+
+        Uses simplified A/B/C/D/F scale for comprehensive skill reports,
+        matching the original grading thresholds used by this validator.
+        """
         if self.overall_score >= 90:
             self.grade = "A"
         elif self.overall_score >= 80:
@@ -375,6 +427,11 @@ class ValidationReport:
             self.grade = "D"
         else:
             self.grade = "F"
+
+
+# Backward compatibility aliases for tests and internal usage
+ValidationResult = ComprehensiveValidationResult
+ValidationReport = ComprehensiveSkillReport
 
 
 # =============================================================================
@@ -761,9 +818,9 @@ def validate_allowed_tools_field(
             category="Frontmatter",
         )
 
-    # Over-permissioning warning
+    # Over-permissioning advisory — not blocking
     if len(tool_list) > 6:
-        report.minor(
+        report.warning(
             f"Many tools permitted ({len(tool_list)}) - consider limiting",
             "SKILL.md",
             category="Frontmatter",
@@ -964,6 +1021,11 @@ def validate_hooks_field(
         "SessionStart",
         "SessionEnd",
         "PreCompact",
+        "TeammateIdle",
+        "TaskCompleted",
+        "ConfigChange",
+        "WorktreeCreate",
+        "WorktreeRemove",
     }
 
     for event_name in hooks.keys():
@@ -1086,7 +1148,7 @@ def validate_field_whitelist(
                     category="Frontmatter",
                 )
             else:
-                report.info(
+                report.warning(
                     f"Unknown frontmatter field '{key}' (may be ignored by CLI)",
                     "SKILL.md",
                     category="Frontmatter",
@@ -1170,9 +1232,7 @@ def validate_required_sections(body: str, report: ValidationReport, strict_mode:
             )
 
 
-def validate_path_formats(
-    body: str, report: ValidationReport, skip_platform_checks: list[str] | None = None
-) -> None:
+def validate_path_formats(body: str, report: ValidationReport, skip_platform_checks: list[str] | None = None) -> None:
     """Validate path formats (no absolute paths, forward slashes only).
 
     Args:
@@ -1987,6 +2047,10 @@ def validate_skill(
     # Validate reference files (TOC and nesting depth - Anthropic docs)
     validate_reference_files(skill_path, report)
 
+    # Validate TOC embedding — SKILL.md must embed TOCs from referenced .md files
+    if skill_md is not None:
+        validate_toc_embedding(content, skill_md, skill_path, report)
+
     # Validate 8+1 Pillars (optional)
     if validate_pillars_flag:
         validate_pillars(skill_path, body, report)
@@ -2057,8 +2121,8 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
         if r.level == "INFO" and not verbose:
             continue
 
-        # Print category header if new
-        if r.category and r.category not in categories_seen:
+        # Print category header if new (category only exists on ComprehensiveValidationResult)
+        if isinstance(r, ComprehensiveValidationResult) and r.category and r.category not in categories_seen:
             categories_seen.add(r.category)
             print(f"\n  {colors['BOLD']}[{r.category}]{colors['RESET']}")
 
@@ -2104,7 +2168,7 @@ def print_json(report: ValidationReport) -> None:
                 "message": r.message,
                 "file": r.file,
                 "line": r.line,
-                "category": r.category,
+                "category": r.category if isinstance(r, ComprehensiveValidationResult) else None,
             }
             for r in report.results
         ],
@@ -2149,10 +2213,22 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    skill_path = Path(args.skill_path)
+    skill_path = Path(args.skill_path).resolve()
 
     if not skill_path.exists():
         print(f"Error: {skill_path} does not exist", file=sys.stderr)
+        return 1
+
+    if not skill_path.is_dir():
+        print(f"Error: {skill_path} is not a directory (expected a skill directory)", file=sys.stderr)
+        return 1
+
+    # Verify content type — skill directory must contain SKILL.md
+    if not (skill_path / "SKILL.md").exists() and not (skill_path / "skill.md").exists():
+        print(
+            f"Error: No SKILL.md found in {skill_path}\nA valid skill directory must contain a SKILL.md file.",
+            file=sys.stderr,
+        )
         return 1
 
     report = validate_skill(

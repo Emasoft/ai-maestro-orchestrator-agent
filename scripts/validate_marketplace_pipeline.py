@@ -38,18 +38,16 @@ import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 import yaml
-
-# Exit codes (matching other validators)
-EXIT_OK = 0
-EXIT_CRITICAL = 1
-EXIT_MAJOR = 2
-EXIT_MINOR = 3
-
-# Type alias for validation levels
-Level = Literal["CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"]
+from cpv_validation_common import (
+    EXIT_CRITICAL,
+    EXIT_MAJOR,
+    EXIT_MINOR,
+    EXIT_OK,
+    Level,
+)
 
 # =============================================================================
 # Constants
@@ -71,9 +69,6 @@ REQUIRED_MARKETPLACE_FIELDS = {"name", "version", "plugins"}
 # GitHub repo HTTPS URL pattern
 GITHUB_HTTPS_URL_PATTERN = re.compile(r"^https://github\.com/[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+(\.git)?$")
 
-# Version pattern (semver)
-VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$")
-
 
 # =============================================================================
 # Data Classes
@@ -81,7 +76,7 @@ VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?
 
 
 @dataclass
-class ValidationResult:
+class PipelineValidationResult:
     """Result of a single validation check with weighted scoring."""
 
     level: Level  # "CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"
@@ -113,7 +108,7 @@ class CategoryScore:
     weight: int
     points_earned: float = 0.0
     points_possible: float = 0.0
-    results: list[ValidationResult] = field(default_factory=list)
+    results: list[PipelineValidationResult] = field(default_factory=list)
 
     @property
     def percentage(self) -> float:
@@ -158,7 +153,7 @@ class PipelineValidationReport:
         if points_earned is None:
             points_earned = points_possible if level == "PASSED" else 0.0
 
-        result = ValidationResult(
+        result = PipelineValidationResult(
             level=level,
             category=category,
             message=message,
@@ -1493,20 +1488,33 @@ Exit Codes:
         action="store_true",
         help="Output results as JSON",
     )
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
 
     args = parser.parse_args()
 
+    # Resolve to absolute path so relative_to() works correctly
+    marketplace_path = args.marketplace_path.resolve()
+
     # Validate path exists
-    if not args.marketplace_path.exists():
-        print(f"Error: Path does not exist: {args.marketplace_path}", file=sys.stderr)
+    if not marketplace_path.exists():
+        print(f"Error: Path does not exist: {marketplace_path}", file=sys.stderr)
         return EXIT_MINOR
 
-    if not args.marketplace_path.is_dir():
-        print(f"Error: Path is not a directory: {args.marketplace_path}", file=sys.stderr)
+    if not marketplace_path.is_dir():
+        print(f"Error: Path is not a directory: {marketplace_path}", file=sys.stderr)
+        return EXIT_MINOR
+
+    # Verify content type — marketplace directory must contain marketplace.json
+    if not (marketplace_path / "marketplace.json").exists():
+        print(
+            f"Error: No marketplace.json found at {marketplace_path}\n"
+            f"Expected a marketplace directory with marketplace.json.",
+            file=sys.stderr,
+        )
         return EXIT_MINOR
 
     # Run validation
-    report = validate_marketplace_pipeline(args.marketplace_path, _verbose=args.verbose)
+    report = validate_marketplace_pipeline(marketplace_path, _verbose=args.verbose)
 
     # Output results
     if args.json:

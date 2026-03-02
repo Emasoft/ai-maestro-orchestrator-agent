@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from validation_common import (
+from cpv_validation_common import (
     COLORS,
     MAX_BODY_WORDS,
     MAX_DESCRIPTION_LENGTH,
@@ -38,6 +38,7 @@ from validation_common import (
     NAME_PATTERN,
     SECRET_PATTERNS,
     USER_PATH_PATTERNS,
+    VALID_CONTEXT_VALUES,
     VALID_MODELS,
     VALID_TOOLS,
     ValidationReport,
@@ -48,26 +49,28 @@ from validation_common import (
 # Based on: https://code.claude.com/docs/en/sub-agents.md
 KNOWN_FRONTMATTER_FIELDS = {
     # Required fields
-    "name",  # Unique identifier using lowercase letters and hyphens
-    "description",  # When Claude should delegate to this subagent
+    "name",
+    "description",
     # Optional fields
-    "tools",  # Tools the subagent can use (inherits all if omitted)
-    "disallowedTools",  # Tools to deny, removed from inherited or specified list
-    "model",  # Model: sonnet, opus, haiku, or inherit (defaults to inherit)
-    "permissionMode",  # Permission mode: default, acceptEdits, dontAsk, bypassPermissions, plan
-    "skills",  # Skills to preload into the subagent's context at startup
-    "hooks",  # Lifecycle hooks scoped to this subagent
-    "color",  # UI background color for the agent
-    "capabilities",  # Agent capabilities list
+    "tools",
+    "disallowedTools",
+    "model",
+    "permissionMode",
+    "skills",
+    "hooks",
+    "color",
+    "capabilities",
+    "maxTurns",
+    "mcpServers",
+    "memory",
+    "background",
+    "isolation",
     # Claude Code-specific fields (legacy/extended)
-    "context",  # Context mode (fork)
-    "agent",  # Specialized agent type
-    "user-invocable",  # Whether users can invoke directly
-    "system-prompt",  # Custom system prompt (alternative to body)
+    "context",
+    "agent",
+    "user-invocable",
+    "system-prompt",
 }
-
-# Valid values for the 'context' field
-VALID_CONTEXT_VALUES = {"fork"}
 
 # Valid values for the 'permissionMode' field
 VALID_PERMISSION_MODES = {
@@ -78,14 +81,14 @@ VALID_PERMISSION_MODES = {
     "plan",  # Plan mode (read-only exploration)
 }
 
-# Valid values for the 'agent' field (specialized agent types)
-VALID_AGENT_VALUES = {
-    "api-coordinator",
-    "test-engineer",
-    "deploy-agent",
-    "debug-specialist",
-    "code-reviewer",
-}
+# Built-in agent types per official docs — custom agent names are also valid
+VALID_AGENT_VALUES = {"Explore", "Plan", "general-purpose"}
+
+# Valid values for the 'memory' field (persistent memory scope)
+VALID_MEMORY_SCOPES = {"user", "project", "local"}
+
+# Valid values for the 'isolation' field
+VALID_ISOLATION_VALUES = {"worktree"}
 
 # Minimum required example blocks for agent documentation
 MIN_EXAMPLE_BLOCKS = 2
@@ -164,7 +167,7 @@ def validate_frontmatter_exists(content: str, report: AgentValidationReport, fil
     # Check for unknown fields
     for key in frontmatter.keys():
         if key not in KNOWN_FRONTMATTER_FIELDS:
-            report.info(
+            report.warning(
                 f"Unknown frontmatter field '{key}' (may be ignored by CLI)",
                 filename,
             )
@@ -568,6 +571,68 @@ def validate_permission_mode_field(frontmatter: dict[str, Any], filename: str, r
     report.passed(f"'permissionMode' field valid: {mode}", filename)
 
 
+def validate_memory_field(frontmatter: dict[str, Any], filename: str, report: AgentValidationReport) -> None:
+    """Validate the 'memory' frontmatter field."""
+    if "memory" not in frontmatter:
+        return
+
+    rel_path = filename
+    memory_val = frontmatter["memory"]
+    if not isinstance(memory_val, str):
+        report.major(f"'memory' must be a string, got {type(memory_val).__name__}", rel_path)
+    elif memory_val not in VALID_MEMORY_SCOPES:
+        report.major(
+            f"Invalid 'memory' value: '{memory_val}'. Must be one of: {sorted(VALID_MEMORY_SCOPES)}",
+            rel_path,
+        )
+    else:
+        report.passed(f"Valid memory scope: {memory_val}", rel_path)
+
+
+def validate_isolation_field(frontmatter: dict[str, Any], filename: str, report: AgentValidationReport) -> None:
+    """Validate the 'isolation' frontmatter field."""
+    if "isolation" not in frontmatter:
+        return
+
+    rel_path = filename
+    isolation_val = frontmatter["isolation"]
+    if not isinstance(isolation_val, str):
+        report.major(f"'isolation' must be a string, got {type(isolation_val).__name__}", rel_path)
+    elif isolation_val not in VALID_ISOLATION_VALUES:
+        report.major(
+            f"Invalid 'isolation' value: '{isolation_val}'. Must be one of: {sorted(VALID_ISOLATION_VALUES)}",
+            rel_path,
+        )
+    else:
+        report.passed(f"Valid isolation mode: {isolation_val}", rel_path)
+
+
+def validate_max_turns_field(frontmatter: dict[str, Any], filename: str, report: AgentValidationReport) -> None:
+    """Validate the 'maxTurns' frontmatter field."""
+    if "maxTurns" not in frontmatter:
+        return
+
+    rel_path = filename
+    max_turns = frontmatter["maxTurns"]
+    if not isinstance(max_turns, int) or max_turns < 1:
+        report.major(f"'maxTurns' must be a positive integer, got {max_turns!r}", rel_path)
+    else:
+        report.passed(f"Valid maxTurns: {max_turns}", rel_path)
+
+
+def validate_background_field(frontmatter: dict[str, Any], filename: str, report: AgentValidationReport) -> None:
+    """Validate the 'background' frontmatter field."""
+    if "background" not in frontmatter:
+        return
+
+    rel_path = filename
+    bg_val = frontmatter["background"]
+    if not isinstance(bg_val, bool):
+        report.major(f"'background' must be a boolean, got {type(bg_val).__name__}", rel_path)
+    else:
+        report.passed(f"Valid background: {bg_val}", rel_path)
+
+
 def validate_disallowed_tools_field(frontmatter: dict[str, Any], filename: str, report: AgentValidationReport) -> None:
     """Validate the 'disallowedTools' frontmatter field.
 
@@ -937,6 +1002,12 @@ def validate_agent(agent_path: Path) -> AgentValidationReport:
         validate_disallowed_tools_field(frontmatter, filename, report)
         validate_hooks_field(frontmatter, filename, report)
 
+        # Validate new official fields
+        validate_memory_field(frontmatter, filename, report)
+        validate_isolation_field(frontmatter, filename, report)
+        validate_max_turns_field(frontmatter, filename, report)
+        validate_background_field(frontmatter, filename, report)
+
         # Cross-field validations
         validate_task_tool_prohibition(frontmatter, filename, report)
 
@@ -984,7 +1055,7 @@ def validate_agents_directory(agents_dir: Path) -> list[AgentValidationReport]:
 def print_results(report: AgentValidationReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
     # Count by level
-    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "INFO": 0, "PASSED": 0}
+    counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
     for r in report.results:
         counts[r.level] += 1
 
@@ -998,6 +1069,8 @@ def print_results(report: AgentValidationReport, verbose: bool = False) -> None:
     print(f"  {COLORS['CRITICAL']}CRITICAL: {counts['CRITICAL']}{COLORS['RESET']}")
     print(f"  {COLORS['MAJOR']}MAJOR:    {counts['MAJOR']}{COLORS['RESET']}")
     print(f"  {COLORS['MINOR']}MINOR:    {counts['MINOR']}{COLORS['RESET']}")
+    print(f"  {COLORS['NIT']}NIT:      {counts['NIT']}{COLORS['RESET']}")
+    print(f"  {COLORS['WARNING']}WARNING:  {counts['WARNING']}{COLORS['RESET']}")
     if verbose:
         print(f"  {COLORS['INFO']}INFO:     {counts['INFO']}{COLORS['RESET']}")
         print(f"  {COLORS['PASSED']}PASSED:   {counts['PASSED']}{COLORS['RESET']}")
@@ -1064,12 +1137,21 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
-    path = Path(args.path)
+    path = Path(args.path).resolve()
 
     if not path.exists():
         print(f"Error: {path} does not exist", file=sys.stderr)
+        return 1
+
+    # Verify content type — must be .md file or directory containing .md files
+    if path.is_file() and path.suffix != ".md":
+        print(f"Error: {path} is not a Markdown (.md) agent file", file=sys.stderr)
+        return 1
+    if path.is_dir() and not list(path.glob("*.md")):
+        print(f"Error: No agent definition files (.md) found in {path}", file=sys.stderr)
         return 1
 
     # Handle directory vs file
@@ -1109,7 +1191,9 @@ def main() -> int:
         for report in reports:
             print_results(report, args.verbose)
 
-    # Return worst exit code
+    # Return worst exit code — in strict mode, NIT issues also block validation
+    if args.strict:
+        return max(r.exit_code_strict() for r in reports)
     return max(r.exit_code for r in reports)
 
 

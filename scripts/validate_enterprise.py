@@ -39,10 +39,12 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from validation_common import (
+from cpv_validation_common import (
+    BUILTIN_AGENT_TYPES,
     EXIT_CRITICAL,
     EXIT_MAJOR,
     EXIT_OK,
+    VALID_CONTEXT_VALUES,
     Level,
     ValidationReport,
     ValidationResult,
@@ -53,9 +55,6 @@ from validation_common import (
 # Enterprise Compliance Constants
 # =============================================================================
 
-# Valid values for context field (Claude Code specific)
-VALID_CONTEXT_VALUES = {"fork"}
-
 # Valid values for agent field in enterprise context
 # These are the specialized agent types for enterprise workflows
 VALID_ENTERPRISE_AGENT_TYPES = {
@@ -65,9 +64,6 @@ VALID_ENTERPRISE_AGENT_TYPES = {
     "debug-specialist",
     "code-reviewer",
 }
-
-# Built-in agent types that are also valid
-BUILTIN_AGENT_TYPES = {"Explore", "Plan", "general-purpose"}
 
 # All valid agent types (enterprise + built-in)
 ALL_VALID_AGENT_TYPES = VALID_ENTERPRISE_AGENT_TYPES | BUILTIN_AGENT_TYPES
@@ -907,10 +903,22 @@ Exit codes:
     )
     args = parser.parse_args()
 
-    plugin_path = Path(args.plugin_path)
+    plugin_path = Path(args.plugin_path).resolve()
 
     if not plugin_path.exists():
         print(f"Error: {plugin_path} does not exist", file=sys.stderr)
+        return EXIT_CRITICAL
+
+    if not plugin_path.is_dir():
+        print(f"Error: {plugin_path} is not a directory", file=sys.stderr)
+        return EXIT_CRITICAL
+
+    # Verify this is a plugin directory
+    if not (plugin_path / ".claude-plugin").is_dir():
+        print(
+            f"Error: No Claude Code plugin found at {plugin_path}\nExpected a .claude-plugin/ directory.",
+            file=sys.stderr,
+        )
         return EXIT_CRITICAL
 
     report = validate_enterprise_compliance(plugin_path, strict=args.strict)

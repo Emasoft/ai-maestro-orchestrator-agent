@@ -26,6 +26,7 @@ from typing import Any, Callable, Literal
 # Tool Resolution: local install → remote runner fallback (via smart_exec)
 # =============================================================================
 
+
 def resolve_tool_command(tool_name: str) -> list[str] | None:
     """Resolve a linting tool to its executable command prefix.
 
@@ -56,16 +57,23 @@ def resolve_tool_command(tool_name: str) -> list[str] | None:
 # =============================================================================
 
 # Validation result severity levels (uppercase for consistency)
-Level = Literal["CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"]
+# Hierarchy: CRITICAL > MAJOR > MINOR > NIT > WARNING > INFO > PASSED
+# - CRITICAL/MAJOR/MINOR: always block validation (non-zero exit code)
+# - NIT: blocks only in --strict mode
+# - WARNING: never blocks, always reported (security advisories, best practices)
+# - INFO: informational only, shown in verbose mode
+# - PASSED: check passed, shown in verbose mode
+Level = Literal["CRITICAL", "MAJOR", "MINOR", "NIT", "WARNING", "INFO", "PASSED"]
 
 # =============================================================================
 # Exit Codes
 # =============================================================================
 
-EXIT_OK = 0  # All checks passed (or only INFO/PASSED)
+EXIT_OK = 0  # All checks passed (or only WARNING/INFO/PASSED)
 EXIT_CRITICAL = 1  # CRITICAL issues found
 EXIT_MAJOR = 2  # MAJOR issues found
 EXIT_MINOR = 3  # MINOR issues found
+EXIT_NIT = 4  # NIT issues found (only in --strict mode)
 
 # =============================================================================
 # Severity Level Constants (L1-L10 Alternative System)
@@ -84,20 +92,6 @@ SEVERITY_L8 = 8  # High severity, confidence > 0.95
 SEVERITY_L9 = 9  # High severity, confidence > 0.95
 SEVERITY_L10 = 10  # Critical severity, confidence > 0.99
 
-# Severity ranges for categorization
-SEVERITY_LOW = (SEVERITY_L1, SEVERITY_L2, SEVERITY_L3)  # confidence > 0.7
-SEVERITY_MEDIUM = (SEVERITY_L4, SEVERITY_L5, SEVERITY_L6)  # confidence > 0.85
-SEVERITY_HIGH = (SEVERITY_L7, SEVERITY_L8, SEVERITY_L9)  # confidence > 0.95
-SEVERITY_CRITICAL = (SEVERITY_L10,)  # confidence > 0.99
-
-# Confidence thresholds for each severity range
-CONFIDENCE_THRESHOLDS = {
-    "LOW": 0.7,
-    "MEDIUM": 0.85,
-    "HIGH": 0.95,
-    "CRITICAL": 0.99,
-}
-
 
 def severity_to_level(severity: int) -> Level:
     """Convert L1-L10 severity to standard Level.
@@ -106,7 +100,7 @@ def severity_to_level(severity: int) -> Level:
         severity: Numeric severity (1-10)
 
     Returns:
-        Corresponding Level (CRITICAL, MAJOR, MINOR, INFO)
+        Corresponding Level (CRITICAL, MAJOR, MINOR, NIT, WARNING, INFO)
     """
     if severity >= SEVERITY_L10:
         return "CRITICAL"
@@ -114,6 +108,10 @@ def severity_to_level(severity: int) -> Level:
         return "MAJOR"
     elif severity >= SEVERITY_L4:
         return "MINOR"
+    elif severity == SEVERITY_L3:
+        return "NIT"
+    elif severity == SEVERITY_L2:
+        return "WARNING"
     else:
         return "INFO"
 
@@ -131,29 +129,13 @@ def level_to_severity(level: Level) -> int:
         "CRITICAL": SEVERITY_L10,
         "MAJOR": SEVERITY_L8,
         "MINOR": SEVERITY_L5,
-        "INFO": SEVERITY_L2,
+        "NIT": SEVERITY_L3,
+        "WARNING": SEVERITY_L2,
+        "INFO": SEVERITY_L1,
         "PASSED": SEVERITY_L1,
     }
     return mapping.get(level, SEVERITY_L1)
 
-
-# =============================================================================
-# Multi-Layer Validation Phase Constants
-# =============================================================================
-
-# Validation phases for multi-layer validation
-PHASE_STRUCTURE = "structure"  # File/directory structure checks
-PHASE_SEMANTIC = "semantic"  # Content and meaning validation
-PHASE_SECURITY = "security"  # Security-related checks
-PHASE_CROSS_REF = "cross-reference"  # Cross-file reference validation
-
-# All phases in execution order
-VALIDATION_PHASES = [
-    PHASE_STRUCTURE,
-    PHASE_SEMANTIC,
-    PHASE_SECURITY,
-    PHASE_CROSS_REF,
-]
 
 # =============================================================================
 # Hook Event Types
@@ -169,34 +151,30 @@ VALID_HOOK_EVENTS = {
     "Notification",
     "Stop",
     "SubagentStop",
+    "SubagentStart",
     "SessionStart",
     "SessionEnd",
     "PreCompact",
-    "PreToolResponse",  # Less common but valid
-}
-
-# Events that require a matcher pattern (tool-specific events)
-EVENTS_REQUIRING_MATCHER = {
-    "PreToolUse",
-    "PostToolUse",
-    "PostToolUseFailure",
-    "PermissionRequest",
-    "Notification",
-    "SessionStart",
-    "PreCompact",
-}
-
-# Events that do not support matchers (global events)
-EVENTS_NO_MATCHER = {
-    "UserPromptSubmit",
-    "Stop",
-    "SubagentStop",
-    "SessionEnd",
+    "Setup",
+    "TeammateIdle",
+    "TaskCompleted",
+    "ConfigChange",
+    "WorktreeCreate",
+    "WorktreeRemove",
 }
 
 # =============================================================================
 # Common Constants
 # =============================================================================
+
+# Valid context values for agents and skills (only "fork" is documented)
+VALID_CONTEXT_VALUES = {"fork"}
+
+# Built-in agent types provided by Claude Code
+BUILTIN_AGENT_TYPES = {"Explore", "Plan", "general-purpose"}
+
+# Semantic version pattern for marketplace version fields
+SEMVER_PATTERN = re.compile(r"^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$")
 
 # Valid tool names for Claude Code agents
 VALID_TOOLS = {
@@ -210,20 +188,30 @@ VALID_TOOLS = {
     "WebSearch",
     "Task",
     "NotebookEdit",
-    "AskFollowupQuestion",
-    "AttemptCompletion",
-    "ListFiles",
-    "SearchFiles",
-    "ListCodeDefinitionNames",
-    "Browser",
-    "MCP",
-    "Computer",
-    "TextEditor",
-    "UrlScreenshot",
+    "Skill",
+    "AskUserQuestion",
+    "EnterPlanMode",
+    "ExitPlanMode",
+    "EnterWorktree",
+    "TaskCreate",
+    "TaskUpdate",
+    "TaskList",
+    "TaskGet",
+    "TaskStop",
+    "ToolSearch",
 }
 
 # Valid model values for agents
 VALID_MODELS = {"haiku", "sonnet", "opus", "inherit"}
+
+# Environment variables provided by Claude Code at plugin load time
+# Plugins must use these instead of hardcoded absolute paths
+VALID_PLUGIN_ENV_VARS = {
+    "CLAUDE_PLUGIN_ROOT",  # Plugin's root directory (all plugin hooks)
+    "CLAUDE_PROJECT_DIR",  # Project root directory (all hooks)
+    "CLAUDE_ENV_FILE",  # SessionStart/Setup only — write export statements to persist env vars
+    "CLAUDE_CODE_REMOTE",  # Set to "true" in remote web environments; not set in local CLI
+}
 
 # Directories to skip when scanning (cache dirs, hidden dirs, etc.)
 SKIP_DIRS = {
@@ -250,10 +238,22 @@ SECRET_PATTERNS = [
     (re.compile(r"AKIA[0-9A-Z]{16}"), "AWS Access Key"),
     (re.compile(r"-----BEGIN (RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----"), "Private Key"),
     (re.compile(r"ghp_[a-zA-Z0-9]{36}"), "GitHub Personal Access Token"),
-    (re.compile(r"sk-[a-zA-Z0-9]{48}"), "OpenAI API Key"),
+    (re.compile(r"sk-[a-zA-Z0-9]{20,}"), "API Key (sk-... format)"),
     (re.compile(r"xox[baprs]-[0-9a-zA-Z-]+"), "Slack Token"),
+    (re.compile(r"github_pat_[a-zA-Z0-9_]{22,}"), "GitHub Fine-Grained Personal Access Token"),
+    (re.compile(r"AIza[0-9A-Za-z\-_]{35}"), "Google API Key"),
+    (re.compile(r"sk_live_[a-zA-Z0-9]{24,}"), "Stripe Secret Key"),
+    (re.compile(r"pk_live_[a-zA-Z0-9]{24,}"), "Stripe Publishable Key"),
+    (re.compile(r"sk-ant-[a-zA-Z0-9\-_]{80,}"), "Anthropic API Key"),
+    (re.compile(r"npm_[a-zA-Z0-9]{36}"), "npm Access Token"),
+    (re.compile(r"://[^:\s]+:[^@\s]+@[^\s]+"), "Database Connection String with Credentials"),
+    (re.compile(r"SG\.[a-zA-Z0-9\-_]{22}\.[a-zA-Z0-9\-_]{43}"), "SendGrid API Key"),
     # Generic API key pattern excludes environment variable placeholders (${VAR} or $VAR)
     (re.compile(r"api[_-]?key['\"]?\s*[:=]\s*['\"](?!\$[\{A-Z_])[^'\"]{20,}['\"]", re.I), "Generic API Key"),
+    # JWT tokens (base64url-encoded header.payload, signature optional)
+    (re.compile(r"eyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}"), "JWT Token"),
+    # AWS Secret Access Key (40-char base64 string)
+    (re.compile(r"aws_secret_access_key\s*[:=]\s*['\"]?[A-Za-z0-9/+=]{40}", re.I), "AWS Secret Access Key"),
 ]
 
 # Generic example usernames that are acceptable in documentation
@@ -299,25 +299,48 @@ USER_PATH_PATTERNS = [
 
 # Patterns for ANY absolute path (stricter check for plugins)
 # Plugins should use relative paths or ${CLAUDE_PLUGIN_ROOT} / ${HOME}
-# Only check for home directory paths which are the problematic ones
 ABSOLUTE_PATH_PATTERNS = [
-    # macOS/Linux home directory paths - these are problematic
+    # macOS/Linux home directory paths — CRITICAL portability issue
     (re.compile(r'(?<![#!])(/(?:Users|home)/[^/\s"\'`>\]})]+/[^\s"\'`>\]})]+)'), "home directory path"),
     # Windows home directory paths
     (re.compile(r'(?<!\$\{)(?<!\$)([A-Z]:[\\\/]Users[\\\/][^\s"\'`>\]})]+)', re.IGNORECASE), "Windows home path"),
+    # Unix system paths — non-portable, use env vars or relative paths instead
+    # The (?<![#!]) lookbehind skips shebangs like #!/usr/bin/env or #!/bin/bash
+    (
+        re.compile(
+            r"(?<![#!])"
+            r"(?<!\$\{CLAUDE_PLUGIN_ROOT\})(?<!\$\{CLAUDE_PROJECT_DIR\})(?<![\w$\{])"
+            r'(/(?:usr|opt|etc|var|bin|sbin|lib|root)/[^\s"\'`>\]})]+)'
+        ),
+        "system absolute path",
+    ),
 ]
 
 # Allowed absolute path prefixes in documentation examples
+# These are skipped in doc files (.md, .txt, .html) to reduce false positives
 ALLOWED_DOC_PATH_PREFIXES = {
     "/tmp/",
     "/var/tmp/",
+    "/var/lib/",  # Docker volumes, app data (e.g. /var/lib/postgresql/data)
+    "/var/log/",  # Log path examples (e.g. /var/log/myapp/)
+    "/var/run/",  # PID/socket files
     "/dev/",
     "/proc/",
     "/sys/",
-    "/etc/",
-    "/usr/bin/",
-    "/usr/local/",
-    "/opt/",
+    "/etc/",  # Common in config examples
+    "/bin/",  # Shell references (e.g. /bin/sh, /bin/bash)
+    "/sbin/",  # System binaries
+    "/usr/bin/",  # Common in shebang/doc examples
+    "/usr/sbin/",  # System admin binaries
+    "/usr/lib/",  # Shared libraries
+    "/usr/lib64/",  # 64-bit shared libraries (RHEL/Fedora)
+    "/usr/libexec/",  # Helper binaries (e.g. macOS ApplicationFirewall)
+    "/usr/share/",  # Shared data (e.g. /usr/share/dotnet)
+    "/usr/local/",  # Common in installation examples
+    "/usr/include/",  # Header files
+    "/opt/",  # Common in deployment examples
+    "/snap/",  # Snap packages
+    "/run/",  # Runtime data
 }
 
 # Files that should never be in a plugin
@@ -326,12 +349,31 @@ DANGEROUS_FILES = {
     ".env.local",
     ".env.development",
     ".env.production",
+    ".env.staging",
+    ".env.test",
     "credentials.json",
     "secrets.json",
     "config.secret.json",
     "private.key",
     "id_rsa",
     "id_ed25519",
+    "id_dsa",
+    "id_ecdsa",
+    ".npmrc",
+    ".pypirc",
+    ".netrc",
+    "token.json",
+    "auth.json",
+    "service-account.json",
+    "service_account_key.json",
+    ".htpasswd",
+    "kubeconfig",
+    ".docker/config.json",
+    "cert.pem",
+    "key.pem",
+    "server.pem",
+    "client.pem",
+    "ca.pem",
 }
 
 # =============================================================================
@@ -576,8 +618,12 @@ def is_path_gitignored(rel_path: str, patterns: list[str]) -> bool:
     path_parts = rel_path.split("/")
 
     for pattern in patterns:
-        # Handle negation (!) - not fully implemented, just skip
+        # Handle negation (!) - un-ignore previously matched paths
         if pattern.startswith("!"):
+            neg_pattern = pattern[1:]
+            # If the path matches the negation pattern, it should NOT be ignored
+            if fnmatch.fnmatch(rel_path, neg_pattern) or fnmatch.fnmatch(str(Path(rel_path).name), neg_pattern):
+                return False
             continue
 
         # Handle directory-only patterns (ending with /)
@@ -590,11 +636,30 @@ def is_path_gitignored(rel_path: str, patterns: list[str]) -> bool:
         if is_anchored:
             pattern = pattern[1:]
 
-        # Convert gitignore pattern to fnmatch pattern
-        # Handle ** for directory matching
+        # Handle ** patterns properly for recursive directory matching
         if "**" in pattern:
-            # Simplified: treat ** as matching any path
-            pattern = pattern.replace("**/", "*/").replace("/**", "/*")
+            if pattern.startswith("**/"):
+                # **/foo matches foo at any depth
+                suffix = pattern[3:]  # e.g., "dist" from "**/dist"
+                if (
+                    fnmatch.fnmatch(rel_path, suffix)
+                    or fnmatch.fnmatch(rel_path, f"*/{suffix}")
+                    or f"/{suffix}" in f"/{rel_path}"
+                ):
+                    return True
+                continue
+            elif pattern.endswith("/**"):
+                # build/** matches any file under the prefix directory
+                prefix = pattern[:-3]  # e.g., "build" from "build/**"
+                if rel_path.startswith(prefix + "/") or rel_path == prefix:
+                    return True
+                continue
+            else:
+                # General ** — replace with regex-like matching
+                regex = pattern.replace(".", r"\.").replace("**", ".*").replace("*", "[^/]*").replace("?", "[^/]")
+                if re.match(regex + "$", rel_path):
+                    return True
+                continue
 
         # Check if pattern matches any component or the full path
         if is_anchored:
@@ -763,6 +828,14 @@ class ValidationReport:
         """Add an info message."""
         self.add("INFO", message, file)
 
+    def warning(self, message: str, file: str | None = None, line: int | None = None) -> None:
+        """Add a warning — always reported, never blocks validation (even in --strict)."""
+        self.add("WARNING", message, file, line)
+
+    def nit(self, message: str, file: str | None = None, line: int | None = None) -> None:
+        """Add a nit — blocks validation only in --strict mode."""
+        self.add("NIT", message, file, line)
+
     def minor(self, message: str, file: str | None = None, line: int | None = None) -> None:
         """Add a minor issue."""
         self.add("MINOR", message, file, line)
@@ -791,14 +864,41 @@ class ValidationReport:
         return any(r.level == "MINOR" for r in self.results)
 
     @property
+    def has_nit(self) -> bool:
+        """Check if any NIT issues exist."""
+        return any(r.level == "NIT" for r in self.results)
+
+    @property
+    def has_warning(self) -> bool:
+        """Check if any WARNING issues exist."""
+        return any(r.level == "WARNING" for r in self.results)
+
+    @property
     def exit_code(self) -> int:
-        """Get appropriate exit code based on highest severity issue."""
+        """Get appropriate exit code based on highest severity issue.
+
+        NIT and WARNING never affect exit code here.
+        NIT blocking is handled by --strict flag in each validator's main().
+        WARNING never blocks validation.
+        """
         if self.has_critical:
             return EXIT_CRITICAL
         if self.has_major:
             return EXIT_MAJOR
         if self.has_minor:
             return EXIT_MINOR
+        return EXIT_OK
+
+    def exit_code_strict(self) -> int:
+        """Get exit code for --strict mode (NIT issues also block).
+
+        WARNING still does not block even in strict mode.
+        """
+        code = self.exit_code
+        if code != EXIT_OK:
+            return code
+        if self.has_nit:
+            return EXIT_NIT
         return EXIT_OK
 
     @property
@@ -810,7 +910,8 @@ class ValidationReport:
         - Deduct 25 for each CRITICAL
         - Deduct 10 for each MAJOR
         - Deduct 3 for each MINOR
-        - INFO and PASSED don't affect score
+        - Deduct 1 for each NIT
+        - WARNING, INFO, and PASSED don't affect score
         """
         score = 100
         for r in self.results:
@@ -820,11 +921,13 @@ class ValidationReport:
                 score -= 10
             elif r.level == "MINOR":
                 score -= 3
+            elif r.level == "NIT":
+                score -= 1
         return max(0, score)
 
     def count_by_level(self) -> dict[str, int]:
         """Get count of results by level."""
-        counts: dict[str, int] = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "INFO": 0, "PASSED": 0}
+        counts: dict[str, int] = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
         for r in self.results:
             counts[r.level] = counts.get(r.level, 0) + 1
         return counts
@@ -1194,6 +1297,15 @@ class ValidationContext:
 # =============================================================================
 
 
+def get_plugin_root() -> Path:
+    """Get the plugin root directory (parent of scripts/).
+
+    Returns:
+        Path to the plugin root, assuming this module lives in scripts/.
+    """
+    return Path(__file__).resolve().parent.parent
+
+
 def calculate_letter_grade(score: int) -> str:
     """Convert numeric score (0-100) to letter grade.
 
@@ -1249,6 +1361,8 @@ COLORS = {
     "MAJOR": "\033[93m",  # Yellow
     "MAJOR_DARK": "\033[33m",  # Dark Yellow
     "MINOR": "\033[94m",  # Blue
+    "NIT": "\033[96m",  # Cyan — blocks only in --strict
+    "WARNING": "\033[95m",  # Magenta — never blocks, always reported
     "INFO": "\033[90m",  # Gray
     "PASSED": "\033[92m",  # Green
     "RESET": "\033[0m",  # Reset
@@ -1293,6 +1407,8 @@ def print_report_summary(report: ValidationReport, title: str = "Validation Repo
     print(f"\n{COLORS['CRITICAL']}CRITICAL: {counts['CRITICAL']}{COLORS['RESET']}")
     print(f"{COLORS['MAJOR']}MAJOR:    {counts['MAJOR']}{COLORS['RESET']}")
     print(f"{COLORS['MINOR']}MINOR:    {counts['MINOR']}{COLORS['RESET']}")
+    print(f"{COLORS['NIT']}NIT:      {counts.get('NIT', 0)}{COLORS['RESET']}")
+    print(f"{COLORS['WARNING']}WARNING:  {counts.get('WARNING', 0)}{COLORS['RESET']}")
     print(f"{COLORS['INFO']}INFO:     {counts['INFO']}{COLORS['RESET']}")
     print(f"{COLORS['PASSED']}PASSED:   {counts['PASSED']}{COLORS['RESET']}")
 
@@ -1321,6 +1437,8 @@ def print_results_by_level(report: ValidationReport, verbose: bool = False) -> N
         "CRITICAL": [],
         "MAJOR": [],
         "MINOR": [],
+        "NIT": [],
+        "WARNING": [],
         "INFO": [],
         "PASSED": [],
     }
@@ -1328,13 +1446,25 @@ def print_results_by_level(report: ValidationReport, verbose: bool = False) -> N
     for result in report.results:
         by_level[result.level].append(result)
 
-    # Print each level
+    # Always print blocking levels (CRITICAL, MAJOR, MINOR)
     for level in ["CRITICAL", "MAJOR", "MINOR"]:
         results = by_level[level]
         if results:
             print(f"\n{COLORS[level]}--- {level} ISSUES ({len(results)}) ---{COLORS['RESET']}")
             for result in results:
                 print(f"  {format_result(result)}")
+
+    # Always print NIT (blocks in --strict mode)
+    if by_level["NIT"]:
+        print(f"\n{COLORS['NIT']}--- NIT ISSUES ({len(by_level['NIT'])}) [blocks in --strict] ---{COLORS['RESET']}")
+        for result in by_level["NIT"]:
+            print(f"  {format_result(result)}")
+
+    # Always print WARNING (never blocks, but always visible)
+    if by_level["WARNING"]:
+        print(f"\n{COLORS['WARNING']}--- WARNINGS ({len(by_level['WARNING'])}) [non-blocking] ---{COLORS['RESET']}")
+        for result in by_level["WARNING"]:
+            print(f"  {format_result(result)}")
 
     # Only print INFO and PASSED in verbose mode
     if verbose:
@@ -1386,7 +1516,7 @@ def normalize_level(level: str) -> Level:
         Normalized Level literal
     """
     upper = level.upper()
-    if upper in ("CRITICAL", "MAJOR", "MINOR", "INFO", "PASSED"):
+    if upper in ("CRITICAL", "MAJOR", "MINOR", "NIT", "WARNING", "INFO", "PASSED"):
         return upper  # type: ignore
     # Default to INFO for unknown levels
     return "INFO"
@@ -1595,6 +1725,10 @@ def scan_file_for_absolute_paths(
                 line_num,
             )
 
+    # Determine if this is a documentation file (more lenient) or code file (strict)
+    doc_extensions = {".md", ".txt", ".html", ".rst", ".adoc"}
+    is_doc_file = filepath.suffix.lower() in doc_extensions
+
     # Then check for ALL absolute paths (MAJOR)
     for pattern, desc in ABSOLUTE_PATH_PATTERNS:
         for match in pattern.finditer(content):
@@ -1604,8 +1738,8 @@ def scan_file_for_absolute_paths(
             if any(c in matched_text for c in r"[]\^$.*+?{}|()"):
                 continue
 
-            # Skip allowed documentation paths
-            if any(matched_text.startswith(prefix) for prefix in ALLOWED_DOC_PATH_PREFIXES):
+            # Skip allowed documentation paths — only in doc files, not in code/scripts
+            if is_doc_file and any(matched_text.startswith(prefix) for prefix in ALLOWED_DOC_PATH_PREFIXES):
                 continue
 
             # Skip if it's an environment variable reference
@@ -1622,9 +1756,11 @@ def scan_file_for_absolute_paths(
 
             line_num = content[: match.start()].count("\n") + 1
             issues_found += 1
-            report.major(
+            # Use MINOR for system paths in scripts (may be intentional), MAJOR for home paths
+            severity = "minor" if desc == "system absolute path" and not is_doc_file else "major"
+            getattr(report, severity)(
                 f"Absolute path found: '{matched_text[:60]}...' - "
-                "use relative path, ${CLAUDE_PLUGIN_ROOT}, or ${HOME}",
+                "use relative path, ${CLAUDE_PLUGIN_ROOT}, or ${CLAUDE_PROJECT_DIR}",
                 rel_path,
                 line_num,
             )
@@ -1682,6 +1818,11 @@ def validate_no_absolute_paths(
             if filepath.suffix.lower() not in SCANNABLE_EXTENSIONS:
                 continue
 
+            # Skip CPV's own validation infrastructure — it contains path
+            # patterns and allowlists as data constants, not hardcoded paths
+            if filename == "cpv_validation_common.py":
+                continue
+
             files_checked += 1
 
             issues = scan_file_for_absolute_paths(filepath, report, rel_path)
@@ -1691,3 +1832,192 @@ def validate_no_absolute_paths(
         report.passed(f"No absolute paths found ({files_checked} files checked)")
     else:
         report.info(f"Found {total_issues} absolute path(s) in {files_checked} files")
+
+
+# =============================================================================
+# TOC Embedding Validation — ensures .md files embed TOCs from referenced files
+# =============================================================================
+
+# Regex to extract TOC entries from a reference file's "## Table of Contents" section
+_TOC_SECTION_RE = re.compile(
+    r"(?im)^##\s*(table\s+of\s+contents|contents|toc|index)\s*\n(.*?)(?=\n##\s|\Z)",
+    re.DOTALL,
+)
+
+# Regex to extract individual TOC heading titles (strip numbering, links, bullets)
+_TOC_ENTRY_RE = re.compile(r"(?m)^[\s]*[-*]?\s*(?:\d+\.?\s*)?(?:\[([^\]]+)\]\([^)]*\)|(.+))")
+
+# Regex to find markdown links pointing to .md files in references/
+_MD_LINK_RE = re.compile(r"\[([^\]]+)\]\(((?:references/)?[^\s)]+\.md)\)")
+
+
+def extract_toc_headings(md_content: str) -> list[str]:
+    """Extract TOC heading titles from a markdown file's Table of Contents section.
+
+    Returns a list of heading title strings (stripped of numbering/links/bullets).
+    Returns empty list if no TOC section is found.
+    """
+    m = _TOC_SECTION_RE.search(md_content)
+    if not m:
+        return []
+
+    toc_block = m.group(2)
+    headings: list[str] = []
+
+    for entry_match in _TOC_ENTRY_RE.finditer(toc_block):
+        # Group 1 = link text [Title](#anchor), Group 2 = plain text
+        title = (entry_match.group(1) or entry_match.group(2) or "").strip()
+        if not title or title.startswith("---"):
+            continue
+        # Strip leading numbering like "1. " or "3a. "
+        title_clean = re.sub(r"^\d+[a-z]?\.\s*", "", title).strip()
+        if title_clean:
+            headings.append(title_clean)
+
+    return headings
+
+
+# Files exempt from the TOC requirement — these file types serve
+# structural roles and do not need a Table of Contents section.
+_TOC_EXEMPT_NAMES = {"SKILL.md", "CLAUDE.md"}
+_TOC_EXEMPT_DIRS = {"agents", "commands", "rules"}
+
+# Regex to detect list items (bulleted or numbered)
+_LIST_ITEM_RE = re.compile(r"\s*(?:[-*+]|\d+\.)\s")
+
+
+def _is_toc_exempt(file_path: Path) -> bool:
+    """Check if a file is exempt from the TOC requirement.
+
+    Exempt: SKILL.md, CLAUDE.md, agent files under agents/,
+    command files under commands/, rule files under rules/.
+    """
+    if file_path.name in _TOC_EXEMPT_NAMES:
+        return True
+    for part in file_path.parts:
+        if part in _TOC_EXEMPT_DIRS:
+            return True
+    return False
+
+
+def validate_toc_embedding(
+    md_content: str,
+    md_file_path: Path,
+    base_dir: Path,
+    report: ValidationReport,
+) -> None:
+    """Validate that .md files embed TOCs from referenced .md files.
+
+    When a markdown file links to another .md file, the link should include
+    the referenced file's Table of Contents inline, so agents can see what
+    content is available before navigating.
+
+    Links can appear anywhere — in paragraphs, headings, or list items.
+    Referenced files can be anywhere inside the plugin directory.
+
+    When a link appears inside a list item (bullet or numbered), it may be
+    an embedded TOC entry rather than a standalone reference. In that case:
+    - If the target has a TOC and the TOC IS embedded after the link: PASSED
+    - If the target has a TOC but no TOC copy follows: WARNING (ambiguous)
+    - If the target has no TOC and is not exempt: NIT (file should have TOC)
+
+    When a link is NOT in a list item (clear standalone reference):
+    - If the target has a TOC and the TOC IS embedded: PASSED
+    - If the target has a TOC but not embedded: MINOR (should embed it)
+    - If the target has no TOC: skip (separate validation handles it)
+
+    Args:
+        md_content: The content of the markdown file being validated
+        md_file_path: Path to the markdown file being validated
+        base_dir: Base directory for resolving relative references
+        report: ValidationReport to add results to
+    """
+    lines = md_content.split("\n")
+    rel_file = md_file_path.name
+    refs_checked = 0
+    refs_with_toc = 0
+
+    for link_match in _MD_LINK_RE.finditer(md_content):
+        link_target = link_match.group(2)
+
+        # Resolve the referenced file path
+        ref_path = base_dir / link_target
+        if not ref_path.is_file():
+            ref_path = md_file_path.parent / link_target
+            if not ref_path.is_file():
+                continue
+
+        # Only validate .md files
+        if ref_path.suffix.lower() != ".md":
+            continue
+
+        # Determine if this link is inside a list item (bullet/numbered)
+        link_start = link_match.start()
+        link_line_num = md_content[:link_start].count("\n")
+        line_text = lines[link_line_num] if link_line_num < len(lines) else ""
+        is_list_item = bool(_LIST_ITEM_RE.match(line_text))
+
+        # Read the referenced file and extract its TOC
+        try:
+            ref_content = ref_path.read_text()
+        except Exception:
+            continue
+
+        toc_headings = extract_toc_headings(ref_content)
+
+        if not toc_headings:
+            # Target file has no TOC
+            if is_list_item and not _is_toc_exempt(ref_path):
+                # The link is in a list item pointing to a file without a TOC.
+                # We can't require TOC embedding, but the file itself should
+                # have a TOC for progressive discovery.
+                report.nit(
+                    f"Referenced file '{ref_path.name}' (linked from a list in "
+                    f"{rel_file}) has no Table of Contents section. All .md "
+                    f"reference files should include a TOC for progressive "
+                    f"discovery.",
+                    rel_file,
+                )
+            # For non-list links or exempt files: skip (no TOC to embed)
+            continue
+
+        refs_checked += 1
+
+        # Check if TOC headings appear within ~50 lines after the link
+        search_start = max(0, link_line_num)
+        search_end = min(len(lines), link_line_num + 50)
+        nearby_text = "\n".join(lines[search_start:search_end])
+
+        embedded_count = sum(1 for heading in toc_headings if heading.lower() in nearby_text.lower())
+
+        min_required = min(2, len(toc_headings))
+        if embedded_count >= min_required:
+            refs_with_toc += 1
+        elif is_list_item:
+            # Ambiguous: link in a list item could be a TOC title that
+            # happens to link to a .md file, or a genuine reference.
+            # Report as WARNING since we cannot tell which it is.
+            report.warning(
+                f"Link to '{ref_path.name}' in a list entry of {rel_file} "
+                f"points to a file with a TOC ({len(toc_headings)} sections) "
+                f"but the TOC is not embedded after the link. If this is a "
+                f"reference, embed the TOC so agents know what it contains. "
+                f"If this is an embedded TOC title, avoid using markdown "
+                f"links in TOC entries to prevent this ambiguity.",
+                rel_file,
+            )
+        else:
+            # Clear standalone reference — TOC must be embedded
+            report.minor(
+                f"Reference to '{ref_path.name}' in {rel_file} does not "
+                f"include the file's Table of Contents ({len(toc_headings)} "
+                f"sections). Embed the TOC inline so agents can see what "
+                f"content is available before navigating to it.",
+                rel_file,
+            )
+
+    if refs_checked > 0 and refs_with_toc == refs_checked:
+        report.passed(
+            f"All {refs_checked} referenced .md files have TOC embedded in {rel_file}",
+            rel_file,
+        )
