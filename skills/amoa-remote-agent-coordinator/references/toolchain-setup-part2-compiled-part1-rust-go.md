@@ -122,8 +122,9 @@ brew install go
 
 # Linux:
 wget https://go.dev/dl/go1.22.0.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz
-export PATH=$PATH:/usr/local/go/bin
+GO_ROOT="$HOME/.local"  # or any preferred install dir
+sudo tar -C "$GO_ROOT" -xzf go1.22.0.linux-amd64.tar.gz
+export PATH="$PATH:$GO_ROOT/go/bin"
 
 # Verify installation
 go version

@@ -27,6 +27,15 @@ dmypy.json
 .DS_Store
 Thumbs.db
 
+# Environment files
+.env
+.env.*
+
+# Virtual environments
+.venv/
+venv/
+env/
+
 # Dev folders (NEVER PUBLISH - development artifacts only)
 # Wildcard pattern catches all: docs_dev, scripts_dev, tests_dev, samples_dev,
 # examples_dev, downloads_dev, libs_dev, builds_dev, etc.
