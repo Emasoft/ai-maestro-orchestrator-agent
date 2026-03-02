@@ -95,7 +95,7 @@ fi
 # Falls back to python3 if uv is not available
 set +e
 if command -v uv &> /dev/null; then
-    uv run --with pyyaml python scripts/validate_plugin.py . --verbose --strict 2>&1
+    uv run --with pyyaml --with types-PyYAML python scripts/validate_plugin.py . --verbose --strict 2>&1
 else
     python3 scripts/validate_plugin.py . --verbose --strict 2>&1
 fi
