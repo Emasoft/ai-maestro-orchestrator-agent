@@ -9,8 +9,6 @@ metadata:
 agent: amoa-main
 context: fork
 user-invocable: false
-workflow-instruction: "support"
-procedure: "support-skill"
 ---
 
 # Claude Code Action Integration

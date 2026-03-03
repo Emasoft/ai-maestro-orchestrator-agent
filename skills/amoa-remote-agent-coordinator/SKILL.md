@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Step 17"
-procedure: "proc-execute-task"
 ---
 
 # Remote Agent Coordinator

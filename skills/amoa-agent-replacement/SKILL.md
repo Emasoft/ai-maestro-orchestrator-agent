@@ -9,8 +9,6 @@ metadata:
 user-invocable: false
 context: fork
 agent: amoa-main
-workflow-instruction: "support"
-procedure: "support-skill"
 ---
 
 # Agent Replacement Skill

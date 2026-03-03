@@ -9,8 +9,6 @@ metadata:
 agent: amoa-main
 context: fork
 user-invocable: false
-workflow-instruction: "Step 19"
-procedure: "proc-complete-task"
 ---
 
 # Verification Patterns for AMOA (AI Maestro Orchestrator Agent)

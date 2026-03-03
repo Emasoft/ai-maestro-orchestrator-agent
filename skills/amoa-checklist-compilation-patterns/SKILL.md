@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "support"
-procedure: "support-skill"
 ---
 
 # Checklist Compiler Skill

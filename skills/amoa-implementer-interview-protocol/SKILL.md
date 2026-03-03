@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Steps 14, 19"
-procedure: "proc-clarify-tasks, proc-complete-task"
 ---
 
 # Implementer Interview Protocol

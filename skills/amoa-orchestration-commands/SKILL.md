@@ -9,8 +9,6 @@ metadata:
 user-invocable: false
 context: fork
 agent: amoa-main
-workflow-instruction: "support"
-procedure: "support-skill"
 ---
 
 # Orchestration Commands Skill
@@ -428,8 +426,14 @@ Copy this checklist and track your progress:
 ## Resources
 
 - [start-orchestration-procedure.md](references/start-orchestration-procedure.md) - Starting orchestration
+<!-- TOC: 1 When to start orchestration phase | 2 Prerequisites verification checklist | 3 Command syntax and options -->
 - [status-monitoring.md](references/status-monitoring.md) - Reading status output
+<!-- TOC: 1 Understanding the orchestration status output | 2 Reading module status indicators | 3 Interpreting agent registry information -->
 - [orchestration-loop-mechanics.md](references/orchestration-loop-mechanics.md) - Loop behavior
+<!-- TOC: 1 What the orchestrator loop does | 2 Task source monitoring and priority | 3 Iteration counting and max iterations -->
 - [cancellation-cleanup.md](references/cancellation-cleanup.md) - Cancellation procedures
+<!-- TOC: 1 When to cancel vs let loop complete naturally | 2 Cancellation procedure step-by-step | 3 Cleanup of state files and locks -->
 - [state-file-format.md](references/state-file-format.md) - State file schemas
+<!-- TOC: 1 Loop state file format and fields | 2 Execution phase state file format | 3 Frontmatter field definitions -->
 - [troubleshooting.md](references/troubleshooting.md) - Common issues and solutions
+<!-- TOC: 1 Loop won't start - common causes | 2 Stop hook not firing - debugging steps | 3 Tasks showing as pending incorrectly -->

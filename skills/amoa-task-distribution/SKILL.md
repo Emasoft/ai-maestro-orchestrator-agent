@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Steps 13, 16, 18, 22"
-procedure: "proc-populate-kanban, proc-update-tasks, proc-update-kanban-status, proc-handle-failed-pr"
 ---
 
 # Task Distribution Skill

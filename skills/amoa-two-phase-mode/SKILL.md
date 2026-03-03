@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Step 10"
-procedure: "proc-decompose-design"
 ---
 
 # Two-Phase Mode Skill

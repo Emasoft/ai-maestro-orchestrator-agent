@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Step 20"
-procedure: "proc-request-pr-review"
 ---
 
 # AMOA Shared Communication Templates

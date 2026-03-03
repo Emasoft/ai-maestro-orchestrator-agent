@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Steps 10, 12, 23, 24"
-procedure: "proc-decompose-design, proc-create-task-plan, proc-handle-successful-pr, proc-iterate"
 ---
 
 # Orchestration Patterns Skill

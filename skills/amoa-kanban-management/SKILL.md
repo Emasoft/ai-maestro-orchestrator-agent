@@ -9,8 +9,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Steps 12, 13, 14, 15"
-procedure: "proc-populate-kanban, proc-update-kanban-status, proc-add-columns, proc-sync-kanban"
 ---
 
 # Kanban Board Management Skill

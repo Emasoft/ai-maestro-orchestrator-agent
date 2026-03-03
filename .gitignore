@@ -36,6 +36,9 @@ Thumbs.db
 venv/
 env/
 
+# Node.js
+node_modules/
+
 # Dev folders (NEVER PUBLISH - development artifacts only)
 # Wildcard pattern catches all: docs_dev, scripts_dev, tests_dev, samples_dev,
 # examples_dev, downloads_dev, libs_dev, builds_dev, etc.

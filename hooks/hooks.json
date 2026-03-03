@@ -23,7 +23,7 @@
           {
             "type": "command",
             "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_verification_status.py",
-            "timeout": 10
+            "timeout": 30000
           }
         ]
       }
@@ -36,7 +36,7 @@
           {
             "type": "command",
             "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_polling_due.py",
-            "timeout": 5
+            "timeout": 30000
           }
         ]
       }

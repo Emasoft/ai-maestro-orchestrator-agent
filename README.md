@@ -73,6 +73,17 @@ The Orchestrator Agent handles **task distribution, agent coordination, and prog
 | `amoa-polling-reminder` | UserPromptSubmit | Remind to poll progress |
 | `amoa-file-tracker` | PostToolUse | Track file modifications |
 
+## Project Structure Notes
+
+### Non-Standard Directories
+
+- **`git-hooks/`** — Contains git hook scripts (pre-push) for plugin validation before pushing
+- **`shared/`** — Shared resources used across skills and agents
+
+### Shell Scripts Compatibility
+
+3 bash/shell scripts (`.sh` files) require **Linux or macOS** and are not natively available on Windows. Windows users should use WSL2 or equivalent.
+
 ## Workflow
 
 1. Receives plan from Architect (via Assistant Manager)

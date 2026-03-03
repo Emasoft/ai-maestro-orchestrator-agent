@@ -12,8 +12,6 @@ metadata:
 context: fork
 user-invocable: false
 agent: amoa-main
-workflow-instruction: "Steps 14, 15, 22"
-procedure: "proc-clarify-tasks, proc-handle-feedback, proc-handle-failed-pr"
 ---
 
 # Developer Communication Skill
@@ -360,8 +358,14 @@ Copy this checklist and track your progress:
 ## Resources
 
 - [pr-comment-writing.md](references/pr-comment-writing.md) - Code review comment patterns
+<!-- TOC: 1 Writing constructive code review comments | 1 The praise-suggestion-question framework | 2 Balancing thoroughness with developer time -->
 - [issue-communication.md](references/issue-communication.md) - Bug report and feature request handling
+<!-- TOC: 1 Bug report response workflow | 1 Acknowledgment template | 2 Reproduction confirmation -->
 - [technical-explanation.md](references/technical-explanation.md) - Explaining technical decisions
+<!-- TOC: 1 Explaining technical decisions | 1 The context-decision-consequences format | 2 Acknowledging tradeoffs honestly -->
 - [conflict-resolution.md](references/conflict-resolution.md) - Handling disagreements
+<!-- TOC: 1 Disagreeing professionally | 1 Separating the idea from the person | 2 Starting with understanding -->
 - [status-updates.md](references/status-updates.md) - Progress reporting
+<!-- TOC: ### Part 1: Progress Reports | 1 Progress report format -->
 - [templates-for-humans.md](references/templates-for-humans.md) - PR and commit templates
+<!-- TOC: 1 Pull Request description template | 1 Summary section | 2 Changes section with bullets -->
