@@ -14,6 +14,7 @@ All individual validators should import from this module to ensure consistency.
 from __future__ import annotations
 
 import fnmatch
+import getpass
 import json
 import os
 import re
@@ -404,8 +405,6 @@ def _get_private_usernames() -> set[str]:
 
     # Get current user's login name
     try:
-        import getpass
-
         username = getpass.getuser().lower()
         if username and username not in EXAMPLE_USERNAMES:
             usernames.add(username)

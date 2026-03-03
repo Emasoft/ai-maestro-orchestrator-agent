@@ -298,7 +298,7 @@ def validate_structure(plugin_root: Path, report: ValidationReport, marketplace_
         report.passed(".claude-plugin directory exists")
 
     # Components must be at root, NOT in .claude-plugin
-    for component in ["commands", "agents", "skills", "hooks", "schemas", "bin"]:
+    for component in ["commands", "agents", "skills", "hooks", "scripts", "schemas", "bin"]:
         wrong_path = plugin_root / ".claude-plugin" / component
         if wrong_path.exists():
             report.critical(f"{component}/ must be at plugin root, not in .claude-plugin/")
@@ -365,6 +365,40 @@ def validate_structure(plugin_root: Path, report: ValidationReport, marketplace_
                 f"Non-standard directory '{dirname}/' — not part of the plugin spec. "
                 f"If needed by plugin scripts, consider documenting its purpose in README."
             )
+
+    # Validate plugin-shipped settings.json if present
+    settings_path = plugin_root / "settings.json"
+    if settings_path.exists():
+        try:
+            settings_data = json.loads(settings_path.read_text())
+            if not isinstance(settings_data, dict):
+                report.major("settings.json: root must be a JSON object", "settings.json")
+            else:
+                # Only "agent" is a recognized plugin setting key
+                recognized_keys = {"agent"}
+                for key in settings_data:
+                    if key not in recognized_keys:
+                        report.minor(
+                            f"settings.json: unrecognized key '{key}' — "
+                            f"supported plugin settings: {', '.join(sorted(recognized_keys))}",
+                            "settings.json",
+                        )
+                report.passed("settings.json is valid", "settings.json")
+        except json.JSONDecodeError as e:
+            report.major(f"settings.json: JSON parse error: {e}", "settings.json")
+
+    # Check that plugin has at least some actual content beyond just a manifest
+    content_indicators = ["commands", "skills", "agents", "hooks", "scripts"]
+    file_indicators = [".mcp.json", ".lsp.json"]
+    has_content = any((plugin_root / d).is_dir() for d in content_indicators) or any(
+        (plugin_root / f).exists() for f in file_indicators
+    )
+    if not has_content:
+        report.major(
+            "Plugin has a manifest but no content — "
+            "expected at least one of: commands/, skills/, agents/, hooks/, scripts/, .mcp.json, or .lsp.json",
+            ".claude-plugin/plugin.json",
+        )
 
 
 def validate_commands(plugin_root: Path, report: ValidationReport) -> None:
@@ -630,6 +664,24 @@ def validate_scripts(plugin_root: Path, report: ValidationReport) -> None:
                 report.minor(f"Shellcheck issues in {sh_file.name}", f"scripts/{sh_file.name}")
         else:
             report.minor("shellcheck not available locally or via bunx/npx, skipping shell lint")
+
+    # Check shebangs on script files — scripts without shebangs may not run cross-platform
+    shebang_extensions = {".py", ".sh", ".bash", ".rb", ".pl", ".php"}
+    all_scripts = [f for f in scripts_dir.iterdir() if f.is_file() and f.suffix.lower() in shebang_extensions]
+    scripts_missing_shebang = []
+    for script in all_scripts:
+        try:
+            first_line = script.read_text().split("\n", 1)[0]
+            if not first_line.startswith("#!"):
+                scripts_missing_shebang.append(script.name)
+        except (OSError, UnicodeDecodeError):
+            pass
+    if scripts_missing_shebang:
+        report.minor(
+            f"Scripts missing shebang (e.g. #!/usr/bin/env python3): {', '.join(sorted(scripts_missing_shebang))}. "
+            "Without a shebang, scripts may not run correctly across platforms.",
+            "scripts/",
+        )
 
 
 # =============================================================================

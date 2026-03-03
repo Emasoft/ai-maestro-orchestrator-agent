@@ -37,6 +37,7 @@ import argparse
 import json
 import os
 import platform
+import re
 import shlex
 import shutil
 import subprocess
@@ -222,6 +223,7 @@ def executor_versions() -> dict[str, str | None]:
 
 
 def bunx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
+    """Build argv for running a package via bunx/bun x."""
     # Bun supports -p/--package for package != command. (see: https://bun.com/docs/pm/bunx )
     base = ["bunx"] if have("bunx") else ["bun", "x"]
     if cmd == pkg:
@@ -230,6 +232,7 @@ def bunx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
 
 
 def pnpm_dlx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
+    """Build argv for running a package via pnpm dlx."""
     # pnpm dlx runs the default bin; if cmd differs, place cmd explicitly.
     if cmd == pkg:
         return ["pnpm", "dlx", pkg] + tool_args
@@ -237,29 +240,45 @@ def pnpm_dlx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
 
 
 def yarn_dlx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
+    """Build argv for running a package via yarn dlx."""
     if cmd == pkg:
         return ["yarn", "dlx", pkg] + tool_args
     return ["yarn", "dlx", "-p", pkg, cmd] + tool_args
 
 
 def npx_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
+    """Build argv for running a package via npx."""
     if cmd == pkg:
         return ["npx", "--yes", pkg] + tool_args
     return ["npx", "--yes", "-p", pkg, cmd] + tool_args
 
 
 def npm_exec_argv(pkg: str, cmd: str, tool_args: list[str]) -> list[str]:
+    """Build argv for running a package via npm exec."""
     # npm exec --package=<pkg> -- <cmd> [args...]   (see: https://docs.npmjs.com/cli/v8/commands/npm-exec )
     return ["npm", "exec", "--yes", f"--package={pkg}", "--", cmd] + tool_args
 
 
 def deno_npm_argv(pkg: str, cmd: str, tool_args: list[str], latest: bool = True) -> list[str]:
+    """Build argv for running an npm package via Deno with minimal permissions."""
     ver = "@latest" if latest else ""
     spec = f"npm:{pkg}{ver}"
-    return ["deno", "run", "-A", spec, "--", cmd] + tool_args
+    return [
+        "deno",
+        "run",
+        "--allow-read=.",
+        "--allow-write=.",
+        "--allow-env",
+        "--allow-net",
+        "--no-prompt",
+        spec,
+        "--",
+        cmd,
+    ] + tool_args
 
 
 def uvx_argv(pkg: str, cmd: str, tool_args: list[str], latest: bool = True) -> list[str]:
+    """Build argv for running a Python package via uvx/uv tool run."""
     # uvx TOOL@latest ... (when pkg==cmd), else uvx --from <pkg> <cmd> ...
     if have("uvx"):
         if pkg == cmd:
@@ -277,28 +296,55 @@ def uvx_argv(pkg: str, cmd: str, tool_args: list[str], latest: bool = True) -> l
 
 
 def pipx_run_argv(pkg: str, tool_args: list[str]) -> list[str]:
+    """Build argv for running a Python package via pipx run."""
     # pipx can't reliably pick an arbitrary bin from a package; best effort:
     return ["pipx", "run", pkg] + tool_args
 
 
 def deno_builtin_argv(subcmd: str, tool_args: list[str]) -> list[str]:
+    """Build argv for running a Deno built-in subcommand."""
     return ["deno", subcmd] + tool_args
 
 
 def docker_argv(image: str, prefix: list[str], tool_args: list[str]) -> list[str]:
+    """Build argv for running a tool inside a Docker container (read-only mount)."""
     cwd = os.getcwd()
-    return ["docker", "run", "--rm", "-v", f"{cwd}:/w", "-w", "/w", image] + prefix + tool_args
+    return (
+        [
+            "docker",
+            "run",
+            "--rm",
+            "-v",
+            f"{cwd}:/w:ro",
+            "-w",
+            "/w",
+            "--security-opt=no-new-privileges",
+            "--cap-drop=ALL",
+            image,
+        ]
+        + prefix
+        + tool_args
+    )
 
 
 def ps_quote(s: str) -> str:
+    """Escape a string for use in PowerShell single-quoted context."""
     # Single-quote escaping for PowerShell: ' -> ''
     return "'" + s.replace("'", "''") + "'"
 
 
 def powershell_module_argv(module: str, cmdlet: str, cmdlet_args: list[str]) -> list[str]:
+    """Download PowerShell module to temp dir, import it, run cmdlet.
+
+    Validates module and cmdlet names against PowerShell naming conventions
+    to prevent command injection.
     """
-    Download module to temp dir, import it, run cmdlet.
-    """
+    # Validate module/cmdlet names to prevent injection
+    if not re.match(r"^[A-Za-z][A-Za-z0-9._-]*$", module):
+        raise ValueError(f"Invalid PowerShell module name: {module!r}")
+    if not re.match(r"^[A-Za-z]+-[A-Za-z][A-Za-z0-9]*$", cmdlet):
+        raise ValueError(f"Invalid PowerShell cmdlet name: {cmdlet!r}")
+
     shell = "pwsh" if have("pwsh") else "powershell"
     if not have(shell):
         raise RuntimeError("No PowerShell found (pwsh or powershell)")
@@ -321,10 +367,17 @@ Import-Module $psd1 -Force | Out-Null
 
 
 def resolve_tool(tool_name: str) -> ToolSpec:
+    """Resolve a tool name to a ToolSpec from TOOL_DB.
+
+    Raises ValueError for unknown tools — only known tools in TOOL_DB are allowed
+    to prevent auto-installation of typosquatted packages.
+    """
     if tool_name in TOOL_DB:
         return TOOL_DB[tool_name]
-    # Default guess: node (common for random CLIs); can be overridden via --ecosystem.
-    return ToolSpec(name=tool_name, ecosystem="node", package=tool_name, command=tool_name)
+    raise ValueError(
+        f"Unknown tool '{tool_name}'. Only tools listed in TOOL_DB are allowed. "
+        f"Known tools: {', '.join(sorted(TOOL_DB))}"
+    )
 
 
 def build_argv_for_executor(executor: str, spec: ToolSpec, tool_args: list[str]) -> list[str] | None:
