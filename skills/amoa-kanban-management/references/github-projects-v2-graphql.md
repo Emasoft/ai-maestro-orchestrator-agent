@@ -210,7 +210,7 @@ InputObject 'UpdateProjectV2FieldInput' doesn't accept argument 'projectId'
 4. Execute the mutation with the complete options array
 5. Verify existing assignments survived
 
-**ALWAYS use `scripts/gh-project-add-columns.sh` instead of calling this mutation directly.** The script handles the safe preservation of existing options automatically.
+**ALWAYS use `scripts/gh-project-add-columns.py` instead of calling this mutation directly.** The script handles the safe preservation of existing options automatically.
 
 ---
 
@@ -483,4 +483,4 @@ gh api graphql -f query='
 gh project create --owner Emasoft --title "New Project Board"
 ```
 
-This creates a project with only the default "Status" field and default columns (Todo, In Progress, Done). Use `scripts/gh-project-add-columns.sh` to add the full 8-column system.
+This creates a project with only the default "Status" field and default columns (Todo, In Progress, Done). Use `scripts/gh-project-add-columns.py` to add the full 8-column system.

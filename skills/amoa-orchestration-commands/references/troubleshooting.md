@@ -374,7 +374,7 @@ chmod +x "${CLAUDE_PLUGIN_ROOT}/scripts/check-tasks.sh"
 gh auth status
 
 # Test script directly
-"${CLAUDE_PLUGIN_ROOT}/scripts/check-github-projects.sh"
+"${CLAUDE_PLUGIN_ROOT}/scripts/check-github-projects.py"
 
 # Check for network issues
 ping github.com

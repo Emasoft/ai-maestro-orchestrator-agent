@@ -88,7 +88,7 @@ def validate_manifest(
         return None
 
     try:
-        manifest = json.loads(manifest_path.read_text())
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         report.critical(f"Invalid JSON in plugin.json: {e}", ".claude-plugin/plugin.json")
         return None
@@ -328,7 +328,6 @@ def validate_structure(plugin_root: Path, report: ValidationReport, marketplace_
         ".claude-plugin",
         ".git",
         ".github",
-        ".gitignore",
         "commands",
         "agents",
         "skills",
@@ -352,6 +351,16 @@ def validate_structure(plugin_root: Path, report: ValidationReport, marketplace_
         "examples",
         "samples",
         "references",
+        # Developer tooling dirs
+        "git-hooks",
+        "shared",
+        "fixtures",
+        "vendor",
+        "src",
+        "dist",
+        "build",
+        "out",
+        "target",
     }
     # Also skip hidden dirs and _dev dirs
     for item in plugin_root.iterdir():
@@ -370,20 +379,25 @@ def validate_structure(plugin_root: Path, report: ValidationReport, marketplace_
     settings_path = plugin_root / "settings.json"
     if settings_path.exists():
         try:
-            settings_data = json.loads(settings_path.read_text())
+            settings_data = json.loads(settings_path.read_text(encoding="utf-8"))
             if not isinstance(settings_data, dict):
                 report.major("settings.json: root must be a JSON object", "settings.json")
             else:
                 # Only "agent" is a recognized plugin setting key
                 recognized_keys = {"agent"}
+                has_unrecognized = False
                 for key in settings_data:
                     if key not in recognized_keys:
+                        has_unrecognized = True
                         report.minor(
                             f"settings.json: unrecognized key '{key}' — "
                             f"supported plugin settings: {', '.join(sorted(recognized_keys))}",
                             "settings.json",
                         )
-                report.passed("settings.json is valid", "settings.json")
+                if not has_unrecognized:
+                    report.passed("settings.json is valid", "settings.json")
+                else:
+                    report.passed("settings.json is parseable JSON", "settings.json")
         except json.JSONDecodeError as e:
             report.major(f"settings.json: JSON parse error: {e}", "settings.json")
 
@@ -424,7 +438,7 @@ def validate_commands(plugin_root: Path, report: ValidationReport) -> None:
 def validate_command_file(cmd_path: Path, report: ValidationReport) -> None:
     """Validate a single command file."""
     rel_path = f"commands/{cmd_path.name}"
-    content = cmd_path.read_text()
+    content = cmd_path.read_text(encoding="utf-8")
 
     # Check frontmatter
     if not content.startswith("---"):
@@ -486,7 +500,7 @@ def validate_agents(plugin_root: Path, report: ValidationReport) -> None:
 def validate_agent_file(agent_path: Path, report: ValidationReport) -> None:
     """Validate a single agent file."""
     rel_path = f"agents/{agent_path.name}"
-    content = agent_path.read_text()
+    content = agent_path.read_text(encoding="utf-8")
 
     # Check frontmatter
     if not content.startswith("---"):
@@ -640,6 +654,8 @@ def validate_scripts(plugin_root: Path, report: ValidationReport) -> None:
 
     # Shell scripts
     sh_files = list(scripts_dir.glob("*.sh"))
+    # Resolve shellcheck once, outside the loop
+    shellcheck_cmd = resolve_tool_command("shellcheck") if sh_files else None
     for sh_file in sh_files:
         if not os.access(sh_file, os.X_OK):
             report.major(
@@ -649,8 +665,7 @@ def validate_scripts(plugin_root: Path, report: ValidationReport) -> None:
         else:
             report.passed(f"Shell script executable: {sh_file.name}", f"scripts/{sh_file.name}")
 
-        # Shellcheck
-        shellcheck_cmd = resolve_tool_command("shellcheck")
+        # Shellcheck lint
         if shellcheck_cmd:
             result = subprocess.run(
                 shellcheck_cmd + [str(sh_file)],
@@ -662,8 +677,9 @@ def validate_scripts(plugin_root: Path, report: ValidationReport) -> None:
                 report.passed(f"Shellcheck passed: {sh_file.name}")
             else:
                 report.minor(f"Shellcheck issues in {sh_file.name}", f"scripts/{sh_file.name}")
-        else:
-            report.minor("shellcheck not available locally or via bunx/npx, skipping shell lint")
+    # Report shellcheck availability once (after loop)
+    if sh_files and not shellcheck_cmd:
+        report.minor("shellcheck not available locally or via bunx/npx, skipping shell lint")
 
     # Check shebangs on script files — scripts without shebangs may not run cross-platform
     shebang_extensions = {".py", ".sh", ".bash", ".rb", ".pl", ".php"}
@@ -671,7 +687,8 @@ def validate_scripts(plugin_root: Path, report: ValidationReport) -> None:
     scripts_missing_shebang = []
     for script in all_scripts:
         try:
-            first_line = script.read_text().split("\n", 1)[0]
+            with open(script, errors="replace") as f:
+                first_line = f.readline().rstrip("\n")
             if not first_line.startswith("#!"):
                 scripts_missing_shebang.append(script.name)
         except (OSError, UnicodeDecodeError):
@@ -782,7 +799,7 @@ def validate_cross_platform(plugin_root: Path, report: ValidationReport) -> None
         ".zig": ("Zig", ["build.zig"]),
     }
 
-    # Directories to always skip (build artifacts, caches)
+    # Directories to always skip (build artifacts, caches, developer tooling)
     skip_dirs = {
         "__pycache__",
         "node_modules",
@@ -790,6 +807,9 @@ def validate_cross_platform(plugin_root: Path, report: ValidationReport) -> None
         "build",
         "target",
         ".eggs",
+        "git-hooks",  # git hooks are developer tooling, not end-user components
+        "tests",  # test fixtures may contain platform-specific scripts
+        "fixtures",
     }
 
     # Use gitignore-aware walk to skip ignored files and directories

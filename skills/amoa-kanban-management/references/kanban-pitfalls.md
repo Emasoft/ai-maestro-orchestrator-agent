@@ -8,7 +8,7 @@
 - 3.2 updateProjectV2Field replaces ALL options - Data loss risk
   - 3.2.1 Why this happens - Option IDs are regenerated
   - 3.2.2 Safe column addition procedure
-  - 3.2.3 Using gh-project-add-columns.sh script
+  - 3.2.3 Using gh-project-add-columns.py script
 - 3.3 gh auth refresh requires interactive browser - Cannot be automated
 - 3.4 updateProjectV2Field does not accept projectId - Only fieldId
 
@@ -198,13 +198,13 @@ To safely add columns, you MUST:
 
 After this mutation, existing items retain their column assignments because the existing option IDs were preserved.
 
-### 3.2.3 Using gh-project-add-columns.sh script
+### 3.2.3 Using gh-project-add-columns.py script
 
 **ALWAYS use the provided helper script instead of calling the mutation directly:**
 
 ```bash
 # The script handles all the safe preservation logic automatically
-./scripts/gh-project-add-columns.sh \
+python3 scripts/gh-project-add-columns.py \
   --project <project-number> \
   --field "Status" \
   --add "AI Review" \
@@ -222,7 +222,7 @@ After this mutation, existing items retain their column assignments because the 
 5. Re-queries the field to verify existing assignments survived
 6. Reports success or failure with details
 
-**The script is located at:** `scripts/gh-project-add-columns.sh` in the AMOA plugin directory.
+**The script is located at:** `scripts/gh-project-add-columns.py` in the AMOA plugin directory.
 
 ---
 

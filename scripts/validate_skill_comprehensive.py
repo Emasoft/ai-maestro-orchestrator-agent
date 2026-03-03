@@ -1691,7 +1691,7 @@ def validate_scripts_directory(skill_path: Path, report: ValidationReport) -> No
 
             # Check shebang line
             try:
-                content = script.read_text()
+                content = script.read_text(encoding="utf-8")
                 first_line = content.split("\n")[0] if content else ""
 
                 if not first_line.startswith("#!"):
@@ -1783,7 +1783,7 @@ def validate_reference_files(skill_path: Path, report: ValidationReport) -> None
     # Check for long reference files without TOC
     for ref_file in refs_dir.glob("*.md"):
         try:
-            content = ref_file.read_text()
+            content = ref_file.read_text(encoding="utf-8")
             line_count = content.count("\n") + 1
 
             if line_count > REFERENCE_TOC_THRESHOLD:
@@ -1984,7 +1984,7 @@ def validate_skill(
     skill_md = find_skill_md(skill_path)
     if skill_md is None:
         return report
-    content = skill_md.read_text()
+    content = skill_md.read_text(encoding="utf-8")
 
     # Parse frontmatter
     frontmatter = validate_frontmatter_structure(content, report)

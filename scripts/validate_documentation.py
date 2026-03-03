@@ -109,7 +109,7 @@ def validate_installation_section(plugin_path: Path, report: DocumentationValida
     if readme is None:
         return  # Already reported in validate_readme_exists
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
 
     # Pattern matches ## Installation, ## Getting Started, ## Setup, ## Quick Start
     installation_patterns = [
@@ -148,7 +148,7 @@ def validate_usage_section(plugin_path: Path, report: DocumentationValidationRep
     if readme is None:
         return
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
 
     usage_patterns = [
         r"^#+\s*usage",
@@ -186,7 +186,7 @@ def validate_description_section(plugin_path: Path, report: DocumentationValidat
     if readme is None:
         return
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
     lines = content.split("\n")
 
     # Find the first h1 and first h2
@@ -246,7 +246,7 @@ def validate_broken_links(plugin_path: Path, report: DocumentationValidationRepo
 
     for md_file in md_files:
         try:
-            content = md_file.read_text()
+            content = md_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
 
@@ -325,7 +325,7 @@ def validate_heading_hierarchy(plugin_path: Path, report: DocumentationValidatio
     if readme is None:
         return
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
     lines = content.split("\n")
 
     # Track current heading level
@@ -371,7 +371,7 @@ def validate_code_block_closed(plugin_path: Path, report: DocumentationValidatio
     if readme is None:
         return
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
     lines = content.split("\n")
 
     # Track code fence state
@@ -418,7 +418,7 @@ def validate_code_block_language_tags(plugin_path: Path, report: DocumentationVa
     if readme is None:
         return
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
     lines = content.split("\n")
 
     in_code_block = False
@@ -465,7 +465,7 @@ def validate_list_formatting(plugin_path: Path, report: DocumentationValidationR
     if readme is None:
         return
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
     lines = content.split("\n")
 
     # Track list markers used
@@ -518,7 +518,7 @@ def validate_table_structure(plugin_path: Path, report: DocumentationValidationR
     if readme is None:
         return
 
-    content = readme.read_text()
+    content = readme.read_text(encoding="utf-8")
     lines = content.split("\n")
 
     in_table = False
@@ -593,7 +593,7 @@ def validate_image_references(plugin_path: Path, report: DocumentationValidation
 
     for md_file in md_files:
         try:
-            content = md_file.read_text()
+            content = md_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
 

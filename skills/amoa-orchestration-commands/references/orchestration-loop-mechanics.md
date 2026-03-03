@@ -102,7 +102,7 @@ The orchestrator monitors 4 task sources. Priority is determined by the orchestr
 
 **Detection**:
 ```bash
-# Checked by check-github-projects.sh helper script
+# Checked by check-github-projects.py helper script
 # Returns JSON: {"pending_count": N, "available": true, "tasks": [...]}
 ```
 

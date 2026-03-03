@@ -139,7 +139,7 @@ def validate_json_structure(hook_path: Path, report: ValidationReport) -> dict[s
         return None
 
     try:
-        content = hook_path.read_text()
+        content = hook_path.read_text(encoding="utf-8")
         data = json.loads(content)
         report.passed("Valid JSON syntax")
         return cast(dict[str, Any], data)
@@ -180,7 +180,7 @@ def validate_event_name(event_name: str, report: ValidationReport) -> bool:
     """Validate a hook event name."""
     if event_name not in VALID_HOOK_EVENTS:
         # Fuzzy match for "did you mean?" suggestions
-        close = difflib.get_close_matches(event_name, VALID_HOOK_EVENTS, n=1, cutoff=0.6)
+        close = difflib.get_close_matches(event_name, sorted(VALID_HOOK_EVENTS), n=1, cutoff=0.6)
         if close:
             report.critical(
                 f"Unknown hook event: '{event_name}' — did you mean '{close[0]}'? "
@@ -190,6 +190,27 @@ def validate_event_name(event_name: str, report: ValidationReport) -> bool:
             report.critical(f"Unknown hook event: '{event_name}'. Valid events: {sorted(VALID_HOOK_EVENTS)}")
         return False
     return True
+
+
+def _check_matcher_values(
+    matcher: str,
+    known_values: set[str],
+    event_label: str,
+    values_label: str,
+    report: ValidationReport,
+) -> None:
+    """Check matcher parts against a set of known values, reporting info for unknowns."""
+    parts = re.split(r"[|()]", matcher)
+    for part in parts:
+        part = part.strip()
+        # Skip empty, wildcard, and regex patterns (contain metacharacters)
+        if not part or part == "*" or re.escape(part) != part:
+            continue
+        if part not in known_values:
+            report.info(
+                f"{event_label} matcher '{part}' is not a known {values_label} — "
+                f"known values: {', '.join(sorted(known_values))}"
+            )
 
 
 def validate_matcher(matcher: Any, event_name: str, report: ValidationReport) -> bool:
@@ -226,38 +247,13 @@ def validate_matcher(matcher: Any, event_name: str, report: ValidationReport) ->
                 if re.match(r"^[A-Z][a-zA-Z]+$", part):
                     report.info(f"Matcher '{part}' is not a common tool name (may be custom or MCP tool)")
 
-    # Validate Notification matcher types
+    # Validate matcher values against known sets for specific event types
     if event_name == "Notification":
-        parts = re.split(r"[|()]", matcher)
-        for part in parts:
-            part = part.strip()
-            if part and part != "*" and part not in COMMON_NOTIFICATION_TYPES:
-                report.info(
-                    f"Notification matcher '{part}' is not a common type — "
-                    f"known types: {', '.join(sorted(COMMON_NOTIFICATION_TYPES))}"
-                )
-
-    # Validate SessionStart matcher sources
+        _check_matcher_values(matcher, COMMON_NOTIFICATION_TYPES, "Notification", "type", report)
     if event_name == "SessionStart":
-        parts = re.split(r"[|()]", matcher)
-        for part in parts:
-            part = part.strip()
-            if part and part != "*" and part not in SESSION_START_SOURCES:
-                report.info(
-                    f"SessionStart matcher '{part}' is not a known source — "
-                    f"known values: {', '.join(sorted(SESSION_START_SOURCES))}"
-                )
-
-    # Validate PreCompact matcher triggers
+        _check_matcher_values(matcher, SESSION_START_SOURCES, "SessionStart", "source", report)
     if event_name == "PreCompact":
-        parts = re.split(r"[|()]", matcher)
-        for part in parts:
-            part = part.strip()
-            if part and part != "*" and part not in COMPACT_TRIGGERS:
-                report.info(
-                    f"PreCompact matcher '{part}' is not a known trigger — "
-                    f"known values: {', '.join(sorted(COMPACT_TRIGGERS))}"
-                )
+        _check_matcher_values(matcher, COMPACT_TRIGGERS, "PreCompact", "trigger", report)
 
     return True
 
@@ -551,35 +547,44 @@ def validate_command_hook(
     # Bash command portability checks
     stripped_cmd = command.strip()
 
-    # 3a: Script file without interpreter prefix
+    # 3a: Script file as first token without an explicit interpreter prefix
     script_extensions = {".py", ".js", ".ts", ".sh", ".rb", ".pl"}
     if cmd_first_token and any(cmd_first_token.endswith(ext) for ext in script_extensions):
-        # Check if it's being run directly (first token IS the script, no interpreter before it)
-        interpreter_prefixes = {"python", "python3", "node", "bun", "deno", "bash", "sh", "ruby", "perl"}
-        if not any(cmd_first_token.startswith(pfx) for pfx in interpreter_prefixes):
-            # It's a script file as first token — warn if no shebang guarantee
+        # Check if the script is being invoked directly (first token) vs via an interpreter
+        # e.g. "python3 script.py" -> first token is "python3", second is script -> OK
+        # e.g. "./script.py" -> first token IS the script -> warn
+        cmd_tokens = command.strip().split()
+        interpreter_names = {"python", "python3", "node", "bun", "deno", "bash", "sh", "ruby", "perl", "env"}
+        has_interpreter = len(cmd_tokens) >= 2 and cmd_tokens[0] in interpreter_names
+        if not has_interpreter:
             report.minor(
                 f"Command runs '{cmd_first_token}' without an explicit interpreter — "
                 "add one (e.g. python3, node, bash) for cross-platform reliability"
             )
 
     # 3b: Tilde path that may not expand in hook commands
-    if stripped_cmd.startswith("~/"):
+    if re.search(r"(^|\s)~/", stripped_cmd):
         report.minor(
-            "Command starts with '~/' — tilde expansion may not work in hook commands. "
+            "Command uses '~/' path — tilde expansion may not work in hook commands. "
             "Use $HOME/ or ${CLAUDE_PLUGIN_ROOT}/ instead."
         )
 
     # 3c: Bare 'cd' without chained command (no effect in fresh shell)
-    if stripped_cmd.startswith("cd ") and "&&" not in stripped_cmd and ";" not in stripped_cmd:
+    if (
+        (stripped_cmd.startswith("cd ") or stripped_cmd == "cd")
+        and "&&" not in stripped_cmd
+        and ";" not in stripped_cmd
+    ):
         report.minor(
             "'cd' alone has no effect — each hook runs in a fresh shell. "
             "Combine with your command: 'cd /dir && your-command'"
         )
 
-    # 3d: Windows backslash paths (cross-platform warning — always check, not just on Windows)
-    if "\\" in command and "${CLAUDE_PLUGIN_ROOT}" not in command and "\\n" not in command and "\\t" not in command:
-        report.minor("Command contains backslash paths — use forward slashes for cross-platform compatibility")
+    # 3d: Windows-style backslash paths (look for drive-letter patterns or consecutive backslash dirs)
+    if re.search(r"[A-Za-z]:\\\\|\\\\[A-Za-z]", command):
+        report.minor(
+            "Command contains Windows-style backslash paths — use forward slashes for cross-platform compatibility"
+        )
 
     # Relative path without $CLAUDE_PLUGIN_ROOT — may not resolve at runtime
     if (

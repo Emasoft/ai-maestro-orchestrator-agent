@@ -325,7 +325,7 @@ def validate_lsp_config(
 
     # Parse JSON
     try:
-        config = json.loads(config_path.read_text())
+        config = json.loads(config_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         report.critical(f"Invalid JSON in {rel_path}: {e}")
         return report

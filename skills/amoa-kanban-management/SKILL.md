@@ -50,7 +50,7 @@ If scopes are missing, the agent CANNOT proceed. See [references/gh-auth-scopes.
 **Steps:**
 1. Verify gh auth has project scopes (pre-flight check)
 2. Create the GitHub Project via `gh project create`
-3. Add the 8 standard columns using `gh-project-add-columns.sh`
+3. Add the 8 standard columns using `gh-project-add-columns.py`
 4. Link the repository to the project
 5. Register the project number in `.github/project.json`
 
@@ -62,14 +62,14 @@ If scopes are missing, the agent CANNOT proceed. See [references/gh-auth-scopes.
 <!-- TOC: 1 Done column auto-closes linked issues - GitHub built-in automation | 1 How to detect if an issue was auto-closed | 2 Guard: check issue state before attempting gh issue close -->
 
 **Steps:**
-1. ALWAYS use the safe column adder script: `scripts/gh-project-add-columns.sh`
+1. ALWAYS use the safe column adder script: `scripts/gh-project-add-columns.py`
 2. NEVER manually call `updateProjectV2Field` without preserving existing option IDs
 3. Verify existing assignments survived after the mutation
 
 **Script usage:**
 ```bash
 # Add new columns safely (preserves existing columns and their assignments)
-./scripts/gh-project-add-columns.sh --project <number> --field "Status" --add "AI Review" --add "Human Review"
+python3 scripts/gh-project-add-columns.py --project <number> --field "Status" --add "AI Review" --add "Human Review"
 ```
 
 ### PROCEDURE 3: Move Items Between Columns
@@ -101,8 +101,8 @@ The AMOA plugin includes these kanban management scripts in `scripts/`:
 |--------|---------|-------------|
 | `amoa_kanban_manager.py` | Create tasks, assign agents, update status, check ready tasks | Day-to-day kanban operations |
 | `amoa_sync_kanban.py` | Sync label status with GitHub Project board | After manual board changes or to reconcile state |
-| `check-github-projects.sh` | Query project board for pending items | Stop-hook checks, status queries |
-| `gh-project-add-columns.sh` | Safely add columns preserving existing assignments | When adding new columns to a live board |
+| `check-github-projects.py` | Query project board for pending items | Stop-hook checks, status queries |
+| `gh-project-add-columns.py` | Safely add columns preserving existing assignments | When adding new columns to a live board |
 
 ---
 
@@ -153,7 +153,7 @@ The standard 8-column kanban system:
 - 3.2 updateProjectV2Field replaces ALL options - Data loss risk
   - 3.2.1 Why this happens - Option IDs are regenerated
   - 3.2.2 Safe column addition procedure
-  - 3.2.3 Using gh-project-add-columns.sh script
+  - 3.2.3 Using gh-project-add-columns.py script
 - 3.3 gh auth refresh requires interactive browser - Cannot be automated
 - 3.4 updateProjectV2Field does not accept projectId - Only fieldId
 
@@ -165,7 +165,7 @@ Follow these steps to manage the kanban board:
 
 1. **Before first use**: Verify OAuth scopes (Section "Critical Pre-Flight Check")
 2. **Creating a board**: Follow PROCEDURE 1
-3. **Adding columns**: ALWAYS use `gh-project-add-columns.sh` (PROCEDURE 2)
+3. **Adding columns**: ALWAYS use `gh-project-add-columns.py` (PROCEDURE 2)
 4. **Moving items**: Follow PROCEDURE 3
 5. **Syncing status**: Follow PROCEDURE 4
 
@@ -181,7 +181,7 @@ Copy this checklist and track your progress:
 
 **Board Setup:**
 - [ ] Create GitHub Project: `gh project create --owner Emasoft --title "<project>"`
-- [ ] Add standard 8 columns using `gh-project-add-columns.sh`
+- [ ] Add standard 8 columns using `gh-project-add-columns.py`
 - [ ] Save project number to `.github/project.json`
 
 **Task Management:**

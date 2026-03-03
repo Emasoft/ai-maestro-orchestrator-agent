@@ -333,7 +333,7 @@ def parse_gitmodules(gitmodules_path: Path) -> dict[str, dict[str, str]]:
                 }
     except Exception:
         # Fallback to regex parsing if configparser fails
-        content = gitmodules_path.read_text()
+        content = gitmodules_path.read_text(encoding="utf-8")
         submodule_pattern = re.compile(
             r'\[submodule\s+"([^"]+)"\]\s*'
             r"(?:path\s*=\s*([^\n]+)\s*)?"
@@ -908,7 +908,7 @@ def validate_marketplace_workflows(
             )
 
         # Check 5: runs sync script (3 pts, MAJOR)
-        workflow_content = update_workflow_path.read_text()
+        workflow_content = update_workflow_path.read_text(encoding="utf-8")
         sync_patterns = [
             r"sync.*script",
             r"python.*sync",
@@ -1040,7 +1040,7 @@ def validate_plugin_workflows(
                         plugins_with_push_trigger += 1
 
                     # Check for repository_dispatch action
-                    workflow_content = notify_workflow.read_text()
+                    workflow_content = notify_workflow.read_text(encoding="utf-8")
                     if "repository_dispatch" in workflow_content or "repository-dispatch" in workflow_content:
                         plugins_with_dispatch += 1
 
@@ -1286,7 +1286,7 @@ def validate_documentation(
     report.passed(category, "README.md exists", 3.0, str(readme_path))
 
     # Read README content
-    readme_content = readme_path.read_text()
+    readme_content = readme_path.read_text(encoding="utf-8")
 
     # Check 2: Architecture diagram (4 pts, MINOR)
     has_mermaid = "```mermaid" in readme_content
@@ -1350,6 +1350,7 @@ def validate_marketplace_pipeline(
     Returns:
         Complete validation report
     """
+    del _verbose  # reserved for future use
     report = PipelineValidationReport(marketplace_path=marketplace_path)
 
     # Run all category validations

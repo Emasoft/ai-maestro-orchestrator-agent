@@ -136,7 +136,7 @@ def check_claude_tasks(transcript_path: str) -> tuple[int, list[str]]:
 def check_github_projects(script_dir: Path, project_id: str) -> tuple[int, list[str]]:
     """Check GitHub Projects for pending items.
 
-    This function calls the check-github-projects.sh helper script to
+    This function calls the check-github-projects.py helper script to
     query GitHub Projects API for open/pending items. Requires gh CLI
     to be installed and authenticated.
 
@@ -149,7 +149,7 @@ def check_github_projects(script_dir: Path, project_id: str) -> tuple[int, list[
         - pending_count: Number of pending items (-1 if script failed)
         - sample_tasks: List of up to 2 sample items prefixed with [GitHub]
     """
-    script_path = script_dir / "check-github-projects.sh"
+    script_path = script_dir / "check-github-projects.py"
 
     # Skip if script not found or not executable
     if not script_path.exists() or not os.access(script_path, os.X_OK):
@@ -158,8 +158,8 @@ def check_github_projects(script_dir: Path, project_id: str) -> tuple[int, list[
 
     debug("Checking GitHub Projects")
 
-    # Build command with optional project ID
-    command = [str(script_path)]
+    # Build command with optional project ID — use python3 to run .py script
+    command = ["python3", str(script_path)]
     if project_id and project_id != "null":
         command.extend(["--project", project_id])
 

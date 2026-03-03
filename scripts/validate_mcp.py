@@ -359,7 +359,7 @@ def validate_mcp_config(
 
     # Parse JSON
     try:
-        config = json.loads(config_path.read_text())
+        config = json.loads(config_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         report.critical(f"Invalid JSON in {rel_path}: {e}")
         return report
@@ -428,7 +428,7 @@ def validate_plugin_mcp(plugin_root: Path, report: ValidationReport | None = Non
     plugin_json = plugin_root / ".claude-plugin" / "plugin.json"
     if plugin_json.exists():
         try:
-            manifest = json.loads(plugin_json.read_text())
+            manifest = json.loads(plugin_json.read_text(encoding="utf-8"))
             if "mcpServers" in manifest:
                 mcp_servers = manifest["mcpServers"]
 
