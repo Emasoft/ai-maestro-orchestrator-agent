@@ -257,6 +257,13 @@ SECRET_PATTERNS = [
     (re.compile(r"aws_secret_access_key\s*[:=]\s*['\"]?[A-Za-z0-9/+=]{40}", re.I), "AWS Secret Access Key"),
 ]
 
+# Known example/placeholder secrets from AWS documentation and tutorials
+# These are intentionally fake and appear in docs/tests — not real credentials
+KNOWN_EXAMPLE_SECRETS = {
+    "AKIAIOSFODNN7EXAMPLE",
+    "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+}
+
 # Generic example usernames that are acceptable in documentation
 EXAMPLE_USERNAMES = {
     "username",

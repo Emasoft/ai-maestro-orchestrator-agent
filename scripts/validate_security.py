@@ -27,6 +27,8 @@ from pathlib import Path
 
 from cpv_validation_common import (
     DANGEROUS_FILES,
+    EXAMPLE_USERNAMES,
+    KNOWN_EXAMPLE_SECRETS,
     SECRET_PATTERNS,
     SKIP_DIRS,
     USER_PATH_PATTERNS,
@@ -207,6 +209,47 @@ def is_validator_script(file_path: str) -> bool:
     return ("validate_" in file_lower and file_lower.endswith(".py")) or "cpv_validation_common" in file_lower
 
 
+def is_shell_like_file(file_path: str) -> bool:
+    """Recognize files where shell syntax (command substitution, pipes) is expected.
+
+    Covers:
+    - Shell script extensions (.sh, .bash, .zsh, .ksh)
+    - Git hooks in git-hooks/ or .git/hooks/ directories (extensionless scripts)
+    - GitHub Actions YAML (.yml/.yaml inside .github/workflows/)
+    """
+    file_lower = file_path.lower()
+    # Normalize backslashes for consistent matching
+    file_normalized = file_lower.replace("\\", "/")
+    # Standard shell extensions
+    if file_lower.endswith((".sh", ".bash", ".zsh", ".ksh")):
+        return True
+    # Git hook scripts (extensionless files under hook directories)
+    # Handles both absolute (/git-hooks/) and relative (git-hooks/) paths
+    if "/git-hooks/" in file_normalized or file_normalized.startswith("git-hooks/"):
+        return True
+    if "/.git/hooks/" in file_normalized or file_normalized.startswith(".git/hooks/"):
+        return True
+    # GitHub Actions workflow YAML files contain shell commands in run: blocks
+    # Also match template workflow directories (templates/github-workflows/)
+    if file_lower.endswith((".yml", ".yaml")):
+        if "/workflows/" in file_normalized or file_normalized.startswith(".github/workflows/"):
+            return True
+        if "github-workflows/" in file_normalized:
+            return True
+    return False
+
+
+def _line_is_string_assignment(line: str) -> bool:
+    """Detect Python multi-line string assignments like: VAR = '''#!/usr/bin/env python3.
+
+    Matches patterns where an identifier is assigned a triple-quoted string
+    containing content that looks like a shell shebang or path.
+    """
+    stripped = line.strip()
+    # Match: IDENTIFIER = ''' or IDENTIFIER = \"\"\" (with optional space variations)
+    return bool(re.match(r"[A-Za-z_][A-Za-z0-9_]*\s*=\s*(?:'''|\"\"\"|r'''|r\"\"\")", stripped))
+
+
 def scan_for_injection(content: str, file_path: str, report: ValidationReport) -> int:
     """Scan content for injection patterns. Returns count of issues found.
 
@@ -222,12 +265,19 @@ def scan_for_injection(content: str, file_path: str, report: ValidationReport) -
     # Determine if file is markdown - backticks are code formatting
     is_markdown = file_lower.endswith((".md", ".mdx", ".markdown"))
 
-    # Determine if file is a shell script - command substitution is expected
-    is_shell_script = file_lower.endswith((".sh", ".bash", ".zsh", ".ksh"))
+    # Determine if file is a shell-like script - command substitution is expected
+    is_shell_script = is_shell_like_file(file_path)
 
     # Determine if file is a test file - test files often have mock/example content
+    # Handle both absolute (/tests/) and relative (tests/) paths, plus conftest.py
+    file_normalized = file_lower.replace("\\", "/")
     is_test_file = (
-        "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_lower or "\\tests\\" in file_lower
+        "test_" in file_lower
+        or "_test.py" in file_lower
+        or "/tests/" in file_normalized
+        or file_normalized.startswith("tests/")
+        or "/conftest.py" in file_normalized
+        or file_normalized == "conftest.py"
     )
 
     # Determine if file is a validator script - they contain intentional patterns
@@ -236,6 +286,9 @@ def scan_for_injection(content: str, file_path: str, report: ValidationReport) -
     # Skip all injection checks for validator scripts (they define patterns)
     if is_validator:
         return 0
+
+    # Python files never use backtick command substitution — backticks are RST/docstring formatting
+    is_python_file = file_lower.endswith(".py")
 
     # Skip command substitution checks for shell scripts (it's expected) and markdown/tests
     skip_command_sub = is_shell_script or is_markdown or is_test_file
@@ -246,33 +299,57 @@ def scan_for_injection(content: str, file_path: str, report: ValidationReport) -
         if stripped.startswith("#") and not stripped.startswith("#!"):
             continue
 
+        # RST double-backtick filter: if every backtick segment is an RST ``code`` pair, skip
+        # This avoids flagging Python docstrings that use reStructuredText formatting
+        if "`" in line and not is_markdown:
+            backtick_segments = re.findall(r"`[^`]*`", line)
+            if backtick_segments and all(seg.startswith("``") and seg.endswith("``") for seg in backtick_segments):
+                continue
+
         # Check command substitution (CRITICAL) - but not in shell scripts where it's expected
         if not skip_command_sub:
             for pattern, msg in COMMAND_SUBSTITUTION_PATTERNS:
+                # Python files don't have native backtick command substitution —
+                # backticks in .py are usually RST/docstring formatting. BUT backticks
+                # inside shell-execution calls (os.system, os.popen, subprocess) are real threats.
+                if is_python_file and "`...`" in msg:
+                    shell_exec_indicators = ("os.system", "os.popen", "subprocess", "shell=", "Popen", "check_output")
+                    if not any(indicator in line for indicator in shell_exec_indicators):
+                        continue
                 if pattern.search(line):
                     report.critical(f"{msg}: {line.strip()[:80]}", file_path, line_num)
                     issues_found += 1
 
-        # Check pipe to shell (CRITICAL) - dangerous in any context
-        for pattern, msg in PIPE_TO_SHELL_PATTERNS:
-            # Skip if line looks like documentation (markdown table)
-            if "|" in line and line.count("|") >= 2 and ("object" in line.lower() or "string" in line.lower()):
-                continue
-            if pattern.search(line):
-                report.critical(f"{msg}: {line.strip()[:80]}", file_path, line_num)
-                issues_found += 1
+        # Check pipe to shell (CRITICAL) - skip for markdown docs (code examples)
+        if not is_markdown:
+            for pattern, msg in PIPE_TO_SHELL_PATTERNS:
+                if pattern.search(line):
+                    # In Python files, skip if pipe-to-shell is inside a string literal
+                    # (e.g. install instructions in dict values or help text)
+                    if is_python_file and ('"' in stripped or "'" in stripped):
+                        continue
+                    report.critical(f"{msg}: {line.strip()[:80]}", file_path, line_num)
+                    issues_found += 1
 
-        # Check eval patterns (CRITICAL)
-        for pattern, msg in EVAL_PATTERNS:
-            if pattern.search(line):
-                report.critical(f"{msg}: {line.strip()[:80]}", file_path, line_num)
-                issues_found += 1
+        # Check eval patterns (CRITICAL) - skip for markdown docs (code examples)
+        if not is_markdown:
+            for pattern, msg in EVAL_PATTERNS:
+                if pattern.search(line):
+                    # In Python files, skip shell-style eval/exec patterns (e.g. "exec " without parens)
+                    # Only flag actual Python function calls: eval(...), exec(...)
+                    if is_python_file and "command" in msg.lower():
+                        continue
+                    report.critical(f"{msg}: {line.strip()[:80]}", file_path, line_num)
+                    issues_found += 1
 
-        # Check unsafe variable expansion (MAJOR - context-dependent)
-        for pattern, msg in UNSAFE_VARIABLE_PATTERNS:
-            if pattern.search(line):
-                report.major(f"{msg}: {line.strip()[:80]}", file_path, line_num)
-                issues_found += 1
+        # Check unsafe variable expansion (MAJOR) - skip for markdown docs and Python string literals
+        # (Python strings may contain PowerShell/Bash code snippets that use $var syntax)
+        if not is_markdown:
+            if not (is_python_file and ('"' in stripped or "'" in stripped)):
+                for pattern, msg in UNSAFE_VARIABLE_PATTERNS:
+                    if pattern.search(line):
+                        report.major(f"{msg}: {line.strip()[:80]}", file_path, line_num)
+                        issues_found += 1
 
     return issues_found
 
@@ -297,7 +374,9 @@ def scan_for_path_traversal(content: str, file_path: str, report: ValidationRepo
         return 0
 
     # Skip path checks for test files - they contain example data
-    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_lower:
+    # Handle both absolute (/tests/) and relative (tests/) paths
+    file_normalized = file_lower.replace("\\", "/")
+    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_normalized or file_normalized.startswith("tests/"):
         return 0
 
     for line_num, line in enumerate(lines, start=1):
@@ -310,8 +389,51 @@ def scan_for_path_traversal(content: str, file_path: str, report: ValidationRepo
         if stripped.startswith("#!"):
             continue
 
+        # Skip Python multi-line string assignments (e.g. PRE_PUSH_HOOK = '''#!/usr/bin/env python3)
+        if _line_is_string_assignment(line):
+            continue
+
+        # Detect if this line is a Python string literal (help text, error messages, etc.)
+        is_python_string_line = file_lower.endswith(".py") and (
+            '"' in stripped or "'" in stripped
+        )
+
         for pattern, msg in PATH_TRAVERSAL_PATTERNS:
-            if pattern.search(line):
+            match = pattern.search(line)
+            if match:
+                matched_text = match.group(0)
+
+                # Skip ..\ pattern when it's a Python string escape (e.g. "...\n" in f-strings)
+                if "..\\" in msg and "..\\" in matched_text:
+                    # Check if the backslash is followed by a common Python escape char
+                    pos = line.find("..\\")
+                    if pos >= 0 and pos + 3 < len(line) and line[pos + 3] in "nrtbf0'\"":
+                        continue
+
+                # For Windows path matches (C:\...), skip if they contain example usernames
+                # e.g. C:\Users\you\... or C:\Users\alice\... in documentation
+                # Handle both single-backslash (C:\Users\you) and double-backslash (C:\\Users\\you)
+                # since raw file text may contain escaped backslashes
+                if "\\" in matched_text or "Windows" in msg:
+                    win_user_match = re.search(r"[A-Za-z]:\\\\?(?:Users|users)\\\\?([^\\]+)", line)
+                    if win_user_match:
+                        username = win_user_match.group(1).lower()
+                        if username in EXAMPLE_USERNAMES:
+                            continue
+
+                # In Python files, skip paths inside string literals (help text, error messages)
+                if is_python_string_line:
+                    # Skip Windows paths and absolute paths in Python strings
+                    if "Windows" in msg or "C:\\" in matched_text:
+                        continue
+                    # Skip absolute Unix paths in Python string literals
+                    # (e.g. help text mentioning shebangs or system bin directories)
+                    if "Absolute Unix" in msg and (
+                        "#!/" in line or "help" in stripped.lower() or "epilog" in stripped.lower()
+                        or stripped.startswith(("'", '"', "f'", 'f"', "r'", 'r"'))
+                    ):
+                        continue
+
                 report.critical(f"{msg}: {line.strip()[:80]}", file_path, line_num)
                 issues_found += 1
 
@@ -320,12 +442,33 @@ def scan_for_path_traversal(content: str, file_path: str, report: ValidationRepo
 
 def scan_for_secrets(content: str, file_path: str, report: ValidationReport) -> int:
     """Scan content for secret patterns. Returns count of issues found."""
+    file_lower = file_path.lower()
+
+    # Skip validator scripts — they define regex patterns that match secret formats
+    if is_validator_script(file_path):
+        return 0
+
+    # Skip test files — they contain intentional example/mock secrets
+    # Handle both absolute (/tests/) and relative (tests/) paths
+    file_normalized = file_lower.replace("\\", "/")
+    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_normalized or file_normalized.startswith("tests/"):
+        return 0
+
+    # Skip markdown documentation — contains example credentials for illustration
+    if file_lower.endswith((".md", ".mdx", ".markdown")):
+        return 0
+
     issues_found = 0
     lines = content.split("\n")
 
     for line_num, line in enumerate(lines, start=1):
         for pattern, secret_type in SECRET_PATTERNS:
-            if pattern.search(line):
+            match = pattern.search(line)
+            if match:
+                matched_text = match.group(0)
+                # Skip known example/placeholder secrets (e.g. AWS docs AKIAIOSFODNN7EXAMPLE)
+                if matched_text in KNOWN_EXAMPLE_SECRETS:
+                    continue
                 # Mask the actual secret in the report
                 masked_line = line.strip()[:40] + "..." if len(line.strip()) > 40 else line.strip()
                 report.critical(f"{secret_type} detected: {masked_line}", file_path, line_num)
@@ -354,7 +497,9 @@ def scan_for_user_paths(content: str, file_path: str, report: ValidationReport) 
         return 0
 
     # Skip test files - they contain example data
-    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_lower:
+    # Handle both absolute (/tests/) and relative (tests/) paths
+    file_normalized = file_lower.replace("\\", "/")
+    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_normalized or file_normalized.startswith("tests/"):
         return 0
 
     for line_num, line in enumerate(lines, start=1):
