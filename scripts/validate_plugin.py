@@ -1335,7 +1335,11 @@ def print_json(report: ValidationReport) -> None:
 
 def main() -> int:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Validate Claude Code plugin")
+    parser = argparse.ArgumentParser(
+        description="Validate a Claude Code plugin against all validation rules.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="This is the main entry point. It orchestrates all 17 sub-validators.\nExample: uv run python scripts/validate_plugin.py . --strict --verbose",
+    )
     parser.add_argument(
         "--verbose",
         "-v",

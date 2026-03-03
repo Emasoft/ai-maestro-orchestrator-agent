@@ -1014,7 +1014,11 @@ def print_json(report: HookValidationReport) -> None:
 
 def main() -> int:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Validate a Claude Code hooks.json file")
+    parser = argparse.ArgumentParser(
+        description="Validate a Claude Code hooks.json file.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example: uv run python scripts/validate_hook.py hooks/hooks.json --plugin-root .",
+    )
     parser.add_argument("hook_path", help="Path to the hooks.json file")
     parser.add_argument(
         "--plugin-root",

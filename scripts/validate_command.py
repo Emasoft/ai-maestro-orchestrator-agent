@@ -644,7 +644,11 @@ def print_json(report: CommandValidationReport) -> None:
 
 def main() -> int:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Validate a Claude Code command file or directory")
+    parser = argparse.ArgumentParser(
+        description="Validate a Claude Code command file or directory of commands.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example: uv run python scripts/validate_command.py commands/",
+    )
     parser.add_argument("path", help="Path to command .md file or commands/ directory")
     parser.add_argument(
         "--verbose",

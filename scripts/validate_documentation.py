@@ -820,7 +820,11 @@ def main() -> int:
     Returns:
         Exit code (0=ok, 1=critical, 2=major, 3=minor)
     """
-    parser = argparse.ArgumentParser(description="Validate documentation files in a Claude Code plugin")
+    parser = argparse.ArgumentParser(
+        description="Validate documentation files in a Claude Code plugin.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Checks: README structure, broken links, code blocks, image refs, heading hierarchy.",
+    )
     parser.add_argument("plugin_path", help="Path to the plugin directory")
     parser.add_argument(
         "--verbose",

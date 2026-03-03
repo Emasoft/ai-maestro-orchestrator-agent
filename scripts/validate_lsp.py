@@ -463,7 +463,10 @@ def print_results(report: ValidationReport, verbose: bool = False) -> None:
 
 def main() -> int:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Validate LSP configuration")
+    parser = argparse.ArgumentParser(
+        description="Validate LSP (Language Server Protocol) server configuration for Claude Code plugins.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all results")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")

@@ -1461,6 +1461,8 @@ def main() -> int:
         description="Validate marketplace publishing pipeline automation",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
+Checks: GitHub Actions workflows, CI scripts, validation pipeline, deployment config.
+
 Examples:
   %(prog)s /path/to/marketplace
   %(prog)s /path/to/marketplace --verbose

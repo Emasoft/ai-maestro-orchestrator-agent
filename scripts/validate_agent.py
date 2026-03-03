@@ -1128,7 +1128,11 @@ def print_json(report: AgentValidationReport) -> None:
 
 def main() -> int:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Validate a Claude Code agent file or directory")
+    parser = argparse.ArgumentParser(
+        description="Validate a Claude Code agent file or directory of agents.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example: uv run python scripts/validate_agent.py agents/",
+    )
     parser.add_argument("path", help="Path to agent .md file or agents/ directory")
     parser.add_argument(
         "--verbose",

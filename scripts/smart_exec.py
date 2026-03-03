@@ -476,7 +476,12 @@ def choose_best(spec: ToolSpec, tool_args: list[str], executors: dict[str, bool]
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    p = argparse.ArgumentParser(prog="smart_exec.py")
+    p = argparse.ArgumentParser(
+        prog="smart_exec.py",
+        description="Run developer tools using the best available executor (bun, uv, npm, pipx, docker, etc.).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  uv run python scripts/smart_exec.py which ruff\n  uv run python scripts/smart_exec.py executors",
+    )
     sub = p.add_subparsers(dest="subcmd", required=True)
 
     p_run = sub.add_parser("run", help="Run a tool using the best available executor")

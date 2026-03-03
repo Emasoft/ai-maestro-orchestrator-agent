@@ -625,7 +625,11 @@ def print_json(report: SkillValidationReport) -> None:
 
 def main() -> int:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Validate a Claude Code skill directory")
+    parser = argparse.ArgumentParser(
+        description="Validate a Claude Code skill directory.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example: uv run python scripts/validate_skill.py skills/my-skill/",
+    )
     parser.add_argument("skill_path", help="Path to the skill directory")
     parser.add_argument(
         "--verbose",

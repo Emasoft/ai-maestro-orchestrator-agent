@@ -49,6 +49,7 @@ from cpv_validation_common import (
     EXIT_MINOR,
     EXIT_OK,
     VALID_CONTEXT_VALUES,
+    VALID_TOOLS,
     Level,
     validate_toc_embedding,
 )
@@ -120,30 +121,7 @@ MAX_FRONTMATTER_CHARS_ERROR = 15000
 # VALID_CONTEXT_VALUES and BUILTIN_AGENT_TYPES imported from cpv_validation_common
 VALID_MODEL_VALUES = {"sonnet", "opus", "haiku", "inherit"}
 
-# Valid Claude Code tools (2025)
-VALID_TOOLS = {
-    "Read",
-    "Write",
-    "Edit",
-    "Bash",
-    "Grep",
-    "Glob",
-    "WebFetch",
-    "WebSearch",
-    "Task",
-    "NotebookEdit",
-    "Skill",
-    "AskUserQuestion",
-    "EnterPlanMode",
-    "ExitPlanMode",
-    "EnterWorktree",
-    "TaskCreate",
-    "TaskUpdate",
-    "TaskList",
-    "TaskGet",
-    "TaskStop",
-    "ToolSearch",
-}
+# VALID_TOOLS imported from cpv_validation_common
 
 # --- Nixtla Strict Mode Required Sections ---
 REQUIRED_SECTIONS = [
@@ -848,7 +826,7 @@ def validate_allowed_tools_field(
         )
 
     # Over-permissioning advisory — not blocking
-    if len(tool_list) > 6:
+    if len(tool_list) > 10:
         report.warning(
             f"Many tools permitted ({len(tool_list)}) - consider limiting",
             "SKILL.md",

@@ -685,6 +685,8 @@ def main() -> int:
         description="Validate cross-references between Claude Code plugin components",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
+Checks: agent Task() refs, command-agent refs, version sync, hook script paths.
+
 Examples:
     uv run python scripts/validate_xref.py /path/to/plugin
     uv run python scripts/validate_xref.py /path/to/plugin --verbose
