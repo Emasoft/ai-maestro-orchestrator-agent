@@ -303,8 +303,31 @@ def validate_allowed_tools_field(frontmatter: dict[str, Any], report: Validation
     tools = frontmatter["allowed-tools"]
 
     if isinstance(tools, str):
-        # Single tool or comma-separated list
-        tool_list = [t.strip() for t in tools.split(",")]
+        # Single tool or comma-separated list — respect parenthesized scopes
+        # e.g. "Read, Bash(git:*,gh:*), Write" should yield 3 tools, not 4
+        if "(" in tools and "," in tools:
+            tool_list = []
+            depth = 0
+            current: list[str] = []
+            for ch in tools:
+                if ch == "(":
+                    depth += 1
+                    current.append(ch)
+                elif ch == ")":
+                    depth -= 1
+                    current.append(ch)
+                elif ch == "," and depth == 0:
+                    token = "".join(current).strip()
+                    if token:
+                        tool_list.append(token)
+                    current = []
+                else:
+                    current.append(ch)
+            token = "".join(current).strip()
+            if token:
+                tool_list.append(token)
+        else:
+            tool_list = [t.strip() for t in tools.split(",")]
     elif isinstance(tools, list):
         tool_list = tools
     else:

@@ -743,6 +743,42 @@ def validate_description_field(
     report.passed("'description' field present", "SKILL.md", category="Frontmatter")
 
 
+def _split_tools_string(tools: str) -> list[str]:
+    """Split a tools string into individual tool names, respecting parenthesized scopes.
+
+    Handles both comma-delimited (Nixtla) and space-delimited (OpenSpec) formats,
+    without breaking scoped tools like Bash(git:*,gh:*,python:*).
+    """
+    # If no commas at all, space-delimited
+    if "," not in tools:
+        return tools.split()
+    # If no parentheses, simple comma split
+    if "(" not in tools:
+        return [t.strip() for t in tools.split(",")]
+    # Comma-delimited with parenthesized groups — split only on commas outside parens
+    result: list[str] = []
+    depth = 0
+    current: list[str] = []
+    for ch in tools:
+        if ch == "(":
+            depth += 1
+            current.append(ch)
+        elif ch == ")":
+            depth -= 1
+            current.append(ch)
+        elif ch == "," and depth == 0:
+            token = "".join(current).strip()
+            if token:
+                result.append(token)
+            current = []
+        else:
+            current.append(ch)
+    token = "".join(current).strip()
+    if token:
+        result.append(token)
+    return result
+
+
 def validate_allowed_tools_field(
     frontmatter: dict[str, Any],
     report: ValidationReport,
@@ -771,22 +807,15 @@ def validate_allowed_tools_field(
     elif isinstance(tools, str):
         # OpenSpec uses space-delimited format for scoped tools like "Bash(jq:*) Bash(git:*)"
         # Nixtla uses comma-delimited format like "Read, Write, Edit"
-        # Detect format by checking for parentheses (scoped tools)
-        if "(" in tools and ")" in tools and "," not in tools:
-            # OpenSpec space-delimited format with scoped tools
-            tool_list = tools.split()
-            if strict_openspec:
-                report.passed(
-                    "'allowed-tools' uses OpenSpec space-delimited format",
-                    "SKILL.md",
-                    category="Frontmatter",
-                )
-        elif "," in tools:
-            # Comma-delimited format
-            tool_list = [t.strip() for t in tools.split(",")]
-        else:
-            # Single tool or space-delimited simple tools
-            tool_list = tools.split()
+        # Both formats may contain scoped tools with commas inside parens: Bash(git:*,gh:*)
+        # Use parenthesis-aware splitting to avoid breaking scoped tool groups
+        tool_list = _split_tools_string(tools)
+        if strict_openspec and "(" in tools and ")" in tools and "," not in tools:
+            report.passed(
+                "'allowed-tools' uses OpenSpec space-delimited format",
+                "SKILL.md",
+                category="Frontmatter",
+            )
     else:
         report.major(
             f"'allowed-tools' must be string or list, got {type(tools).__name__}",
