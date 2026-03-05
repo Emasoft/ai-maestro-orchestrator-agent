@@ -4,22 +4,21 @@ This document covers the 4 scripts used during Plan Phase.
 
 ## Contents
 
-- 1.1 amoa_start_planning.py <!-- TODO: Script not implemented --> - Initializing Plan Phase Mode
-- 1.2 amoa_planning_status.py <!-- TODO: Script not implemented --> - Displaying Plan Phase progress
-- 1.3 amoa_modify_requirement.py <!-- TODO: Script not implemented --> - Adding, modifying, or removing requirements
-- 1.4 amoa_approve_plan.py <!-- TODO: Script not implemented --> - Validating plan and creating GitHub Issues
+- 1.1 amoa_start_planning.py - Initializing Plan Phase Mode
+- 1.2 amoa_planning_status.py - Displaying Plan Phase progress
+- 1.3 amoa_modify_requirement.py - Adding, modifying, or removing requirements
+- 1.4 amoa_approve_plan.py - Validating plan and creating GitHub Issues
 
 ---
 
-## 1.1 amoa_start_planning.py <!-- TODO: Script not implemented -->
-
+## 1.1 amoa_start_planning.py
 **Purpose:** Initialize Plan Phase Mode.
 
-**Location:** `scripts/amoa_start_planning.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_start_planning.py`
 
 **Usage:**
 ```bash
-python3 amoa_start_planning.py <!-- TODO: Script not implemented --> "User's project goal"
+python3 amoa_start_planning.py "User's project goal"
 ```
 
 **Arguments:**
@@ -37,16 +36,14 @@ python3 amoa_start_planning.py <!-- TODO: Script not implemented --> "User's pro
 
 ---
 
-## 1.2 amoa_planning_status.py <!-- TODO: Script not implemented -->
-
+## 1.2 amoa_planning_status.py
 **Purpose:** Display Plan Phase progress.
 
-**Location:** `scripts/amoa_planning_status.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_planning_status.py`
 
 **Usage:**
 ```bash
-python3 amoa_planning_status.py <!-- TODO: Script not implemented -->
-python3 amoa_planning_status.py <!-- TODO: Script not implemented --> --json
+python3 amoa_planning_status.pypython3 amoa_planning_status.py --json
 ```
 
 **Arguments:**
@@ -65,22 +62,21 @@ python3 amoa_planning_status.py <!-- TODO: Script not implemented --> --json
 
 ---
 
-## 1.3 amoa_modify_requirement.py <!-- TODO: Script not implemented -->
-
+## 1.3 amoa_modify_requirement.py
 **Purpose:** Add, modify, or remove requirements/modules.
 
-**Location:** `scripts/amoa_modify_requirement.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_modify_requirement.py`
 
 **Usage:**
 ```bash
 # Add requirement
-python3 amoa_modify_requirement.py <!-- TODO: Script not implemented --> add --name "Module Name" --description "Description" --priority high
+python3 amoa_modify_requirement.py add --name "Module Name" --description "Description" --priority high
 
 # Modify requirement
-python3 amoa_modify_requirement.py <!-- TODO: Script not implemented --> modify <module-id> --add-criteria "New criteria"
+python3 amoa_modify_requirement.py modify <module-id> --add-criteria "New criteria"
 
 # Remove requirement
-python3 amoa_modify_requirement.py <!-- TODO: Script not implemented --> remove <module-id>
+python3 amoa_modify_requirement.py remove <module-id>
 ```
 
 **Actions (add):**
@@ -104,16 +100,14 @@ python3 amoa_modify_requirement.py <!-- TODO: Script not implemented --> remove 
 
 ---
 
-## 1.4 amoa_approve_plan.py <!-- TODO: Script not implemented -->
-
+## 1.4 amoa_approve_plan.py
 **Purpose:** Validate plan and create GitHub Issues.
 
-**Location:** `scripts/amoa_approve_plan.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_approve_plan.py`
 
 **Usage:**
 ```bash
-python3 amoa_approve_plan.py <!-- TODO: Script not implemented -->
-python3 amoa_approve_plan.py <!-- TODO: Script not implemented --> --dry-run
+python3 amoa_approve_plan.pypython3 amoa_approve_plan.py --dry-run
 ```
 
 **Arguments:**

@@ -253,33 +253,33 @@ config_feedback:
 
 ## 7. Script Usage
 
-Use `amoa_update_verification.py <!-- TODO: Script not implemented -->` to manage update verification:
+Use `amoa_update_verification.py` to manage update verification:
 
 ```bash
 # Send update notification
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> send implementer-1 --type requirement_change \
+python3 amoa_update_verification.py send implementer-1 --type requirement_change \
   --description "Added 2FA support"
 
 # Record receipt confirmation
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> record-receipt implementer-1 update-001
+python3 amoa_update_verification.py record-receipt implementer-1 update-001
 
 # Record feasibility assessment
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> record-feasibility implementer-1 update-001 \
+python3 amoa_update_verification.py record-feasibility implementer-1 update-001 \
   --clear --feasible --no-concerns
 
 # Record feasibility with concerns
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> record-feasibility implementer-1 update-001 \
+python3 amoa_update_verification.py record-feasibility implementer-1 update-001 \
   --concerns "Need Redis credentials"
 
 # Resolve concerns
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> resolve-concerns implementer-1 update-001 \
+python3 amoa_update_verification.py resolve-concerns implementer-1 update-001 \
   --resolution "Redis credentials provided in design/config"
 
 # Authorize resume
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> authorize-resume implementer-1 update-001
+python3 amoa_update_verification.py authorize-resume implementer-1 update-001
 
 # View update history
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> history implementer-1
+python3 amoa_update_verification.py history implementer-1
 ```
 
 ---

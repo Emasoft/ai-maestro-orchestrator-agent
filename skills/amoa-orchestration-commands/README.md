@@ -44,10 +44,10 @@ Located in `../../scripts/`:
 | Script | Used By |
 |--------|---------|
 | `amoa_start_orchestration.py` | `/start-orchestration` |
-| `amoa_orchestration_status.py` <!-- TODO: Script not implemented --> | `/orchestration-status` |
-| `amoa_check_orchestrator_status.py` <!-- TODO: Script not implemented --> | `/orchestrator-status` |
+| `amoa_orchestration_status.py` | `/orchestration-status` |
+| `amoa_check_orchestrator_status.py` | `/orchestrator-status` |
 | `amoa_setup_orchestrator_loop.py` | `/orchestrator-loop` |
-| `amoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented --> | Stop hook |
+| `amoa_orchestrator_stop_check.py` | Stop hook |
 
 ## Usage
 

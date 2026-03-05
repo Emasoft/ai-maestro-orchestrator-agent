@@ -88,7 +88,7 @@ The orchestrator monitors 4 task sources. Priority is determined by the orchestr
 
 **Detection**:
 ```bash
-# Checked by check-tasks.sh helper script
+# Checked by amoa_stop_check/main.py helper script
 # Returns JSON: {"pending_count": N, "exists": true, "tasks": [...]}
 ```
 

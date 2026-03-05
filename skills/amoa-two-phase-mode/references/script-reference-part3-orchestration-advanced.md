@@ -4,27 +4,25 @@ This document covers Orchestration Phase scripts 2.9-2.16 (advanced operations).
 
 ## Contents
 
-- 2.9 amoa_check_plan_phase.py <!-- TODO: Script not implemented --> - Checking if Plan Phase is complete
-- 2.10 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> - Checking if Orchestration Phase is complete
-- 2.11 amoa_sync_github_issues.py <!-- TODO: Script not implemented --> - Syncing modules with GitHub Issues
+- 2.9 amoa_check_plan_phase.py - Checking if Plan Phase is complete
+- 2.10 amoa_check_orchestration_phase.py - Checking if Orchestration Phase is complete
+- 2.11 amoa_sync_github_issues.py - Syncing modules with GitHub Issues
 - 2.12 amoa_verify_instructions.py - Managing Instruction Verification Protocol
 - 2.13 amoa_poll_agent.py - Sending MANDATORY progress poll
-- 2.14 amoa_update_verification.py <!-- TODO: Script not implemented --> - Managing mid-implementation changes
-- 2.15 amoa_init_design_folders.py <!-- TODO: Script not implemented --> - Initializing design folder structure
-- 2.16 amoa_compile_handoff.py <!-- TODO: Script not implemented --> - Compiling template to handoff document
+- 2.14 amoa_update_verification.py - Managing mid-implementation changes
+- 2.15 amoa_init_design_folders.py - Initializing design folder structure
+- 2.16 amoa_compile_handoff.py - Compiling template to handoff document
 
 ---
 
-## 2.9 amoa_check_plan_phase.py <!-- TODO: Script not implemented -->
-
+## 2.9 amoa_check_plan_phase.py
 **Purpose:** Check if Plan Phase is complete.
 
-**Location:** `scripts/amoa_check_plan_phase.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_check_plan_phase.py`
 
 **Usage:**
 ```bash
-python3 amoa_check_plan_phase.py <!-- TODO: Script not implemented -->
-python3 amoa_check_plan_phase.py <!-- TODO: Script not implemented --> --json
+python3 amoa_check_plan_phase.pypython3 amoa_check_plan_phase.py --json
 ```
 
 **Output:**
@@ -39,16 +37,14 @@ python3 amoa_check_plan_phase.py <!-- TODO: Script not implemented --> --json
 
 ---
 
-## 2.10 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->
-
+## 2.10 amoa_check_orchestration_phase.py
 **Purpose:** Check if Orchestration Phase is complete.
 
-**Location:** `scripts/amoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_check_orchestration_phase.py`
 
 **Usage:**
 ```bash
-python3 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented -->
-python3 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> --json
+python3 amoa_check_orchestration_phase.pypython3 amoa_check_orchestration_phase.py --json
 ```
 
 **Output:**
@@ -64,16 +60,14 @@ python3 amoa_check_orchestration_phase.py <!-- TODO: Script not implemented --> 
 
 ---
 
-## 2.11 amoa_sync_github_issues.py <!-- TODO: Script not implemented -->
-
+## 2.11 amoa_sync_github_issues.py
 **Purpose:** Sync modules with GitHub Issues.
 
-**Location:** `scripts/amoa_sync_github_issues.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_sync_github_issues.py`
 
 **Usage:**
 ```bash
-python3 amoa_sync_github_issues.py <!-- TODO: Script not implemented -->
-python3 amoa_sync_github_issues.py <!-- TODO: Script not implemented --> --dry-run
+python3 amoa_sync_github_issues.pypython3 amoa_sync_github_issues.py --dry-run
 ```
 
 **Actions:**
@@ -142,38 +136,37 @@ python3 amoa_poll_agent.py <agent-id> --history
 
 ---
 
-## 2.14 amoa_update_verification.py <!-- TODO: Script not implemented -->
-
+## 2.14 amoa_update_verification.py
 **Purpose:** Manage Instruction Update Verification Protocol for mid-implementation changes.
 
-**Location:** `scripts/amoa_update_verification.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_update_verification.py`
 
 **Usage:**
 ```bash
 # Send update notification
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> send <agent-id> \
+python3 amoa_update_verification.py send <agent-id> \
   --type requirement_change \
   --description "Added OAuth2 scope requirements"
 
 # Record receipt confirmation
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> record-receipt <agent-id> <update-id>
+python3 amoa_update_verification.py record-receipt <agent-id> <update-id>
 
 # Record feasibility assessment
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> record-feasibility <agent-id> <update-id> \
+python3 amoa_update_verification.py record-feasibility <agent-id> <update-id> \
   --clear  # or --concerns "Concern description"
 
 # Resolve concerns
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> resolve-concerns <agent-id> <update-id> \
+python3 amoa_update_verification.py resolve-concerns <agent-id> <update-id> \
   --resolution "Provided additional config"
 
 # Authorize resume
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> authorize-resume <agent-id> <update-id>
+python3 amoa_update_verification.py authorize-resume <agent-id> <update-id>
 
 # View update history
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> history <agent-id>
+python3 amoa_update_verification.py history <agent-id>
 
 # View pending updates
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> pending
+python3 amoa_update_verification.py pending
 ```
 
 **Update types:**
@@ -219,12 +212,12 @@ active_assignments:
 When implementer needs configuration from orchestrator:
 ```bash
 # Implementer requests config
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> send orchestrator \
+python3 amoa_update_verification.py send orchestrator \
   --type config_request \
   --description "Need API keys for OAuth2 provider"
 
 # Orchestrator provides config
-python3 amoa_update_verification.py <!-- TODO: Script not implemented --> resolve-concerns <agent-id> <update-id> \
+python3 amoa_update_verification.py resolve-concerns <agent-id> <update-id> \
   --resolution "Config added to design/config/oauth2.env"
 ```
 
@@ -234,25 +227,24 @@ python3 amoa_update_verification.py <!-- TODO: Script not implemented --> resolv
 
 ---
 
-## 2.15 amoa_init_design_folders.py <!-- TODO: Script not implemented -->
-
+## 2.15 amoa_init_design_folders.py
 **Purpose:** Initialize standardized design folder structure.
 
-**Location:** `scripts/amoa_init_design_folders.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_init_design_folders.py`
 
 **Usage:**
 ```bash
 # Initialize for single platform
-python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web
+python3 amoa_init_design_folders.py --platforms web
 
 # Initialize for multiple platforms
-python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web ios android
+python3 amoa_init_design_folders.py --platforms web ios android
 
 # Initialize with custom root (default: design)
-python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web --root custom-design
+python3 amoa_init_design_folders.py --platforms web --root custom-design
 
 # Skip template file creation
-python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web --no-templates
+python3 amoa_init_design_folders.py --platforms web --no-templates
 ```
 
 **Arguments:**
@@ -299,23 +291,22 @@ design/
 
 ---
 
-## 2.16 amoa_compile_handoff.py <!-- TODO: Script not implemented -->
-
+## 2.16 amoa_compile_handoff.py
 **Purpose:** Compile template to handoff document for implementer.
 
-**Location:** `scripts/amoa_compile_handoff.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_compile_handoff.py`
 
 **Usage:**
 ```bash
 # Compile handoff for module assignment
-python3 amoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web
+python3 amoa_compile_handoff.py auth-core implementer-1 --platform web
 
 # With custom template
-python3 amoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web \
+python3 amoa_compile_handoff.py auth-core implementer-1 --platform web \
     --template custom-handoff-template.md
 
 # Preview without saving
-python3 amoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web --preview
+python3 amoa_compile_handoff.py auth-core implementer-1 --platform web --preview
 ```
 
 **Arguments:**

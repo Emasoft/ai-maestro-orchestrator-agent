@@ -55,10 +55,10 @@ Create issue Claude Tasks when:
 
 ## Creating Issue Tasks
 
-Use the `amoa_create_issue_tasks.py <!-- TODO: Script not implemented -->` script:
+Use the `amoa_create_issue_tasks.py` script:
 
 ```bash
-python3 scripts/amoa_create_issue_tasks.py <!-- TODO: Script not implemented --> \
+python3 scripts/amoa_create_issue_tasks.py \
     --category BUG \
     --reporter implementer-1 \
     --module auth-core \
@@ -204,10 +204,10 @@ The orchestrator stop hook checks `docs_dev/issue-tasks/` for pending Claude Cod
 
 ## Script Reference
 
-See `scripts/amoa_create_issue_tasks.py <!-- TODO: Script not implemented -->` for implementation details.
+See `scripts/amoa_create_issue_tasks.py` for implementation details.
 
 ```
-Usage: amoa_create_issue_tasks.py <!-- TODO: Script not implemented --> [OPTIONS]
+Usage: amoa_create_issue_tasks.py [OPTIONS]
 
 Options:
   --category    Issue category (required)

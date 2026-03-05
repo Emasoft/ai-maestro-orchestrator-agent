@@ -5,13 +5,13 @@ This document covers Orchestration Phase scripts 2.1-2.8 (basic operations).
 ## Contents
 
 - 2.1 amoa_start_orchestration.py - Initializing Orchestration Phase Mode
-- 2.2 amoa_orchestration_status.py <!-- TODO: Script not implemented --> - Displaying Orchestration Phase progress
+- 2.2 amoa_orchestration_status.py - Displaying Orchestration Phase progress
 - 2.3 amoa_register_agent.py - Registering remote agents
 - 2.4 amoa_assign_module.py - Assigning module to registered agent
 - 2.5 amoa_modify_module.py - Modifying modules during orchestration
 - 2.6 amoa_reassign_module.py - Reassigning module to different agent
 - 2.7 amoa_check_remote_agents.py - Polling active AI agents for status
-- 2.8 amoa_notify_agent.py <!-- TODO: Script not implemented --> - Sending AI Maestro message to specific agent
+- 2.8 amoa_notify_agent.py - Sending AI Maestro message to specific agent
 
 ---
 
@@ -41,16 +41,14 @@ python3 amoa_start_orchestration.py
 
 ---
 
-## 2.2 amoa_orchestration_status.py <!-- TODO: Script not implemented -->
-
+## 2.2 amoa_orchestration_status.py
 **Purpose:** Display Orchestration Phase progress.
 
-**Location:** `scripts/amoa_orchestration_status.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_orchestration_status.py`
 
 **Usage:**
 ```bash
-python3 amoa_orchestration_status.py <!-- TODO: Script not implemented -->
-python3 amoa_orchestration_status.py <!-- TODO: Script not implemented --> --json
+python3 amoa_orchestration_status.pypython3 amoa_orchestration_status.py --json
 ```
 
 **Output:**
@@ -202,15 +200,14 @@ python3 amoa_check_remote_agents.py
 
 ---
 
-## 2.8 amoa_notify_agent.py <!-- TODO: Script not implemented -->
-
+## 2.8 amoa_notify_agent.py
 **Purpose:** Send AI Maestro message to specific agent.
 
-**Location:** `scripts/amoa_notify_agent.py <!-- TODO: Script not implemented -->`
+**Location:** `scripts/amoa_notify_agent.py`
 
 **Usage:**
 ```bash
-python3 amoa_notify_agent.py <!-- TODO: Script not implemented --> implementer-1 --subject "Subject" --message "Message body" --priority high
+python3 amoa_notify_agent.py implementer-1 --subject "Subject" --message "Message body" --priority high
 ```
 
 **Arguments:**

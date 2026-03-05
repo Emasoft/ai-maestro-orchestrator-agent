@@ -106,7 +106,7 @@
 **Cause**: Manual changes on GitHub or failed sync.
 
 **Solution**:
-1. Run `amoa_sync_github_issues.py <!-- TODO: Script not implemented -->` to sync state
+1. Run `amoa_sync_github_issues.py` to sync state
 2. Resolve conflicts (state file is authoritative)
 3. Update GitHub Issues to match state if needed
 
@@ -154,8 +154,8 @@
 
 **Solution**:
 1. Verify hook is in settings.json or plugin hooks.json
-2. Check script is executable: `chmod +x amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->`
-3. Run script manually to test: `python amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->`
+2. Check script is executable: `chmod +x amoa_orchestrator_stop_check.py`
+3. Run script manually to test: `python amoa_orchestrator_stop_check.py`
 4. Check hook event type is "Stop"
 
 ### Issue: Stop hook allows exit when it shouldn't

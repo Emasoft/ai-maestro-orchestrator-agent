@@ -199,10 +199,10 @@ The following scripts implement the orchestration commands. Located in the plugi
 | Script | Purpose | Used By |
 |--------|---------|---------|
 | `amoa_start_orchestration.py` | Activates orchestration phase | `/start-orchestration` |
-| `amoa_orchestration_status.py` <!-- TODO: Script not implemented --> | Displays phase status | `/orchestration-status` |
-| `amoa_check_orchestrator_status.py` <!-- TODO: Script not implemented --> | Shows loop state | `/orchestrator-status` |
+| `amoa_orchestration_status.py` | Displays phase status | `/orchestration-status` |
+| `amoa_check_orchestrator_status.py` | Shows loop state | `/orchestrator-status` |
 | `amoa_setup_orchestrator_loop.py` | Creates loop state file | `/orchestrator-loop` |
-| `amoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented --> | Stop hook enforcement | Hook event |
+| `amoa_orchestrator_stop_check.py` | Stop hook enforcement | Hook event |
 
 ---
 
@@ -317,7 +317,7 @@ The following scripts implement the orchestration commands. Located in the plugi
 
 ## Stop Hook Behavior
 
-The orchestrator stop hook (`amoa_orchestrator_stop_check.py` <!-- TODO: Script not implemented -->) enforces completion requirements:
+The orchestrator stop hook (`amoa_orchestrator_stop_check.py`) enforces completion requirements:
 
 **Blocking conditions**:
 - Plan Phase incomplete (requirements not documented, plan not approved)

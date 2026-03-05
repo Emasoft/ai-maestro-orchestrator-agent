@@ -27,7 +27,7 @@ During `/start-planning`:
 
 ```bash
 # Script creates structure automatically
-python3 amoa_start_planning.py <!-- TODO: Script not implemented --> "Build auth system"
+python3 amoa_start_planning.py "Build auth system"
 
 # Creates:
 # design/requirements/shared/

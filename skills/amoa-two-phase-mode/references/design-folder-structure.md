@@ -93,8 +93,8 @@ design/
 
 | Script | Purpose |
 |--------|---------|
-| `amoa_init_design_folders.py <!-- TODO: Script not implemented -->` | Create standardized folder structure |
-| `amoa_compile_handoff.py <!-- TODO: Script not implemented -->` | Compile template to handoff |
+| `amoa_init_design_folders.py` | Create standardized folder structure |
+| `amoa_compile_handoff.py` | Compile template to handoff |
 
 ---
 

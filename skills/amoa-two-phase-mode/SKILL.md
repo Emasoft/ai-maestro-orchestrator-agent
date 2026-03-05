@@ -278,7 +278,7 @@ Complete workflow for handling implementer-reported issues.
 |---------|--------|
 | 1. When to Trigger | AI Maestro messages, progress polls, code review, test failures |
 | 2. Issue Categories | BUG, BLOCKER, QUESTION, ENHANCEMENT, CONFIG, INVESTIGATION |
-| 3. Creating Issue Tasks | /create-issue-tasks command, amoa_create_issue_tasks.py <!-- TODO: Script not implemented --> |
+| 3. Creating Issue Tasks | /create-issue-tasks command, amoa_create_issue_tasks.py |
 | 4. Standard Task Workflow | Assessment, triage, investigation, test creation, GitHub workflow, resolution |
 | 5. Category-Specific Workflows | BUG, BLOCKER, QUESTION, ENHANCEMENT, CONFIG, INVESTIGATION workflows |
 | 6. Integration with Stop Hook | Issue task file checking, open issue blocking |

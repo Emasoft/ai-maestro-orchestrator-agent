@@ -77,7 +77,7 @@ This protocol is split into multiple parts for easier navigation:
   - 6.4 State file tracking for config requests
 
 - **7. Script Usage**
-  - Commands for `amoa_update_verification.py <!-- TODO: Script not implemented -->`
+  - Commands for `amoa_update_verification.py`
   - Send updates, record receipts, resolve concerns, authorize resume
 
 - **8. Troubleshooting**

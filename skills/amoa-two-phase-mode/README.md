@@ -69,31 +69,21 @@ two-phase-mode/
 
 ### Plan Phase Scripts (4)
 
-- `amoa_start_planning.py` - Initialize Plan Phase <!-- TODO: Script not implemented -->
-- `amoa_planning_status.py` - Display planning progress <!-- TODO: Script not implemented -->
-- `amoa_modify_requirement.py` - Add/modify/remove requirements <!-- TODO: Script not implemented -->
-- `amoa_approve_plan.py` - Validate plan, create GitHub Issues <!-- TODO: Script not implemented -->
-
+- `amoa_start_planning.py` - Initialize Plan Phase- `amoa_planning_status.py` - Display planning progress- `amoa_modify_requirement.py` - Add/modify/remove requirements- `amoa_approve_plan.py` - Validate plan, create GitHub Issues
 ### Orchestration Phase Scripts (13)
 
 - `amoa_start_orchestration.py` - Initialize Orchestration Phase
-- `amoa_orchestration_status.py` - Display orchestration progress <!-- TODO: Script not implemented -->
-- `amoa_register_agent.py` - Register remote agent
+- `amoa_orchestration_status.py` - Display orchestration progress- `amoa_register_agent.py` - Register remote agent
 - `amoa_assign_module.py` - Assign module to agent
 - `amoa_modify_module.py` - Add/modify/remove/prioritize modules
 - `amoa_reassign_module.py` - Reassign module to different agent
 - `amoa_check_remote_agents.py` - Poll active AI agents
-- `amoa_notify_agent.py` - Send AI Maestro message <!-- TODO: Script not implemented -->
-- `amoa_check_plan_phase.py` - Check plan phase completion <!-- TODO: Script not implemented -->
-- `amoa_check_orchestration_phase.py` - Check orchestration phase completion <!-- TODO: Script not implemented -->
-- `amoa_sync_github_issues.py` - Sync with GitHub Issues <!-- TODO: Script not implemented -->
-- `amoa_verify_instructions.py` - Instruction Verification Protocol
+- `amoa_notify_agent.py` - Send AI Maestro message- `amoa_check_plan_phase.py` - Check plan phase completion- `amoa_check_orchestration_phase.py` - Check orchestration phase completion- `amoa_sync_github_issues.py` - Sync with GitHub Issues- `amoa_verify_instructions.py` - Instruction Verification Protocol
 - `amoa_poll_agent.py` - Proactive Progress Polling
 
 ### Modified Scripts (1)
 
-- `amoa_orchestrator_stop_check.py` - Phase-aware stop hook <!-- TODO: Script not implemented -->
-
+- `amoa_orchestrator_stop_check.py` - Phase-aware stop hook
 ## Quick Start
 
 ### Starting a New Project

@@ -9,6 +9,7 @@
 - 6.5 Concurrent execution conflicts
 - 6.6 Verification mode stuck
 - 6.7 Helper script failures
+- 6.8 Using /reload-plugins
 
 ---
 
@@ -123,17 +124,17 @@ cat design/logs/hook.log
 
 ```bash
 # Verify script exists and is executable
-ls -la "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->"
+ls -la "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py"
 
 # Test script manually
-echo '{}' | python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->"
+echo '{}' | python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py"
 ```
 
 ### Step 5: Check for Python Errors
 
 ```bash
 # Look for Python syntax errors
-python3 -m py_compile "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py <!-- TODO: Script not implemented -->"
+python3 -m py_compile "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py"
 ```
 
 ### Common Hook Issues
@@ -156,7 +157,7 @@ python3 -m py_compile "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_chec
 **Debugging**:
 ```bash
 # Run task check manually
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_tasks.py <!-- TODO: Script not implemented -->"
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_tasks.py"
 
 # Check TaskList API access
 # Verify TaskList API is available
@@ -353,10 +354,10 @@ grep "verification" design/state/loop.md
 **Debugging**:
 ```bash
 # Test script directly
-"${CLAUDE_PLUGIN_ROOT}/scripts/check-tasks.sh"
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/main.py"
 
 # Check it's executable
-chmod +x "${CLAUDE_PLUGIN_ROOT}/scripts/check-tasks.sh"
+chmod +x "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/main.py"
 
 # Check TaskList API access
 # Verify TaskList API is available
@@ -404,16 +405,26 @@ ping github.com
 **Debugging**:
 ```bash
 # Run script and inspect output
-"${CLAUDE_PLUGIN_ROOT}/scripts/check-tasks.sh"
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/main.py"
 
 # Validate JSON
-"${CLAUDE_PLUGIN_ROOT}/scripts/check-tasks.sh" | python3 -m json.tool
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/main.py" | python3 -m json.tool
 ```
 
 **Common causes**:
 - Script printing extra output (debug messages)
 - Error messages mixed with JSON
 - Encoding issues
+
+---
+
+## 6.8 Using /reload-plugins
+
+If you've modified plugin hooks, skills, or commands and they're not taking effect:
+
+1. Run `/reload-plugins` in Claude Code to activate pending changes without restarting
+2. This is faster than restarting the entire session
+3. Useful after editing `hooks.json`, adding new skills, or modifying commands
 
 ---
 
@@ -442,7 +453,7 @@ cat design/state/exec-phase.md
 
 ```bash
 # Test each component
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_orchestrator_status.py <!-- TODO: Script not implemented -->" --verbose
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_orchestrator_status.py" --verbose
 ```
 
 ### 5. Check for Errors in Claude Code

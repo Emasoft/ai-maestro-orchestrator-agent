@@ -39,22 +39,22 @@ Two-Phase Mode includes **24 scripts** organized into four categories:
 
 Scripts for managing the Plan Phase:
 
-- **1.1 amoa_start_planning.py** <!-- TODO: Script not implemented --> - Initializing Plan Phase Mode
+- **1.1 amoa_start_planning.py** - Initializing Plan Phase Mode
   - Creates orchestrator-plan-phase.local.md
   - Sets up YAML frontmatter with goal
   - Defines exit criteria
 
-- **1.2 amoa_planning_status.py** <!-- TODO: Script not implemented --> - Displaying Plan Phase progress
+- **1.2 amoa_planning_status.py** - Displaying Plan Phase progress
   - Shows plan ID, status, goal
   - Lists modules with status
   - Displays exit criteria checklist
 
-- **1.3 amoa_modify_requirement.py** <!-- TODO: Script not implemented --> - Adding, modifying, or removing requirements
+- **1.3 amoa_modify_requirement.py** - Adding, modifying, or removing requirements
   - Add: generates module ID, adds to list
   - Modify: updates fields, logs changes
   - Remove: validates pending status first
 
-- **1.4 amoa_approve_plan.py** <!-- TODO: Script not implemented --> - Validating plan and creating GitHub Issues
+- **1.4 amoa_approve_plan.py** - Validating plan and creating GitHub Issues
   - Validates USER_REQUIREMENTS.md exists
   - Creates GitHub Issue per module
   - Sets plan_phase_complete: true
@@ -72,7 +72,7 @@ Basic orchestration operations (2.1-2.8):
   - Copies modules from plan with issue links
   - Initializes agent registry
 
-- **2.2 amoa_orchestration_status.py** <!-- TODO: Script not implemented --> - Displaying Orchestration Phase progress
+- **2.2 amoa_orchestration_status.py** - Displaying Orchestration Phase progress
   - Module completion count
   - Active assignments and verification status
 
@@ -96,7 +96,7 @@ Basic orchestration operations (2.1-2.8):
   - Gets all active AI assignments
   - Sends progress poll to each
 
-- **2.8 amoa_notify_agent.py** <!-- TODO: Script not implemented --> - Sending AI Maestro message to specific agent
+- **2.8 amoa_notify_agent.py** - Sending AI Maestro message to specific agent
   - Supports priority levels: normal, high, urgent
 
 ---
@@ -107,15 +107,15 @@ Basic orchestration operations (2.1-2.8):
 
 Advanced orchestration operations (2.9-2.16):
 
-- **2.9 amoa_check_plan_phase.py** <!-- TODO: Script not implemented --> - Checking if Plan Phase is complete
+- **2.9 amoa_check_plan_phase.py** - Checking if Plan Phase is complete
   - Used by stop hook
   - Exit code 2 = incomplete
 
-- **2.10 amoa_check_orchestration_phase.py** <!-- TODO: Script not implemented --> - Checking if Orchestration Phase is complete
+- **2.10 amoa_check_orchestration_phase.py** - Checking if Orchestration Phase is complete
   - Checks module completion and verification loops
   - Used by stop hook
 
-- **2.11 amoa_sync_github_issues.py** <!-- TODO: Script not implemented --> - Syncing modules with GitHub Issues
+- **2.11 amoa_sync_github_issues.py** - Syncing modules with GitHub Issues
   - Creates, updates, and closes issues
 
 - **2.12 amoa_verify_instructions.py** - Managing Instruction Verification Protocol
@@ -125,7 +125,7 @@ Advanced orchestration operations (2.9-2.16):
   - Includes all 6 mandatory questions
   - Record response and view history
 
-- **2.14 amoa_update_verification.py** <!-- TODO: Script not implemented --> - Managing mid-implementation changes
+- **2.14 amoa_update_verification.py** - Managing mid-implementation changes
   - Update types: requirement_change, design_update, spec_clarification, etc.
   - 5-stage verification: pending_receipt -> awaiting_feasibility -> addressing_concerns -> ready_to_resume -> resumed
 
@@ -183,7 +183,7 @@ Scripts for design document management and GitHub integration:
 
 Scripts modified for Two-Phase Mode:
 
-- **3.1 amoa_orchestrator_stop_check.py** <!-- TODO: Script not implemented --> - Phase-aware stop hook
+- **3.1 amoa_orchestrator_stop_check.py** - Phase-aware stop hook
   - Plan Phase: blocks if plan_phase_complete: false
   - Orchestration Phase: blocks if modules incomplete or verification loops remaining
   - Output format: JSON with decision, reason, systemMessage, outputToUser
@@ -206,28 +206,17 @@ All scripts are located in the `scripts/` directory:
 
 ```
 scripts/
-├── amoa_start_planning.py           # TODO: Script not implemented
-├── amoa_planning_status.py          # TODO: Script not implemented
-├── amoa_modify_requirement.py       # TODO: Script not implemented
-├── amoa_approve_plan.py             # TODO: Script not implemented
-├── amoa_start_orchestration.py
-├── amoa_orchestration_status.py     # TODO: Script not implemented
-├── amoa_register_agent.py
+├── amoa_start_planning.py           ├── amoa_planning_status.py          ├── amoa_modify_requirement.py       ├── amoa_approve_plan.py             ├── amoa_start_orchestration.py
+├── amoa_orchestration_status.py     ├── amoa_register_agent.py
 ├── amoa_assign_module.py
 ├── amoa_modify_module.py
 ├── amoa_reassign_module.py
 ├── amoa_check_remote_agents.py
-├── amoa_notify_agent.py             # TODO: Script not implemented
-├── amoa_check_plan_phase.py         # TODO: Script not implemented
-├── amoa_check_orchestration_phase.py # TODO: Script not implemented
-├── amoa_sync_github_issues.py       # TODO: Script not implemented
-├── amoa_verify_instructions.py
+├── amoa_notify_agent.py             ├── amoa_check_plan_phase.py         ├── amoa_check_orchestration_phase.py ├── amoa_sync_github_issues.py       ├── amoa_verify_instructions.py
 ├── amoa_poll_agent.py
-├── amoa_update_verification.py      # TODO: Script not implemented
-├── amoa_init_design_folders.py      # Design folder initialization
+├── amoa_update_verification.py      ├── amoa_init_design_folders.py      # Design folder initialization
 ├── amoa_compile_handoff.py          # Handoff document compilation
 ├── amoa_design_search.py            # Design document search
 ├── amoa_sync_kanban.py              # GitHub Projects kanban sync
 ├── amoa_create_module_issues.py     # GitHub issue creation for modules
-└── amoa_orchestrator_stop_check.py  # TODO: Script not implemented
-```
+└── amoa_orchestrator_stop_check.py  ```

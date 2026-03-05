@@ -103,7 +103,7 @@ active_assignments:
 Creates standardized folder structure:
 
 ```bash
-python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --platforms web ios android
+python3 amoa_init_design_folders.py --platforms web ios android
 
 # Creates:
 # design/requirements/shared/
@@ -128,7 +128,7 @@ python3 amoa_init_design_folders.py <!-- TODO: Script not implemented --> --plat
 Compiles template to handoff:
 
 ```bash
-python3 amoa_compile_handoff.py <!-- TODO: Script not implemented --> auth-core implementer-1 --platform web
+python3 amoa_compile_handoff.py auth-core implementer-1 --platform web
 
 # Output:
 # Compiled handoff saved to: design/handoffs/implementer-1/auth-core-handoff.md
