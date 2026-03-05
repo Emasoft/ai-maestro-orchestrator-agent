@@ -17,7 +17,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_start_orchestration.py" $ARGUMENTS
 
 ## Prerequisites
 
-- Plan Phase must be complete (`/approve-plan` executed)
+- Plan Phase must be complete (plan approved by user)
 - Orchestration Phase state file must exist
 
 ## What This Command Does

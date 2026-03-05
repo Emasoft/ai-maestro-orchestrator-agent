@@ -1,6 +1,6 @@
 ---
 name: amoa-two-phase-mode
-description: "Use when orchestrating complex projects. Trigger with multi-module or two-phase planning requests."
+description: "Use when running Plan-then-Execute workflows with formal approval and GitHub Issue-backed modules. Trigger with two-phase or plan phase requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro messaging system, GitHub CLI (gh), remote agents registered by user, and YAML frontmatter state files. Requires AI Maestro installed.
 metadata:

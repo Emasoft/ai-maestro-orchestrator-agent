@@ -221,7 +221,8 @@ def main() -> None:
             "timestamp": datetime.now().isoformat(),
         }
         # Exit code 2 indicates blocking error
-        print(json.dumps(result), file=sys.stderr)
+        # Output blocking decision to stdout so Claude Code receives it
+        print(json.dumps(result))
         sys.exit(2)
 
 

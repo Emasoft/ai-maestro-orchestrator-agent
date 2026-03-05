@@ -76,7 +76,7 @@ Based on agent responses:
 
 - **Default**: Every 10-15 minutes
 - **Blocked agent**: Every 5 minutes until unblocked
-- **Near completion močno**: More frequent checks
+- **Near completion**: More frequent checks
 
 ## State File Tracking
 

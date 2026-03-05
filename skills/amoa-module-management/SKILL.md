@@ -1,5 +1,5 @@
 ---
-name: amoa-module-management-commands
+name: amoa-module-management
 description: "Trigger with module management tasks. Use when managing modules during Orchestration Phase (add, modify, remove, prioritize, reassign). Every module maps 1:1 to GitHub Issue."
 license: Apache-2.0
 compatibility: Cross-platform compatible. Requires Python 3.8+ and PyYAML for scripts. Requires gh CLI for GitHub Issue operations. Works with AI Maestro messaging for agent notifications. Requires AI Maestro installed.

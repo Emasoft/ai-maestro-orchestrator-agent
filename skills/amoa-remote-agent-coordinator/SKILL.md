@@ -1,6 +1,6 @@
 ---
 name: amoa-remote-agent-coordinator
-description: "Use when coordinating remote AI agents. Trigger with task delegation or multi-agent coordination requests."
+description: "Use when coordinating remote AI agents via AI Maestro messaging. NOT for human coordination. Trigger with agent delegation or multi-agent requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro messaging system (AMP, handles routing automatically). Python 3.9+ for LSP management scripts. Requires AI Maestro installed.
 metadata:

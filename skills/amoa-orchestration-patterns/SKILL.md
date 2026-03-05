@@ -1,6 +1,6 @@
 ---
 name: amoa-orchestration-patterns
-description: "Use when coordinating work among multiple developers. Trigger with orchestration requests."
+description: "Use when breaking down tasks for human developers. NOT for AI agents or plan-execute workflows. Trigger with task decomposition requests."
 license: Apache-2.0
 compatibility: Requires multiple developers or task agents, task tracking system (GitHub issues or similar), clear task definitions with success criteria, and communication channel for status updates. Requires AI Maestro installed.
 metadata:

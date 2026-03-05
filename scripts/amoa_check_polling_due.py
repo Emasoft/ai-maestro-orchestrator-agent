@@ -29,8 +29,6 @@ POLLING_WARNING_MINUTES = 10  # Warn when approaching poll interval
 
 def log_error(message: str) -> None:
     """Log error message to stderr."""
-    import sys
-
     print(f"[ERROR] amoa_check_polling_due: {message}", file=sys.stderr)
 
 

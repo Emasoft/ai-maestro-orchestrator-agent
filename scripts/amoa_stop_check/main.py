@@ -15,7 +15,6 @@ The hook reads JSON from stdin and outputs a decision to stdout.
 
 import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -84,22 +83,6 @@ def main() -> int:
     info("FIRED: Stop hook triggered - checking orchestrator state")
     debug(f"Hook started, PID={os.getpid()}")
     debug(f"Working directory: {os.getcwd()}")
-
-    # Dependency checks for required external tools
-    for cmd in ["jq", "perl"]:
-        try:
-            subprocess.run(
-                [cmd, "--version"], capture_output=True, timeout=5, check=True
-            )
-        except (
-            subprocess.CalledProcessError,
-            subprocess.TimeoutExpired,
-            FileNotFoundError,
-        ):
-            warn(f"{cmd} is required but not installed")
-            fail_safe_exit(f"{cmd} not installed")
-
-    debug("Dependencies OK: jq, perl")
 
     # Acquire lock to prevent concurrent execution
     if not acquire_lock():

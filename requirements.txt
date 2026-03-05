@@ -1,0 +1,2 @@
+# Runtime dependency for YAML frontmatter parsing in hook and command scripts
+PyYAML>=6.0
