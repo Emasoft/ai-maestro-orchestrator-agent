@@ -140,7 +140,7 @@ def check_orchestration_phase(state):
     for module in modules:
         module_id = module.get("id", "unknown")
         module_status = module.get("status", "unknown")
-        if module_status not in ("complete", "done"):
+        if module_status not in ("complete", "done", "verified", "skipped"):
             incomplete_modules.append({"id": module_id, "status": module_status})
 
     if incomplete_modules:

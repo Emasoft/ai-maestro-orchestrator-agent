@@ -186,6 +186,7 @@ Claude Code's skill resolution system automatically finds skills by folder name 
 | `amoa-remote-agent-coordinator` | Coordinating remote AI agents |
 | `amoa-task-distribution` | Distributing tasks to implementer agents |
 | `amoa-two-phase-mode` | Two-phase planning and execution mode |
+| `amoa-kanban-management` | GitHub Projects V2 kanban board management (create boards, add columns, move items) |
 | `amoa-verification-patterns` | Code and deliverable verification patterns |
 
 ### NEVER Reference Other Plugins
@@ -458,6 +459,10 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 ---
 
+## Recent Changes (2026-03-06)
+
+- Added `amoa-kanban-management` to Available AMOA Skills table, updated version to 1.1.0
+
 ## Recent Changes (2026-02-07)
 
 - Added 8-column canonical kanban system (unified from 5 conflicting systems)
@@ -487,6 +492,6 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 ---
 
-**Document Version**: 1.0.0
-**Last Updated**: 2026-02-04
+**Document Version**: 1.1.0
+**Last Updated**: 2026-03-06
 **Maintained By**: claude-skills-factory

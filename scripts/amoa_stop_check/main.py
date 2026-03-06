@@ -51,9 +51,6 @@ from .tasks import (
 )
 
 
-# Global error tracking flag
-CRITICAL_ERROR_OCCURRED = False
-
 
 def cleanup() -> None:
     """Clean up resources on exit.
@@ -217,7 +214,7 @@ REQUIRED ACTION:
 3. If tasks remain, continue working on them
 4. The orchestrator will NOT auto-exit based on iteration count
 
-This threshold exists to alert you, NOT to force exit. Quality over speed.""")
+This threshold exists to alert you, NOT to force exit. Quality over speed.""", file=sys.stderr)
         info("Escalation triggered but continuing task check (RULE 13 compliant)")
 
     # Get transcript and check for completion signals
@@ -274,9 +271,6 @@ This threshold exists to alert you, NOT to force exit. Quality over speed.""")
             f"Helper scripts failed ({helper_script_failures} failures). "
             "Cannot reliably determine task status."
         )
-
-    if CRITICAL_ERROR_OCCURRED:
-        conservative_block_exit("Critical errors occurred during task checking")
 
     # Decision logic
     info(f"Total pending tasks: {total_pending} from {len(pending_sources)} sources")

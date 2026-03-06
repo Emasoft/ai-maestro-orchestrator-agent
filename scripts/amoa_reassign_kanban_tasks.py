@@ -28,10 +28,6 @@ Examples:
         --from-agent implementer-1 --to-agent implementer-2 \\
         --handoff-url "https://github.com/owner/repo/issues/42#issuecomment-123456"
 
-    # Reassign within a specific project:
-    python3 amoa_reassign_kanban_tasks.py \\
-        --from-agent implementer-1 --to-agent implementer-2 \\
-        --project-name "Auth System v2"
 """
 
 import argparse
@@ -103,6 +99,8 @@ def find_issues_by_assignee(agent_id):
 def check_issue_has_open_pr(issue_number):
     """Check if an issue has any open pull requests linked to it.
 
+    Uses 'gh pr list' to search for open PRs that reference this issue number.
+
     Args:
         issue_number: The GitHub issue number.
 
@@ -111,15 +109,18 @@ def check_issue_has_open_pr(issue_number):
     """
     try:
         result = subprocess.run(
-            ["gh", "issue", "view", str(issue_number),
-             "--json", "body"],
-            capture_output=True, text=True, timeout=15,
+            ["gh", "pr", "list",
+             "--search", "issue:{}".format(issue_number),
+             "--state", "open",
+             "--json", "number",
+             "--limit", "1"],
+            capture_output=True, text=True, timeout=30,
         )
-        if result.returncode == 0:
-            # Simple heuristic: check for PR references in the timeline
-            # A more robust approach would use the GitHub API
-            pass
-    except (subprocess.TimeoutExpired, FileNotFoundError):
+        if result.returncode == 0 and result.stdout.strip():
+            prs = json.loads(result.stdout)
+            if isinstance(prs, list) and len(prs) > 0:
+                return True
+    except (subprocess.TimeoutExpired, FileNotFoundError, json.JSONDecodeError):
         pass
     return False
 
@@ -249,14 +250,6 @@ def main():
     parser.add_argument(
         "--to-agent", required=True,
         help="ID of the agent to reassign TO"
-    )
-    parser.add_argument(
-        "--project-id", type=str, default=None,
-        help="GitHub Project ID (for filtering)"
-    )
-    parser.add_argument(
-        "--project-name", type=str, default=None,
-        help="GitHub Project name (alternative to ID)"
     )
     parser.add_argument(
         "--dry-run", action="store_true", default=False,

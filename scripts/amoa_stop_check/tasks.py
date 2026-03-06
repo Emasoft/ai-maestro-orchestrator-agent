@@ -282,18 +282,57 @@ def check_todo_list(transcript_path: str) -> int:
     try:
         content = Path(transcript_path).read_text(encoding="utf-8")
 
-        # Find all todos arrays in the transcript (there may be multiple)
-        todos_match = re.findall(r'"todos":\s*\[[^\]]*\]', content)
-        if not todos_match:
+        # Find all todos arrays using balanced bracket matching
+        # (naive regex fails when todo items contain ] characters)
+        last_todos_str = None
+        search_start = 0
+
+        while True:
+            todos_pos = content.find('"todos":', search_start)
+            if todos_pos == -1:
+                break
+
+            bracket_start = content.find("[", todos_pos)
+            if bracket_start == -1:
+                break
+
+            # Parse array with balanced bracket counting (handles ] inside strings)
+            bracket_count = 0
+            in_string = False
+            escape_next = False
+            end_pos = bracket_start
+
+            for i, char in enumerate(content[bracket_start:], start=bracket_start):
+                if escape_next:
+                    escape_next = False
+                    continue
+                if char == "\\" and in_string:
+                    escape_next = True
+                    continue
+                if char == '"' and not escape_next:
+                    in_string = not in_string
+                    continue
+                if not in_string:
+                    if char == "[":
+                        bracket_count += 1
+                    elif char == "]":
+                        bracket_count -= 1
+                        if bracket_count == 0:
+                            end_pos = i + 1
+                            break
+
+            if bracket_count == 0 and end_pos > bracket_start:
+                last_todos_str = content[bracket_start:end_pos]
+
+            search_start = end_pos if end_pos > bracket_start else todos_pos + 1
+
+        if not last_todos_str:
             debug("TODO list pending: 0")
             return 0
 
-        # Use the last todos array (most recent state)
-        last_todos = todos_match[-1]
-
         # Count pending and in-progress items by status field
-        pending_count = len(re.findall(r'"status":\s*"pending"', last_todos))
-        in_progress_count = len(re.findall(r'"status":\s*"in.progress"', last_todos))
+        pending_count = len(re.findall(r'"status":\s*"pending"', last_todos_str))
+        in_progress_count = len(re.findall(r'"status":\s*"in.progress"', last_todos_str))
 
         count = pending_count + in_progress_count
         debug(f"TODO list pending: {count}")

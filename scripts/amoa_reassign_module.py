@@ -90,7 +90,7 @@ def send_ai_maestro_message(session_name: str, subject: str, message: str) -> bo
                 "--priority",
                 "high",
                 "--type",
-                "notification",
+                "info",
             ],
             capture_output=True,
             text=True,

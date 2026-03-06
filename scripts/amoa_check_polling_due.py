@@ -16,7 +16,7 @@ Output:
 
 import json
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # State file path (relative to project root)
@@ -99,7 +99,7 @@ def check_polling_status() -> tuple[list, list]:
     if not active_assignments:
         return [], []
 
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     overdue = []
     warning = []
 

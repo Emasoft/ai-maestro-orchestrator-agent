@@ -1,124 +1,153 @@
-# Orchestrator Agent (amoa-)
+# AI Maestro Orchestrator Agent (amoa-)
 
-**Version**: 1.0.0
+**Version**: 1.4.0
 
 ## Overview
 
-The Orchestrator Agent handles **task distribution, agent coordination, and progress monitoring**. It receives plans from the Architect and coordinates subagents to implement them.
+The Orchestrator Agent handles **task distribution, agent coordination, and progress monitoring** for multi-agent projects. It receives plans and coordinates subagents to implement them via AI Maestro inter-agent messaging.
+
+## Requirements
+
+- Python 3.8+ with PyYAML (`pip install pyyaml`)
+- GitHub CLI (`gh`) for issue and project management
+- AI Maestro messaging system for inter-agent communication
 
 ## Core Responsibilities
 
-1. **Task Distribution**: Break plans into assignable tasks
-2. **Agent Coordination**: Manage subagents and remote agents
-3. **Progress Monitoring**: Track task completion
-4. **Module Management**: Organize work into modules
-5. **Verification**: Ensure instructions are followed correctly
+1. **Task Distribution**: Break plans into assignable tasks with dependency ordering
+2. **Agent Coordination**: Manage subagents and remote agents via AI Maestro
+3. **Progress Monitoring**: Track task completion via polling hooks
+4. **Module Management**: Organize work into GitHub Issue-backed modules
+5. **Verification**: Ensure instructions are followed correctly before exit
+6. **Kanban Management**: GitHub Projects V2 board and column management
 
 ## Components
 
-### Agents
+### Agents (6)
 
 | Agent | Description |
 |-------|-------------|
-| `amoa-main.md` | Main orchestrator agent |
-| `amoa-team-orchestrator.md` | Coordinates team of agents |
-| `amoa-task-summarizer.md` | Summarizes task progress |
-| `amoa-checklist-compiler.md` | Creates verification checklists |
-| `amoa-docker-container-expert.md` | Docker and container expertise |
-| `amoa-experimenter.md` | Experimentation and prototyping |
+| `amoa-orchestrator-main-agent` | Main orchestrator — delegates to sub-agents |
+| `amoa-team-orchestrator` | Coordinates team of remote agents |
+| `amoa-task-summarizer` | Summarizes task progress and state |
+| `amoa-checklist-compiler` | Creates verification checklists |
+| `amoa-docker-container-expert` | Docker and container expertise |
+| `amoa-experimenter` | Experimentation and prototyping |
 
-### Commands
+### Commands (15)
 
 | Command | Description |
 |---------|-------------|
-| `amoa-start-orchestration` | Start orchestration phase |
-| `amoa-register-agent` | Register remote agent |
-| `amoa-assign-module` | Assign module to agent |
-| `amoa-reassign-module` | Reassign module |
-| `amoa-check-agents` | Check agent status |
-| `amoa-add-module` | Add new module |
-| `amoa-modify-module` | Modify module |
-| `amoa-remove-module` | Remove module |
-| `amoa-prioritize-module` | Change module priority |
-| `amoa-orchestrator-loop` | Start orchestration loop |
-| `amoa-orchestrator-status` | Check orchestrator status |
-| `amoa-cancel-orchestrator` | Cancel orchestration |
+| `/amoa-start-orchestration` | Start orchestration phase |
+| `/amoa-orchestrator-loop` | Start orchestration loop |
+| `/amoa-orchestration-status` | Show orchestration phase status (modules/agents) |
+| `/amoa-orchestrator-status` | Show orchestrator loop status (iterations/tasks) |
+| `/amoa-cancel-orchestrator` | Cancel orchestration |
+| `/amoa-register-agent` | Register remote agent |
+| `/amoa-check-agents` | Check agent status and poll progress |
+| `/amoa-assign-module` | Assign module to agent |
+| `/amoa-reassign-module` | Reassign module to different agent |
+| `/amoa-add-module` | Add new module |
+| `/amoa-modify-module` | Modify existing module |
+| `/amoa-remove-module` | Remove module |
+| `/amoa-prioritize-module` | Change module priority |
+| `/amoa-reassign-kanban-tasks` | Reassign kanban board tasks |
+| `/amoa-generate-replacement-handoff` | Generate agent replacement handoff document |
 
-### Skills
+### Skills (16)
 
 | Skill | Description |
 |-------|-------------|
-| `amoa-two-phase-mode` | Two-phase orchestration mode |
-| `amoa-orchestration-commands` | Orchestration command patterns |
-| `amoa-orchestration-patterns` | Orchestration best practices |
-| `amoa-remote-agent-coordinator` | Remote agent coordination |
-| `amoa-module-management` | Module CRUD operations |
-| `amoa-verification-patterns` | Instruction verification |
-| `amoa-developer-communication` | Developer comm patterns |
-| `amoa-checklist-compilation-patterns` | Checklist generation |
-| `amoa-agent-replacement` | Agent replacement handoffs |
-| `amoa-task-distribution` | Task breakdown and assignment |
-| `amoa-progress-monitoring` | Progress tracking and polling |
-| `amoa-messaging-templates` | AI Maestro message formats |
-| `amoa-label-taxonomy` | GitHub label system |
-| `amoa-implementer-interview-protocol` | Interview-based requirements |
-| `amoa-github-action-integration` | GitHub Actions patterns |
+| `amoa-two-phase-mode` | Plan-then-Execute workflows with formal approval |
+| `amoa-orchestration-commands` | Orchestration command reference and loop mechanics |
+| `amoa-orchestration-patterns` | Task breakdown patterns for human developers |
+| `amoa-remote-agent-coordinator` | Remote AI agent coordination via AI Maestro |
+| `amoa-module-management` | Module CRUD operations (1:1 with GitHub Issues) |
+| `amoa-verification-patterns` | Implementation verification and evidence collection |
+| `amoa-developer-communication` | Developer communication patterns and templates |
+| `amoa-checklist-compilation-patterns` | Verification checklist generation |
+| `amoa-agent-replacement` | Agent replacement and handoff protocols |
+| `amoa-task-distribution` | Task breakdown, assignment, and load balancing |
+| `amoa-progress-monitoring` | Progress tracking via state-based polling |
+| `amoa-messaging-templates` | AI Maestro message format templates |
+| `amoa-label-taxonomy` | GitHub label system for multi-agent coordination |
+| `amoa-implementer-interview-protocol` | Interview-based task verification |
+| `amoa-github-action-integration` | GitHub Actions CI/CD patterns |
+| `amoa-kanban-management` | GitHub Projects V2 kanban board management |
 
-### Hooks
+### Hooks (4)
 
 | Hook | Event | Description |
 |------|-------|-------------|
-| `amoa-orchestrator-stop` | Stop | Block exit until tasks complete |
-| `amoa-instruction-verification-check` | PreToolUse | Verify instructions before work |
-| `amoa-polling-reminder` | UserPromptSubmit | Remind to poll progress |
-| `amoa-file-tracker` | PostToolUse | Track file modifications |
+| `amoa-orchestrator-stop` | Stop | Blocks exit until all tasks complete (120s timeout) |
+| `amoa-instruction-verification-check` | PreToolUse | Blocks agent work if verification incomplete |
+| `amoa-polling-reminder` | UserPromptSubmit | Reminds to poll agent progress |
+| `amoa-file-tracker` | PostToolUse | Tracks Edit/Write file modifications |
 
-## Project Structure Notes
+## Project Structure
 
-### Non-Standard Directories
-
-- **`git-hooks/`** — Contains git hook scripts (pre-push) for plugin validation before pushing
-- **`shared/`** — Shared resources used across skills and agents
-
-### Shell Scripts Compatibility
-
-3 bash/shell scripts (`.sh` files) require **Linux or macOS** and are not natively available on Windows. Windows users should use WSL2 or equivalent.
+```
+ai-maestro-orchestrator-agent/
+├── .claude-plugin/      # Plugin manifest (plugin.json)
+├── agents/              # Agent definitions (6 agents)
+├── commands/            # Slash command definitions (15 commands)
+├── docs/                # Architecture docs (role boundaries, workflow, registry)
+├── git-hooks/           # Git hooks (pre-push validation)
+├── hooks/               # Plugin hooks (hooks.json + 4 hook scripts)
+├── scripts/             # Python scripts (37 scripts + validation suite)
+│   └── amoa_stop_check/ # Stop hook package (lock, tasks, phase checks)
+├── shared/              # Shared resources across skills
+├── skills/              # Skill definitions (16 skills with references)
+├── tests/               # Test suite
+└── requirements.txt     # Python dependencies (PyYAML)
+```
 
 ## Workflow
 
-1. Receives plan from Architect (via Assistant Manager)
-2. Creates modules from plan
-3. Assigns modules to agents
-4. Monitors progress via polling
-5. Handles failures and reassignments
-6. Reports completion to Assistant Manager
-7. Hands off to Integrator for quality gates
+1. **Plan Phase**: Define modules and requirements (two-phase mode)
+2. **Assignment**: Assign modules to agents via kanban board
+3. **Execution**: Agents implement modules, report via AI Maestro
+4. **Monitoring**: Poll agent progress, detect stalls, handle failures
+5. **Verification**: 4-loop verification ensures all tasks complete
+6. **Completion**: Stop hook enforces completion before session exit
 
-## Installation (Production)
+## Installation
 
-<!-- Marketplace installation will be available once the AI Maestro marketplace is configured -->
+Install using `--plugin-dir` for local development:
 
-Install using `--plugin-dir` for now (marketplace coming soon). Use `--scope local` to install only for this agent's directory, or `--scope global` for all projects.
+```bash
+claude --plugin-dir /path/to/ai-maestro-orchestrator-agent
+```
 
-Role plugins are installed with `--scope local` inside the specific agent's working directory (`~/agents/<agent-name>/`). This ensures the plugin is only available to that agent.
-
-Once installed, start a session with the main agent:
+Start a session with the main orchestrator agent:
 
 ```bash
 claude --agent amoa-orchestrator-main-agent
 ```
 
-## Development Only (--plugin-dir)
-
-`--plugin-dir` loads a plugin directly from a local directory without marketplace installation. Use only during plugin development.
+After modifying plugin files, reload without restarting:
 
 ```bash
-claude --plugin-dir ./OUTPUT_SKILLS/ai-maestro-orchestrator-agent
+/reload-plugins
 ```
 
 ## Validation
 
+Run the CPV (Claude Plugins Validation) suite:
+
 ```bash
-cd OUTPUT_SKILLS/ai-maestro-orchestrator-agent
-uv run python scripts/validate_plugin.py . --verbose
+cd ai-maestro-orchestrator-agent
+uv run --with pyyaml --with mypy --with types-PyYAML python scripts/validate_plugin.py . --verbose --strict
 ```
+
+The pre-push hook automatically syncs validators and runs validation before each push.
+
+## Development
+
+- **Sync validators**: `python3 scripts/sync_cpv_validators.py`
+- **Kanban management**: `python3 scripts/amoa_kanban_manager.py <command>`
+- **GitHub project columns**: `python3 scripts/gh-project-add-columns.py`
+
+## License
+
+MIT

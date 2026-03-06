@@ -1,4 +1,4 @@
-# AMCOS Role Boundaries
+# AI Maestro Role Boundaries
 
 **CRITICAL: This document defines the strict boundaries between agent roles. Violating these boundaries breaks the system architecture.**
 
@@ -191,6 +191,6 @@ AMOA: Sends handoff to agent-456
 
 ---
 
-**Document Version**: 1.0.0
-**Last Updated**: 2026-02-02
-**Author**: AMCOS Plugin Development
+**Document Version**: 1.1.0
+**Last Updated**: 2026-03-06
+**Author**: AMOA Plugin Development

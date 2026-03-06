@@ -58,8 +58,6 @@ from pathlib import Path
 # State file location relative to the project root (JSON format)
 STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 
-# Fallback exec-phase state file (YAML frontmatter in markdown)
-EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 
 # Audit log location relative to the project root
 AUDIT_LOG_DIR = "logs"
@@ -616,7 +614,7 @@ def main():
 
     # Step 3: Send AMCOS notification
     ecos_notified = False
-    if not args.skip_ecos_notify:
+    if not args.skip_amcos_notify:
         notification_details = {
             "ack_status": ack_status,
             "state_updated": state is not None,
@@ -627,7 +625,7 @@ def main():
             notification_details["assignments_updated"] = state_updates.get("assignments_updated", 0)
 
         ecos_notified = send_ecos_notification(
-            ecos_session=args.ecos_session,
+            ecos_session=args.amcos_session,
             status=outcome,
             failed_agent=args.failed_agent,
             new_agent=args.new_agent,

@@ -482,8 +482,10 @@ def main() -> int:
             print("Use --project-id or set github_project_id in state file")
         return 1
 
-    # Get modules
-    modules = exec_data.get("modules", [])
+    # Get modules - try modules_status first (execution phase), fall back to modules (plan phase)
+    modules = exec_data.get("modules_status", [])
+    if not modules:
+        modules = exec_data.get("modules", [])
     if not modules:
         if args.json:
             print(
