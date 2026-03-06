@@ -81,6 +81,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# WHY: Import report_writer for token-efficient output redirection when called by orchestrator
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
+
 
 # State file location relative to the project root
 STATE_FILE_REL = ".ai-maestro/update-verification-state.json"
@@ -478,6 +482,8 @@ def main() -> int:
         default=".",
         help="Path to the project root directory (default: current directory)",
     )
+    # WHY: Allow orchestrator to redirect verbose output to a report file
+    add_output_dir_argument(parser)
 
     subparsers = parser.add_subparsers(dest="subcommand", help="Subcommand to execute")
     subparsers.required = True
@@ -542,6 +548,25 @@ def main() -> int:
     if handler is None:
         print("ERROR: Unknown subcommand '{}'".format(args.subcommand), file=sys.stderr)
         return 1
+
+    # WHY: When --output-dir is provided, capture all print output to a report file
+    # and return only a brief summary, saving orchestrator context tokens
+    if should_use_report(args):
+
+        def _summary(text: str) -> str:
+            """Extract first non-empty line as summary."""
+            for line in text.splitlines():
+                stripped = line.strip()
+                if stripped:
+                    return stripped
+            return f"{args.subcommand} completed"
+
+        return capture_and_report(
+            fn=lambda: handler(project_root, args),
+            script_name="amoa_update_verification",
+            summary_fn=_summary,
+            output_dir=get_output_dir(args),
+        )
 
     return handler(project_root, args)
 

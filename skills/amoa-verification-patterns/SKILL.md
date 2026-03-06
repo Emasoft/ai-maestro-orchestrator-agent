@@ -395,3 +395,12 @@ Copy this checklist and track your progress:
 - [ ] Report results to orchestrator with proper evidence format
 - [ ] Update GitHub issues if applicable (status transitions, evidence comments)
 - [ ] Clean up test environment and temporary resources
+
+## Script Output Rules
+
+All scripts invoked by this skill MUST follow the token-efficient output protocol:
+
+1. **Verbose output** goes to a timestamped report file in `docs_dev/reports/`
+2. **Stdout** emits only 2-3 lines: `[OK/ERROR] script_name - summary` + `Report: path`
+3. Scripts accept `--output-dir` to override the default report directory
+4. **EXCEPTION**: Scripts in `scripts/amoa_stop_check/` MUST output JSON to stdout (Claude Code hook requirement)

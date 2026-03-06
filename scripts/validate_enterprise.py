@@ -39,6 +39,10 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
+
 from cpv_validation_common import (
     BUILTIN_AGENT_TYPES,
     EXIT_CRITICAL,
@@ -901,6 +905,7 @@ Exit codes:
         action="store_true",
         help="Enterprise mode: all rules become CRITICAL (fail-fast)",
     )
+    add_output_dir_argument(parser)
     args = parser.parse_args()
 
     plugin_path = Path(args.plugin_path).resolve()
@@ -923,10 +928,24 @@ Exit codes:
 
     report = validate_enterprise_compliance(plugin_path, strict=args.strict)
 
-    if args.json:
-        print_json(report)
+    if should_use_report(args):
+        def print_output():
+            if args.json:
+                print_json(report)
+            else:
+                print_results(report, args.verbose)
+            return report.exit_code
+        return capture_and_report(
+            fn=print_output,
+            script_name="validate_enterprise",
+            summary_fn=lambda out: f"Enterprise validation: exit_code={report.exit_code}",
+            output_dir=get_output_dir(args),
+        )
     else:
-        print_results(report, args.verbose)
+        if args.json:
+            print_json(report)
+        else:
+            print_results(report, args.verbose)
 
     return report.exit_code
 

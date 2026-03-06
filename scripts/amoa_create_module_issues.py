@@ -22,6 +22,10 @@ from typing import Any
 
 import yaml
 
+# WHY: Enable token-efficient output redirection for orchestrator consumption
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
+
 # State file location
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 
@@ -279,6 +283,8 @@ def main() -> int:
     parser.add_argument("--project-id", help="GitHub Project ID to add issues to")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be created")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    # WHY: Token-efficient output redirection for orchestrator consumption
+    add_output_dir_argument(parser)
 
     args = parser.parse_args()
 
@@ -398,5 +404,30 @@ def main() -> int:
     return 0 if output["success"] else 1
 
 
+def _summarize(output: str) -> str:
+    """Extract a brief summary from captured output for report header."""
+    lines = output.strip().splitlines()
+    # WHY: Find the most informative line (created/total counts or error)
+    for line in lines:
+        if "Created:" in line or "Total:" in line or "ERROR" in line:
+            return line.strip()
+    return lines[0].strip() if lines else "No output"
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    # WHY: Pre-parse args to check if output redirection is requested
+    _pre_parser = argparse.ArgumentParser(add_help=False)
+    add_output_dir_argument(_pre_parser)
+    _pre_args, _ = _pre_parser.parse_known_args()
+
+    if should_use_report(_pre_args):
+        sys.exit(
+            capture_and_report(
+                fn=main,
+                script_name="amoa_create_module_issues",
+                summary_fn=_summarize,
+                output_dir=get_output_dir(_pre_args),
+            )
+        )
+    else:
+        sys.exit(main())

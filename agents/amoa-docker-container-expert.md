@@ -82,6 +82,12 @@ Reason: User specified Alpine (REQ-045) but Ubuntu recommended for broader tooli
 Presenting alternatives to user for decision
 </example>
 
+### Script Output Enforcement
+
+When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
+
+**Exception**: Scripts in `scripts/amoa_stop_check/` must output JSON to stdout (Claude Code hook requirement) — do not redirect their output.
+
 ## Output Format
 
 ```

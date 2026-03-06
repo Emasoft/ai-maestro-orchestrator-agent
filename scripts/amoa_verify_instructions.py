@@ -21,6 +21,10 @@ from typing import Any
 
 import yaml
 
+# WHY: report_writer redirects verbose print output to files, saving orchestrator tokens
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import add_output_dir_argument, capture_and_report, get_output_dir, should_use_report
+
 # State file location
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 
@@ -301,6 +305,8 @@ def main() -> int:
     parser.add_argument(
         "--answered", type=int, default=0, help="Number of questions answered"
     )
+    # WHY: --output-dir enables token-efficient report file output instead of stdout
+    add_output_dir_argument(parser)
 
     args = parser.parse_args()
 
@@ -314,16 +320,28 @@ def main() -> int:
         print("ERROR: Could not parse orchestration state file")
         return 1
 
-    if args.action == "status":
-        return show_status(data, args.agent_id)
-    elif args.action == "record-repetition":
-        return record_repetition(data, body, args.agent_id, args.correct)
-    elif args.action == "record-questions":
-        return record_questions(data, body, args.agent_id, args.count, args.answered)
-    elif args.action == "authorize":
-        return authorize_agent(data, body, args.agent_id)
+    # WHY: dispatch function runs the chosen action, used both directly and via capture_and_report
+    def _dispatch() -> int:
+        if args.action == "status":
+            return show_status(data, args.agent_id)
+        elif args.action == "record-repetition":
+            return record_repetition(data, body, args.agent_id, args.correct)
+        elif args.action == "record-questions":
+            return record_questions(data, body, args.agent_id, args.count, args.answered)
+        elif args.action == "authorize":
+            return authorize_agent(data, body, args.agent_id)
+        return 1
 
-    return 1
+    # WHY: when --output-dir is set, redirect all print output to a report file for token savings
+    if should_use_report(args):
+        return capture_and_report(
+            fn=_dispatch,
+            script_name="amoa_verify_instructions",
+            summary_fn=lambda output: f"verify-instructions {args.action} {args.agent_id} - {'ERROR' if 'ERROR' in output else 'OK'}",
+            output_dir=get_output_dir(args),
+        )
+
+    return _dispatch()
 
 
 if __name__ == "__main__":

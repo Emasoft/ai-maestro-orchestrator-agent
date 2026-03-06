@@ -19,6 +19,9 @@ from typing import Any
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
+
 # State file location
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 
@@ -311,6 +314,7 @@ def main() -> int:
     parser.add_argument("--clarifications", help="Clarifications requested")
     parser.add_argument("--resolved", action="store_true", help="Issues were resolved")
     parser.add_argument("--history", action="store_true", help="Show poll history")
+    add_output_dir_argument(parser)
 
     args = parser.parse_args()
 
@@ -324,14 +328,23 @@ def main() -> int:
         print("ERROR: Could not parse orchestration state file")
         return 1
 
-    if args.history:
-        return show_poll_history(data, args.agent_id)
-    elif args.record_response:
-        return record_response(
-            data, body, args.agent_id, args.issues, args.clarifications, args.resolved
+    def _run() -> int:
+        if args.history:
+            return show_poll_history(data, args.agent_id)
+        elif args.record_response:
+            return record_response(
+                data, body, args.agent_id, args.issues, args.clarifications, args.resolved
+            )
+        else:
+            return send_poll_to_agent(data, body, args.agent_id)
+
+    if should_use_report(args):
+        return capture_and_report(
+            _run,
+            script_name="amoa_poll_agent",
+            output_dir=get_output_dir(args),
         )
-    else:
-        return send_poll_to_agent(data, body, args.agent_id)
+    return _run()
 
 
 if __name__ == "__main__":

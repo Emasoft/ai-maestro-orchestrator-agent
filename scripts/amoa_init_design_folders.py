@@ -20,6 +20,10 @@ from typing import Any
 
 import yaml
 
+# WHY: Token-efficient output redirection for orchestrator agents
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import add_output_dir_argument, capture_and_report, get_output_dir, should_use_report
+
 # Default root location
 DEFAULT_ROOT = "design"
 
@@ -318,100 +322,115 @@ def main() -> int:
     )
     parser.add_argument("--force", action="store_true", help="Overwrite existing index file")
     parser.add_argument("--json", action="store_true", help="Output results as JSON")
+    # WHY: Enables --output-dir flag for token-efficient output redirection
+    add_output_dir_argument(parser)
 
     args = parser.parse_args()
 
-    root = Path(args.root)
-    platforms = args.platforms
+    def _run() -> int:
+        """Core logic extracted for capture_and_report wrapping."""
+        root = Path(args.root)
+        platforms = args.platforms
 
-    # Ensure 'shared' is always included
-    if "shared" not in platforms:
-        platforms = ["shared"] + platforms
+        # Ensure 'shared' is always included
+        if "shared" not in platforms:
+            platforms = ["shared"] + platforms
 
-    results = {
-        "success": True,
-        "root": str(root),
-        "platforms": platforms,
-        "folders_created": [],
-        "templates_created": [],
-        "index_created": False,
-        "errors": [],
-    }
+        results = {
+            "success": True,
+            "root": str(root),
+            "platforms": platforms,
+            "folders_created": [],
+            "templates_created": [],
+            "index_created": False,
+            "errors": [],
+        }
 
-    # Check if already initialized
-    index_file = root / "index.yaml"
-    if index_file.exists() and not args.force:
-        if args.json:
+        # Check if already initialized
+        index_file = root / "index.yaml"
+        if index_file.exists() and not args.force:
+            if args.json:
+                results["success"] = False
+                results["errors"].append(f"Design folder already initialized at {root}. Use --force to reinitialize.")
+                print(json.dumps(results, indent=2))
+            else:
+                print(f"Design folder already initialized at {root}")
+                print("Use --force to reinitialize")
+            return 1
+
+        # Create folder structure
+        try:
+            folders = create_folder_structure(root, platforms)
+            results["folders_created"] = [str(f) for f in folders]
+        except Exception as e:
             results["success"] = False
-            results["errors"].append(f"Design folder already initialized at {root}. Use --force to reinitialize.")
-            print(json.dumps(results, indent=2))
-        else:
-            print(f"Design folder already initialized at {root}")
-            print("Use --force to reinitialize")
-        return 1
+            results["errors"].append(f"Failed to create folder structure: {e}")
+            if args.json:
+                print(json.dumps(results, indent=2))
+            else:
+                print(f"ERROR: {e}")
+            return 1
 
-    # Create folder structure
-    try:
-        folders = create_folder_structure(root, platforms)
-        results["folders_created"] = [str(f) for f in folders]
-    except Exception as e:
-        results["success"] = False
-        results["errors"].append(f"Failed to create folder structure: {e}")
+        # Create template files
+        try:
+            templates = create_template_files(root, platforms)
+            results["templates_created"] = [str(f) for f in templates]
+        except Exception as e:
+            results["success"] = False
+            results["errors"].append(f"Failed to create template files: {e}")
+            if args.json:
+                print(json.dumps(results, indent=2))
+            else:
+                print(f"ERROR: {e}")
+            return 1
+
+        # Create index file
+        index_data = create_index_file(root, platforms)
+        if write_yaml_file(index_file, index_data):
+            results["index_created"] = True
+        else:
+            results["success"] = False
+            results["errors"].append("Failed to create index file")
+
+        # Output results
         if args.json:
             print(json.dumps(results, indent=2))
         else:
-            print(f"ERROR: {e}")
-        return 1
+            print(f"Design folder initialized at: {root}")
+            print(f"Platforms: {', '.join(platforms)}")
+            print(f"Folders created: {len(results['folders_created'])}")
+            print(f"Templates created: {len(results['templates_created'])}")
+            print()
+            print("Structure:")
+            print(f"  {root}/")
+            print("    requirements/")
+            for p in platforms:
+                print(f"      {p}/")
+                print("        templates/")
+                print("        specs/")
+                print("        rdd/")
+            print("    memory/")
+            print("      templates/")
+            print("    handoffs/")
+            print("      templates/")
+            print("    config/")
+            for p in platforms:
+                print(f"      {p}/")
+            print("    archive/")
+            print("    index.yaml")
 
-    # Create template files
-    try:
-        templates = create_template_files(root, platforms)
-        results["templates_created"] = [str(f) for f in templates]
-    except Exception as e:
-        results["success"] = False
-        results["errors"].append(f"Failed to create template files: {e}")
-        if args.json:
-            print(json.dumps(results, indent=2))
-        else:
-            print(f"ERROR: {e}")
-        return 1
+        return 0 if results["success"] else 1
 
-    # Create index file
-    index_data = create_index_file(root, platforms)
-    if write_yaml_file(index_file, index_data):
-        results["index_created"] = True
-    else:
-        results["success"] = False
-        results["errors"].append("Failed to create index file")
-
-    # Output results
-    if args.json:
-        print(json.dumps(results, indent=2))
-    else:
-        print(f"Design folder initialized at: {root}")
-        print(f"Platforms: {', '.join(platforms)}")
-        print(f"Folders created: {len(results['folders_created'])}")
-        print(f"Templates created: {len(results['templates_created'])}")
-        print()
-        print("Structure:")
-        print(f"  {root}/")
-        print("    requirements/")
-        for p in platforms:
-            print(f"      {p}/")
-            print("        templates/")
-            print("        specs/")
-            print("        rdd/")
-        print("    memory/")
-        print("      templates/")
-        print("    handoffs/")
-        print("      templates/")
-        print("    config/")
-        for p in platforms:
-            print(f"      {p}/")
-        print("    archive/")
-        print("    index.yaml")
-
-    return 0 if results["success"] else 1
+    # WHY: When --output-dir is provided, redirect all verbose print output to a
+    # timestamped report file, returning only a 2-line summary to the caller
+    if should_use_report(args):
+        return capture_and_report(
+            fn=_run,
+            script_name="amoa_init_design_folders",
+            summary_fn=lambda output: f"Design folders initialized ({output.count('created') + output.count('initialized')} operations)",
+            output_dir=get_output_dir(args),
+        )
+    return _run()
 
 
 if __name__ == "__main__":

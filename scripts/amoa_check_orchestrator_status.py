@@ -26,6 +26,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
+# WHY: Token-efficient output redirection for orchestrator/agent callers
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import add_output_dir_argument, capture_and_report, should_use_report
+
 
 def parse_yaml_frontmatter(content: str) -> dict[str, Any]:
     """Parse YAML frontmatter from markdown content.
@@ -176,113 +180,129 @@ def main() -> int:
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Show detailed debug information"
     )
+    add_output_dir_argument(parser)
     args = parser.parse_args()
 
     state_file = Path(".claude/orchestrator-loop.local.md")
 
-    print("=" * 60)
-    print("ORCHESTRATOR LOOP STATUS")
-    print("=" * 60)
-    print()
-
-    # Check if loop is active
-    if not state_file.exists():
-        print("Status: INACTIVE")
-        print()
-        print("No orchestrator loop is currently running.")
-        print()
-        print("To start a loop, use: /orchestrator-loop")
+    def _run_status() -> int:
+        """Inner function that prints all status output."""
         print("=" * 60)
+        print("ORCHESTRATOR LOOP STATUS")
+        print("=" * 60)
+        print()
+
+        # Check if loop is active
+        if not state_file.exists():
+            print("Status: INACTIVE")
+            print()
+            print("No orchestrator loop is currently running.")
+            print()
+            print("To start a loop, use: /orchestrator-loop")
+            print("=" * 60)
+            return 0
+
+        # Read state file
+        try:
+            content = state_file.read_text(encoding="utf-8")
+            state = parse_yaml_frontmatter(content)
+        except OSError as e:
+            print(f"Error reading state file: {e}", file=sys.stderr)
+            return 1
+
+        print("Status: ACTIVE")
+        print()
+
+        # Display configuration
+        print("Configuration:")
+        iteration = state.get("iteration", "?")
+        max_iter = state.get("max_iterations", 100)
+        print(f"  Iteration:           {iteration} / {max_iter}")
+        print(f"  Started at:          {state.get('started_at', 'unknown')}")
+
+        promise = state.get("completion_promise")
+        if promise and promise != "null":
+            print(f"  Completion promise:  {promise}")
+
+        task_file = state.get("task_file")
+        if task_file and task_file != "null":
+            print(f"  Task file:           {task_file}")
+
+        print(f"  Check Tasks:         {state.get('check_tasks', True)}")
+        print(f"  Check GitHub:        {state.get('check_github', True)}")
+
+        github_project = state.get("github_project_id")
+        if github_project:
+            print(f"  GitHub Project:      {github_project}")
+
+        # Verification mode
+        if state.get("verification_mode"):
+            remaining = state.get("verification_remaining", 0)
+            print(f"  Verification mode:   ON ({remaining} loops remaining)")
+
+        print()
+
+        # Check task sources
+        print("Pending Tasks:")
+        total_pending = 0
+
+        # Claude Tasks
+        if state.get("check_tasks", True):
+            count, summaries = check_claude_tasks()
+            print(f"  Claude Tasks:        {count} pending")
+            total_pending += count
+
+        # GitHub Projects
+        if state.get("check_github", True):
+            count, summaries = check_github_projects(github_project)
+            print(f"  GitHub Projects:     {count} open items")
+            if summaries and args.verbose:
+                for s in summaries:
+                    print(s)
+            total_pending += count
+
+        # Task file
+        if task_file and task_file != "null":
+            count, summaries = check_task_file(task_file)
+            print(f"  Task file:           {count} unchecked")
+            if summaries and args.verbose:
+                for s in summaries:
+                    print(s)
+            total_pending += count
+
+        print()
+        print(f"Total pending: {total_pending}")
+        print()
+
+        # Show body content (the prompt)
+        if args.verbose:
+            # Extract body after frontmatter
+            parts = content.split("---", 2)
+            if len(parts) >= 3:
+                body = parts[2].strip()
+                if body:
+                    print("Initial prompt:")
+                    print(f"  {body[:200]}...")
+                    print()
+
+        print(f"State file: {state_file}")
+        print(f"To cancel:  rm {state_file}")
+        print("=" * 60)
+
         return 0
 
-    # Read state file
-    try:
-        content = state_file.read_text(encoding="utf-8")
-        state = parse_yaml_frontmatter(content)
-    except OSError as e:
-        print(f"Error reading state file: {e}", file=sys.stderr)
-        return 1
-
-    print("Status: ACTIVE")
-    print()
-
-    # Display configuration
-    print("Configuration:")
-    iteration = state.get("iteration", "?")
-    max_iter = state.get("max_iterations", 100)
-    print(f"  Iteration:           {iteration} / {max_iter}")
-    print(f"  Started at:          {state.get('started_at', 'unknown')}")
-
-    promise = state.get("completion_promise")
-    if promise and promise != "null":
-        print(f"  Completion promise:  {promise}")
-
-    task_file = state.get("task_file")
-    if task_file and task_file != "null":
-        print(f"  Task file:           {task_file}")
-
-    print(f"  Check Tasks:         {state.get('check_tasks', True)}")
-    print(f"  Check GitHub:        {state.get('check_github', True)}")
-
-    github_project = state.get("github_project_id")
-    if github_project:
-        print(f"  GitHub Project:      {github_project}")
-
-    # Verification mode
-    if state.get("verification_mode"):
-        remaining = state.get("verification_remaining", 0)
-        print(f"  Verification mode:   ON ({remaining} loops remaining)")
-
-    print()
-
-    # Check task sources
-    print("Pending Tasks:")
-    total_pending = 0
-
-    # Claude Tasks
-    if state.get("check_tasks", True):
-        count, summaries = check_claude_tasks()
-        print(f"  Claude Tasks:        {count} pending")
-        total_pending += count
-
-    # GitHub Projects
-    if state.get("check_github", True):
-        count, summaries = check_github_projects(github_project)
-        print(f"  GitHub Projects:     {count} open items")
-        if summaries and args.verbose:
-            for s in summaries:
-                print(s)
-        total_pending += count
-
-    # Task file
-    if task_file and task_file != "null":
-        count, summaries = check_task_file(task_file)
-        print(f"  Task file:           {count} unchecked")
-        if summaries and args.verbose:
-            for s in summaries:
-                print(s)
-        total_pending += count
-
-    print()
-    print(f"Total pending: {total_pending}")
-    print()
-
-    # Show body content (the prompt)
-    if args.verbose:
-        # Extract body after frontmatter
-        parts = content.split("---", 2)
-        if len(parts) >= 3:
-            body = parts[2].strip()
-            if body:
-                print("Initial prompt:")
-                print(f"  {body[:200]}...")
-                print()
-
-    print(f"State file: {state_file}")
-    print(f"To cancel:  rm {state_file}")
-    print("=" * 60)
-
-    return 0
+    # WHY: When --output-dir is given, redirect all print output to a report file
+    # so calling agents/orchestrators receive only a 2-line summary, saving tokens
+    if should_use_report(args):
+        return capture_and_report(
+            fn=_run_status,
+            script_name="amoa_check_orchestrator_status",
+            summary_fn=lambda output: (
+                "ACTIVE" if "Status: ACTIVE" in output else "INACTIVE"
+            ) + f" | {output.count(chr(10))} lines of detail",
+            output_dir=getattr(args, "output_dir", None),
+        )
+    return _run_status()
 
 
 if __name__ == "__main__":

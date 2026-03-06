@@ -38,6 +38,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
+
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments.
@@ -133,6 +136,8 @@ CANCELLING:
         metavar="ID",
         help="Specific GitHub Project ID to check",
     )
+
+    add_output_dir_argument(parser)
 
     return parser.parse_args()
 
@@ -381,4 +386,15 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # Pre-parse to check for --output-dir before running main
+    _pre_args = parse_arguments()
+    if should_use_report(_pre_args):
+        exit_code = capture_and_report(
+            fn=main,
+            script_name="amoa_setup_orchestrator_loop",
+            summary_fn=lambda out: f"Setup complete ({out.count(chr(10))} lines of output)",
+            output_dir=get_output_dir(_pre_args),
+        )
+        sys.exit(exit_code)
+    else:
+        sys.exit(main())

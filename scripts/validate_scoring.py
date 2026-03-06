@@ -26,6 +26,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+# Import report writer for token-efficient output redirection
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
+
 # Import shared validation infrastructure
 from cpv_validation_common import (
     COLORS,
@@ -745,6 +749,7 @@ Rating scale (0-10 per category):
         help="Output results as JSON instead of formatted text",
     )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
+    add_output_dir_argument(parser)
 
     args = parser.parse_args()
 
@@ -771,12 +776,6 @@ Rating scale (0-10 per category):
     # Compute quality score
     report = compute_quality_score(plugin_path)
 
-    # Output results
-    if args.json:
-        print(report.to_json())
-    else:
-        print_quality_report(report, verbose=args.verbose)
-
     # Determine exit code based on highest severity issue found
     # Count issues across all category scores
     total_critical = sum(cat.issues_critical for cat in report.category_scores.values())
@@ -784,13 +783,31 @@ Rating scale (0-10 per category):
     total_minor = sum(cat.issues_minor for cat in report.category_scores.values())
 
     if total_critical > 0:
-        return EXIT_CRITICAL
+        exit_code = EXIT_CRITICAL
     elif total_major > 0:
-        return EXIT_MAJOR
+        exit_code = EXIT_MAJOR
     elif total_minor > 0:
-        return EXIT_MINOR
+        exit_code = EXIT_MINOR
     else:
-        return EXIT_PASS
+        exit_code = EXIT_PASS
+
+    # Output results with optional report redirection
+    def print_output():
+        if args.json:
+            print(report.to_json())
+        else:
+            print_quality_report(report, verbose=args.verbose)
+        return exit_code
+
+    if should_use_report(args):
+        return capture_and_report(
+            fn=print_output,
+            script_name="validate_scoring",
+            summary_fn=lambda out: f"Score: {report.overall_score:.1f}/100 ({report.letter_grade}) - Exit: {exit_code}",
+            output_dir=get_output_dir(args),
+        )
+    else:
+        return print_output()
 
 
 if __name__ == "__main__":

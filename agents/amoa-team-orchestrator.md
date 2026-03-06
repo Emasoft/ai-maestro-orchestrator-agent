@@ -127,6 +127,12 @@ Details: docs_dev/team-orchestrator-report-20260131-143156.md
 Created GitHub Project "Race Condition Fix" with 3 investigation tasks. Assigned debugging-session-manager, debugging-cache-layer, debugging-api-gateway to separate agents via AI Maestro. Session manager agent identified root cause (non-atomic read-modify-write). Coordinated fixes: session manager implements mutex, cache layer adds retry logic, API gateway adds request deduplication. All agents confirmed TDD verification complete. Integration approved.
 </example>
 
+### Script Output Enforcement
+
+When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
+
+**Exception**: Scripts in `scripts/amoa_stop_check/` must output JSON to stdout (Claude Code hook requirement) — do not redirect their output.
+
 ## Output Format
 
 **Return minimal report to orchestrator:**
