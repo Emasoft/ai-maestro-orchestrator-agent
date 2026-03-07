@@ -26,16 +26,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-# Import report writer for token-efficient output redirection
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
-from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
-
 # Import shared validation infrastructure
 from cpv_validation_common import (
     COLORS,
+    EXIT_CRITICAL,
+    EXIT_MAJOR,
+    EXIT_MINOR,
+    EXIT_OK,
     ValidationReport,
     ValidationResult,
-    calculate_letter_grade,
 )
 
 # Import all validators
@@ -102,11 +101,7 @@ RATING_DESCRIPTIONS = {
     "0-4": "Poor - Major revision required",
 }
 
-# Exit codes - standard severity-based convention
-EXIT_PASS = 0  # No issues found
-EXIT_CRITICAL = 1  # Critical issues found
-EXIT_MAJOR = 2  # Major issues found (no critical)
-EXIT_MINOR = 3  # Minor issues only
+EXIT_PASS = EXIT_OK  # Alias for scoring module backward compat
 
 
 # =============================================================================
@@ -178,7 +173,6 @@ class QualityScoreReport:
     Attributes:
         plugin_path: Path to the validated plugin
         overall_score: Overall quality score (0-100)
-        letter_grade: Letter grade (A+, A, B, etc.)
         status: Overall status (PASS, CONDITIONAL_PASS, FAIL)
         category_scores: Individual category scores
         critical_failures: List of critical failures that cause automatic fail
@@ -188,7 +182,6 @@ class QualityScoreReport:
 
     plugin_path: str
     overall_score: float = 0.0
-    letter_grade: str = "F"
     status: str = "FAIL"
     category_scores: dict[str, CategoryScore] = field(default_factory=dict)
     critical_failures: list[str] = field(default_factory=list)
@@ -200,7 +193,6 @@ class QualityScoreReport:
         return {
             "plugin_path": self.plugin_path,
             "overall_score": round(self.overall_score, 2),
-            "letter_grade": self.letter_grade,
             "status": self.status,
             "category_scores": {name: cat.to_dict() for name, cat in self.category_scores.items()},
             "critical_failures": self.critical_failures,
@@ -577,7 +569,7 @@ def compute_quality_score(plugin_path: Path) -> QualityScoreReport:
         report.overall_score = 0.0
 
     # Determine letter grade
-    report.letter_grade = calculate_letter_grade(int(report.overall_score))
+    # letter_grade removed — no grading in syntactic validation
 
     # Determine pass/fail status
     has_critical = len(report.critical_failures) > 0
@@ -625,7 +617,7 @@ def print_quality_report(report: QualityScoreReport, verbose: bool = False) -> N
         status_symbol = "FAIL"
 
     print(f"\n{COLORS['BOLD']}Overall Score:{COLORS['RESET']} ", end="")
-    print(f"{status_color}{report.overall_score:.1f}/100 ({report.letter_grade}){COLORS['RESET']}")
+    print(f"{status_color}{report.overall_score:.1f}/100{COLORS['RESET']}")
     print(f"{COLORS['BOLD']}Status:{COLORS['RESET']} {status_color}{status_symbol}{COLORS['RESET']}")
 
     # Category breakdown
@@ -749,7 +741,9 @@ Rating scale (0-10 per category):
         help="Output results as JSON instead of formatted text",
     )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
-    add_output_dir_argument(parser)
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
 
     args = parser.parse_args()
 
@@ -776,6 +770,39 @@ Rating scale (0-10 per category):
     # Compute quality score
     report = compute_quality_score(plugin_path)
 
+    # Output results
+    if args.json:
+        print(report.to_json())
+    elif args.report:
+        import io as _io
+
+        # Capture the full text report into a buffer
+        _buf = _io.StringIO()
+        _original_stdout = sys.stdout
+        try:
+            sys.stdout = _buf
+            print_quality_report(report, verbose=args.verbose)
+        finally:
+            sys.stdout = _original_stdout
+
+        # Write full report to file
+        report_path = Path(args.report)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(_buf.getvalue())
+
+        # Print compact summary to stdout
+        if report.status == "PASS":
+            verdict = f"{COLORS['PASSED']}PASS{COLORS['RESET']}"
+        elif report.status == "CONDITIONAL_PASS":
+            verdict = f"{COLORS['MAJOR']}CONDITIONAL PASS{COLORS['RESET']}"
+        else:
+            verdict = f"{COLORS['CRITICAL']}FAIL{COLORS['RESET']}"
+        print(f"{COLORS['BOLD']}Plugin Quality Score{COLORS['RESET']}: {verdict}")
+        print(f"  Score: {report.overall_score:.1f}/100")
+        print(f"  Report: {report_path}")
+    else:
+        print_quality_report(report, verbose=args.verbose)
+
     # Determine exit code based on highest severity issue found
     # Count issues across all category scores
     total_critical = sum(cat.issues_critical for cat in report.category_scores.values())
@@ -783,31 +810,13 @@ Rating scale (0-10 per category):
     total_minor = sum(cat.issues_minor for cat in report.category_scores.values())
 
     if total_critical > 0:
-        exit_code = EXIT_CRITICAL
+        return EXIT_CRITICAL
     elif total_major > 0:
-        exit_code = EXIT_MAJOR
+        return EXIT_MAJOR
     elif total_minor > 0:
-        exit_code = EXIT_MINOR
+        return EXIT_MINOR
     else:
-        exit_code = EXIT_PASS
-
-    # Output results with optional report redirection
-    def print_output():
-        if args.json:
-            print(report.to_json())
-        else:
-            print_quality_report(report, verbose=args.verbose)
-        return exit_code
-
-    if should_use_report(args):
-        return capture_and_report(
-            fn=print_output,
-            script_name="validate_scoring",
-            summary_fn=lambda out: f"Score: {report.overall_score:.1f}/100 ({report.letter_grade}) - Exit: {exit_code}",
-            output_dir=get_output_dir(args),
-        )
-    else:
-        return print_output()
+        return EXIT_PASS
 
 
 if __name__ == "__main__":

@@ -40,7 +40,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from cpv_validation_common import ValidationReport
+from cpv_validation_common import COLORS, ValidationReport, save_report_and_print_summary
 
 # =============================================================================
 # Documentation Validation Report
@@ -718,14 +718,7 @@ def print_results(report: DocumentationValidationReport, verbose: bool = False) 
         verbose: If True, also show INFO and PASSED results
     """
     # ANSI colors
-    colors = {
-        "CRITICAL": "\033[91m",  # Red
-        "MAJOR": "\033[93m",  # Yellow
-        "MINOR": "\033[94m",  # Blue
-        "INFO": "\033[90m",  # Gray
-        "PASSED": "\033[92m",  # Green
-        "RESET": "\033[0m",
-    }
+    colors = COLORS
 
     # Count by level
     counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "INFO": 0, "PASSED": 0}
@@ -833,6 +826,9 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
@@ -859,7 +855,13 @@ def main() -> int:
     if args.json:
         print_json(report)
     else:
-        print_results(report, args.verbose)
+        if args.report:
+            save_report_and_print_summary(
+                report, Path(args.report), "Documentation Validation", print_results, args.verbose,
+                plugin_path=args.plugin_path,
+            )
+        else:
+            print_results(report, args.verbose)
 
     if args.strict:
         return report.exit_code_strict()

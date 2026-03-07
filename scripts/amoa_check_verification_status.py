@@ -14,7 +14,7 @@ Exit codes:
 
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -193,7 +193,7 @@ def main() -> None:
         result: dict[str, Any] = {
             "status": "ok",
             "message": message,
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         print(json.dumps(result))
         sys.exit(0)
@@ -218,7 +218,7 @@ def main() -> None:
             "3. Answer any clarifying questions\n"
             "4. Issue formal authorization to proceed\n\n"
             "Use /check-agents to see verification status.",
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         # Exit code 2 indicates blocking error
         # Output blocking decision to stdout so Claude Code receives it

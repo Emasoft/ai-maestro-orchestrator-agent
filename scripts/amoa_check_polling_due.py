@@ -243,7 +243,7 @@ def main():
         "status": "ok",
         "overdue_count": len(overdue),
         "warning_count": len(warning),
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
     # Add reminder if there are overdue or warning items

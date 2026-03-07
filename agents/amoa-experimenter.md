@@ -107,3 +107,9 @@ After completion:
 1. Write results to `docs_dev/experiments/exp-[id]/RESULTS.md`
 2. Delete all experimental code (except archived prototypes)
 3. Return minimal report to orchestrator
+
+### Script Output Enforcement
+
+When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
+
+**Exception**: Scripts in `scripts/amoa_stop_check/` must output JSON to stdout (Claude Code hook requirement) — do not redirect their output.

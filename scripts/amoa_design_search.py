@@ -17,7 +17,7 @@ import argparse
 import json
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -81,7 +81,7 @@ def extract_document_info(file_path: Path, root: Path) -> dict[str, Any]:
 
     # Get file stats
     stat = file_path.stat()
-    modified_time = datetime.fromtimestamp(stat.st_mtime).isoformat()
+    modified_time = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
 
     # Read content
     content = file_path.read_text(encoding="utf-8")

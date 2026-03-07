@@ -15,96 +15,28 @@ agent: amoa-main
 
 ## Overview
 
-This skill defines the complete label taxonomy for the AI Maestro multi-agent orchestration system. Labels serve two purposes: issue classification (type, priority, component) and agent coordination (assignment, status tracking). All labels follow the `<category>:<value>` format with strict cardinality rules to prevent conflicts and enable precise filtering.
+Defines the label taxonomy for AI Maestro multi-agent orchestration. Labels classify issues (type, priority, component) and coordinate agents (assignment, status). All labels use `<category>:<value>` format with strict cardinality rules.
 
 ## Prerequisites
 
 1. Read **AGENT_OPERATIONS.md** for orchestrator workflow context
 2. Access to GitHub CLI (`gh`) configured for the repository
-3. Understanding of the ai-maestro agent roles (AMOA, AMCOS, AMIA, AMAMA)
-4. Read **amoa-messaging-templates** for message formats using labels
-5. Read **amoa-task-distribution** for assignment workflow
+3. Understanding of ai-maestro agent roles (AMOA, AMCOS, AMIA, AMAMA)
 
 ## Instructions
 
 1. Determine the operation type (create, query, update)
 2. Identify the label category (`assign:*`, `status:*`, `priority:*`, etc.)
-3. Check cardinality rules for the category (section 3.1)
+3. Check cardinality rules. See: [references/usage-rules.md](./references/usage-rules.md)
 4. If updating, remove conflicting labels first (especially `assign:*` and `status:*`)
 5. Apply the new label using `gh` CLI
 6. Verify the label was applied correctly
-7. Log the label change if tracking is required
-
-See sections below for detailed category definitions and CLI commands.
-
-### Checklist
-
-Copy this checklist and track your progress:
-
-**Label Operation Workflow:**
-- [ ] Determine operation type (create, query, update)
-- [ ] Identify the label category (`assign:*`, `status:*`, `priority:*`, etc.)
-- [ ] Check cardinality rules for the category (section 3.1)
-- [ ] If updating, remove conflicting labels first (especially `assign:*` and `status:*`)
-- [ ] Apply the new label using `gh` CLI
-- [ ] Verify the label was applied correctly
-- [ ] Log the label change if tracking is required
-
-**Label Lifecycle Checks:**
-- [ ] Issue created: Set `type:*`, `status:backlog`, optional `component:*`
-- [ ] Issue triaged: Set `priority:*`, `effort:*`, `platform:*`/`toolchain:*` if relevant
-- [ ] Issue assigned: Add `assign:<agent>`, change `status:todo` → `status:in-progress`
-- [ ] Issue in AI review: Change `status:in-progress` → `status:ai-review`
-- [ ] Issue in human review: Change `status:ai-review` → `status:human-review` (BIG tasks only)
-- [ ] Issue ready to merge: Change review status → `status:merge-release`
-- [ ] Issue completed: Remove `assign:*`, change `status:merge-release` → `status:done`
 
 ---
 
-## 1. Label System Overview
+## Label Categories Quick Reference
 
-### What Labels Are For
-
-Labels in the AI Maestro multi-agent system serve TWO purposes:
-
-1. **Issue Classification** - Categorize what the issue IS (type, priority, component)
-2. **Agent Coordination** - Track who is WORKING on the issue (assignment, status)
-
-### Label Anatomy
-
-All labels follow this format:
-
-```
-<category>:<value>
-```
-
-Examples:
-- `status:in-progress` - Category is `status`, value is `in-progress`
-- `assign:implementer-1` - Category is `assign`, value is `implementer-1`
-
-### Why Prefixes Matter
-
-Prefixes enable:
-- Filtering: `gh issue list --label "assign:implementer-1"`
-- Grouping: All `status:*` labels show workflow state
-- Clarity: Instantly know what a label represents
-
----
-
-## 2. Label Categories Summary
-
-**Full category details**: [label-categories-detailed.md](./references/label-categories-detailed.md)
-- Assignment labels (`assign:*`) - Agent assignment tracking
-- Status labels (`status:*`) - Workflow state
-- Priority labels (`priority:*`) - Urgency level
-- Type labels (`type:*`) - Kind of work
-- Component labels (`component:*`) - Affected code areas
-- Effort labels (`effort:*`) - Size estimate
-- Platform labels (`platform:*`) - Target platforms
-- Toolchain labels (`toolchain:*`) - Required tools
-- Review labels (`review:*`) - PR review status
-
-### Key Categories Quick Reference
+**Full category details**: [references/label-categories-detailed.md](./references/label-categories-detailed.md)
 
 | Prefix | Purpose | Cardinality | Example |
 |--------|---------|-------------|---------|
@@ -118,173 +50,56 @@ Prefixes enable:
 | `toolchain:` | Required tools | 0+ | `toolchain:python` |
 | `review:` | PR review status | 0-1 | `review:approved` |
 
-### Kanban Columns (Canonical 8-Column System)
+Every issue MUST have: `status:*`, `priority:*`, `type:*`.
 
-The full workflow uses these 8 status columns:
+## Kanban Columns (8-Column System)
 
-| # | Column Code | Display Name | Label | Description |
-|---|-------------|-------------|-------|-------------|
-| 1 | `backlog` | Backlog | `status:backlog` | Entry point for new tasks |
-| 2 | `todo` | Todo | `status:todo` | Ready to start |
-| 3 | `in-progress` | In Progress | `status:in-progress` | Active work |
-| 4 | `ai-review` | AI Review | `status:ai-review` | Integrator agent reviews ALL tasks |
-| 5 | `human-review` | Human Review | `status:human-review` | User reviews BIG tasks only (via AMAMA) |
-| 6 | `merge-release` | Merge/Release | `status:merge-release` | Ready to merge |
-| 7 | `done` | Done | `status:done` | Completed |
-| 8 | `blocked` | Blocked | `status:blocked` | Blocked at any stage |
+| # | Label | Description |
+|---|-------|-------------|
+| 1 | `status:backlog` | Entry point for new tasks |
+| 2 | `status:todo` | Ready to start |
+| 3 | `status:in-progress` | Active work |
+| 4 | `status:ai-review` | Integrator reviews ALL tasks |
+| 5 | `status:human-review` | User reviews BIG tasks only |
+| 6 | `status:merge-release` | Ready to merge |
+| 7 | `status:done` | Completed |
+| 8 | `status:blocked` | Blocked at any stage |
 
-**Task Routing Rules:**
-- **Small tasks**: In Progress -> AI Review -> Merge/Release -> Done
-- **Big tasks**: In Progress -> AI Review -> Human Review -> Merge/Release -> Done
-- **Human Review** is requested via AMAMA (Assistant Manager asks user to test/review)
-- Not all tasks go through Human Review -- only significant changes requiring human judgment
+**Routing**: Small tasks skip human-review. Big tasks go through all stages.
 
 ---
 
-## 3. Usage Rules
+## Usage Rules
 
-### 3.1 Label Cardinality
+Cardinality, lifecycle, and common mistakes. See: [references/usage-rules.md](./references/usage-rules.md)
 
-| Category | Cardinality | Meaning |
-|----------|-------------|---------|
-| `assign:*` | 0 or 1 | At most one assignment |
-| `status:*` | 1 | Exactly one status |
-| `priority:*` | 1 | Exactly one priority |
-| `type:*` | 1 | Exactly one type |
-| `component:*` | 1+ | One or more components |
-| `effort:*` | 1 | Exactly one effort |
-| `platform:*` | 0+ | Zero or more platforms |
-| `toolchain:*` | 0+ | Zero or more toolchains |
-| `review:*` | 0 or 1 | At most one review status |
+## CLI Commands
 
-### 3.2 Label Lifecycle
+**Full command reference**: [references/cli-commands.md](./references/cli-commands.md)
 
-**When Issue Created:**
-1. Set `type:*` based on issue content
-2. Set `status:backlog`
-3. Optionally set `component:*` if known
-
-**When Issue Triaged:**
-1. Set `priority:*`
-2. Set `effort:*`
-3. Set `platform:*` and `toolchain:*` if relevant
-4. Change `status:backlog` → `status:todo` (or keep in backlog)
-
-**When Issue Assigned:**
-1. Add `assign:<agent-name>`
-2. Change `status:todo` → `status:in-progress`
-
-**When Work Done, AI Reviews:**
-1. Change `status:in-progress` → `status:ai-review`
-2. Integrator (AMIA) reviews ALL tasks
-
-**When Human Review Needed (BIG tasks only):**
-1. Change `status:ai-review` → `status:human-review`
-2. User reviews the task
-
-**When Ready to Merge:**
-1. Change review status → `status:merge-release`
-2. Ready to merge and release
-
-**When Issue Completed:**
-1. Remove `assign:*` label
-2. Change `status:merge-release` → `status:done`
-
-### 3.3 Common Mistakes to Avoid
-
-| Mistake | Correct Approach |
-|---------|------------------|
-| Multiple `assign:*` labels | Remove old before adding new |
-| Missing `status:*` label | Every issue needs exactly one |
-| Changing `type:*` mid-work | Create new issue instead |
-| Using `agent:*` prefix | Use `assign:*` for assignments |
-| Forgetting to update status | Update status at each workflow transition |
-
----
-
-## 4. Quick Reference
-
-### Minimum Required Labels
-
-Every issue MUST have:
-1. `status:*` - One status label
-2. `priority:*` - One priority label
-3. `type:*` - One type label
-
-### Colors Reference
-
-| Category | Suggested Color |
-|----------|-----------------|
-| `assign:` | Various blues/purples |
-| `status:` | Workflow colors (green=ready, yellow=progress, red=blocked) |
-| `priority:` | Urgency colors (red=critical, orange=high, yellow=normal, green=low) |
-| `type:` | Category colors |
-| `component:` | Light pastels |
-| `effort:` | Size-based (green=small, red=large) |
-| `platform:` | Neutral grays |
-| `toolchain:` | Language brand colors |
-| `review:` | Review state colors |
-
----
-
-## 5. CLI Commands
-
-**Full command reference**: [cli-commands.md](./references/cli-commands.md)
-- Create labels for all categories
-- Query labels (list issues by label)
-- Update labels (reassign, change status)
-- Validate label cardinality
-
-**Quick commands**:
 ```bash
-# Assign task to agent
+# Assign task
 gh issue edit 42 --add-label "assign:implementer-1"
-
 # Update status
 gh issue edit 42 --remove-label "status:todo" --add-label "status:in-progress"
-
 # Query assigned issues
 gh issue list --label "assign:implementer-1"
 ```
 
----
+## Error Handling
+
+Label conflict errors, invalid category errors, and cardinality violations. See: [references/error-handling-and-output.md](./references/error-handling-and-output.md)
 
 ## Output
 
-| Output Type | Format | Example |
-|-------------|--------|---------|
-| Label list | JSON from `gh issue view` | `{"labels": [{"name": "assign:implementer-1"}]}` |
-| Label query results | Table/list from `gh issue list` | Issues matching filter criteria |
-| Label creation | CLI confirmation | `✓ Label "assign:implementer-1" created` |
-| Label update | CLI confirmation | `✓ Updated labels for #42` |
-| Validation result | Boolean/message | "Valid: issue has exactly 1 status label" |
-
----
-
-## Error Handling
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| Multiple `assign:*` labels on one issue | Concurrent updates or incorrect removal | Remove all `assign:*` labels, then add the correct one |
-| Missing `status:*` label | Label removed accidentally or never set | Set the appropriate status label based on current workflow state |
-| Multiple `status:*` labels | Concurrent updates | Remove all `status:*` labels, then add the correct one |
-| `gh` command fails | No auth or repo not found | Run `gh auth login` and verify repo access |
-| Label conflict during reassignment | Old label not removed first | Use `gh issue edit --remove-label "old" --add-label "new"` in single command |
-| Invalid label name | Typo or wrong format | Check label format: `<category>:<value>` (no spaces) |
-
----
+Output formats (stdout summary, JSON for hooks) and label color codes. See: [references/error-handling-and-output.md](./references/error-handling-and-output.md)
 
 ## Examples
 
-**Full examples**: [examples.md](./references/examples.md)
-- Example 1: Assign task to agent
-- Example 2: Update status during workflow
-- Example 3: Query issues by multiple labels
-- Example 4: Validate label cardinality
+**Full examples**: [references/examples.md](./references/examples.md)
 
-**Quick example - Reassign task**:
 ```bash
-# Remove old assignment and add new in single command
+# Reassign task
 gh issue edit 42 --remove-label "assign:implementer-1" --add-label "assign:implementer-2"
 ```
 
@@ -292,22 +107,14 @@ gh issue edit 42 --remove-label "assign:implementer-1" --add-label "assign:imple
 
 ## Resources
 
-- **[label-categories-detailed.md](./references/label-categories-detailed.md)** - Full category definitions
-<!-- TOC: Assignment Labels (`assign:*`) | Rules | Assignment Authority -->
-- **[cli-commands.md](./references/cli-commands.md)** - Complete CLI reference
-<!-- TOC: Create Labels | Query Labels | Update Labels -->
-- **[examples.md](./references/examples.md)** - Usage examples
-<!-- TOC: Example 1: Assign Task to Agent | Example 2: Update Status During Workflow | Example 3: Query Issues by Multiple Labels -->
-- **AGENT_OPERATIONS.md** - Core orchestrator workflow context
-- **amoa-messaging-templates** - Message templates using labels
-- **amoa-task-distribution** - Assignment workflow
-- **amoa-progress-monitoring** - Status tracking
+- [references/label-categories-detailed.md](./references/label-categories-detailed.md) - Full category definitions
+- [references/cli-commands.md](./references/cli-commands.md) - Complete CLI reference
+- [references/examples.md](./references/examples.md) - Usage examples
+- [references/usage-rules.md](./references/usage-rules.md) - Cardinality, lifecycle, mistakes
+- [references/error-handling-and-output.md](./references/error-handling-and-output.md) - Errors, output, colors
+- **AGENT_OPERATIONS.md** - Orchestrator workflow context
+- **amoa-messaging-templates** / **amoa-task-distribution** / **amoa-progress-monitoring**
 
 ## Script Output Rules
 
-All scripts invoked by this skill MUST follow the token-efficient output protocol:
-
-1. **Verbose output** goes to a timestamped report file in `docs_dev/reports/`
-2. **Stdout** emits only 2-3 lines: `[OK/ERROR] script_name - summary` + `Report: path`
-3. Scripts accept `--output-dir` to override the default report directory
-4. **EXCEPTION**: Scripts in `scripts/amoa_stop_check/` MUST output JSON to stdout (Claude Code hook requirement)
+Scripts write verbose output to `docs_dev/reports/`, emit only `[OK/ERROR] name - summary` to stdout. Exception: `scripts/amoa_stop_check/` outputs JSON (hook requirement).

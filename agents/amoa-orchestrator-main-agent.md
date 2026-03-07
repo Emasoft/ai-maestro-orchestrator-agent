@@ -93,7 +93,7 @@ uv run python scripts/amoa_kanban_manager.py <command> [args]
 - `notify-agent` - Notify agent of assignment via AI Maestro
 - `request-review` - Request PR review from integrator
 
-**Agent Assignment:** Use GitHub issue labels like `assigned:project-impl-01`. The assigned agent monitors for issues with their label.
+**Agent Assignment:** Use GitHub issue labels like `assign:project-impl-01`. The assigned agent monitors for issues with their label.
 
 ## Team Registry
 
@@ -234,3 +234,9 @@ Details: [filename if written]
 **PRESERVE REQUIREMENTS** - RULE 14 applies. User requirements immutable. No compromises.
 
 **COMMUNICATE ACTIVELY** - ACK all messages, send status updates, report results promptly.
+
+### Script Output Enforcement
+
+When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
+
+**Exception**: Scripts in `scripts/amoa_stop_check/` must output JSON to stdout (Claude Code hook requirement) — do not redirect their output.

@@ -39,12 +39,9 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
-from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
-
 from cpv_validation_common import (
     BUILTIN_AGENT_TYPES,
+    COLORS,
     EXIT_CRITICAL,
     EXIT_MAJOR,
     EXIT_OK,
@@ -52,7 +49,7 @@ from cpv_validation_common import (
     Level,
     ValidationReport,
     ValidationResult,
-    calculate_letter_grade,
+    save_report_and_print_summary,
 )
 
 # =============================================================================
@@ -764,15 +761,7 @@ def validate_enterprise_compliance(
 def print_results(report: EnterpriseComplianceReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
     # ANSI colors
-    colors = {
-        "CRITICAL": "\033[91m",  # Red
-        "MAJOR": "\033[93m",  # Yellow
-        "MINOR": "\033[94m",  # Blue
-        "INFO": "\033[90m",  # Gray
-        "PASSED": "\033[92m",  # Green
-        "RESET": "\033[0m",
-        "BOLD": "\033[1m",
-    }
+    colors = COLORS
 
     # Count by level
     counts = report.count_by_level()
@@ -850,7 +839,7 @@ def print_results(report: EnterpriseComplianceReport, verbose: bool = False) -> 
         rst = colors["RESET"]
         print(f"{minor}NOTICE: Minor compliance issues found{rst}")
 
-    print(f"\nScore: {report.score}/100 ({calculate_letter_grade(report.score)})")
+    print(f"\nScore: {report.score}/100")
     print()
 
 
@@ -905,7 +894,9 @@ Exit codes:
         action="store_true",
         help="Enterprise mode: all rules become CRITICAL (fail-fast)",
     )
-    add_output_dir_argument(parser)
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     args = parser.parse_args()
 
     plugin_path = Path(args.plugin_path).resolve()
@@ -928,24 +919,12 @@ Exit codes:
 
     report = validate_enterprise_compliance(plugin_path, strict=args.strict)
 
-    if should_use_report(args):
-        def print_output():
-            if args.json:
-                print_json(report)
-            else:
-                print_results(report, args.verbose)
-            return report.exit_code
-        return capture_and_report(
-            fn=print_output,
-            script_name="validate_enterprise",
-            summary_fn=lambda out: f"Enterprise validation: exit_code={report.exit_code}",
-            output_dir=get_output_dir(args),
-        )
+    if args.json:
+        print_json(report)
+    elif args.report:
+        save_report_and_print_summary(report, Path(args.report), "Enterprise Validation", print_results, args.verbose, plugin_path=args.plugin_path)
     else:
-        if args.json:
-            print_json(report)
-        else:
-            print_results(report, args.verbose)
+        print_results(report, args.verbose)
 
     return report.exit_code
 

@@ -19,16 +19,18 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
+
 import re
 import sys
 from pathlib import Path
 
 from cpv_validation_common import (
-    SKIP_DIRS,
     ValidationReport,
+    get_gitignore_filter,
+    is_binary_file,
     print_report_summary,
     print_results_by_level,
+    save_report_and_print_summary,
 )
 
 # =============================================================================
@@ -102,58 +104,6 @@ BATCH_EXTENSIONS = {
     ".ps1",
 }
 
-# Binary file extensions to skip
-BINARY_EXTENSIONS = {
-    ".png",
-    ".jpg",
-    ".jpeg",
-    ".gif",
-    ".bmp",
-    ".ico",
-    ".webp",
-    ".svg",
-    ".pdf",
-    ".doc",
-    ".docx",
-    ".xls",
-    ".xlsx",
-    ".ppt",
-    ".pptx",
-    ".zip",
-    ".tar",
-    ".gz",
-    ".bz2",
-    ".xz",
-    ".7z",
-    ".rar",
-    ".exe",
-    ".dll",
-    ".so",
-    ".dylib",
-    ".a",
-    ".o",
-    ".obj",
-    ".pyc",
-    ".pyo",
-    ".class",
-    ".jar",
-    ".war",
-    ".woff",
-    ".woff2",
-    ".ttf",
-    ".otf",
-    ".eot",
-    ".mp3",
-    ".mp4",
-    ".avi",
-    ".mkv",
-    ".mov",
-    ".wav",
-    ".flac",
-    ".sqlite",
-    ".db",
-    ".sqlite3",
-}
 
 # =============================================================================
 # Encoding Validation Report
@@ -186,33 +136,6 @@ class EncodingValidationReport(ValidationReport):
 # =============================================================================
 # Encoding Detection Utilities
 # =============================================================================
-
-
-def is_binary_file(file_path: Path) -> bool:
-    """Check if a file is binary based on extension or content."""
-    # Check extension first (fast path)
-    if file_path.suffix.lower() in BINARY_EXTENSIONS:
-        return True
-
-    # Check file content for null bytes (binary indicator)
-    try:
-        with open(file_path, "rb") as f:
-            chunk = f.read(8192)
-            return b"\x00" in chunk
-    except (OSError, PermissionError):
-        return True  # Treat unreadable files as binary
-
-
-def should_skip_directory(dir_name: str) -> bool:
-    """Check if a directory should be skipped during scanning."""
-    if dir_name in SKIP_DIRS:
-        return True
-    for skip_pattern in SKIP_DIRS:
-        if "*" in skip_pattern:
-            pattern = skip_pattern.replace("*", ".*")
-            if re.match(pattern, dir_name):
-                return True
-    return False
 
 
 def is_text_file(file_path: Path) -> bool:
@@ -517,11 +440,11 @@ def validate_encoding(plugin_path: Path) -> EncodingValidationReport:
 
     report.info(f"Starting encoding scan of: {plugin_path}")
 
-    # Walk through all files
-    for root, dirs, files in os.walk(plugin_path):
-        # Filter out directories to skip
-        dirs[:] = [d for d in dirs if not should_skip_directory(d)]
+    # Use gitignore-aware walker to skip ignored paths
+    gi = get_gitignore_filter(plugin_path)
 
+    # Walk through all files
+    for root, dirs, files in gi.walk(plugin_path):
         for filename in files:
             file_path = Path(root) / filename
 
@@ -586,6 +509,9 @@ Exit Codes:
     parser.add_argument("plugin_path", type=Path, help="Path to the plugin directory to validate")
     parser.add_argument("-v", "--verbose", action="store_true", help="Show all results including INFO and PASSED")
     parser.add_argument("--json", action="store_true", help="Output results as JSON")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
 
     args = parser.parse_args()
@@ -612,6 +538,13 @@ Exit Codes:
         output = report.to_dict()
         output["plugin_path"] = str(plugin_path)
         print(json.dumps(output, indent=2))
+    elif args.report:
+        # Save full report to file, print only compact summary to stdout
+        def _print_full(report, verbose=False):
+            print_report_summary(report, "Encoding Validation Report")
+            print_results_by_level(report, verbose=verbose)
+
+        save_report_and_print_summary(report, Path(args.report), "Encoding Validation", _print_full, args.verbose, plugin_path=args.plugin_path)
     else:
         print_results_by_level(report, verbose=args.verbose)
         print_report_summary(report, title=f"Encoding Validation: {plugin_path.name}")

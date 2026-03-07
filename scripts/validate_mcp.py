@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from cpv_validation_common import ValidationReport
+from cpv_validation_common import COLORS, VALID_PLUGIN_ENV_VARS, ValidationReport, save_report_and_print_summary, validate_component_name
 
 # Valid transport types
 VALID_TRANSPORTS = {"stdio", "sse", "http"}
@@ -55,7 +55,7 @@ KNOWN_SERVER_FIELDS = {
 ENV_VAR_PATTERN = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-([^}]*))?\}")
 
 # Plugin-specific environment variables
-PLUGIN_ENV_VARS = {"CLAUDE_PLUGIN_ROOT", "CLAUDE_PROJECT_DIR"}
+PLUGIN_ENV_VARS = VALID_PLUGIN_ENV_VARS
 
 # Absolute path patterns (platform-independent)
 ABSOLUTE_PATH_PATTERNS = [
@@ -323,6 +323,9 @@ def validate_mcp_server(
                 report.major(f"Server {server_name} 'oauth.clientId' must be a string")
             if "callbackPort" in oauth and not isinstance(oauth["callbackPort"], int):
                 report.major(f"Server {server_name} 'oauth.callbackPort' must be an integer")
+            # authServerMetadataUrl: custom OAuth metadata discovery URL (v2.1.69+)
+            if "authServerMetadataUrl" in oauth and not isinstance(oauth["authServerMetadataUrl"], str):
+                report.major(f"Server {server_name} 'oauth.authServerMetadataUrl' must be a string")
             report.passed(f"Server {server_name} has OAuth configuration")
 
     report.passed(f"Server {server_name} configuration validated")
@@ -391,9 +394,8 @@ def validate_mcp_config(
             report.major(f"Duplicate server name: {server_name}")
         server_names.add(server_name)
 
-        # Validate server name format
-        if not re.match(r"^[a-zA-Z][a-zA-Z0-9_-]*$", server_name):
-            report.minor(f"Server name '{server_name}' should be alphanumeric with hyphens/underscores")
+        # Validate server name format — uses shared validate_component_name for uniform rules
+        validate_component_name(server_name, "mcp-server", report)
 
         if not isinstance(server_config, dict):
             report.critical(f"Server '{server_name}' config must be an object")
@@ -480,16 +482,7 @@ def validate_plugin_mcp(plugin_root: Path, report: ValidationReport | None = Non
 
 def print_results(report: ValidationReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
-    colors = {
-        "CRITICAL": "\033[91m",
-        "MAJOR": "\033[93m",
-        "MINOR": "\033[94m",
-        "NIT": "\033[96m",
-        "WARNING": "\033[95m",
-        "INFO": "\033[90m",
-        "PASSED": "\033[92m",
-        "RESET": "\033[0m",
-    }
+    colors = COLORS
 
     counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
     for r in report.results:
@@ -541,6 +534,9 @@ def main() -> int:
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all results")
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     parser.add_argument(
         "path",
         nargs="?",
@@ -603,7 +599,10 @@ def main() -> int:
         }
         print(json.dumps(output, indent=2))
     else:
-        print_results(report, args.verbose)
+        if args.report:
+            save_report_and_print_summary(report, Path(args.report), "MCP Validation", print_results, args.verbose, plugin_path=args.path)
+        else:
+            print_results(report, args.verbose)
 
     if args.strict:
         return report.exit_code_strict()

@@ -49,6 +49,7 @@ Examples:
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -64,7 +65,7 @@ AUDIT_LOG_DIR = "logs"
 AUDIT_LOG_FILE = "replacement_audit.json"
 
 # AI Maestro API base URL
-AIMAESTRO_API = "http://localhost:23000"
+AIMAESTRO_API = os.environ.get("AIMAESTRO_API", "http://localhost:23000")
 
 # Default AMCOS session name for notifications
 DEFAULT_AMCOS_SESSION = "amcos-controller"
@@ -327,7 +328,7 @@ def update_state_for_replacement(project_root, state, failed_agent, new_agent, h
     return updates_summary
 
 
-def send_ecos_notification(ecos_session, status, failed_agent, new_agent, handoff_id, details):
+def send_amcos_notification(ecos_session, status, failed_agent, new_agent, handoff_id, details):
     """Send replacement confirmation notification to AMCOS via AI Maestro.
 
     Sends a structured JSON message to the AMCOS controller agent with the
@@ -624,7 +625,7 @@ def main():
         if state_updates and isinstance(state_updates, dict):
             notification_details["assignments_updated"] = state_updates.get("assignments_updated", 0)
 
-        ecos_notified = send_ecos_notification(
+        ecos_notified = send_amcos_notification(
             ecos_session=args.amcos_session,
             status=outcome,
             failed_agent=args.failed_agent,

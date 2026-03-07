@@ -56,194 +56,27 @@ The `claude-code-action` is Anthropic's official GitHub Action for running Claud
 
 ## Quick Start
 
-### Step 1: Choose a Template
-
-Select the workflow template that matches your use case from `templates/workflows/`.
-
-### Step 2: Copy to Repository
-
-Copy the YAML file to your repository's `.github/workflows/` directory:
-
-```bash
-# Example: Set up PR review
-cp claude-pr-review.yml /path/to/repo/.github/workflows/
-```
-
-### Step 3: Configure Secrets
-
-Add required secrets in your repository settings:
-
-1. Go to **Settings > Secrets and variables > Actions**
-2. Add `ANTHROPIC_API_KEY` with your Anthropic API key
-
-### Step 4: Configure Permissions
-
-1. Go to **Settings > Actions > General**
-2. Under "Workflow permissions", select "Read and write permissions"
-3. Check "Allow GitHub Actions to create and approve pull requests"
+1. **Choose a Template** from `templates/workflows/`
+2. **Copy to Repository**: `cp <template>.yml /path/to/repo/.github/workflows/`
+3. **Configure Secrets**: Add `ANTHROPIC_API_KEY` in Settings > Secrets and variables > Actions
+4. **Configure Permissions**: Enable "Read and write permissions" and "Allow GitHub Actions to create and approve pull requests" in Settings > Actions > General
 
 ---
 
 ## Template Details
 
-### PR Review Workflow
+Three workflow templates are provided: PR Review (triggers on PR events, reviews code quality/bugs/security/performance), Mention Response (triggers on @claude mentions in comments), and Issue Triage (triggers on new issues, auto-labels and assesses priority).
+See: `references/template-details.md`
 
-**File**: `templates/workflows/claude-pr-review.yml`
+## Customization & Examples
 
-**Triggers**:
-- Pull request opened
-- New commits pushed to PR
-- PR marked ready for review
-- PR reopened
-
-**Features**:
-- Comprehensive code review (quality, bugs, security, performance)
-- Inline comments on specific code issues
-- Summary comment with overall assessment
-- Concurrency control (one review per PR at a time)
-- Draft PR handling (skips drafts)
-
-**Review Categories**:
-1. Code Quality - patterns, naming, organization, DRY
-2. Potential Bugs - null handling, edge cases, race conditions
-3. Security - injection, XSS, auth issues
-4. Performance - complexity, queries, caching
-5. Testing - coverage, edge cases, clarity
-
-### Mention Response Workflow
-
-**File**: `templates/workflows/claude-mention.yml`
-
-**Triggers**:
-- @claude mentioned in issue comment
-- @claude mentioned in PR comment
-
-**Features**:
-- Responds to direct questions
-- Provides code explanations
-- Suggests fixes for reported issues
-- Answers architecture questions
-
-### Issue Triage Workflow
-
-**File**: `templates/workflows/claude-issue-triage.yml`
-
-**Triggers**:
-- New issue opened
-
-**Features**:
-- Automatic label assignment
-- Priority assessment
-- Initial response to reporter
-- Related issue linking
-
----
-
-## Customization
-
-### Changing the Model
-
-Edit the `claude_args` section in any workflow:
-
-```yaml
-claude_args: |
-  --model "claude-sonnet-4-20250514"  # or claude-opus-4-5-20251101
-```
-
-### Restricting Tools
-
-Modify the `--allowedTools` argument to limit what Claude can do:
-
-```yaml
---allowedTools "Read,Glob,Grep"  # Read-only, no bash
-```
-
-### Custom Prompts
-
-Edit the `prompt` section to customize Claude's behavior for your project's specific needs.
-
----
-
-## Examples
-
-### Example 1: Basic PR Review Setup
-
-```yaml
-# .github/workflows/claude-review.yml
-name: Claude PR Review
-
-on:
-  pull_request:
-    types: [opened, synchronize, ready_for_review]
-
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: anthropics/claude-code-action@v1
-        with:
-          prompt: "Review this PR for code quality and potential bugs"
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
-### Example 2: @claude Mention Handler
-
-```yaml
-# .github/workflows/claude-mention.yml
-name: Claude Mention
-
-on:
-  issue_comment:
-    types: [created]
-
-jobs:
-  respond:
-    if: contains(github.event.comment.body, '@claude')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: anthropics/claude-code-action@v1
-        with:
-          prompt: "Respond to this comment helpfully"
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
----
+Model selection, tool restrictions, custom prompts, and complete YAML examples for PR review and @claude mention workflows.
+See: `references/customization-and-examples.md`
 
 ## Error Handling
 
-### Workflow Not Triggering
-
-1. Check workflow file is in `.github/workflows/`
-2. Verify YAML syntax is valid
-3. Ensure trigger conditions match your action
-
-### Authentication Errors
-
-1. Verify `ANTHROPIC_API_KEY` secret is set
-2. Check API key has not expired
-3. Ensure key has required permissions
-
-### Permission Denied Errors
-
-1. Enable "Read and write permissions" in repository settings
-2. Add required permissions block to workflow
-
-### Timeout Issues
-
-1. Increase `timeout-minutes` in workflow
-2. Consider using a faster model for large repos
-
----
-
-## Resources
-
-- [claude-code-action GitHub](https://github.com/anthropics/claude-code-action) - Official action repository
-- [GitHub Actions Documentation](https://docs.github.com/en/actions) - Actions reference
-- `templates/workflows/claude-pr-review.yml` - PR review template
-- `templates/workflows/claude-mention.yml` - Mention handler template
-- `templates/workflows/claude-issue-triage.yml` - Issue triage template
+Troubleshooting for workflow triggers, authentication, permissions, and timeouts.
+See: `references/error-handling.md`
 
 ---
 
@@ -270,25 +103,27 @@ jobs:
 
 ## Checklist
 
-Copy this checklist and track your progress:
+- [ ] Select and copy workflow template to `.github/workflows/`
+- [ ] Add `ANTHROPIC_API_KEY` secret
+- [ ] Enable read/write permissions and PR creation for Actions
+- [ ] Customize model and tools if needed
+- [ ] Test on draft PR or test issue, then monitor costs
 
-- [ ] Select appropriate workflow template (PR review, @claude mention, or issue triage)
-- [ ] Copy template YAML to `.github/workflows/` directory
-- [ ] Add `ANTHROPIC_API_KEY` secret in repository settings
-- [ ] Enable "Read and write permissions" for GitHub Actions
-- [ ] Enable "Allow GitHub Actions to create and approve pull requests"
-- [ ] Customize `claude_args` model if needed (default: sonnet)
-- [ ] Customize `--allowedTools` for security requirements
-- [ ] Test workflow on a draft PR or test issue
-- [ ] Verify workflow triggers correctly
-- [ ] Monitor API usage and costs
-- [ ] Document custom prompts for team reference
+## References
+
+- [claude-code-action](https://github.com/anthropics/claude-code-action) | [GitHub Actions docs](https://docs.github.com/en/actions)
+- `references/template-details.md` - Workflow template specs
+- `references/customization-and-examples.md` - Customization and YAML examples
+- `references/error-handling.md` - Troubleshooting
+
+## Examples
+
+See: `references/customization-and-examples.md`
+
+## Resources
+
+See `## References` above.
 
 ## Script Output Rules
 
-All scripts invoked by this skill MUST follow the token-efficient output protocol:
-
-1. **Verbose output** goes to a timestamped report file in `docs_dev/reports/`
-2. **Stdout** emits only 2-3 lines: `[OK/ERROR] script_name - summary` + `Report: path`
-3. Scripts accept `--output-dir` to override the default report directory
-4. **EXCEPTION**: Scripts in `scripts/amoa_stop_check/` MUST output JSON to stdout (Claude Code hook requirement)
+Scripts MUST write verbose output to `docs_dev/reports/` and emit only `[OK/ERROR] name - summary` on stdout. Scripts in `scripts/amoa_stop_check/` output JSON to stdout (hook requirement).

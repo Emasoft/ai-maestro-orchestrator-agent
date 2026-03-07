@@ -1,7 +1,7 @@
 # Team Registry Specification
 
-**Version**: 1.1.0
-**Last Updated**: 2026-02-07
+**Version**: 1.2.0
+**Last Updated**: 2026-03-06
 
 This document specifies the format and location of team registries, agent contacts, and naming conventions.
 

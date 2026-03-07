@@ -1,7 +1,7 @@
 ---
 name: amoa-reassign-kanban-tasks
 description: "Reassign GitHub Project kanban tasks from one agent to another"
-argument-hint: "--from-agent <ID> --to-agent <ID> --project-id <ID> [--dry-run]"
+argument-hint: "--from-agent <ID> --to-agent <ID> [--dry-run] [--handoff-url URL] [--reason TEXT]"
 allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_reassign_kanban_tasks.py:*)"]
 ---
 
@@ -21,8 +21,6 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_reassign_kanban_tasks.py" $ARGUMENTS
 |----------|----------|-------------|
 | `--from-agent` | Yes | ID of the agent to reassign FROM |
 | `--to-agent` | Yes | ID of the agent to reassign TO |
-| `--project-id` | No | GitHub Project ID (auto-detected if not specified) |
-| `--project-name` | No | GitHub Project name (alternative to ID) |
 | `--dry-run` | No | Show what would be changed without making changes |
 | `--handoff-url` | No | URL of handoff document to include in comments |
 | `--reason` | No | Reason for reassignment (default: "agent_replacement") |
@@ -101,13 +99,6 @@ Records all changes for audit:
 # - Issue #42: auth-core module -> reassigned
 # - Issue #43: token-refresh -> reassigned
 # Total: 2 issues reassigned
-```
-
-### With Project ID
-
-```bash
-# Specify project explicitly
-/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --project-id 12345
 ```
 
 ### With Handoff URL
@@ -230,7 +221,7 @@ Failed:
 - #43: GitHub API rate limit exceeded
 
 Retry failed issues with:
-/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --issues "#43"
+/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2
 ```
 
 ## Error Handling

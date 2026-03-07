@@ -28,7 +28,7 @@ from typing import Any
 
 # WHY: Token-efficient output redirection for orchestrator/agent callers
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
-from report_writer import add_output_dir_argument, capture_and_report, should_use_report
+from report_writer import add_output_dir_argument, capture_and_report, get_output_dir, should_use_report
 
 
 def parse_yaml_frontmatter(content: str) -> dict[str, Any]:
@@ -300,7 +300,7 @@ def main() -> int:
             summary_fn=lambda output: (
                 "ACTIVE" if "Status: ACTIVE" in output else "INACTIVE"
             ) + f" | {output.count(chr(10))} lines of detail",
-            output_dir=getattr(args, "output_dir", None),
+            output_dir=get_output_dir(args),
         )
     return _run_status()
 

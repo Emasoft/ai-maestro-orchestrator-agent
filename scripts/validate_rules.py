@@ -33,10 +33,12 @@ from typing import Any
 
 import yaml
 from cpv_validation_common import (
+    COLORS,
     SECRET_PATTERNS,
     USER_PATH_PATTERNS,
     ValidationReport,
     check_utf8_encoding,
+    save_report_and_print_summary,
 )
 
 # =============================================================================
@@ -322,16 +324,7 @@ def validate_rules_directory(
 
 def print_results(report: ValidationReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
-    colors = {
-        "CRITICAL": "\033[91m",
-        "MAJOR": "\033[93m",
-        "MINOR": "\033[94m",
-        "NIT": "\033[96m",
-        "WARNING": "\033[95m",
-        "INFO": "\033[90m",
-        "PASSED": "\033[92m",
-        "RESET": "\033[0m",
-    }
+    colors = COLORS
 
     counts: dict[str, int] = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
     for r in report.results:
@@ -411,6 +404,9 @@ def main() -> int:
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all results")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     args = parser.parse_args()
 
     path = Path(args.path).resolve()
@@ -439,7 +435,10 @@ def main() -> int:
     if args.json:
         print_json(report)
     else:
-        print_results(report, args.verbose)
+        if args.report:
+            save_report_and_print_summary(report, Path(args.report), "Rules Validation", print_results, args.verbose, plugin_path=args.path)
+        else:
+            print_results(report, args.verbose)
 
     if args.strict:
         return report.exit_code_strict()

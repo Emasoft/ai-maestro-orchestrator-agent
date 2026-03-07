@@ -34,13 +34,13 @@ from cpv_validation_common import (
     EXIT_CRITICAL,
     EXIT_MAJOR,
     EXIT_OK,
-    MAX_NAME_LENGTH,
-    NAME_PATTERN,
     SECRET_PATTERNS,
+    validate_component_name,
     USER_PATH_PATTERNS,
     VALID_TOOLS,
     ValidationReport,
     check_utf8_encoding,
+    save_report_and_print_summary,
 )
 
 # =============================================================================
@@ -201,35 +201,8 @@ def validate_name_field(frontmatter: dict[str, Any], filename: str, report: Comm
         report.critical(f"'name' must be a string, got {type(name).__name__}", filename)
         return
 
-    # Length check: 1-64 characters
-    if len(name) < 1:
-        report.critical("Name cannot be empty", filename)
-        return
-
-    if len(name) > MAX_NAME_LENGTH:
-        report.major(
-            f"Name exceeds {MAX_NAME_LENGTH} chars ({len(name)} chars): {name}",
-            filename,
-        )
-
-    # Lowercase check
-    if name != name.lower():
-        report.major(f"Name must be lowercase: {name}", filename)
-
-    # Kebab-case pattern check
-    if not NAME_PATTERN.match(name):
-        report.major(
-            f"Name must be kebab-case (lowercase letters, numbers, hyphens): {name}",
-            filename,
-        )
-
-    # Consecutive hyphens check
-    if "--" in name:
-        report.major(f"Name cannot contain consecutive hyphens: {name}", filename)
-
-    # Start/end hyphen check
-    if name.startswith("-") or name.endswith("-"):
-        report.major(f"Name cannot start/end with hyphen: {name}", filename)
+    # Uniform naming validation via shared function
+    validate_component_name(name, "command", report)
 
 
 def validate_description_field(frontmatter: dict[str, Any], filename: str, report: CommandValidationReport) -> None:
@@ -658,6 +631,9 @@ def main() -> int:
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     args = parser.parse_args()
 
     path = Path(args.path).resolve()
@@ -709,7 +685,13 @@ def main() -> int:
             print(json.dumps(combined, indent=2))
     else:
         for report in reports:
-            print_results(report, args.verbose)
+            if args.report:
+                save_report_and_print_summary(
+                    report, Path(args.report), f"Command Validation: {report.command_path}", print_results, args.verbose,
+                    plugin_path=args.path,
+                )
+            else:
+                print_results(report, args.verbose)
 
     # Return worst exit code — in strict mode NIT issues also block
     if args.strict:

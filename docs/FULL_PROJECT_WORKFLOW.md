@@ -1,7 +1,7 @@
 # Full Project Workflow: From Requirements to Delivery
 
-**Version**: 1.1.0
-**Last Updated**: 2026-02-07
+**Version**: 1.2.0
+**Last Updated**: 2026-03-06
 
 This document describes the complete workflow for how the AI Maestro agent system handles a project from initial requirements to delivery. All agents must understand this workflow to coordinate effectively.
 

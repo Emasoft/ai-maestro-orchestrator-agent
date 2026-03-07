@@ -17,13 +17,14 @@ agent: amoa-main
 
 Handle agent replacement scenarios triggered by AMCOS (Emergency Context-loss Operations System). When an agent fails, becomes unresponsive, or experiences context loss, compile all task context and generate handoff documents for the replacement agent.
 
+**Use this skill when**: AMCOS notifies you of agent failure, context loss, unresponsive behavior, or manual replacement is needed.
+
 ## Prerequisites
 
 - Python 3.8+ with PyYAML installed
 - GitHub CLI (gh) authenticated
 - AI Maestro running for inter-agent messaging
 - AMCOS system operational for replacement notifications
-- Active orchestration state with agent assignments
 
 ## Output
 
@@ -36,22 +37,15 @@ Handle agent replacement scenarios triggered by AMCOS (Emergency Context-loss Op
 
 ---
 
-## Instructions
+## Workflow Summary
 
-1. Receive and acknowledge the AMCOS replacement notification via AI Maestro
-2. Compile all task context from the failed agent (assignments, progress, blockers, file changes)
-3. Generate a comprehensive handoff document with all necessary context
-4. Reassign GitHub Project kanban tasks to the replacement agent
-5. Send the handoff document to the new agent using the `agent-messaging` skill and request acknowledgment
-6. Confirm replacement by verifying ACK, updating state, and notifying AMCOS
+Six-step replacement protocol: receive AMCOS notification, compile task context, generate handoff document, reassign kanban tasks, send handoff to new agent, confirm reassignment.
 
-**Use this skill when**: AMCOS notifies you of agent failure, context loss, unresponsive behavior, or manual replacement is needed.
+See: [references/replacement-workflow-steps.md](references/replacement-workflow-steps.md) for detailed steps, commands, and scripts.
 
 ---
 
 ## Checklist
-
-Copy this checklist and track your progress:
 
 - [ ] Receive and acknowledge AMCOS replacement notification
 - [ ] Compile all task context from failed agent
@@ -64,185 +58,52 @@ Copy this checklist and track your progress:
 
 ---
 
-## Contents
-
-| Section | Reference |
-|---------|-----------|
-| Step 1: Receive AMCOS Notification | [amcos-notification-handling.md](references/amcos-notification-handling.md) |
-| Step 2: Compile Task Context | [context-compilation-workflow.md](references/context-compilation-workflow.md) |
-<!-- TOC: 1 Information Sources | 2 State File Extraction | 3 GitHub Issue Collection -->
-| Step 3: Generate Handoff Document | [handoff-document-format.md](references/handoff-document-format.md) |
-<!-- TOC: 1 Required Sections | 2 Task Detail Format | 3 Progress Documentation -->
-| Step 4: Reassign Kanban Tasks | [kanban-reassignment-protocol.md](references/kanban-reassignment-protocol.md) |
-<!-- TOC: 1 Finding Assigned Cards | 2 Updating Assignee | 3 Adding Audit Comments -->
-| Step 5: Send Handoff to New Agent | [handoff-delivery-protocol.md](references/handoff-delivery-protocol.md) |
-<!-- TOC: 1 Document Upload | 2 AI Maestro Notification | 3 ACK Requirements -->
-| Step 6: Confirm Reassignment | [confirmation-protocol.md](references/confirmation-protocol.md) |
-<!-- TOC: 1 ACK Verification | 2 State File Updates | 3 AMCOS Notification -->
-| Handoff Protocols | [handoff-protocols.md](references/handoff-protocols.md) |
-| Design Document Protocol | [design-document-protocol.md](references/design-document-protocol.md) |
-<!-- TOC: Document UUID Format (GUUID) | Required Frontmatter Schema | Document Lifecycle -->
-| Edge Case Protocols | [edge-case-protocols.md](references/edge-case-protocols.md) |
-<!-- TOC: Table of Contents | 0 AI Maestro Unavailable | 1 Detection Methods -->
-| Task Completion Checklist | [task-completion-checklist.md](references/task-completion-checklist.md) |
-<!-- TOC: Before Reporting Task Complete | Acceptance Criteria Met | Quality Gates Passed -->
-
----
-
-## Replacement Protocol Flow
-
-```
-AMCOS → AMOA: Agent X failed, replacement is Agent Y
-                    ↓
-AMOA: Compile all task context for Agent X
-                    ↓
-AMOA: Generate comprehensive handoff document
-                    ↓
-AMOA: Update GitHub Project kanban (reassign tasks)
-                    ↓
-AMOA: Send handoff to replacement agent
-                    ↓
-AMOA: Confirm reassignment complete
-```
-
-**CRITICAL**: Before any replacement action: SAVE all state, DOCUMENT progress, PRESERVE communication history, NEVER assume new agent has any context.
-
----
-
-## Step 1: Receive AMCOS Notification
-
-Acknowledge AMCOS notification, pause new assignments, begin context compilation.
-
-See: [amcos-notification-handling.md](references/amcos-notification-handling.md) - 1.1 Notification Types, 1.2 Urgency Levels, 1.3 Acknowledgment Protocol, 1.4 Error Handling
-
----
-
-## Step 2: Compile Task Context
-
-Gather ALL information: task assignments, requirements, current progress, blockers, file changes, communication history, GitHub issues.
-
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_compile_replacement_context.py" \
-  --failed-agent "implementer-1" --output "replacement-context.md"
-```
-
-See: [context-compilation-workflow.md](references/context-compilation-workflow.md) - 2.1 Information Sources, 2.2 State File Extraction, 2.3 GitHub Issue Collection, 2.4 Communication History, 2.5 Git Branch Analysis
-
----
-
-## Step 3: Generate Handoff Document
-
-Create comprehensive handoff with: metadata, task context, user requirements, progress, technical context, communication history, next steps, verification requirements.
-
-```
-/amoa-generate-replacement-handoff --failed-agent implementer-1 --new-agent implementer-2 --include-tasks --include-context
-```
-
-See: [handoff-document-format.md](references/handoff-document-format.md) - 3.1 Required Sections, 3.2 Task Detail Format, 3.3 Progress Documentation, 3.4 Communication History Format, 3.5 Next Steps Clarity
-
----
-
-## Step 4: Reassign Kanban Tasks
-
-Find all cards assigned to failed agent, update assignee, add reassignment comment, preserve labels/status, log for audit.
-
-```
-/amoa-reassign-kanban-tasks --from-agent implementer-1 --to-agent implementer-2 --project-id PROJECT_ID
-```
-
-See: [kanban-reassignment-protocol.md](references/kanban-reassignment-protocol.md) - 4.1 Finding Assigned Cards, 4.2 Updating Assignee, 4.3 Audit Comments, 4.4 Preserving State, 4.5 Handling Partial Work
-
----
-
-## Step 5: Send Handoff to New Agent
-
-Upload handoff to GitHub issue, send AI Maestro message using the `agent-messaging` skill with URL, include urgency level, request ACK within timeout.
-
-See: [handoff-delivery-protocol.md](references/handoff-delivery-protocol.md) - 5.1 Document Upload, 5.2 AI Maestro Notification, 5.3 ACK Requirements, 5.4 Timeout Handling
-
----
-
-## Step 6: Confirm Reassignment
-
-Verify: new agent ACKed, requirements understood, GitHub cards updated, state file updated, AMCOS notified, failed agent removed from roster.
-
-See: [confirmation-protocol.md](references/confirmation-protocol.md) - 6.1 ACK Verification, 6.2 State File Updates, 6.3 AMCOS Notification, 6.4 Audit Logging
-
----
-
-## Python Scripts
-
-| Script | Purpose |
-|--------|---------|
-| `amoa_compile_replacement_context.py` | Gather all context about failed agent's work |
-| `amoa_generate_replacement_handoff.py` | Generate handoff document from compiled context |
-| `amoa_reassign_kanban_tasks.py` | Reassign GitHub Project cards |
-| `amoa_confirm_replacement.py` | Verify replacement completion and notify AMCOS |
-
----
-
 ## Error Handling
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| AMCOS notification not received | AI Maestro communication failure | Check AI Maestro service status |
-| Context compilation failed | State file missing or git unavailable | See troubleshooting.md section 7.2 |
-| Handoff generation failed | Template or incomplete data error | See troubleshooting.md section 7.3 |
-| GitHub API rate limit | Too many API calls | Wait or use batch operations |
-| New agent ACK timeout | Agent unresponsive | Retry or alert user |
+Common errors include AMCOS notification failures, context compilation issues, GitHub API rate limits, and ACK timeouts.
 
-See: [troubleshooting.md](references/troubleshooting.md) for detailed troubleshooting procedures.
-<!-- TOC: 1 AMCOS Communication Failures | 2 Context Compilation Failures | 3 Handoff Generation Failures -->
-
-See: [emergency-procedures.md](references/emergency-procedures.md) for critical failure scenarios.
-<!-- TOC: Replacement Agent Also Fails | Handoff Document Corrupted | GitHub Project Access Issues -->
+See: [references/error-handling-reference.md](references/error-handling-reference.md) for error table and solutions.
 
 ---
+
+## References
+
+All reference files are in `references/`. Key documents:
+
+- [replacement-workflow-steps.md](references/replacement-workflow-steps.md) - Full 6-step workflow and scripts
+- [error-handling-reference.md](references/error-handling-reference.md) - Error table and troubleshooting
+- [handoff-document-format.md](references/handoff-document-format.md) - Handoff document structure
+- [examples.md](references/examples.md) - Usage examples
+- [emergency-procedures.md](references/emergency-procedures.md) - Emergency procedures
+
+Additional references: `amcos-notification-handling`, `context-compilation-workflow`, `kanban-reassignment-protocol`, `handoff-delivery-protocol`, `confirmation-protocol`, `handoff-protocols`, `design-document-protocol`, `edge-case-protocols`, `task-completion-checklist`, `troubleshooting`.
 
 ## Examples
 
-See: [examples.md](references/examples.md) - Standard replacement flow, emergency replacement with partial context
-<!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
+See: [references/examples.md](references/examples.md) for full replacement workflow examples and sample handoff documents.
+
+---
+
+## Instructions
+
+1. On AMCOS notification, compile task context from the failed agent's GitHub issues, kanban cards, and AI Maestro message history.
+2. Generate a handoff document and deliver it to the replacement agent via AI Maestro `agent-messaging` skill.
+3. Wait for ACK, confirm reassignment, and notify AMCOS of successful replacement.
 
 ---
 
 ## Resources
 
-| Reference | Description |
-|-----------|-------------|
-| [amcos-notification-handling.md](references/amcos-notification-handling.md) | AMCOS message handling + Agent Recovery decision tree and response template |
-<!-- TOC: 1 Notification Types | 2 Urgency Levels | 3 Acknowledgment Protocol -->
-| [context-compilation-workflow.md](references/context-compilation-workflow.md) | Gathering task context |
-<!-- TOC: 1 Information Sources | 2 State File Extraction | 3 GitHub Issue Collection -->
-| [handoff-document-format.md](references/handoff-document-format.md) | Handoff document structure |
-<!-- TOC: 1 Required Sections | 2 Task Detail Format | 3 Progress Documentation -->
-| [kanban-reassignment-protocol.md](references/kanban-reassignment-protocol.md) | GitHub Project updates |
-<!-- TOC: 1 Finding Assigned Cards | 2 Updating Assignee | 3 Adding Audit Comments -->
-| [handoff-delivery-protocol.md](references/handoff-delivery-protocol.md) | Delivering to new agent + Handoff delivery method decision tree and ACK template |
-<!-- TOC: 1 Document Upload | 2 AI Maestro Notification | 3 ACK Requirements -->
-| [confirmation-protocol.md](references/confirmation-protocol.md) | Confirming replacement + Confirmation outcome decision tree and AMCOS notification template |
-<!-- TOC: 1 ACK Verification | 2 State File Updates | 3 AMCOS Notification -->
-| [handoff-protocols.md](references/handoff-protocols.md) | Handoff protocol procedures |
-<!-- TOC: Document Delivery Protocol | Task Delegation Protocol | Acknowledgment Protocol -->
-| [design-document-protocol.md](references/design-document-protocol.md) | Design document protocol |
-<!-- TOC: Document UUID Format (GUUID) | Required Frontmatter Schema | Document Lifecycle -->
-| [edge-case-protocols.md](references/edge-case-protocols.md) | Edge case protocols |
-<!-- TOC: Table of Contents | 0 AI Maestro Unavailable | 1 Detection Methods -->
-| [task-completion-checklist.md](references/task-completion-checklist.md) | Task completion checklist |
-<!-- TOC: Before Reporting Task Complete | Acceptance Criteria Met | Quality Gates Passed -->
-| [troubleshooting.md](references/troubleshooting.md) | Common issues and solutions |
-<!-- TOC: 1 AMCOS Communication Failures | 2 Context Compilation Failures | 3 Handoff Generation Failures -->
-| [emergency-procedures.md](references/emergency-procedures.md) | Emergency procedures |
-<!-- TOC: Replacement Agent Also Fails | Handoff Document Corrupted | GitHub Project Access Issues -->
-| [examples.md](references/examples.md) | Usage examples |
-<!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
+- [references/replacement-workflow-steps.md](references/replacement-workflow-steps.md) - Protocol steps and scripts
+- [references/handoff-document-format.md](references/handoff-document-format.md) - Handoff structure
+- [references/context-compilation-workflow.md](references/context-compilation-workflow.md) - Context gathering
+
+---
 
 ## Related Skills
 
-- `amoa-remote-agent-coordinator` - Agent registration and assignment
-- `amoa-remote-agent-coordinator` - Remote agent communication
+- `amoa-remote-agent-coordinator` - Agent registration, assignment, and remote agent communication
 - `amoa-orchestration-patterns` - General orchestration patterns
-- `amoa-agent-replacement` - Shared handoff protocols
 
 ---
 

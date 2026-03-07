@@ -33,9 +33,8 @@ from cpv_validation_common import (
     COLORS,
     MAX_BODY_WORDS,
     MAX_DESCRIPTION_LENGTH,
-    MAX_NAME_LENGTH,
     MIN_BODY_CHARS,
-    NAME_PATTERN,
+    validate_component_name,
     SECRET_PATTERNS,
     USER_PATH_PATTERNS,
     VALID_CONTEXT_VALUES,
@@ -43,6 +42,7 @@ from cpv_validation_common import (
     VALID_TOOLS,
     ValidationReport,
     check_utf8_encoding,
+    save_report_and_print_summary,
 )
 
 # Known frontmatter fields per official docs (agent-specific)
@@ -193,31 +193,8 @@ def validate_name_field(frontmatter: dict[str, Any], filename: str, report: Agen
         report.critical(f"'name' must be a string, got {type(name).__name__}", filename)
         return
 
-    # Length check
-    if len(name) > MAX_NAME_LENGTH:
-        report.major(
-            f"Name exceeds {MAX_NAME_LENGTH} chars ({len(name)} chars): {name}",
-            filename,
-        )
-
-    # Lowercase check
-    if name != name.lower():
-        report.major(f"Name must be lowercase: {name}", filename)
-
-    # Kebab-case pattern check
-    if not NAME_PATTERN.match(name):
-        report.major(
-            f"Name must be kebab-case (lowercase letters, numbers, hyphens): {name}",
-            filename,
-        )
-
-    # Consecutive hyphens check
-    if "--" in name:
-        report.major(f"Name cannot contain consecutive hyphens: {name}", filename)
-
-    # Start/end hyphen check
-    if name.startswith("-") or name.endswith("-"):
-        report.major(f"Name cannot start/end with hyphen: {name}", filename)
+    # Uniform naming validation via shared function
+    validate_component_name(name, "agent", report)
 
 
 def validate_description_field(frontmatter: dict[str, Any], filename: str, report: AgentValidationReport) -> None:
@@ -1141,6 +1118,9 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
@@ -1193,7 +1173,14 @@ def main() -> int:
             print(json.dumps(combined, indent=2))
     else:
         for report in reports:
-            print_results(report, args.verbose)
+            if args.report:
+                agent_file = report.agent_path or args.path
+                save_report_and_print_summary(
+                    report, Path(args.report), f"Agent Validation: {agent_file}", print_results, args.verbose,
+                    plugin_path=args.path,
+                )
+            else:
+                print_results(report, args.verbose)
 
     # Return worst exit code — in strict mode, NIT issues also block validation
     if args.strict:

@@ -35,10 +35,11 @@ from typing import Any
 import yaml
 from cpv_validation_common import (
     COLORS,
-    SKIP_DIRS,
     ValidationReport,
     print_report_summary,
     print_results_by_level,
+    save_report_and_print_summary,
+    should_skip_directory,
 )
 
 # =============================================================================
@@ -165,7 +166,7 @@ def should_skip_dir(path: Path) -> bool:
     Returns:
         True if directory should be skipped
     """
-    return path.name in SKIP_DIRS or path.name.startswith(".")
+    return should_skip_directory(path.name) or path.name.startswith(".")
 
 
 def parse_yaml_frontmatter(content: str) -> dict[str, Any] | None:
@@ -716,6 +717,17 @@ Exit codes:
         action="store_true",
         help="Output results as JSON",
     )
+    parser.add_argument(
+        "--report",
+        type=str,
+        default=None,
+        help="Save detailed report to file, print only summary to stdout",
+    )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Strict mode: NIT issues also cause non-zero exit",
+    )
 
     args = parser.parse_args()
 
@@ -739,6 +751,16 @@ Exit codes:
     # Output results
     if args.json:
         print(report.to_json())
+    elif args.report:
+
+        def _print_full(report, verbose=False):
+            print_report_summary(report, "Cross-Reference Validation Report")
+            print_results_by_level(report, verbose=verbose)
+
+        save_report_and_print_summary(
+            report, Path(args.report), "Cross-Reference Validation", _print_full, args.verbose,
+            plugin_path=args.plugin_path,
+        )
     else:
         print_report_summary(report, "Cross-Reference Validation Report")
         print_results_by_level(report, verbose=args.verbose)
@@ -755,7 +777,7 @@ Exit codes:
             if report.hook_script_refs:
                 print(f"  Hook scripts referenced: {len(report.hook_script_refs)}")
 
-    return report.exit_code
+    return report.exit_code_strict() if args.strict else report.exit_code
 
 
 if __name__ == "__main__":

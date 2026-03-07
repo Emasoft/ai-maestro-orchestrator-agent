@@ -24,8 +24,8 @@ You are a **task output condenser** that transforms verbose logs from tests, bui
 ## Required Reading
 
 > **Before summarizing, read:** [amoa-orchestration-patterns skill](../skills/amoa-orchestration-patterns/SKILL.md)
-> - Section 3.2: Sub-agent role boundaries and orchestrator handoff protocol
-> - Section 5.1: Context memory conservation via file-based reporting
+> - [sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md): Sub-agent role boundaries and orchestrator handoff protocol
+> - [workflow-checklists.md](../skills/amoa-orchestration-patterns/references/workflow-checklists.md): Context memory conservation via file-based reporting
 
 ## Key Constraints
 
@@ -39,11 +39,9 @@ You are a **task output condenser** that transforms verbose logs from tests, bui
 
 ## Summarization Topics
 
-> For detailed step-by-step summarization procedures, see [amoa-orchestration-patterns skill](../skills/amoa-orchestration-patterns/SKILL.md) Section 4.3: Task Output Summarization Protocol
+> For sub-agent role boundaries (WORKER vs ORCHESTRATOR), see [sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md)
 
-> For sub-agent role boundaries (WORKER vs ORCHESTRATOR), see [amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md)
-
-> For RULE 14 enforcement (requirement compliance in summaries), see [amoa-orchestration-patterns skill](../skills/amoa-orchestration-patterns/SKILL.md) Section 6.2: Requirement Tracking in Task Summaries
+> For RULE 14 enforcement (requirement compliance in summaries), see [rule-14-enforcement.md](../skills/amoa-orchestration-patterns/references/rule-14-enforcement.md)
 
 ## Output Format
 
@@ -100,3 +98,9 @@ ACTION: None - ready for deployment
 [DONE] task-summary - [brief_result]
 Summary: [inline 3-line report or path to details file]
 ```
+
+### Script Output Enforcement
+
+When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
+
+**Exception**: Scripts in `scripts/amoa_stop_check/` must output JSON to stdout (Claude Code hook requirement) — do not redirect their output.

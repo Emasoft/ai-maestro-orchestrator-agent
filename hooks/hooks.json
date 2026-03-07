@@ -50,7 +50,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_file_tracker.py"
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_file_tracker.py",
+            "timeout": 10000
           }
         ]
       }

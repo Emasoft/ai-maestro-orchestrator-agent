@@ -2,7 +2,7 @@
 name: amoa-module-management
 description: "Trigger with module management tasks. Use when managing modules during Orchestration Phase (add, modify, remove, prioritize, reassign). Every module maps 1:1 to GitHub Issue."
 license: Apache-2.0
-compatibility: Cross-platform compatible. Requires Python 3.8+ and PyYAML for scripts. Requires gh CLI for GitHub Issue operations. Works with AI Maestro messaging for agent notifications. Requires AI Maestro installed.
+compatibility: Requires Python 3.8+, PyYAML, gh CLI, AI Maestro.
 metadata:
   author: Emasoft
   version: 1.0.0
@@ -13,36 +13,27 @@ agent: amoa-main
 
 # Module Management Commands Skill
 
+Manages modules dynamically during the Orchestration Phase. Modules are atomic work units; each maps 1:1 to a GitHub Issue for traceability.
+
 ## Overview
 
-This skill teaches orchestrators how to dynamically manage modules during the Orchestration Phase.
+Add, modify, remove, prioritize, or reassign modules during orchestration. Each module maps 1:1 to a GitHub Issue. See [references/command-details.md](./references/command-details.md) for full command specs.
 
 ## Prerequisites
 
 - Orchestration Phase active (Plan Phase completed and approved)
 - GitHub CLI (gh) authenticated
 - AI Maestro running for agent notifications
-- State file `design/state/exec-phase.md` exists Modules are the atomic units of work in AMOA orchestration. Each module represents one feature, component, or deliverable that an agent will implement.
-
-**CRITICAL RULE**: Every module is tied 1:1 to a GitHub Issue. When you add a module, an issue is created. When you remove a module, the issue is closed. When you modify a module, the issue is updated. This linkage ensures traceability and transparency.
+- State file `design/state/exec-phase.md` exists
 
 ## Instructions
 
-1. Identify the module management action needed (add, modify, remove, prioritize, or reassign)
-2. Verify prerequisites: Orchestration Phase active, gh CLI authenticated, AI Maestro running
-3. Execute the appropriate command with required parameters
-4. Verify the module state update in `design/state/exec-phase.md`
-5. Confirm GitHub Issue synchronization completed
+1. Identify the module management action needed
+2. Verify prerequisites
+3. Execute the appropriate command
+4. Verify state update in `design/state/exec-phase.md`
+5. Confirm GitHub Issue synchronization
 6. Notify affected agents via AI Maestro if applicable
-
-## Output
-
-| Output Type | Format | Location |
-|-------------|--------|----------|
-| Module state update | YAML | `design/state/exec-phase.md` |
-| GitHub Issue created/updated | Issue number | GitHub repository |
-| Agent notification | AI Maestro message | Agent inbox |
-| Command success/failure | Status message | Console output |
 
 ## Commands Overview
 
@@ -54,366 +45,42 @@ This skill teaches orchestrators how to dynamically manage modules during the Or
 | `/prioritize-module` | Change priority level | Urgency changed |
 | `/reassign-module` | Transfer to different agent | Agent stuck or unavailable |
 
----
+Full syntax, arguments, and examples for each command. See: [references/command-details.md](./references/command-details.md)
 
 ## Quick Reference by Situation
 
-### Situation: User wants a new feature
+**New feature needed**: `/add-module` with name and criteria. See: [references/module-creation.md](./references/module-creation.md)
 
-1. Use `/add-module` with name and criteria
-2. System creates GitHub Issue automatically
-3. Module appears in pending queue
-4. Assign to agent when ready
+**Requirements changed**: `/modify-module` with new specs; agent notified if assigned. See: [references/module-modification.md](./references/module-modification.md)
 
-**Read**: [module-creation.md](./references/module-creation.md)
-- 1.1 When to add modules during orchestration
-- 1.2 Required fields for new modules (name, criteria)
-- 1.3 Optional fields (priority level)
-- 1.4 Automatic GitHub Issue creation
-- 1.5 State file update after addition
-- 1.6 Complete examples with all variations
+**Module cancelled**: `/remove-module` (pending only). See: [references/module-removal-rules.md](./references/module-removal-rules.md)
 
-### Situation: Requirements changed for a module
+**Urgency changed**: `/prioritize-module` with new level. See: [references/module-prioritization.md](./references/module-prioritization.md)
 
-1. Use `/modify-module` with new specs
-2. System updates linked GitHub Issue
-3. If module assigned, agent is notified
+**Agent stuck**: `/reassign-module` to new agent; old agent notified. See: [references/module-reassignment.md](./references/module-reassignment.md)
 
-**Read**: [module-modification.md](./references/module-modification.md)
-- 2.1 What can be modified (name, criteria, priority)
-- 2.2 Modification restrictions by status
-- 2.3 Agent notification protocol
-- 2.4 GitHub Issue synchronization
-- 2.5 Complete modification examples
+## Module-Issue Synchronization
 
-### Situation: Module needs to be cancelled
+Every module event syncs to GitHub: add creates an issue, modify updates it, remove closes it with wontfix, priority change updates labels, assignment updates assignee, completion closes with linked PR. See: [references/github-issue-sync.md](./references/github-issue-sync.md)
 
-1. Verify module status is `pending`
-2. Use `/remove-module` with module ID
-3. System closes linked GitHub Issue
+## State File & YAML Format
 
-**Read**: [module-removal-rules.md](./references/module-removal-rules.md)
-- 3.1 Which modules can be removed (pending only)
-- 3.2 Why in-progress modules cannot be removed
-- 3.3 Removal process step by step
-- 3.4 GitHub Issue closure with wontfix label
-- 3.5 Alternatives to removal (scope reduction)
-- 3.6 Error handling and recovery
-
-### Situation: Module urgency changed
-
-1. Use `/prioritize-module` with new level
-2. System updates GitHub Issue labels
-3. Agent notified if assigned
-
-**Read**: [module-prioritization.md](./references/module-prioritization.md)
-- 4.1 Priority levels explained (critical, high, medium, low)
-- 4.2 Effects on assignment queue
-- 4.3 GitHub Issue label updates
-- 4.4 When to escalate vs downgrade
-- 4.5 Complete priority change examples
-
-### Situation: Module needs different agent
-
-1. Request progress report from current agent
-2. Use `/reassign-module` with new agent ID
-3. Old agent notified to stop work
-4. New agent receives full assignment
-
-**Read**: [module-reassignment.md](./references/module-reassignment.md)
-- 5.1 When reassignment is appropriate
-- 5.2 Reassignment workflow step by step
-- 5.3 Old agent notification protocol
-- 5.4 New agent assignment message
-- 5.5 State file updates during reassignment
-- 5.6 Instruction Verification Protocol reset
-
----
-
-## The Module-Issue Relationship
-
-Every module in AMOA orchestration has a corresponding GitHub Issue. This relationship is fundamental and cannot be bypassed.
-
-### Why Modules Map to Issues
-
-| Reason | Benefit |
-|--------|---------|
-| Traceability | All work is tracked in GitHub |
-| Transparency | Stakeholders see progress |
-| Integration | PRs link to issues |
-| History | Changes documented |
-| Accountability | Assignment visible |
-
-### Automatic Synchronization
-
-| Module Event | GitHub Issue Action |
-|--------------|---------------------|
-| Module added | Issue created with labels |
-| Module modified | Issue body/labels updated |
-| Module removed | Issue closed with wontfix |
-| Priority changed | Priority label updated |
-| Agent assigned | Issue assigned to developer |
-| Module completed | Issue closed with linked PR |
-
-**Read**: [github-issue-sync.md](./references/github-issue-sync.md)
-- 6.1 Issue creation format and labels
-- 6.2 Issue update synchronization
-- 6.3 Issue closure protocols
-- 6.4 Label conventions (module, priority-*, status-*)
-- 6.5 Manual sync when automation fails
-- 6.6 Troubleshooting sync issues
-
----
-
-## Command Details
-
-### /add-module
-
-**Usage**: `/add-module "<NAME>" --criteria "<TEXT>" [--priority LEVEL]`
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| NAME | Yes | Display name for the module |
-| --criteria | Yes | Acceptance criteria text |
-| --priority | No | `critical`, `high`, `medium`, `low` (default: medium) |
-
-**What Happens**:
-1. Module entry created in state file
-2. GitHub Issue created with labels
-3. Stop hook updated to include new module
-
-**Example**:
-```bash
-/add-module "Two-Factor Auth" --criteria "Support TOTP and SMS" --priority critical
-```
-
-### /modify-module
-
-**Usage**: `/modify-module <MODULE_ID> [--name NAME] [--criteria TEXT] [--priority LEVEL]`
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| MODULE_ID | Yes | ID of module to modify |
-| --name | No | New display name |
-| --criteria | No | New acceptance criteria |
-| --priority | No | New priority level |
-
-**Restrictions**:
-- `pending` modules: All fields modifiable
-- `in-progress` modules: Modifiable with agent notification
-- `complete` modules: Cannot modify
-
-**Example**:
-```bash
-/modify-module auth-core --criteria "Support JWT with 24h expiry" --priority high
-```
-
-### /remove-module
-
-**Usage**: `/remove-module <MODULE_ID> [--force]`
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| MODULE_ID | Yes | ID of module to remove |
-| --force | No | Skip confirmation |
-
-**Restrictions**:
-- Only `pending` modules can be removed
-- `in-progress` modules cannot be removed
-- `complete` modules cannot be removed
-
-**Example**:
-```bash
-/remove-module oauth-facebook
-```
-
-### /prioritize-module
-
-**Usage**: `/prioritize-module <MODULE_ID> --priority <LEVEL>`
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| MODULE_ID | Yes | ID of module |
-| --priority | Yes | `critical`, `high`, `medium`, `low` |
-
-**Example**:
-```bash
-/prioritize-module auth-core --priority critical
-```
-
-### /reassign-module
-
-**Usage**: `/reassign-module <MODULE_ID> --to <AGENT_ID>`
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| MODULE_ID | Yes | ID of module to reassign |
-| --to | Yes | ID of new agent |
-
-**What Happens**:
-1. Old agent receives STOP notification
-2. Assignment record transferred
-3. New agent receives full assignment
-4. Instruction Verification Protocol resets
-
-**Example**:
-```bash
-/reassign-module auth-core --to implementer-2
-```
-
----
-
-## State File Structure
-
-Module management commands modify the orchestration state file at `design/state/exec-phase.md`.
-
-### Module Entry Format
-
-```yaml
-modules_status:
-  - id: "auth-core"           # Kebab-case identifier
-    name: "Core Authentication"  # Display name
-    status: "pending"         # pending|assigned|in-progress|complete
-    assigned_to: null         # Agent ID or null
-    github_issue: "#42"       # Linked issue number
-    pr: null                  # Linked PR when complete
-    verification_loops: 0     # Number of review cycles
-    acceptance_criteria: "Support JWT and session tokens"
-    priority: "high"          # critical|high|medium|low
-```
-
-### Assignment Entry Format
-
-```yaml
-active_assignments:
-  - agent: "implementer-1"
-    agent_type: "ai"
-    module: "auth-core"
-    github_issue: "#42"
-    task_uuid: "task-abc123def456"
-    status: "pending_verification"
-    instruction_verification:
-      status: "awaiting_repetition"
-      repetition_received: false
-      repetition_correct: false
-      questions_asked: 0
-      questions_answered: 0
-      authorized_at: null
-```
-
----
-
-## Examples
-
-### Example 1: Add New Module Mid-Orchestration
-
-```bash
-# User requests two-factor authentication
-/add-module "Two-Factor Auth" --criteria "Support TOTP and SMS" --priority critical
-
-# System automatically creates GitHub Issue #43
-# Module appears in pending queue with status: pending
-```
-
-### Example 2: Reassign Blocked Module
-
-```bash
-# Agent implementer-1 is blocked on auth-core
-# Request progress report first
-/check-agents --agent implementer-1
-
-# Reassign to implementer-2
-/reassign-module auth-core --to implementer-2
-
-# Old agent notified to stop
-# New agent receives full assignment with Instruction Verification Protocol reset
-```
-
----
+Module and assignment entries are stored in `design/state/exec-phase.md`. See: [references/state-file-structure.md](./references/state-file-structure.md)
 
 ## Error Handling
 
-| Problem | Likely Cause | Solution |
-|---------|--------------|----------|
-| Module not found | Wrong ID used | Use `/orchestration-status` to see actual IDs |
-| Cannot remove module | Status not pending | Modify scope instead of removing |
-| GitHub Issue not created | gh CLI not authenticated | Run `gh auth login` |
-| Agent not notified | AI Maestro not running | Verify AI Maestro AMP messaging is running using the `agent-messaging` skill health check |
-| Priority not updating | Issue labels mismatch | Manually update GitHub Issue |
+| Problem | Solution |
+|---------|----------|
+| Module not found | Use `/orchestration-status` to see actual IDs |
+| Cannot remove module | Status not pending; modify scope instead |
+| GitHub Issue not created | Run `gh auth login` |
+| Agent not notified | Verify AI Maestro AMP is running |
 
-**For detailed troubleshooting**: [troubleshooting.md](./references/troubleshooting.md)
-- 7.1 State file corruption recovery
-- 7.2 GitHub sync failure recovery
-- 7.3 Agent notification failures
-- 7.4 Module ID conflicts
-- 7.5 Force removal scenarios
+Full troubleshooting guide. See: [references/troubleshooting.md](./references/troubleshooting.md)
 
----
+## Examples & Scripts
 
-## Scripts Reference
-
-### Module Operations Script
-
-**Location**: `scripts/module_operations.py`
-
-Provides programmatic access to all module operations:
-
-```bash
-# Add module
-python3 scripts/module_operations.py add "Module Name" --criteria "Criteria"
-
-# Modify module
-python3 scripts/module_operations.py modify module-id --priority critical
-
-# Remove module
-python3 scripts/module_operations.py remove module-id
-
-# List modules
-python3 scripts/module_operations.py list
-
-# Validate module state
-python3 scripts/module_operations.py validate
-```
-
-### GitHub Sync Script
-
-**Location**: `scripts/github_sync.py`
-
-Synchronizes module state with GitHub Issues:
-
-```bash
-# Sync all modules to GitHub
-python3 scripts/github_sync.py sync-all
-
-# Sync specific module
-python3 scripts/github_sync.py sync module-id
-
-# Verify sync status
-python3 scripts/github_sync.py verify
-```
-
----
-
-## Reference Documents
-
-| Reference | Contents |
-|-----------|----------|
-| [module-creation.md](./references/module-creation.md) | Add-module workflow, validation, examples |
-<!-- TOC: 1 When to add modules during orchestration | 2 Required fields for new modules (name, criteria) | 3 Optional fields (priority level) -->
-| [module-modification.md](./references/module-modification.md) | Modify specs, notifications, restrictions |
-<!-- TOC: 1 What can be modified (name, criteria, priority) | 2 Modification restrictions by status | 3 Agent notification protocol -->
-| [module-removal-rules.md](./references/module-removal-rules.md) | Removal conditions, cleanup, alternatives |
-<!-- TOC: 1 Which modules can be removed (pending only) | 2 Why in-progress modules cannot be removed | 3 Removal process step by step -->
-| [module-prioritization.md](./references/module-prioritization.md) | Priority levels, effects, label updates |
-<!-- TOC: 1 Priority levels explained (critical, high, medium, low) | 2 Effects on assignment queue | 3 GitHub Issue label updates -->
-| [module-reassignment.md](./references/module-reassignment.md) | Transfer workflow, notifications, reset |
-<!-- TOC: 1 When reassignment is appropriate | 2 Reassignment workflow step by step | 3 Old agent notification protocol -->
-| [github-issue-sync.md](./references/github-issue-sync.md) | Issue creation, labels, sync protocol |
-<!-- TOC: 1 Issue creation format and labels | 2 Issue update synchronization | 3 Issue closure protocols -->
-| [troubleshooting.md](./references/troubleshooting.md) | Error recovery, force operations |
-<!-- TOC: 1 State file corruption recovery | 2 GitHub sync failure recovery | 3 Agent notification failures -->
-
----
+Usage examples and programmatic script reference. See: [references/usage-examples.md](./references/usage-examples.md)
 
 ## Related Commands
 
@@ -424,65 +91,22 @@ python3 scripts/github_sync.py verify
 | `/check-agents` | Monitor agent progress |
 | `/register-agent` | Register new agents |
 
----
+## Examples
 
-## Summary
+See [references/usage-examples.md](./references/usage-examples.md) for complete usage examples of each command.
 
-| Action | Command | Restrictions |
-|--------|---------|--------------|
-| Add module | `/add-module` | None |
-| Modify specs | `/modify-module` | Cannot modify complete |
-| Remove module | `/remove-module` | Pending only |
-| Change priority | `/prioritize-module` | None |
-| Reassign agent | `/reassign-module` | Cannot reassign complete |
+## Output
 
-**Key Principles**:
-- Every module = 1 GitHub Issue
-- Modifications sync to GitHub automatically
-- Agent notifications via AI Maestro
-- Instruction Verification required after reassignment
-
----
+Commands update `design/state/exec-phase.md` and sync to GitHub Issues. See [references/state-file-structure.md](./references/state-file-structure.md) for output format details.
 
 ## Resources
 
-- [module-creation.md](./references/module-creation.md) - Add-module workflow and validation
-<!-- TOC: 1 When to add modules during orchestration | 2 Required fields for new modules (name, criteria) | 3 Optional fields (priority level) -->
-- [module-modification.md](./references/module-modification.md) - Modify specs and notifications
-<!-- TOC: 1 What can be modified (name, criteria, priority) | 2 Modification restrictions by status | 3 Agent notification protocol -->
-- [module-removal-rules.md](./references/module-removal-rules.md) - Removal conditions and cleanup
-<!-- TOC: 1 Which modules can be removed (pending only) | 2 Why in-progress modules cannot be removed | 3 Removal process step by step -->
-- [module-prioritization.md](./references/module-prioritization.md) - Priority levels and effects
-<!-- TOC: 1 Priority levels explained (critical, high, medium, low) | 2 Effects on assignment queue | 3 GitHub Issue label updates -->
-- [module-reassignment.md](./references/module-reassignment.md) - Transfer workflow
-<!-- TOC: 1 When reassignment is appropriate | 2 Reassignment workflow step by step | 3 Old agent notification protocol -->
-- [github-issue-sync.md](./references/github-issue-sync.md) - Issue creation and sync
-<!-- TOC: 1 Issue creation format and labels | 2 Issue update synchronization | 3 Issue closure protocols -->
-- [troubleshooting.md](./references/troubleshooting.md) - Error recovery
-<!-- TOC: 1 State file corruption recovery | 2 GitHub sync failure recovery | 3 Agent notification failures -->
+- [references/command-details.md](./references/command-details.md) -- full command syntax and arguments
+- [references/troubleshooting.md](./references/troubleshooting.md) -- error resolution guide
+- [references/github-issue-sync.md](./references/github-issue-sync.md) -- GitHub synchronization rules
 
----
+## Key Principles
 
-## Checklist
-
-Copy this checklist and track your progress:
-
-- [ ] Identify module management action needed (add/modify/remove/prioritize/reassign)
-- [ ] Verify Orchestration Phase is active
-- [ ] Confirm gh CLI is authenticated
-- [ ] Verify AI Maestro messaging system (AMP) is running
-- [ ] Execute appropriate command with required parameters
-- [ ] Check module state updated in design/state/exec-phase.md
-- [ ] Verify GitHub Issue created/updated with correct labels
-- [ ] Confirm agent notification sent via AI Maestro (if applicable)
-- [ ] Validate module-to-issue 1:1 relationship maintained
-- [ ] Document any errors in troubleshooting log
-
-## Script Output Rules
-
-All scripts invoked by this skill MUST follow the token-efficient output protocol:
-
-1. **Verbose output** goes to a timestamped report file in `docs_dev/reports/`
-2. **Stdout** emits only 2-3 lines: `[OK/ERROR] script_name - summary` + `Report: path`
-3. Scripts accept `--output-dir` to override the default report directory
-4. **EXCEPTION**: Scripts in `scripts/amoa_stop_check/` MUST output JSON to stdout (Claude Code hook requirement)
+- Every module = 1 GitHub Issue (modifications sync automatically)
+- Agent notifications via AI Maestro; Instruction Verification required after reassignment
+- Checklist and script output rules: See [references/checklist-and-scripts.md](./references/checklist-and-scripts.md)

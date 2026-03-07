@@ -1,6 +1,6 @@
 # AI Maestro Orchestrator Agent (amoa-)
 
-**Version**: 1.4.0
+**Version**: 1.4.1
 
 ## Overview
 
@@ -94,7 +94,7 @@ ai-maestro-orchestrator-agent/
 ├── docs/                # Architecture docs (role boundaries, workflow, registry)
 ├── git-hooks/           # Git hooks (pre-push validation)
 ├── hooks/               # Plugin hooks (hooks.json + 4 hook scripts)
-├── scripts/             # Python scripts (37 scripts + validation suite)
+├── scripts/             # Python scripts (56 scripts + validation suite)
 │   └── amoa_stop_check/ # Stop hook package (lock, tasks, phase checks)
 ├── shared/              # Shared resources across skills
 ├── skills/              # Skill definitions (16 skills with references)

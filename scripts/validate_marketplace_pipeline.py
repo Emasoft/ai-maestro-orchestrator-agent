@@ -42,6 +42,7 @@ from typing import Any
 
 import yaml
 from cpv_validation_common import (
+    COLORS,
     EXIT_CRITICAL,
     EXIT_MAJOR,
     EXIT_MINOR,
@@ -1392,7 +1393,7 @@ def format_text_report(report: PipelineValidationReport, verbose: bool = False) 
 
     # Overall score
     lines.append("-" * 70)
-    lines.append(f"OVERALL SCORE: {report.total_score:.1f}/100 (Grade: {report.grade})")
+    lines.append(f"OVERALL SCORE: {report.total_score:.1f}/100")
     lines.append(f"Status: {report.grade_description}")
     lines.append("-" * 70)
     lines.append("")
@@ -1492,6 +1493,9 @@ Exit Codes:
         help="Output results as JSON",
     )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
 
     args = parser.parse_args()
 
@@ -1522,6 +1526,23 @@ Exit Codes:
     # Output results
     if args.json:
         print(json.dumps(report.to_dict(), indent=2))
+    elif args.report:
+        Path(args.report).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.report).write_text(format_text_report(report, verbose=args.verbose))
+        # Inline compact summary (PipelineValidationReport is not a ValidationReport)
+        grade = report.grade
+        score = report.total_score
+        if report.has_critical():
+            verdict = f"{COLORS['CRITICAL']}FAIL (critical){COLORS['RESET']}"
+        elif report.has_major():
+            verdict = f"{COLORS['MAJOR']}FAIL (major){COLORS['RESET']}"
+        elif grade in ("A", "B"):
+            verdict = f"{COLORS['PASSED']}PASS{COLORS['RESET']}"
+        else:
+            verdict = f"{COLORS['MINOR']}WARN ({grade}){COLORS['RESET']}"
+        print(f"{COLORS['BOLD']}Marketplace Pipeline Validation{COLORS['RESET']}: {verdict}")
+        print(f"  Score: {score:.1f}/100 ({grade})")
+        print(f"  Report: {Path(args.report)}")
     else:
         print(format_text_report(report, verbose=args.verbose))
 

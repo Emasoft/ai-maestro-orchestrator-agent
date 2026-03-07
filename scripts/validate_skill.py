@@ -29,24 +29,21 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from cpv_validation_common import BUILTIN_AGENT_TYPES, VALID_CONTEXT_VALUES, ValidationReport
+from cpv_validation_common import (
+    BUILTIN_AGENT_TYPES,
+    COLORS,
+    SKILL_FRONTMATTER_FIELDS,
+    VALID_CONTEXT_VALUES,
+    ValidationReport,
+    save_report_and_print_summary,
+    validate_component_name,
+)
 
 # Maximum recommended SKILL.md line count per Anthropic docs
 MAX_SKILL_LINES = 500
 
 # Known frontmatter fields per official docs
-KNOWN_FRONTMATTER_FIELDS = {
-    "name",
-    "description",
-    "argument-hint",
-    "disable-model-invocation",
-    "user-invocable",
-    "allowed-tools",
-    "model",
-    "context",
-    "agent",
-    "hooks",
-}
+KNOWN_FRONTMATTER_FIELDS = SKILL_FRONTMATTER_FIELDS
 
 
 @dataclass
@@ -144,33 +141,12 @@ def validate_name_field(frontmatter: dict[str, Any], skill_dir_name: str, report
         name = frontmatter["name"]
         report.passed(f"'name' field present: {name}", "SKILL.md")
 
-    # Validate name format per docs:
-    # "Lowercase letters, numbers, and hyphens only (max 64 characters)"
     if not isinstance(name, str):
         report.critical(f"'name' must be a string, got {type(name).__name__}", "SKILL.md")
         return
 
-    if len(name) > 64:
-        report.major(
-            f"Skill name exceeds 64 characters ({len(name)} chars): {name}",
-            "SKILL.md",
-        )
-
-    if name != name.lower():
-        report.major(f"Skill name must be lowercase: {name}", "SKILL.md")
-
-    if not re.match(r"^[a-z][a-z0-9-]*$", name):
-        report.major(
-            f"Skill name must use only lowercase letters, numbers, hyphens: {name}",
-            "SKILL.md",
-        )
-
-    # Check name matches directory name (recommended)
-    if "name" in frontmatter and name != skill_dir_name:
-        report.info(
-            f"Skill name '{name}' differs from directory name '{skill_dir_name}'",
-            "SKILL.md",
-        )
+    # Uniform naming validation via shared function (includes dir-name match as MAJOR)
+    validate_component_name(name, "skill", report, directory_name=skill_dir_name if "name" in frontmatter else None)
 
 
 def validate_description_field(frontmatter: dict[str, Any], body: str, report: ValidationReport) -> None:
@@ -537,17 +513,7 @@ def validate_skill(skill_path: Path) -> SkillValidationReport:
 
 def print_results(report: SkillValidationReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
-    # ANSI colors
-    colors = {
-        "CRITICAL": "\033[91m",  # Red
-        "MAJOR": "\033[93m",  # Yellow
-        "MINOR": "\033[94m",  # Blue
-        "NIT": "\033[96m",  # Cyan — blocks only in --strict
-        "WARNING": "\033[95m",  # Magenta — never blocks, always reported
-        "INFO": "\033[90m",  # Gray
-        "PASSED": "\033[92m",  # Green
-        "RESET": "\033[0m",
-    }
+    colors = COLORS
 
     # Count by level
     counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
@@ -638,6 +604,9 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
@@ -664,7 +633,10 @@ def main() -> int:
     if args.json:
         print_json(report)
     else:
-        print_results(report, args.verbose)
+        if args.report:
+            save_report_and_print_summary(report, Path(args.report), "Skill Validation", print_results, args.verbose, plugin_path=args.skill_path)
+        else:
+            print_results(report, args.verbose)
 
     if args.strict:
         return report.exit_code_strict()

@@ -153,7 +153,7 @@ def get_module_from_state(module_id: str) -> dict[str, Any] | None:
         return None
 
     data, _ = parse_frontmatter(EXEC_STATE_FILE)
-    modules = data.get("modules", [])
+    modules = data.get("modules_status", data.get("modules", []))
 
     for module in modules:
         if module.get("id") == module_id:

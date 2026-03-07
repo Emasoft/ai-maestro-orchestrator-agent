@@ -342,6 +342,7 @@ def main() -> int:
         return capture_and_report(
             _run,
             script_name="amoa_poll_agent",
+            summary_fn=lambda out: f"poll {args.agent_id} - {'ERROR' if 'ERROR' in out else 'OK'}",
             output_dir=get_output_dir(args),
         )
     return _run()

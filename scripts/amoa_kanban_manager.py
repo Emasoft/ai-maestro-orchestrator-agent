@@ -44,8 +44,6 @@ KANBAN_COLUMNS = {
     "blocked": "Blocked",
 }
 
-# Local cache for task state
-CACHE_DIR = Path.home() / ".eoa" / "kanban-cache"
 
 
 def get_timestamp() -> str:
@@ -59,6 +57,7 @@ def run_gh_command(args: list[str]) -> tuple[int, str, str]:
         ["gh"] + args,
         capture_output=True,
         text=True,
+        timeout=30,
         env={**os.environ, "GH_TOKEN": GITHUB_TOKEN},
     )
     return result.returncode, result.stdout, result.stderr

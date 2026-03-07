@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
+
 import re
 import stat
 import sys
@@ -30,11 +30,13 @@ from cpv_validation_common import (
     EXAMPLE_USERNAMES,
     KNOWN_EXAMPLE_SECRETS,
     SECRET_PATTERNS,
-    SKIP_DIRS,
     USER_PATH_PATTERNS,
     ValidationReport,
+    get_gitignore_filter,
+    is_binary_file,
     print_report_summary,
     print_results_by_level,
+    save_report_and_print_summary,
 )
 
 # =============================================================================
@@ -107,95 +109,8 @@ PATH_TRAVERSAL_PATTERNS = [
 ]
 
 # =============================================================================
-# Binary File Detection
-# =============================================================================
-
-# File extensions that are typically binary
-BINARY_EXTENSIONS = {
-    ".png",
-    ".jpg",
-    ".jpeg",
-    ".gif",
-    ".bmp",
-    ".ico",
-    ".webp",
-    ".svg",
-    ".pdf",
-    ".doc",
-    ".docx",
-    ".xls",
-    ".xlsx",
-    ".ppt",
-    ".pptx",
-    ".zip",
-    ".tar",
-    ".gz",
-    ".bz2",
-    ".xz",
-    ".7z",
-    ".rar",
-    ".exe",
-    ".dll",
-    ".so",
-    ".dylib",
-    ".a",
-    ".o",
-    ".obj",
-    ".pyc",
-    ".pyo",
-    ".class",
-    ".jar",
-    ".war",
-    ".woff",
-    ".woff2",
-    ".ttf",
-    ".otf",
-    ".eot",
-    ".mp3",
-    ".mp4",
-    ".avi",
-    ".mkv",
-    ".mov",
-    ".wav",
-    ".flac",
-    ".sqlite",
-    ".db",
-    ".sqlite3",
-}
-
-# =============================================================================
 # Security Validation Functions
 # =============================================================================
-
-
-def is_binary_file(file_path: Path) -> bool:
-    """Check if a file is binary based on extension or content."""
-    # Check extension first (fast path)
-    if file_path.suffix.lower() in BINARY_EXTENSIONS:
-        return True
-
-    # Check file content for null bytes (binary indicator)
-    try:
-        with open(file_path, "rb") as f:
-            chunk = f.read(8192)
-            return b"\x00" in chunk
-    except (OSError, PermissionError):
-        return True  # Treat unreadable files as binary
-
-
-def should_skip_directory(dir_name: str) -> bool:
-    """Check if a directory should be skipped during scanning."""
-    # Direct match
-    if dir_name in SKIP_DIRS:
-        return True
-    # Wildcard patterns (e.g., *.egg-info)
-    for skip_pattern in SKIP_DIRS:
-        if "*" in skip_pattern:
-            # Convert glob pattern to regex
-            pattern = skip_pattern.replace("*", ".*")
-            if re.match(pattern, dir_name):
-                return True
-    return False
 
 
 def is_validator_script(file_path: str) -> bool:
@@ -376,7 +291,12 @@ def scan_for_path_traversal(content: str, file_path: str, report: ValidationRepo
     # Skip path checks for test files - they contain example data
     # Handle both absolute (/tests/) and relative (tests/) paths
     file_normalized = file_lower.replace("\\", "/")
-    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_normalized or file_normalized.startswith("tests/"):
+    if (
+        "test_" in file_lower
+        or "_test.py" in file_lower
+        or "/tests/" in file_normalized
+        or file_normalized.startswith("tests/")
+    ):
         return 0
 
     for line_num, line in enumerate(lines, start=1):
@@ -394,9 +314,7 @@ def scan_for_path_traversal(content: str, file_path: str, report: ValidationRepo
             continue
 
         # Detect if this line is a Python string literal (help text, error messages, etc.)
-        is_python_string_line = file_lower.endswith(".py") and (
-            '"' in stripped or "'" in stripped
-        )
+        is_python_string_line = file_lower.endswith(".py") and ('"' in stripped or "'" in stripped)
 
         for pattern, msg in PATH_TRAVERSAL_PATTERNS:
             match = pattern.search(line)
@@ -429,7 +347,9 @@ def scan_for_path_traversal(content: str, file_path: str, report: ValidationRepo
                     # Skip absolute Unix paths in Python string literals
                     # (e.g. help text mentioning shebangs or system bin directories)
                     if "Absolute Unix" in msg and (
-                        "#!/" in line or "help" in stripped.lower() or "epilog" in stripped.lower()
+                        "#!/" in line
+                        or "help" in stripped.lower()
+                        or "epilog" in stripped.lower()
                         or stripped.startswith(("'", '"', "f'", 'f"', "r'", 'r"'))
                     ):
                         continue
@@ -451,7 +371,12 @@ def scan_for_secrets(content: str, file_path: str, report: ValidationReport) -> 
     # Skip test files — they contain intentional example/mock secrets
     # Handle both absolute (/tests/) and relative (tests/) paths
     file_normalized = file_lower.replace("\\", "/")
-    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_normalized or file_normalized.startswith("tests/"):
+    if (
+        "test_" in file_lower
+        or "_test.py" in file_lower
+        or "/tests/" in file_normalized
+        or file_normalized.startswith("tests/")
+    ):
         return 0
 
     # Skip markdown documentation — contains example credentials for illustration
@@ -499,7 +424,12 @@ def scan_for_user_paths(content: str, file_path: str, report: ValidationReport) 
     # Skip test files - they contain example data
     # Handle both absolute (/tests/) and relative (tests/) paths
     file_normalized = file_lower.replace("\\", "/")
-    if "test_" in file_lower or "_test.py" in file_lower or "/tests/" in file_normalized or file_normalized.startswith("tests/"):
+    if (
+        "test_" in file_lower
+        or "_test.py" in file_lower
+        or "/tests/" in file_normalized
+        or file_normalized.startswith("tests/")
+    ):
         return 0
 
     for line_num, line in enumerate(lines, start=1):
@@ -519,11 +449,9 @@ def scan_for_user_paths(content: str, file_path: str, report: ValidationReport) 
 def check_dangerous_files(plugin_path: Path, report: ValidationReport) -> int:
     """Check for presence of dangerous files in the plugin. Returns count found."""
     issues_found = 0
+    gi = get_gitignore_filter(plugin_path)
 
-    for root, dirs, files in os.walk(plugin_path):
-        # Skip hidden and cache directories
-        dirs[:] = [d for d in dirs if not should_skip_directory(d)]
-
+    for root, dirs, files in gi.walk(plugin_path):
         for filename in files:
             if filename in DANGEROUS_FILES:
                 full_path = Path(root) / filename
@@ -537,11 +465,9 @@ def check_dangerous_files(plugin_path: Path, report: ValidationReport) -> int:
 def check_script_permissions(plugin_path: Path, report: ValidationReport) -> int:
     """Check script files for proper permissions. Returns count of issues found."""
     issues_found = 0
+    gi = get_gitignore_filter(plugin_path)
 
-    for root, dirs, files in os.walk(plugin_path):
-        # Skip hidden and cache directories
-        dirs[:] = [d for d in dirs if not should_skip_directory(d)]
-
+    for root, dirs, files in gi.walk(plugin_path):
         for filename in files:
             file_path = Path(root) / filename
             rel_path = file_path.relative_to(plugin_path)
@@ -607,10 +533,9 @@ def scan_all_files(plugin_path: Path, report: ValidationReport) -> dict[str, int
         "user_path_issues": 0,
     }
 
-    for root, dirs, files in os.walk(plugin_path):
-        # Filter out directories to skip
-        dirs[:] = [d for d in dirs if not should_skip_directory(d)]
+    gi = get_gitignore_filter(plugin_path)
 
+    for root, dirs, files in gi.walk(plugin_path):
         for filename in files:
             file_path = Path(root) / filename
             rel_path = str(file_path.relative_to(plugin_path))
@@ -736,6 +661,9 @@ Exit Codes:
     parser.add_argument("-v", "--verbose", action="store_true", help="Show all results including INFO and PASSED")
     parser.add_argument("--json", action="store_true", help="Output results as JSON")
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
 
     args = parser.parse_args()
 
@@ -761,6 +689,13 @@ Exit Codes:
         output = report.to_dict()
         output["plugin_path"] = str(plugin_path)
         print(json.dumps(output, indent=2))
+    elif args.report:
+
+        def _print_full(report, verbose=False):
+            print_report_summary(report, "Security Validation Report")
+            print_results_by_level(report, verbose=verbose)
+
+        save_report_and_print_summary(report, Path(args.report), "Security Validation", _print_full, args.verbose, plugin_path=args.plugin_path)
     else:
         print_results_by_level(report, verbose=args.verbose)
         print_report_summary(report, title=f"Security Validation: {plugin_path.name}")

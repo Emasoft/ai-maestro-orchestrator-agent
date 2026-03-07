@@ -32,7 +32,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
 
-from cpv_validation_common import VALID_HOOK_EVENTS, ValidationReport, resolve_tool_command
+from cpv_validation_common import (
+    COLORS,
+    VALID_HOOK_EVENTS,
+    ValidationReport,
+    resolve_tool_command,
+    save_report_and_print_summary,
+)
 
 # Events that support matchers
 EVENTS_WITH_MATCHERS = {
@@ -58,6 +64,7 @@ EVENTS_WITHOUT_MATCHERS = {
     "TaskCompleted",
     "WorktreeCreate",
     "WorktreeRemove",
+    "InstructionsLoaded",
 }
 
 # Valid hook types
@@ -917,16 +924,7 @@ def validate_hooks(
 def print_results(report: HookValidationReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
     # ANSI colors
-    colors = {
-        "CRITICAL": "\033[91m",  # Red
-        "MAJOR": "\033[93m",  # Yellow
-        "MINOR": "\033[94m",  # Blue
-        "NIT": "\033[96m",  # Cyan
-        "WARNING": "\033[95m",  # Magenta
-        "INFO": "\033[90m",  # Gray
-        "PASSED": "\033[92m",  # Green
-        "RESET": "\033[0m",
-    }
+    colors = COLORS
 
     # Count by level
     counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
@@ -1031,28 +1029,45 @@ def main() -> int:
         help="Show all results including passed checks",
     )
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
     args = parser.parse_args()
 
     hook_path = Path(args.hook_path).resolve()
     plugin_root = Path(args.plugin_root).resolve() if args.plugin_root else None
 
+    # Early-exit errors: write minimal report if --report is specified
+    early_error = None
     if not hook_path.exists():
-        print(f"Error: {hook_path} does not exist", file=sys.stderr)
-        return 1
+        early_error = f"Error: {hook_path} does not exist"
+    elif not hook_path.is_file():
+        early_error = f"Error: {hook_path} is not a file (expected hooks.json)"
+    elif hook_path.suffix != ".json":
+        early_error = f"Error: {hook_path} is not a JSON file (expected hooks.json)"
 
-    # Verify content type — must be a JSON file (hooks.json)
-    if not hook_path.is_file():
-        print(f"Error: {hook_path} is not a file (expected hooks.json)", file=sys.stderr)
-        return 1
-    if hook_path.suffix != ".json":
-        print(f"Error: {hook_path} is not a JSON file (expected hooks.json)", file=sys.stderr)
+    if early_error:
+        if args.report:
+            report_path = Path(args.report)
+            report_path.parent.mkdir(parents=True, exist_ok=True)
+            report_path.write_text(f"# Hook Validation\n\nCRITICAL: {early_error}\n", encoding="utf-8")
+            print("Hook Validation: FAIL (critical)")
+            print("  CRITICAL:1")
+            print(f"  Report: {report_path}")
+        else:
+            print(early_error, file=sys.stderr)
         return 1
 
     report = validate_hooks(hook_path, plugin_root)
 
     if args.json:
         print_json(report)
+    elif args.report:
+        save_report_and_print_summary(
+            report, Path(args.report), f"Hook Validation: {hook_path}", print_results, args.verbose,
+            plugin_path=args.hook_path,
+        )
     else:
         print_results(report, args.verbose)
 

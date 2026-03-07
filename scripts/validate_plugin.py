@@ -43,7 +43,15 @@ from pathlib import Path
 from typing import Any, cast
 
 import yaml
-from cpv_validation_common import ValidationReport, resolve_tool_command, validate_toc_embedding
+from cpv_validation_common import (
+    COLORS,
+    ValidationReport,
+    resolve_tool_command,
+    save_report_and_print_summary,
+    validate_component_name,
+    validate_no_absolute_paths,
+    validate_toc_embedding,
+)
 from gitignore_filter import GitignoreFilter
 from validate_hook import validate_hooks as validate_hook_file
 from validate_mcp import validate_plugin_mcp
@@ -118,18 +126,11 @@ def validate_manifest(
                 ".claude-plugin/plugin.json",
             )
 
-    # Name validation
+    # Name validation — uses shared validate_component_name for uniform rules
     if "name" in manifest:
         name = manifest["name"]
-        if name != name.lower():
-            report.major(f"Plugin name must be lowercase: {name}", ".claude-plugin/plugin.json")
-        if " " in name:
-            report.major(
-                f"Plugin name cannot contain spaces: {name}",
-                ".claude-plugin/plugin.json",
-            )
-        if not re.match(r"^[a-z][a-z0-9-]*$", name):
-            report.major(f"Plugin name must be kebab-case: {name}", ".claude-plugin/plugin.json")
+        if isinstance(name, str):
+            validate_component_name(name, "plugin", report)
 
     # Version validation
     if "version" in manifest:
@@ -260,18 +261,37 @@ def validate_manifest(
                         ".claude-plugin/plugin.json",
                     )
 
-    # Check for duplicate hooks.json - the standard hooks/hooks.json is auto-loaded
-    # so specifying it in manifest.hooks causes a duplicate load error
-    if "hooks" in manifest:
-        hooks_value = manifest["hooks"]
-        if isinstance(hooks_value, str):
-            # Normalize the path to check if it points to the auto-loaded file
-            normalized = hooks_value.replace("\\", "/").lstrip("./")
-            if normalized == "hooks/hooks.json":
-                report.major(
-                    "manifest.hooks points to 'hooks/hooks.json' which is auto-loaded by "
-                    "Claude Code. This causes a duplicate load error. Remove the 'hooks' "
-                    "field from plugin.json to fix.",
+    # Claude Code auto-discovers standard directories (commands/, agents/, skills/,
+    # hooks/) without needing them declared in plugin.json. Declaring the default path
+    # causes Claude Code to reject the manifest as malformed — the plugin won't load.
+    auto_discovered_defaults = {
+        "commands": "./commands/",
+        "agents": "./agents/",
+        "skills": "./skills/",
+        "hooks": "./hooks/",
+    }
+    for key, default_path in auto_discovered_defaults.items():
+        if key in manifest:
+            value = manifest[key]
+            # String pointing to the default directory breaks plugin loading
+            if isinstance(value, str):
+                normalized = value.replace("\\", "/").rstrip("/") + "/"
+                if normalized == default_path:
+                    report.critical(
+                        f"Field '{key}' points to '{default_path}' which is auto-discovered "
+                        f"by Claude Code. This causes a malformed manifest error and the "
+                        f"plugin will not load. Remove it from plugin.json — only non-standard "
+                        f"paths need explicit declaration.",
+                        ".claude-plugin/plugin.json",
+                    )
+            # Array of files inside the default directory also breaks plugin loading
+            elif isinstance(value, list) and all(
+                isinstance(p, str) and p.startswith(default_path) for p in value
+            ):
+                report.critical(
+                    f"Field '{key}' lists files inside '{default_path}' which is "
+                    f"auto-discovered by Claude Code. This causes a malformed manifest "
+                    f"error and the plugin will not load. Remove it from plugin.json.",
                     ".claude-plugin/plugin.json",
                 )
 
@@ -1084,9 +1104,6 @@ def validate_no_local_paths(plugin_root: Path, report: ValidationReport) -> None
     - Generic example usernames in documentation
     - Test directories (tests/) — contain intentional test fixture paths
     """
-    # Import the stricter absolute path validation from cpv_validation_common
-    from cpv_validation_common import validate_no_absolute_paths
-
     # Use the strict absolute path validator which checks for:
     # - Current user's username (auto-detected) - CRITICAL
     # - ANY absolute paths that don't use env vars - MAJOR
@@ -1260,16 +1277,7 @@ def validate_workflow_inline_python(plugin_root: Path, report: ValidationReport)
 
 def print_results(report: ValidationReport, verbose: bool = False) -> None:
     """Print validation results in human-readable format."""
-    colors = {
-        "CRITICAL": "\033[91m",
-        "MAJOR": "\033[93m",
-        "MINOR": "\033[94m",
-        "NIT": "\033[96m",
-        "WARNING": "\033[95m",
-        "INFO": "\033[90m",
-        "PASSED": "\033[92m",
-        "RESET": "\033[0m",
-    }
+    colors = COLORS
 
     counts = {"CRITICAL": 0, "MAJOR": 0, "MINOR": 0, "NIT": 0, "WARNING": 0, "INFO": 0, "PASSED": 0}
     for r in report.results:
@@ -1360,6 +1368,9 @@ def main() -> int:
         "Valid platforms: windows, macos, linux. Use without args to skip all.",
     )
     parser.add_argument("--strict", action="store_true", help="Strict mode — NIT issues also block validation")
+    parser.add_argument(
+        "--report", type=str, default=None, help="Save detailed report to file, print only summary to stdout"
+    )
     parser.add_argument("path", nargs="?", help="Plugin root path (default: parent of scripts/)")
     args = parser.parse_args()
 
@@ -1423,7 +1434,10 @@ def main() -> int:
     if args.json:
         print_json(report)
     else:
-        print_results(report, args.verbose)
+        if args.report:
+            save_report_and_print_summary(report, Path(args.report), "Plugin Validation", print_results, args.verbose, plugin_path=args.path)
+        else:
+            print_results(report, args.verbose)
 
     if args.strict:
         return report.exit_code_strict()
