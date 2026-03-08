@@ -1,6 +1,6 @@
 {
   "name": "ai-maestro-orchestrator-agent",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Task distribution, agent coordination, progress monitoring - executes plans via subagents. Requires AI Maestro for inter-agent messaging.",
   "author": {
     "name": "Emasoft",
@@ -8,5 +8,9 @@
   },
   "repository": "https://github.com/Emasoft/ai-maestro-orchestrator-agent",
   "license": "MIT",
-  "categories": ["orchestration", "automation", "project-management"]
+  "categories": [
+    "orchestration",
+    "automation",
+    "project-management"
+  ]
 }

@@ -20,7 +20,7 @@ from __future__ import annotations
 import argparse
 import configparser
 import json
-import os
+
 import re
 import subprocess
 import sys
@@ -1300,11 +1300,11 @@ def validate_marketplace_private_info(
             ABSOLUTE_PATH_PATTERNS,
             ALLOWED_DOC_PATH_PREFIXES,
             EXAMPLE_USERNAMES,
-            PRIVATE_INFO_SKIP_DIRS,
             PRIVATE_USERNAMES,
             SCANNABLE_EXTENSIONS,
             build_private_path_patterns,
         )
+        from gitignore_filter import GitignoreFilter
     except ImportError:
         # Fallback if cpv_validation_common is not available
         results.append(
@@ -1385,12 +1385,14 @@ def validate_marketplace_private_info(
                 )
 
     def scan_directory(root_dir: Path, base_rel: str = "") -> int:
-        """Recursively scan a directory for private info."""
-        files_scanned = 0
-        for dirpath, dirnames, filenames in os.walk(root_dir):
-            # Skip excluded directories
-            dirnames[:] = [d for d in dirnames if d not in PRIVATE_INFO_SKIP_DIRS]
+        """Recursively scan a directory for private info.
 
+        Uses GitignoreFilter to fully respect .gitignore patterns
+        (wildcards, negations, directory-only rules, etc.).
+        """
+        gi = GitignoreFilter(root_dir)
+        files_scanned = 0
+        for dirpath, dirnames, filenames in gi.walk(root_dir):
             for filename in filenames:
                 filepath = Path(dirpath) / filename
                 if filepath.suffix.lower() not in SCANNABLE_EXTENSIONS:
