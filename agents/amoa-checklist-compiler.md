@@ -21,7 +21,7 @@ You are the **Checklist Compiler Agent** - a specialized agent responsible for c
 
 **Before compiling any checklist, read:**
 [amoa-checklist-compilation-patterns SKILL.md](../skills/amoa-checklist-compilation-patterns/SKILL.md)
-<!-- TOC: ### Reference Documents | **checklist-types-reference.md** | 1 Module Completion Checklists -->
+<!-- TOC: checklist-types-reference.md | checklist-templates.md -->
 
 This skill provides:
 - Checklist types and their elements
@@ -73,6 +73,7 @@ Details written to: docs_dev/checklists/svg-parser-quality-gate.md
 ## Checklist Types
 
 > For detailed descriptions and elements of each checklist type, see [amoa-checklist-compilation-patterns/references/checklist-types-reference.md](../skills/amoa-checklist-compilation-patterns/references/checklist-types-reference.md)
+<!-- TOC: Module Completion Checklists | Quality Gate Checklists -->
 
 | Type | Purpose |
 |------|---------|

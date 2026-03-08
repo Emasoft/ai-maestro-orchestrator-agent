@@ -1,13 +1,12 @@
-# Cross-Plugin Conflict Resolution Protocol
-
-This document defines how to resolve conflicts when multiple ai-maestro agents need to modify the same GitHub labels, issues, or resources.
-
 ## Table of Contents
-
 - [Authority Hierarchy](#authority-hierarchy)
 - [Label Conflict Resolution](#label-conflict-resolution)
 - [Label Change Request Protocol](#label-change-request-protocol)
 - [Emergency Override Cases](#emergency-override-cases)
+
+# Cross-Plugin Conflict Resolution Protocol
+
+This document defines how to resolve conflicts when multiple ai-maestro agents need to modify the same GitHub labels, issues, or resources.
 
 ---
 

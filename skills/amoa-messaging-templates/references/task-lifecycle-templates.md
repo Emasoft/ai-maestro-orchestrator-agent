@@ -1,11 +1,4 @@
-# Task Lifecycle Message Templates
-
-This document provides the AI Maestro message templates for task lifecycle operations: cancelling tasks, pausing and resuming tasks, stopping work immediately, and broadcasting messages to multiple agents. These templates complement the standard task assignment and completion templates found in `message-templates.md`.
-
-> All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
-
 ## Table of Contents
-
 - [1. Task Cancellation (AMOA to Agent)](#1-task-cancellation-amoa-to-agent)
 - [2. Task Pause (AMOA to Agent)](#2-task-pause-amoa-to-agent)
 - [3. Task Resume (AMOA to Agent)](#3-task-resume-amoa-to-agent)
@@ -13,6 +6,12 @@ This document provides the AI Maestro message templates for task lifecycle opera
 - [5. Broadcast Message (AMOA to All Active Agents)](#5-broadcast-message-amoa-to-all-active-agents)
 - [6. Cancel vs Pause vs Reassign Decision Tree](#6-cancel-vs-pause-vs-reassign-decision-tree)
 - [7. Broadcast vs Targeted Decision Tree](#7-broadcast-vs-targeted-decision-tree)
+
+# Task Lifecycle Message Templates
+
+This document provides the AI Maestro message templates for task lifecycle operations: cancelling tasks, pausing and resuming tasks, stopping work immediately, and broadcasting messages to multiple agents. These templates complement the standard task assignment and completion templates found in `message-templates.md`.
+
+> All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
 
 ---
 

@@ -1,3 +1,11 @@
+## Table of Contents
+- [Standard Handoff Format](#standard-handoff-format)
+- [Automatic Handoff Triggers](#automatic-handoff-triggers)
+- [Handoff Document Location](#handoff-document-location)
+- [Mandatory Handoff Sections](#mandatory-handoff-sections)
+- [Proactive Writing Rules](#proactive-writing-rules)
+- [Handoff Quality Checklist](#handoff-quality-checklist)
+
 # Proactive Handoff Protocol
 
 ## Standard Handoff Format

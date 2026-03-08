@@ -1,22 +1,22 @@
+## Table of Contents
+- [2.1 Task Assignment (AMOA to Remote Agent)](#21-task-assignment-amoa--remote-agent)
+- [2.2 Task Completion Report (Agent to AMOA)](#22-task-completion-report-agent--amoa)
+- [2.3 Status Request (AMOA to Agent)](#23-status-request-amoa--agent)
+- [2.4 Status Response (Agent to AMOA)](#24-status-response-agent--amoa)
+- [2.5 Approval Request (AMCOS to AMAMA)](#25-approval-request-amcos--amama)
+- [2.6 Approval Response (AMAMA to AMCOS)](#26-approval-response-amama--amcos)
+- [2.7 Escalation (Any Agent to AMCOS/AMAMA)](#27-escalation-any-agent--amcosamama)
+- [2.8 Acknowledgment (Any Agent)](#28-acknowledgment-any-agent)
+- [2.9 Design Handoff (AMAA to AMOA)](#29-design-handoff-amaa--amoa)
+- [2.10 Integration Request (AMOA to AMIA)](#210-integration-request-amoa--amia)
+- [2.11 Integration Result (AMIA to AMOA)](#211-integration-result-amia--amoa)
+- [Decision Trees for Core Message Templates](#decision-trees-for-core-message-templates)
+
 # Message Templates by Scenario
 
 This document provides the complete AI Maestro message templates for all common agent communication scenarios across ai-maestro plugins.
 
 > All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
-
-## Table of Contents
-
-- [2.1 Task Assignment (AMOA → Remote Agent)](#21-task-assignment-amoa--remote-agent)
-- [2.2 Task Completion Report (Agent → AMOA)](#22-task-completion-report-agent--eoa)
-- [2.3 Status Request (AMOA → Agent)](#23-status-request-amoa--agent)
-- [2.4 Status Response (Agent → AMOA)](#24-status-response-agent--eoa)
-- [2.5 Approval Request (AMCOS → AMAMA)](#25-approval-request-amcos--eama)
-- [2.6 Approval Response (AMAMA → AMCOS)](#26-approval-response-amama--ecos)
-- [2.7 Escalation (Any Agent → AMCOS/AMAMA)](#27-escalation-any-agent--ecoseama)
-- [2.8 Acknowledgment (Any Agent)](#28-acknowledgment-any-agent)
-- [2.9 Design Handoff (AMAA → AMOA)](#29-design-handoff-amaa--eoa)
-- [2.10 Integration Request (AMOA → AMIA)](#210-integration-request-amoa--eia)
-- [2.11 Integration Result (AMIA → AMOA)](#211-integration-result-amia--eoa)
 
 ---
 

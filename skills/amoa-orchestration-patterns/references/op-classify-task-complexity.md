@@ -1,31 +1,19 @@
 ---
 operation: classify-task-complexity
 procedure: proc-decompose-design
-workflow-instruction: Step 10 - Design Decomposition
 parent-skill: amoa-orchestration-patterns
-parent-plugin: ai-maestro-orchestrator-agent
-version: 1.0.0
 ---
 
 # Classify Task Complexity
 
-
 ## Contents
-
-- [When to Use](#when-to-use)
-- [Prerequisites](#prerequisites)
-- [Procedure](#procedure)
-  - [Step 1: Initial Assessment](#step-1-initial-assessment)
-  - [Step 2: Count Complexity Signals](#step-2-count-complexity-signals)
-  - [Step 3: Apply Classification](#step-3-apply-classification)
-  - [Step 4: Choose Action Pattern](#step-4-choose-action-pattern)
-- [Checklist](#checklist)
-- [Examples](#examples)
-  - [Example: Simple Task - Add Logging](#example-simple-task-add-logging)
-  - [Example: Medium Task - New API Endpoint](#example-medium-task-new-api-endpoint)
-  - [Example: Complex Task - Cross-Platform Feature](#example-complex-task-cross-platform-feature)
-- [Error Handling](#error-handling)
-- [Related Operations](#related-operations)
+- Triggers
+- Prerequisites
+- Steps
+- Checklist
+- Examples
+- Errors
+- Related
 
 ## When to Use
 
@@ -172,5 +160,7 @@ Copy this checklist and track your progress:
 ## Related Operations
 
 - [op-select-agent-for-task.md](op-select-agent-for-task.md) - Select agent after classification
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-decompose-goals-to-modules.md](op-decompose-goals-to-modules.md) - Decompose complex tasks
 - [op-define-scope-boundaries.md](op-define-scope-boundaries.md) - Define boundaries for medium/complex tasks
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

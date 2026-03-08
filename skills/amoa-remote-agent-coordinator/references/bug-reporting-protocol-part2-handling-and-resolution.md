@@ -1,3 +1,15 @@
+## Table of Contents
+- [Purpose](#purpose)
+- [Contents](#contents)
+- [Escalation Handling](#escalation-handling)
+- [Error States](#error-states)
+- [Echo/Acknowledgment Integration](#echoacknowledgment-integration)
+- [Bug Verification Requirements](#bug-verification-requirements)
+- [Best Practices](#best-practices)
+- [Integration](#integration)
+- [Message Type Registry](#message-type-registry)
+- [Troubleshooting](#troubleshooting)
+
 # Bug Reporting Protocol - Part 2: Handling and Resolution
 
 ## Purpose

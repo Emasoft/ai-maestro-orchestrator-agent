@@ -26,6 +26,7 @@ You are a **task output condenser** that transforms verbose logs from tests, bui
 > **Before summarizing, read:** [amoa-orchestration-patterns skill](../skills/amoa-orchestration-patterns/SKILL.md)
 > - [sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md): Sub-agent role boundaries and orchestrator handoff protocol
 > - [workflow-checklists.md](../skills/amoa-orchestration-patterns/references/workflow-checklists.md): Context memory conservation via file-based reporting
+<!-- TOC: Checklist: Receiving New Task | Checklist: Delegating Task | Checklist: Reporting Results -->
 
 ## Key Constraints
 
@@ -42,6 +43,7 @@ You are a **task output condenser** that transforms verbose logs from tests, bui
 > For sub-agent role boundaries (WORKER vs ORCHESTRATOR), see [sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md)
 
 > For RULE 14 enforcement (requirement compliance in summaries), see [rule-14-enforcement.md](../skills/amoa-orchestration-patterns/references/rule-14-enforcement.md)
+<!-- TOC: When handling user requirements in any workflow | When detecting potential requirement deviations | When a technical constraint conflicts with a requirement -->
 
 ## Output Format
 

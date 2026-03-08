@@ -1,38 +1,14 @@
+## Table of Contents
+- [1. AMCOS Mid-Task Requirement Update (AMCOS to AMOA)](#1-amcos-mid-task-requirement-update-amcos-to-amoa)
+- [2. AMOA Acknowledgment of Requirement Update (AMOA to AMCOS)](#2-amoa-acknowledgment-of-requirement-update-amoa-to-amcos)
+- [3. Module Modification Notification (AMOA to Agent)](#3-module-modification-notification-amoa-to-agent)
+- [4. Priority Change Notification (AMOA to Agent)](#4-priority-change-notification-amoa-to-agent)
+- [5. AMAMA User Decision Response (AMAMA to AMOA)](#5-amama-user-decision-response-amama-to-amoa)
+- [6. Mid-Task Update Severity Decision Tree](#6-mid-task-update-severity-decision-tree)
+
 # Mid-Task Update Templates
 
 Templates for handling changes that occur while agents are actively working on assigned tasks. These templates cover three scenarios: receiving requirement updates from the Chief of Staff (AMCOS), relaying module or priority modifications to working agents, and processing user decisions forwarded by the Assistant Manager (AMAMA).
-
----
-
-## Table of Contents
-
-- 1. AMCOS Mid-Task Requirement Update (AMCOS to AMOA)
-  - 1.1 When to use this template
-  - 1.2 Incoming message template from AMCOS
-  - 1.3 Decision tree for processing the update
-- 2. AMOA Acknowledgment of Requirement Update (AMOA to AMCOS)
-  - 2.1 When to use this template
-  - 2.2 Acknowledgment message template
-  - 2.3 Decision tree for composing the acknowledgment
-- 3. Module Modification Notification (AMOA to Agent)
-  - 3.1 When to use this template
-  - 3.2 Notification message template
-  - 3.3 Expected agent response template
-  - 3.4 Decision tree for module modification handling
-- 4. Priority Change Notification (AMOA to Agent)
-  - 4.1 When to use this template
-  - 4.2 Notification message template
-  - 4.3 Expected agent response template
-  - 4.4 Decision tree for priority change handling
-- 5. AMAMA User Decision Response (AMAMA to AMOA)
-  - 5.1 When to use this template
-  - 5.2 Incoming decision message from AMAMA
-  - 5.3 Relay message to affected agent
-  - 5.4 Decision tree for processing user decisions
-- 6. Mid-Task Update Severity Decision Tree
-  - 6.1 Full decision tree diagram
-  - 6.2 Severity classification rules
-  - 6.3 Timing considerations
 
 ---
 

@@ -1,32 +1,17 @@
 ---
 name: template-issue-config
-description: "Issue template chooser configuration that disables blank issues and redirects to structured forms."
+description: "Issue template chooser config that disables blank issues and redirects to structured forms."
 ---
 
 # Issue Template Chooser Configuration
-
-## Table of Contents
-
-- 1. When to Use This Configuration
-  - 1.1 What is config.yml and where it goes
-  - 1.2 How the issue template chooser works in GitHub
-- 2. Disabling Blank Issues
-  - 2.1 Why blank issues should be disabled
-  - 2.2 The blank_issues_enabled setting
-- 3. Contact Links
-  - 3.1 Redirecting feature requests to GitHub Discussions
-  - 3.2 Redirecting questions to a community forum or chat
-  - 3.3 Adding custom external links
-- 4. Complete Configuration (Ready to Copy)
-- 5. How the Template Chooser Appears to Users
-  - 5.1 Visual layout of the chooser page
-  - 5.2 Order of templates and links
-- 6. Orchestrator Usage Notes
-  - 6.1 When the orchestrator configures issue templates
-  - 6.2 Ensuring all agent-filed issues use structured templates
-- 7. Customization Notes
-  - 7.1 Adding project-specific contact links
-  - 7.2 Combining with issue templates
+## Contents
+- When to use this config
+- Disabling blank issues
+- Contact links
+- Complete configuration
+- Template chooser appearance
+- Orchestrator usage notes
+- Customization notes
 
 ---
 

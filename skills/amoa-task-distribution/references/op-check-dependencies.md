@@ -1,3 +1,6 @@
+## Table of Contents
+- [Metadata](#metadata) - [Purpose](#purpose) - [Preconditions](#preconditions) - [Dependency Types](#dependency-types) - [Input](#input) - [Procedure](#procedure) - [Command](#command) - [Output](#output) - [Circular Dependency Detection](#circular-dependency-detection) - [Error Handling](#error-handling) - [Related Operations](#related-operations)
+
 # Operation: Check Task Dependencies
 
 ## Metadata

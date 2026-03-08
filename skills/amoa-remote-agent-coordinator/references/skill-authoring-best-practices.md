@@ -1,3 +1,16 @@
+## Table of Contents
+- [Contents](#contents)
+- [Core Principles](#core-principles)
+- [Skill Structure](#skill-structure)
+- [Progressive Disclosure Patterns](#progressive-disclosure-patterns)
+- [Workflows and Feedback Loops](#workflows-and-feedback-loops)
+- [Content Guidelines](#content-guidelines)
+- [Common Patterns](#common-patterns)
+- [Executable Scripts](#executable-scripts)
+- [Anti-Patterns to Avoid](#anti-patterns-to-avoid)
+- [Evaluation and Iteration](#evaluation-and-iteration)
+- [Checklist for Effective Skills](#checklist-for-effective-skills)
+
 # Skill Authoring Best Practices
 
 Official Anthropic guidance for writing effective Claude Code Skills.

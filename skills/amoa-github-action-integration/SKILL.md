@@ -13,22 +13,25 @@ user-invocable: false
 
 # Claude Code Action Integration
 
+## Overview
+
+Integrate Claude Code into GitHub Actions for automated PR reviews, @claude mention responses, and issue triage workflows.
+
 ## Prerequisites
 
 - GitHub repository with Actions enabled
 - Anthropic API key (ANTHROPIC_API_KEY secret)
 - Repository write permissions configured
-- Understanding of GitHub Actions workflow syntax
+- Basic GitHub Actions knowledge
 
 ## Instructions
 
-1. Choose the appropriate workflow template from `templates/workflows/` based on your use case (PR review, @claude mention, or issue triage)
-2. Copy the selected YAML file to your repository's `.github/workflows/` directory
-3. Add the `ANTHROPIC_API_KEY` secret in your repository settings under Settings > Secrets and variables > Actions
-4. Configure repository permissions by enabling "Read and write permissions" and "Allow GitHub Actions to create and approve pull requests" in Settings > Actions > General
-5. Customize the workflow file if needed (model selection, allowed tools, custom prompts)
-6. Test the workflow on a draft PR or test issue to verify it triggers correctly
-7. Monitor API usage and costs after deployment
+1. Choose a workflow template from `templates/workflows/` (PR review, @claude mention, or issue triage)
+2. Copy the YAML file to `.github/workflows/`
+3. Add `ANTHROPIC_API_KEY` secret in Settings > Secrets and variables > Actions
+4. Enable "Read and write permissions" and "Allow GitHub Actions to create and approve pull requests" in Settings > Actions > General
+5. Customize model, tools, and prompts if needed
+6. Test on a draft PR or test issue, then monitor API costs
 
 ## Trigger Conditions
 
@@ -40,43 +43,23 @@ user-invocable: false
 
 ---
 
-## Overview
-
-The `claude-code-action` is Anthropic's official GitHub Action for running Claude Code in CI/CD workflows. This skill provides ready-to-use workflow templates for common integration patterns.
-
-## Available Templates
-
-| Template | Purpose | Location |
-|----------|---------|----------|
-| **claude-pr-review.yml** | Automatic PR code review | `templates/workflows/` |
-| **claude-mention.yml** | @claude mention responses | `templates/workflows/` |
-| **claude-issue-triage.yml** | Automated issue triage | `templates/workflows/` |
-
----
-
-## Quick Start
-
-1. **Choose a Template** from `templates/workflows/`
-2. **Copy to Repository**: `cp <template>.yml /path/to/repo/.github/workflows/`
-3. **Configure Secrets**: Add `ANTHROPIC_API_KEY` in Settings > Secrets and variables > Actions
-4. **Configure Permissions**: Enable "Read and write permissions" and "Allow GitHub Actions to create and approve pull requests" in Settings > Actions > General
-
----
-
 ## Template Details
 
-Three workflow templates are provided: PR Review (triggers on PR events, reviews code quality/bugs/security/performance), Mention Response (triggers on @claude mentions in comments), and Issue Triage (triggers on new issues, auto-labels and assesses priority).
+PR Review, @claude Mention Response, and Issue Triage templates in `templates/workflows/`.
 See: `references/template-details.md`
+<!-- TOC: PR Review Workflow | Mention Response Workflow | Issue Triage Workflow -->
 
 ## Customization & Examples
 
-Model selection, tool restrictions, custom prompts, and complete YAML examples for PR review and @claude mention workflows.
+Model selection, tool restrictions, custom prompts, and YAML examples.
 See: `references/customization-and-examples.md`
+<!-- TOC: Changing the Model | Restricting Tools | Custom Prompts | Example 1: Basic PR Review Setup | Example 2: @claude Mention Handler -->
 
 ## Error Handling
 
 Troubleshooting for workflow triggers, authentication, permissions, and timeouts.
 See: `references/error-handling.md`
+<!-- TOC: Workflow Not Triggering | Authentication Errors | Permission Denied Errors | Timeout Issues -->
 
 ---
 
@@ -92,16 +75,18 @@ See: `references/error-handling.md`
 
 ## Output
 
-| Field | Type | Description |
-|-------|------|-------------|
-| Workflow File | YAML | GitHub Actions workflow configured in `.github/workflows/` |
-| API Key Secret | Secret | ANTHROPIC_API_KEY configured in repository settings |
-| Permissions | Config | Repository permissions set to "Read and write" |
-| Status | Boolean | Workflow enabled and ready to trigger |
+| Field | Description |
+|-------|-------------|
+| Workflow File | YAML workflow in `.github/workflows/` |
+| API Key Secret | ANTHROPIC_API_KEY in repository settings |
+| Permissions | Read and write permissions enabled |
+| Status | Workflow enabled and ready to trigger |
 
 ---
 
 ## Checklist
+
+Copy this checklist and track your progress:
 
 - [ ] Select and copy workflow template to `.github/workflows/`
 - [ ] Add `ANTHROPIC_API_KEY` secret
@@ -109,21 +94,24 @@ See: `references/error-handling.md`
 - [ ] Customize model and tools if needed
 - [ ] Test on draft PR or test issue, then monitor costs
 
-## References
+## Resources
 
 - [claude-code-action](https://github.com/anthropics/claude-code-action) | [GitHub Actions docs](https://docs.github.com/en/actions)
 - `references/template-details.md` - Workflow template specs
+  <!-- TOC: PR Review Workflow | Mention Response Workflow | Issue Triage Workflow -->
 - `references/customization-and-examples.md` - Customization and YAML examples
+  <!-- TOC: Changing the Model | Restricting Tools | Custom Prompts | Example 1: Basic PR Review Setup | Example 2: @claude Mention Handler -->
 - `references/error-handling.md` - Troubleshooting
+  <!-- TOC: Workflow Not Triggering | Authentication Errors | Permission Denied Errors | Timeout Issues -->
 
 ## Examples
 
+**Input:** User asks "set up automated PR review with Claude"
+**Output:** Workflow `.github/workflows/claude-pr-review.yml` configured with secrets and permissions.
+
 See: `references/customization-and-examples.md`
-
-## Resources
-
-See `## References` above.
+<!-- TOC: Changing the Model | Restricting Tools | Custom Prompts | Example 1: Basic PR Review Setup | Example 2: @claude Mention Handler -->
 
 ## Script Output Rules
 
-Scripts MUST write verbose output to `docs_dev/reports/` and emit only `[OK/ERROR] name - summary` on stdout. Scripts in `scripts/amoa_stop_check/` output JSON to stdout (hook requirement).
+Scripts write verbose output to `docs_dev/reports/` and emit only `[OK/ERROR] name - summary` on stdout. Scripts in `scripts/amoa_stop_check/` output JSON to stdout (hook requirement).

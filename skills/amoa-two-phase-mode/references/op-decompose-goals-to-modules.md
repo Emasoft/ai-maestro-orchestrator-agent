@@ -1,29 +1,17 @@
 ---
 operation: decompose-goals-to-modules
 procedure: proc-decompose-design
-workflow-instruction: Step 10 - Design Decomposition
 parent-skill: amoa-two-phase-mode
-parent-plugin: ai-maestro-orchestrator-agent
-version: 1.0.0
 ---
 
 # Decompose Goals to Modules
 
-
 ## Contents
-
 - [When to Use](#when-to-use)
 - [Prerequisites](#prerequisites)
 - [Procedure](#procedure)
-  - [Step 1: Identify Natural Boundaries](#step-1-identify-natural-boundaries)
-  - [Step 2: Define Module Structure](#step-2-define-module-structure)
-  - [Step 3: Verify Module Independence](#step-3-verify-module-independence)
-  - [Step 4: Apply MECE Principle](#step-4-apply-mece-principle)
-  - [Step 5: Document in State File](#step-5-document-in-state-file)
 - [Checklist](#checklist)
 - [Examples](#examples)
-  - [Example: E-Commerce Feature](#example-e-commerce-feature)
-  - [Example: Authentication System](#example-authentication-system)
 - [Error Handling](#error-handling)
 - [Related Operations](#related-operations)
 
@@ -211,5 +199,8 @@ modules:
 ## Related Operations
 
 - [op-define-acceptance-criteria.md](op-define-acceptance-criteria.md) - Define criteria for each module
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Analyze dependencies
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-prioritize-task-assignments.md](op-prioritize-task-assignments.md) - Set module priorities
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

@@ -1,8 +1,8 @@
 ---
 name: amoa-two-phase-mode
-description: "Use when running Plan-then-Execute workflows with formal approval and GitHub Issue-backed modules. Trigger with two-phase or plan phase requests."
+description: "Use when running Plan-then-Execute workflows. Trigger with plan-execute or two-phase requests."
 license: Apache-2.0
-compatibility: Requires AI Maestro installed, GitHub CLI (gh), remote agents.
+compatibility: AI Maestro, GitHub CLI (gh), remote agents.
 metadata:
   author: Emasoft
   version: 2.6.0
@@ -15,80 +15,72 @@ agent: amoa-main
 
 ## Overview
 
-Two-Phase Mode separates orchestration into Plan Phase (requirements) and Orchestration Phase (implementation). The orchestrator enforces completion of current tasks while allowing dynamic modifications.
+Separates orchestration into Plan Phase (requirements) and Orchestration Phase (implementation). Stop hook enforces completion; dynamic modifications allowed.
 
 ## Prerequisites
 
-- AI Maestro messaging system running
+- AI Maestro messaging running
 - GitHub CLI (gh) authenticated
-- Remote agents registered by user
+- Remote agents registered
 
 ## Core Principles
 
-1. **Dynamic Flexibility with Completion Enforcement**: User can add/change/remove requirements; stop hook enforces all CURRENT tasks complete before exit.
-2. **Claude Tasks Scheduling (CRITICAL)**: All instructions must be immediately scheduled as Claude Tasks for persistence across compacting. See: [references/native-task-persistence.md](references/native-task-persistence.md)
-
-## Quick Start
-
-1. `/start-planning` - Create state file, document requirements
-2. `/approve-plan` - Transition to Orchestration Phase, create GitHub Issues
-3. `/start-orchestration` - Initialize orchestration state
-4. `/register-agent` + `/assign-module` - Assign work to agents
-5. Execute Instruction Verification Protocol before authorizing
-6. `/check-agents` every 10-15 min to poll progress
-7. Complete 4 verification loops per module
-
-For full step-by-step instructions, output types, agent types, stop hook details, and examples, see: [references/skill-overview-details.md](references/skill-overview-details.md)
-
-## Reference Files
-
-| Reference | Description |
-|-----------|-------------|
-| [plan-phase-workflow.md](references/plan-phase-workflow.md) | Plan Phase workflow |
-| [orchestration-phase-workflow.md](references/orchestration-phase-workflow.md) | Orchestration Phase workflow |
-| [instruction-verification-protocol.md](references/instruction-verification-protocol.md) | **MANDATORY** 8-step pre-implementation protocol |
-| [proactive-progress-polling.md](references/proactive-progress-polling.md) | **MANDATORY** 6-question polling |
-| [instruction-update-verification-protocol.md](references/instruction-update-verification-protocol.md) | **MANDATORY** mid-implementation updates |
-| [native-task-persistence.md](references/native-task-persistence.md) | **CRITICAL** Claude Tasks persistence |
-| [issue-handling-workflow.md](references/issue-handling-workflow.md) | Issue handling workflows |
-| [state-file-formats.md](references/state-file-formats.md) | State file YAML schemas |
-| [design-folder-structure.md](references/design-folder-structure.md) | Design folder structure |
-| [command-reference.md](references/command-reference.md) | All 16 commands |
-| [script-reference.md](references/script-reference.md) | Python scripts |
-| [workflow-diagram.md](references/workflow-diagram.md) | Workflow flowcharts |
-| [quick-reference-checklist.md](references/quick-reference-checklist.md) | Phase checklists |
-| [troubleshooting.md](references/troubleshooting.md) | Troubleshooting |
-| [skill-overview-details.md](references/skill-overview-details.md) | Full details and examples |
+1. **Completion Enforcement**: Dynamic changes allowed; stop hook enforces all tasks complete before exit.
+2. **Claude Tasks Persistence**: Schedule instructions as Claude Tasks immediately. See [native-task-persistence.md](references/native-task-persistence.md).
+<!-- TOC: Task Lifecycle - Creating, tracking, and completing tasks | Best Practices - Effective task management patterns -->
 
 ## Instructions
 
-1. Run `/start-planning` to create the state file and document requirements.
-2. Run `/approve-plan` to transition to Orchestration Phase and create GitHub Issues.
-3. Run `/start-orchestration` then `/register-agent` and `/assign-module` to assign work.
-4. Execute the Instruction Verification Protocol before authorizing any agent to begin.
-5. Poll agents with `/check-agents` every 10-15 minutes and complete 4 verification loops per module.
+1. Start Plan Phase with `/start-planning` to create state file and document requirements
+2. Approve plan with `/approve-plan` to transition to Orchestration Phase and create GitHub Issues
+3. Start orchestration, register agents, and assign modules
+4. Execute Verification Protocol before authorizing agents
+5. Monitor with `/check-agents` every 10-15 min; enforce 4 verification loops per module
 
-Details: [skill-overview-details.md](references/skill-overview-details.md) and [command-reference.md](references/command-reference.md).
+Copy this checklist and track your progress:
+
+- [ ] `/start-planning` — create state file, document requirements
+- [ ] `/approve-plan` — transition to Orchestration Phase, create GitHub Issues
+- [ ] `/start-orchestration`, `/register-agent`, `/assign-module` — assign work
+- [ ] Execute Verification Protocol before authorizing agents
+- [ ] `/check-agents` every 10-15 min; 4 verification loops per module
+
+Details: [command-reference.md](references/command-reference.md) | [skill-overview-details.md](references/skill-overview-details.md)
+<!-- TOC: Plan Phase Commands | Orchestration Phase Commands | Output Types | Instructions | Agent Types | Stop Hook | Examples -->
 
 ## Examples
 
-See [skill-overview-details.md](references/skill-overview-details.md) for usage examples.
+**Input:** `/start-planning` with GitHub repo configured
+**Output:** Creates `design/plan-state.yaml` with requirements template
+
+**Input:** `/approve-plan` after requirements documented
+**Output:** Transitions to Orchestration Phase, creates GitHub Issues per module
+
+More: [skill-overview-details.md](references/skill-overview-details.md)
+<!-- TOC: Output Types | Instructions | Agent Types | Stop Hook | Examples -->
+
 
 ## Output
 
-See [state-file-formats.md](references/state-file-formats.md) and [skill-overview-details.md](references/skill-overview-details.md).
+State files (YAML), GitHub Issues per module, phase transition confirmations. See: [state-file-formats.md](references/state-file-formats.md)
+<!-- TOC: Plan Phase State File | Orchestration Phase State File | Agent Assignment Structure | Module Status Structure | Parsing State Files -->
 
 ## Error Handling
 
-See [troubleshooting.md](references/troubleshooting.md) and [issue-handling-workflow.md](references/issue-handling-workflow.md).
+Plan/orchestration issues, state file corruption, communication failures. See: [troubleshooting.md](references/troubleshooting.md)
+<!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues | Communication Issues | Stop Hook Issues -->
 
 ## Resources
 
-See Reference Files table above and [script-reference.md](references/script-reference.md).
-
-## Script Output Rules
-
-All scripts MUST follow the token-efficient output protocol:
-1. Verbose output goes to a timestamped report file in `docs_dev/reports/`
-2. Stdout emits only 2-3 lines: `[OK/ERROR] script_name - summary` + `Report: path`
-3. **EXCEPTION**: Scripts in `scripts/amoa_stop_check/` MUST output JSON to stdout (hook requirement)
+- [command-reference.md](references/command-reference.md) — All 16 commands
+  <!-- TOC: Plan Phase Commands (6) | Orchestration Phase Commands (10) -->
+- [plan-phase-workflow.md](references/plan-phase-workflow.md) — Plan Phase
+  <!-- TOC: Entering Plan Phase | Planning Activities | Modifying the Plan | Plan Phase Completion | Stop Hook Behavior -->
+- [orchestration-phase-workflow.md](references/orchestration-phase-workflow.md) — Orchestration Phase
+  <!-- TOC: Entering Orchestration Phase | Agent Registration | Module Assignment | Monitoring Progress | Modifying During Orchestration | Completion and Exit -->
+- [instruction-verification-protocol.md](references/instruction-verification-protocol.md) — 8-step verification
+  <!-- TOC: Why This Protocol Exists | The 8-Step Protocol Flow | Message Templates | Tracking Verification Status | Failure Conditions -->
+- [state-file-formats.md](references/state-file-formats.md) — State YAML schemas
+  <!-- TOC: Plan Phase State File | Orchestration Phase State File | Agent Assignment Structure | Module Status Structure -->
+- [troubleshooting.md](references/troubleshooting.md) — Troubleshooting
+  <!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues | Communication Issues | Stop Hook Issues -->

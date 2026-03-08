@@ -1,3 +1,12 @@
+## Table of Contents
+- [Purpose](#purpose)
+- [Contents](#contents)
+- [When to Use](#when-to-use)
+- [Bug Message Schema](#bug-message-schema)
+- [Severity Levels](#severity-levels)
+- [Orchestrator Response Flow](#orchestrator-response-flow)
+- [Troubleshooting](#troubleshooting)
+
 # Bug Reporting Protocol - Part 1: Reporting and Classification
 
 ## Purpose

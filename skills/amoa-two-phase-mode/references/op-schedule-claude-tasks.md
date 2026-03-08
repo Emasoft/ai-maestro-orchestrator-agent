@@ -1,29 +1,17 @@
 ---
 operation: schedule-claude-tasks
 procedure: proc-create-task-plan
-workflow-instruction: Step 12 - Task Plan Creation
 parent-skill: amoa-two-phase-mode
-parent-plugin: ai-maestro-orchestrator-agent
-version: 1.0.0
 ---
 
 # Schedule Claude Tasks
 
-
 ## Contents
-
 - [When to Use](#when-to-use)
 - [Prerequisites](#prerequisites)
 - [Procedure](#procedure)
-  - [Step 1: Identify Tasks to Create](#step-1-identify-tasks-to-create)
-  - [Step 2: Create Tasks with TaskCreate](#step-2-create-tasks-with-taskcreate)
-  - [Step 3: Set Task Dependencies](#step-3-set-task-dependencies)
-  - [Step 4: Create Task Series](#step-4-create-task-series)
-  - [Step 5: Track Task Status](#step-5-track-task-status)
 - [Checklist](#checklist)
 - [Examples](#examples)
-  - [Example: Module Implementation Series](#example-module-implementation-series)
-  - [Example: Multi-Module Orchestration](#example-multi-module-orchestration)
 - [Error Handling](#error-handling)
 - [Related Operations](#related-operations)
 
@@ -220,5 +208,8 @@ TaskUpdate(taskId=final_verify, addBlockedBy=[auth_tests])
 ## Related Operations
 
 - [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies inform task blocking
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-create-github-issues.md](op-create-github-issues.md) - GitHub issues parallel Claude tasks
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-approve-plan-transition.md](op-approve-plan-transition.md) - Transition creates initial tasks
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

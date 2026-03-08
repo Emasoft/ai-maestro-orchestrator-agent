@@ -3,52 +3,22 @@ name: template-pull-request
 description: "Universal pull request template for orchestrator-created PRs, used when filing PRs via implementer agents."
 ---
 
-# Universal Pull Request Template (Orchestrator Perspective)
-
-## Table of Contents
-
-- 1. When the Orchestrator Creates Pull Requests
-  - 1.1 When to create a pull request directly versus delegating to an implementer
-  - 1.2 Installing the template in a repository
-  - 1.3 Choosing the correct base branch
-- 2. Template Structure Overview
-  - 2.1 Required sections every pull request must have
-  - 2.2 Optional sections for specific change types
-- 3. Description and Issue Linking
-  - 3.1 Writing a clear pull request description
-  - 3.2 Linking related issues with closing keywords
-- 4. Type of Change Classification
-  - 4.1 Standard change type checkboxes
-  - 4.2 Area designation for large projects
-- 5. Commit Message Format
-  - 5.1 Conventional commits reminder
-  - 5.2 Examples of well-formed commit messages
-- 6. AI Disclosure Section
-  - 6.1 Why AI disclosure matters for orchestrator-created PRs
-  - 6.2 Testing level classification for AI-generated code
-  - 6.3 Understanding attestation checkbox
-- 7. General Review Checklist
-  - 7.1 Sync and branch hygiene checks
-  - 7.2 Code quality and focus checks
-- 8. Platform Testing Checklist
-  - 8.1 Windows, macOS, and Linux verification
-  - 8.2 When platform testing is required versus optional
-- 9. CI and Testing Requirements
-  - 9.1 Mandatory CI gates
-  - 9.2 Test coverage expectations for new code and bug fixes
-- 10. Screenshots and Visual Changes
-  - 10.1 Before and after comparison table
-- 11. Feature Toggle Section
-  - 11.1 How incomplete features are hidden behind toggles
-  - 11.2 Toggle mechanism options
-- 12. Breaking Changes Section
-  - 12.1 Identifying breaking changes
-  - 12.2 Migration instructions format
-- 13. Complete Template (Ready to Copy)
-- 14. Orchestrator Delegation Guidelines
-  - 14.1 When the orchestrator should create the PR itself
-  - 14.2 When the orchestrator should delegate PR creation to an implementer
-  - 14.3 What the orchestrator must verify before merging a delegated PR
+# Pull Request Template
+## Contents
+- When to create PRs
+- Template structure
+- Description and issue linking
+- Type of change classification
+- Commit message format
+- AI disclosure
+- General review checklist
+- Platform testing checklist
+- CI and testing requirements
+- Screenshots
+- Feature toggle
+- Breaking changes
+- Complete template
+- Orchestrator delegation
 
 ---
 

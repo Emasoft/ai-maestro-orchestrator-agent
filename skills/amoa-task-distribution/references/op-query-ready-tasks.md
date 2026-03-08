@@ -1,3 +1,6 @@
+## Table of Contents
+- [Metadata](#metadata) - [Purpose](#purpose) - [Preconditions](#preconditions) - [Input](#input) - [Procedure](#procedure) - [Command](#command) - [Output](#output) - [Error Handling](#error-handling) - [Exit Codes](#exit-codes) - [Related Operations](#related-operations)
+
 # Operation: Query Ready Tasks
 
 ## Metadata

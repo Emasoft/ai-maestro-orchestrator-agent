@@ -1,31 +1,16 @@
+## Table of Contents
+- [1. AMCOS Response to AMOA Task Completion Report](#1-amcos-response-to-amoa-task-completion-report)
+- [2. AMAMA Response to AMOA Blocker Escalation (User Decision)](#2-amama-response-to-amoa-blocker-escalation-user-decision)
+- [3. AMAA Response to Design Issue Escalation](#3-amaa-response-to-design-issue-escalation)
+- [4. AMCOS Response to AMOA Periodic Status Report](#4-amcos-response-to-amoa-periodic-status-report)
+- [5. AMAMA Response to Immutable Requirement Escalation](#5-amama-response-to-immutable-requirement-escalation)
+- [Cross-Reference](#cross-reference)
+
 # Response Templates from AMCOS, AMAMA, and AMAA Back to AMOA
 
 This document provides structured templates for messages that AMOA **receives** from AMCOS (Chief of Staff), AMAMA (Assistant Manager), and AMAA (Architect Agent). For each response type, this reference includes the incoming message format, the processing instructions AMOA must follow, and the decision tree for handling the response.
 
 > All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
-
-## Table of Contents
-
-- [1. AMCOS Response to AMOA Task Completion Report](#1-amcos-response-to-amoa-task-completion-report)
-  - [1.1 When AMCOS accepts the completed task](#11-when-amcos-accepts-the-completed-task)
-  - [1.2 When AMCOS requests rework on the completed task](#12-when-amcos-requests-rework-on-the-completed-task)
-  - [1.3 When AMCOS requests clarification on the completed task](#13-when-amcos-requests-clarification-on-the-completed-task)
-- [2. AMAMA Response to AMOA Blocker Escalation (User Decision)](#2-amama-response-to-amoa-blocker-escalation-user-decision)
-  - [2.1 When AMAMA delivers the user decision](#21-when-amama-delivers-the-user-decision)
-  - [2.2 When the user defers the decision](#22-when-the-user-defers-the-decision)
-  - [2.3 When the user rejects all proposed options](#23-when-the-user-rejects-all-proposed-options)
-- [3. AMAA Response to Design Issue Escalation](#3-amaa-response-to-design-issue-escalation)
-  - [3.1 When AMAA provides actionable design guidance](#31-when-amaa-provides-actionable-design-guidance)
-  - [3.2 When AMAA provides a revised design document](#32-when-amaa-provides-a-revised-design-document)
-  - [3.3 When AMAA requests more context before advising](#33-when-amaa-requests-more-context-before-advising)
-- [4. AMCOS Response to AMOA Periodic Status Report](#4-amcos-response-to-amoa-periodic-status-report)
-  - [4.1 When AMCOS acknowledges with no further action](#41-when-amcos-acknowledges-with-no-further-action)
-  - [4.2 When AMCOS changes task priorities](#42-when-amcos-changes-task-priorities)
-  - [4.3 When AMCOS adds a new task](#43-when-amcos-adds-a-new-task)
-- [5. AMAMA Response to Immutable Requirement Escalation](#5-amama-response-to-immutable-requirement-escalation)
-  - [5.1 When the user selects a standard option](#51-when-the-user-selects-a-standard-option)
-  - [5.2 When the user proposes a custom resolution](#52-when-the-user-proposes-a-custom-resolution)
-  - [5.3 When the user waives the requirement](#53-when-the-user-waives-the-requirement)
 
 ---
 

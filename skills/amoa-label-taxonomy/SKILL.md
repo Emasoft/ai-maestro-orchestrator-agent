@@ -1,6 +1,6 @@
 ---
 name: amoa-label-taxonomy
-description: GitHub label taxonomy for multi-agent systems. Use when managing labels for issue tracking and coordination. Trigger with label requests.
+description: "Use when applying GitHub labels. Trigger with label query or assignment requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:
@@ -15,67 +15,65 @@ agent: amoa-main
 
 ## Overview
 
-Defines the label taxonomy for AI Maestro multi-agent orchestration. Labels classify issues (type, priority, component) and coordinate agents (assignment, status). All labels use `<category>:<value>` format with strict cardinality rules.
+Label taxonomy for AI Maestro multi-agent orchestration. Format: `<category>:<value>` with cardinality rules.
 
 ## Prerequisites
 
-1. Read **AGENT_OPERATIONS.md** for orchestrator workflow context
-2. Access to GitHub CLI (`gh`) configured for the repository
-3. Understanding of ai-maestro agent roles (AMOA, AMCOS, AMIA, AMAMA)
+1. **AGENT_OPERATIONS.md** for orchestrator workflow context
+2. GitHub CLI (`gh`) configured for the repository
 
 ## Instructions
 
-1. Determine the operation type (create, query, update)
+1. Determine the operation type (create, query, or update labels)
 2. Identify the label category (`assign:*`, `status:*`, `priority:*`, etc.)
-3. Check cardinality rules. See: [references/usage-rules.md](./references/usage-rules.md)
+3. Check cardinality rules in usage-rules.md before applying
 4. If updating, remove conflicting labels first (especially `assign:*` and `status:*`)
-5. Apply the new label using `gh` CLI
-6. Verify the label was applied correctly
+5. Apply the label using `gh` CLI and verify it was applied correctly
 
----
+Copy this checklist and track your progress:
 
-## Label Categories Quick Reference
+- [ ] Determine the operation type (create, query, update)
+- [ ] Identify the label category (`assign:*`, `status:*`, `priority:*`, etc.)
+- [ ] Check cardinality rules. See: [references/usage-rules.md](./references/usage-rules.md)
+  <!-- TOC: Label Cardinality | Label Lifecycle | Common Mistakes to Avoid -->
+- [ ] If updating, remove conflicting labels first (especially `assign:*` and `status:*`)
+- [ ] Apply the new label using `gh` CLI
+- [ ] Verify the label was applied correctly
 
-**Full category details**: [references/label-categories-detailed.md](./references/label-categories-detailed.md)
+## Label Categories
 
-| Prefix | Purpose | Cardinality | Example |
-|--------|---------|-------------|---------|
-| `assign:` | Who is working on it | 0-1 | `assign:implementer-1` |
-| `status:` | Current workflow state | 1 | `status:in-progress` |
-| `priority:` | Urgency level | 1 | `priority:high` |
-| `type:` | Kind of work | 1 | `type:bug` |
-| `component:` | Affected code areas | 1+ | `component:api` |
-| `effort:` | Size estimate | 1 | `effort:m` |
-| `platform:` | Target platforms | 0+ | `platform:linux` |
-| `toolchain:` | Required tools | 0+ | `toolchain:python` |
-| `review:` | PR review status | 0-1 | `review:approved` |
+Details: [label-categories-detailed.md](./references/label-categories-detailed.md)
+<!-- TOC: assign | status | priority | type | component | effort | platform | toolchain | review -->
+
+| Prefix | Purpose | Card. |
+|--------|---------|-------|
+| `assign:` | Who is working on it | 0-1 |
+| `status:` | Workflow state | 1 |
+| `priority:` | Urgency level | 1 |
+| `type:` | Kind of work | 1 |
+| `component:` | Affected areas | 1+ |
+| `effort:` | Size estimate | 1 |
+| `platform:` | Target platforms | 0+ |
+| `toolchain:` | Required tools | 0+ |
+| `review:` | PR review status | 0-1 |
 
 Every issue MUST have: `status:*`, `priority:*`, `type:*`.
 
-## Kanban Columns (8-Column System)
+## Kanban (8 Columns)
 
-| # | Label | Description |
-|---|-------|-------------|
-| 1 | `status:backlog` | Entry point for new tasks |
-| 2 | `status:todo` | Ready to start |
-| 3 | `status:in-progress` | Active work |
-| 4 | `status:ai-review` | Integrator reviews ALL tasks |
-| 5 | `status:human-review` | User reviews BIG tasks only |
-| 6 | `status:merge-release` | Ready to merge |
-| 7 | `status:done` | Completed |
-| 8 | `status:blocked` | Blocked at any stage |
+`backlog` → `todo` → `in-progress` → `ai-review` → `human-review` → `merge-release` → `done` (+ `blocked`)
 
-**Routing**: Small tasks skip human-review. Big tasks go through all stages.
-
----
+Small tasks skip `human-review`. Big tasks go through all stages.
 
 ## Usage Rules
 
-Cardinality, lifecycle, and common mistakes. See: [references/usage-rules.md](./references/usage-rules.md)
+See: [references/usage-rules.md](./references/usage-rules.md)
+<!-- TOC: Label Cardinality | Label Lifecycle | Common Mistakes to Avoid -->
 
 ## CLI Commands
 
-**Full command reference**: [references/cli-commands.md](./references/cli-commands.md)
+See: [references/cli-commands.md](./references/cli-commands.md)
+<!-- TOC: Create Labels | Query Labels | Update Labels | Validate Label Cardinality -->
 
 ```bash
 # Assign task
@@ -86,35 +84,39 @@ gh issue edit 42 --remove-label "status:todo" --add-label "status:in-progress"
 gh issue list --label "assign:implementer-1"
 ```
 
-## Error Handling
-
-Label conflict errors, invalid category errors, and cardinality violations. See: [references/error-handling-and-output.md](./references/error-handling-and-output.md)
-
 ## Output
 
-Output formats (stdout summary, JSON for hooks) and label color codes. See: [references/error-handling-and-output.md](./references/error-handling-and-output.md)
+Label operation confirmations, query result tables, and validation reports. See: [references/error-handling-and-output.md](./references/error-handling-and-output.md)
+<!-- TOC: Error Handling | Output Formats | Colors Reference -->
+
+## Error Handling
+
+Invalid labels, cardinality violations, and missing required labels. See: [references/error-handling-and-output.md](./references/error-handling-and-output.md)
+<!-- TOC: Error Handling | Output Formats | Colors Reference -->
 
 ## Examples
 
-**Full examples**: [references/examples.md](./references/examples.md)
+See: [references/examples.md](./references/examples.md)
+<!-- TOC: Example 1: Assign Task to Agent | Example 4: Validate Label Cardinality -->
 
-```bash
-# Reassign task
-gh issue edit 42 --remove-label "assign:implementer-1" --add-label "assign:implementer-2"
-```
+**Input:** `gh issue edit 42 --remove-label "assign:implementer-1" --add-label "assign:implementer-2"`
+**Output:** `Updated issue #42` (reassignment)
 
----
+**Input:** `gh issue list --label "status:blocked" --label "priority:high"`
+**Output:** Table of high-priority blocked issues.
 
 ## Resources
 
-- [references/label-categories-detailed.md](./references/label-categories-detailed.md) - Full category definitions
-- [references/cli-commands.md](./references/cli-commands.md) - Complete CLI reference
-- [references/examples.md](./references/examples.md) - Usage examples
-- [references/usage-rules.md](./references/usage-rules.md) - Cardinality, lifecycle, mistakes
-- [references/error-handling-and-output.md](./references/error-handling-and-output.md) - Errors, output, colors
-- **AGENT_OPERATIONS.md** - Orchestrator workflow context
-- **amoa-messaging-templates** / **amoa-task-distribution** / **amoa-progress-monitoring**
+- [label-categories-detailed.md](./references/label-categories-detailed.md) — Full category definitions
+  <!-- TOC: assign | status | priority | type | component | effort | platform | toolchain | review -->
+- [cli-commands.md](./references/cli-commands.md) — CLI reference
+  <!-- TOC: Create Labels | Query Labels | Update Labels | Validate Label Cardinality -->
+- [examples.md](./references/examples.md) — Usage examples
+  <!-- TOC: Example 1: Assign Task to Agent | Example 4: Validate Label Cardinality -->
+- [usage-rules.md](./references/usage-rules.md) — Cardinality, lifecycle, mistakes
+  <!-- TOC: Label Cardinality | Label Lifecycle | Common Mistakes to Avoid -->
+- [error-handling-and-output.md](./references/error-handling-and-output.md) — Errors, output, colors
+  <!-- TOC: Error Handling | Output Formats | Colors Reference -->
+- **AGENT_OPERATIONS.md** — Orchestrator workflow context
 
-## Script Output Rules
-
-Scripts write verbose output to `docs_dev/reports/`, emit only `[OK/ERROR] name - summary` to stdout. Exception: `scripts/amoa_stop_check/` outputs JSON (hook requirement).
+Scripts emit only `[OK/ERROR] name - summary` to stdout; verbose output goes to `docs_dev/reports/`.

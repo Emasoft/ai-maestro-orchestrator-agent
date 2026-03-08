@@ -1,6 +1,6 @@
 ---
 name: amoa-implementer-interview-protocol
-description: Interview protocols for task verification. Use when checking implementer readiness or approving PR creation. Trigger with task assignment.
+description: "Use when verifying implementer readiness. Trigger with interview or PR approval requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:
@@ -15,103 +15,96 @@ agent: amoa-main
 
 ## Overview
 
-The Orchestrator (AMOA) MUST interview the Implementer agent both **before** and **after** task execution. This is NOT optional. The pre-task interview verifies understanding, capability, compatibility, and feasibility. The post-task interview verifies completeness, quality, testing, and documentation before approving PR creation.
+Interview the Implementer before and after task execution. Pre-task verifies understanding, capability, feasibility. Post-task verifies completeness, quality, testing before PR creation.
 
 ## Prerequisites
 
-1. Read **AGENT_OPERATIONS.md** for orchestrator workflow
-2. Read **amoa-remote-agent-coordinator/references/rule-14-immutable-requirements.md** for immutable vs. mutable requirements
-3. Read **amoa-label-taxonomy** for status labels
-4. Read **amoa-messaging-templates** for message formats
-
----
+1. Read **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**
+2. Read **amoa-remote-agent-coordinator/references/rule-14-immutable-requirements.md**
 
 ## 1. Pre-Task Interview (MANDATORY)
 
 Verifies: Understanding, Capability, Compatibility, Feasibility.
 
-**Questions and evaluation criteria**: See [interview-templates.md](./references/interview-templates.md)
+**Questions**: [interview-templates.md](./references/interview-templates.md)
+<!-- TOC: Pre-Task Interview Questions | Post-Task Interview Questions -->
 
-**Escalation triggers**: Design concerns → Architect (AMAA). Immutable requirement concerns → Manager (AMAMA) → User. Capability issues → Reassign. Blockers → Resolve first.
-See: [escalation-messages.md](./references/escalation-messages.md)
-
----
+**Escalation**: Design → AMAA. Immutable → AMAMA → User. See: [escalation-messages.md](./references/escalation-messages.md)
+<!-- TOC: REVISE Message | PROCEED Message -->
 
 ## 2. Post-Task Interview (MANDATORY)
 
 Verifies: Completeness, Quality, Testing, Documentation.
 
-**Verification protocol**: See [interview-templates.md](./references/interview-templates.md)
+**Protocol**: [interview-templates.md](./references/interview-templates.md). All pass → APPROVED. Minor → Fix. Major → REVISE.
+<!-- TOC: Pre-Task Interview Questions | Post-Task Interview Questions -->
 
-**Outcomes**: All pass → APPROVED. Minor issues → Request fixes, re-interview. Major issues → REVISE. Requirement deviations → Escalate.
+## 3. Handoff
 
----
-
-## 3. Handoff and Output
-
-After APPROVED, implementer creates PR. Orchestrator updates issue status to `status:ai-review` and notifies Integrator.
+After APPROVED, implementer creates PR. Orchestrator sets `status:ai-review`, notifies Integrator.
 See: [handoff-and-output.md](./references/handoff-and-output.md)
+<!-- TOC: Output Types | Handoff to Integrator -->
 
----
+## Output
+
+- **Interview result**: PROCEED, APPROVED, or REVISE decision
+- **Handoff document**: Markdown with task context for replacement or next agent
+- **Issue update**: GitHub issue labels and comments reflecting interview outcome
 
 ## Instructions
 
-1. Identify the implementer agent and the task issue number to interview about.
-2. Send a **Pre-Task Interview** message via `agent-messaging` skill asking: Task Summary, Acceptance Criteria, Concerns, Approach, Blockers.
-3. Evaluate the implementer's responses against the criteria in [interview-templates.md](./references/interview-templates.md). Escalate if needed.
-4. After task execution, send a **Post-Task Interview** message verifying: Completeness, Quality, Testing, Documentation.
-5. If all checks pass, mark APPROVED and proceed to handoff per [handoff-and-output.md](./references/handoff-and-output.md).
+1. Identify the implementer agent and task issue number
+2. Send the Pre-Task Interview via `agent-messaging` skill
+3. Evaluate responses per interview-templates.md; escalate design/requirement issues
+4. Send PROCEED if pre-task passes; after execution send Post-Task Interview
+5. Evaluate post-task results; issue REVISE or APPROVED
+6. If APPROVED, execute handoff per handoff-and-output.md
 
-Full checklists: [interview-workflow-steps.md](./references/interview-workflow-steps.md)
+Copy this checklist and track your progress:
 
----
+- [ ] Identify the implementer agent and task issue number
+- [ ] Send Pre-Task Interview via `agent-messaging` skill
+- [ ] Evaluate responses and escalate if needed
+- [ ] Send PROCEED or REVISE decision
+- [ ] After execution, send Post-Task Interview
+- [ ] If APPROVED, execute handoff
+
+Steps: [interview-workflow-steps.md](./references/interview-workflow-steps.md)
+<!-- TOC: Pre-Task Interview Steps | Post-Task Interview Steps -->
 
 ## Error Handling
 
 See: [exception-handling.md](./references/exception-handling.md)
+<!-- TOC: Implementer Misunderstands Task | Implementer Never Acknowledges -->
 
-| Error | Quick Solution |
-|-------|----------------|
-| No ACK | Reminder → escalate to progress-monitoring |
-| Misunderstands task | Clarify, update handoff, re-interview |
-| Design concerns | Escalate to Architect (AMAA) |
-| Requirement concerns | Escalate to Manager (AMAMA) → User |
-| Incomplete work | REVISE with specific items |
-| Tests fail | REVISE, require passing tests |
-| PR before approval | Remind protocol, manual review |
-
----
+| Error | Solution |
+|-------|----------|
+| No ACK | Reminder → escalate |
+| Misunderstands task | Clarify, re-interview |
+| Design/requirement concerns | Escalate to AMAA/AMAMA |
+| Incomplete or tests fail | REVISE with specifics |
+| PR before approval | Remind protocol |
 
 ## Examples
 
-Complete interview curl examples and sample dialogues: See [examples.md](./references/examples.md)
+See [examples.md](./references/examples.md)
+<!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect -->
 
----
-
-## Output
-
-Interview outcomes and integrator handoff artifacts: See [handoff-and-output.md](./references/handoff-and-output.md)
-
----
+**Input:** Task assignment for issue #42 to implementer `libs-svg-svgbbox`.
+**Output:** Pre-task interview → PROCEED → post-task → APPROVED → Integrator notified.
 
 ## Resources
 
-- **[interview-templates.md](./references/interview-templates.md)** - Question templates, evaluation, and decision trees
-- **[escalation-messages.md](./references/escalation-messages.md)** - Escalation and approval messages
-- **[exception-handling.md](./references/exception-handling.md)** - Exception procedures
-- **[examples.md](./references/examples.md)** - Complete curl examples
-- **[interview-workflow-steps.md](./references/interview-workflow-steps.md)** - Full checklists and step-by-step procedures
-- **[handoff-and-output.md](./references/handoff-and-output.md)** - Integrator handoff and output types
-- **AGENT_OPERATIONS.md** - Core orchestrator workflow
-- **amoa-label-taxonomy** - Status label workflow
-- **amoa-messaging-templates** - Message templates
-- **amoa-task-distribution** - Task assignment protocol
+- [interview-templates.md](./references/interview-templates.md) — Questions, evaluation, decision trees
+  <!-- TOC: Pre-Task Interview Questions | Post-Task Interview Questions -->
+- [escalation-messages.md](./references/escalation-messages.md) — Escalation and approval messages
+  <!-- TOC: REVISE Message | PROCEED Message -->
+- [exception-handling.md](./references/exception-handling.md) — Exception procedures
+  <!-- TOC: Implementer Misunderstands Task | Implementer Never Acknowledges -->
+- [examples.md](./references/examples.md) — Curl examples
+  <!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect -->
+- [interview-workflow-steps.md](./references/interview-workflow-steps.md) — Checklists and procedures
+  <!-- TOC: Pre-Task Interview Steps | Post-Task Interview Steps -->
+- [handoff-and-output.md](./references/handoff-and-output.md) — Handoff and output types
+  <!-- TOC: Output Types | Handoff to Integrator -->
 
-## Script Output Rules
-
-All scripts invoked by this skill MUST follow the token-efficient output protocol:
-
-1. **Verbose output** goes to a timestamped report file in `docs_dev/reports/`
-2. **Stdout** emits only 2-3 lines: `[OK/ERROR] script_name - summary` + `Report: path`
-3. Scripts accept `--output-dir` to override the default report directory
-4. **EXCEPTION**: Scripts in `scripts/amoa_stop_check/` MUST output JSON to stdout (Claude Code hook requirement)

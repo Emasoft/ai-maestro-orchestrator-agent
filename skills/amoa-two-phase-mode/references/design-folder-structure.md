@@ -1,3 +1,8 @@
+## Table of Contents
+- [Contents](#contents)
+- [Quick Reference](#quick-reference)
+- [When to Read Each Part](#when-to-read-each-part)
+
 # Design Folder Structure
 
 Standardized folder structure for all design documents, customized templates, handoffs, and RDD files per platform.

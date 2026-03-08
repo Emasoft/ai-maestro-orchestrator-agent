@@ -1,6 +1,6 @@
 ---
 name: amoa-task-distribution
-description: Task distribution based on skills and availability. Use when assigning work to agents, balancing load, or resolving dependencies. Trigger with assignment requests.
+description: "Use when distributing tasks. Trigger with task assignment requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:
@@ -15,7 +15,7 @@ agent: amoa-main
 
 ## Overview
 
-This skill defines how the Orchestrator (AMOA) distributes tasks to agents. Distribution is based on **order**, **priority**, and **agent state**. Tasks are selected from the ready queue, sorted by priority, filtered by dependencies, matched to agent capabilities, and assigned via labeled issues and AI Maestro messages.
+Defines how AMOA distributes tasks to agents based on **priority**, **dependencies**, and **agent state**. Tasks from the ready queue are sorted, filtered, matched to agents, and assigned via labeled issues and AI Maestro messages.
 
 ## Prerequisites
 
@@ -23,8 +23,6 @@ This skill defines how the Orchestrator (AMOA) distributes tasks to agents. Dist
 2. Read **amoa-label-taxonomy** for label usage and cardinality rules
 3. Read **amoa-messaging-templates** for message formats
 4. Access to GitHub CLI (`gh`) and AI Maestro API
-
----
 
 ## 1. Task Distribution Order
 
@@ -38,69 +36,74 @@ This skill defines how the Orchestrator (AMOA) distributes tasks to agents. Dist
 
 ## 2. Agent Selection Criteria
 
-Evaluate availability (active > hibernated/offline), skill match (`toolchain:*`, `component:*` labels vs agent capabilities), and capacity (0-2 tasks OK, 3+ at capacity). See: `references/op-select-agent.md`
+Evaluate availability, skill match (`toolchain:*`, `component:*` labels), and capacity (0-2 OK, 3+ at capacity). See: `references/op-select-agent.md`
+<!-- TOC: Purpose | Selection Criteria | Procedure | Specialization Preferences | Error Handling -->
 
 ## 3. Assignment Protocol
 
 Update labels (`assign:<agent>`, `status:in-progress`), send assignment message via `agent-messaging` skill, wait for ACK. See: `references/op-assign-task.md`
+<!-- TOC: Purpose | Procedure | Commands | Message Format | Post-Assignment | Error Handling -->
 
 ## 4. Dependency Management
 
-Three types: Hard (block until resolved), Soft (assign with note), None (parallel). Circular dependencies must be reported to user. See: `references/dependency-management.md`
+Hard (block until resolved), Soft (assign with note), None (parallel). Circular deps → report to user. See: `references/dependency-management.md`
+<!-- TOC: Dependency Types | Dependency Resolution | Circular Dependency Detection -->
 
 ## 5. Load Balancing
 
-Prefer lowest-load agent. When equal, prefer agent with recent similar task experience. Specialization rules apply for code review and bug fixes. See: `references/load-balancing.md`
+Prefer lowest-load agent; if equal, prefer recent similar experience. See: `references/load-balancing.md`
+<!-- TOC: Even Distribution | Specialization -->
 
 ## 6. Reassignment
 
 When reassigning (agent unresponsive/blocked): remove old `assign:*`, add new, send context to new agent, notify original. See: `references/op-reassign-task.md`
+<!-- TOC: When to Reassign | Procedure | Commands | Partial Progress Gathering | Error Handling -->
 
 ## 7. Blocked Task Handling
 
-When an agent reports a task is blocked: acknowledge, record previous status, move to Blocked column, create blocker issue, escalate to AMAMA immediately. Verify blocker is real before escalating. See: `references/blocked-task-handling.md`
+When blocked: acknowledge, record status, move to Blocked column, create blocker issue, escalate to AMAMA. Verify blocker is real first. See: `references/blocked-task-handling.md`
+<!-- TOC: Blocker Response Steps | Escalation Message | Verification | Move to Blocked | Restore from Blocked -->
 
 ## Instructions
 
-1. Query tasks with `status:ready` label and sort by priority (critical > high > normal > low).
-2. Check each task's dependency list; only tasks with empty blockedBy are assignable.
-3. Select the best agent based on availability, skill match, and current load.
-4. Assign the task: add `assign:<agent>` and `status:in-progress` labels, send AI Maestro message.
-5. Wait for ACK; if no ACK within timeout, reassign per `references/op-reassign-task.md`.
+1. Query tasks with `status:ready` label and sort by priority (critical > high > normal > low)
+2. Check each task's dependency list; only tasks with empty blockedBy are assignable
+3. Select the best agent based on availability, skill match, and current load
+4. Assign the task: add `assign:<agent>` and `status:in-progress` labels, send AI Maestro message
+5. Wait for ACK; if no ACK within timeout, reassign per reassignment protocol
+
+Copy this checklist and track your progress:
+
+- [ ] Query tasks with `status:ready` label and sort by priority (critical > high > normal > low)
+- [ ] Check each task's dependency list; only tasks with empty blockedBy are assignable
+- [ ] Select the best agent based on availability, skill match, and current load
+- [ ] Assign the task: add `assign:<agent>` and `status:in-progress` labels, send AI Maestro message
+- [ ] Wait for ACK; if no ACK within timeout, reassign per `references/op-reassign-task.md`
+  <!-- TOC: Reassign | Procedure | Commands | Partial Progress | Errors -->
 
 Full checklist: `references/distribution-workflow-checklist.md`
-
----
+<!-- TOC: Step-by-Step Instructions | Distribution Checklist -->
 
 ## Output
 
-| Output Type | Format |
-|-------------|--------|
-| Assignment confirmation | GitHub label + AI Maestro ACK |
-| Task queue report | Markdown table of ready tasks by priority |
-| Agent availability report | JSON with agent load and state |
-| Dependency graph | Text showing blocks/blockedBy |
-| Delegation log entry | Timestamped assignment record |
+Assignment confirmation (label + ACK), task queue report, agent availability, dependency graph, delegation log.
 
 ## Error Handling
 
-Common errors: no available agents, circular dependencies, agent non-ACK, skill mismatch, stuck dependencies, label conflicts. See: `references/error-handling.md`
+No available agents, circular deps, non-ACK, skill mismatch, stuck deps, label conflicts. See: `references/error-handling.md`
+<!-- TOC: Error Table -->
 
 ## Examples
 
-Query/sort ready tasks, check agent availability, assign with full protocol, handle circular dependencies. See: `references/examples.md`
+**Input:** 3 ready tasks (priorities: critical, normal, low), 2 available agents
+**Output:** Critical task assigned to best-match agent; labels updated; AI Maestro ACK received
 
----
+Query/sort ready tasks, check agent availability, assign with full protocol, handle circular dependencies. See: `references/examples.md`
+<!-- TOC: Query/Sort Tasks | Check Availability | Assign Task | Handle Circular Deps -->
 
 ## Resources
 
-- `references/` -- all operational procedure files (op-*.md, dependency, load-balancing, examples, error-handling, checklist)
+- `references/` -- procedures, examples, error handling, checklist
 - Related skills: **amoa-label-taxonomy**, **amoa-messaging-templates**, **amoa-progress-monitoring**
-- **AGENT_OPERATIONS.md** -- orchestrator workflow and agent lifecycle
+- **AGENT_OPERATIONS.md** -- orchestrator workflow
 
-## Script Output Rules
-
-All scripts invoked by this skill MUST follow the token-efficient output protocol:
-1. Verbose output goes to a timestamped report file in `docs_dev/reports/`
-2. Stdout emits only 2-3 lines: status + filepath
-3. **EXCEPTION**: Scripts in `scripts/amoa_stop_check/` MUST output JSON to stdout (Claude Code hook requirement)

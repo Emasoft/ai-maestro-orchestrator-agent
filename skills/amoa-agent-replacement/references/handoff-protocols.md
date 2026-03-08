@@ -1,3 +1,6 @@
+## Table of Contents
+- [Purpose](#purpose) - [Contents](#contents) - [Standard Handoff Format](#standard-handoff-format) - [Document Delivery Protocol](#document-delivery-protocol) - [Task Delegation Protocol](#task-delegation-protocol) - [Acknowledgment Protocol](#acknowledgment-protocol) - [Completion Reporting Protocol](#completion-reporting-protocol) - [Blocker Escalation Protocol](#blocker-escalation-protocol) - [Integration with Other Protocols](#integration-with-other-protocols) - [Troubleshooting](#troubleshooting)
+
 # Handoff Protocols Reference
 
 ## Purpose

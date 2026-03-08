@@ -1,32 +1,19 @@
 ---
 operation: select-agent-for-task
 procedure: proc-decompose-design
-workflow-instruction: Step 10 - Design Decomposition
 parent-skill: amoa-orchestration-patterns
-parent-plugin: ai-maestro-orchestrator-agent
-version: 1.0.0
 ---
 
 # Select Agent for Task
 
-
 ## Contents
-
-- [When to Use](#when-to-use)
-- [Prerequisites](#prerequisites)
-- [Procedure](#procedure)
-  - [Step 1: Identify Task Category](#step-1-identify-task-category)
-  - [Step 2: Check Language Requirements](#step-2-check-language-requirements)
-  - [Step 3: Verify Parallelization Safety](#step-3-verify-parallelization-safety)
-  - [Step 4: Determine Output Requirements](#step-4-determine-output-requirements)
-  - [Step 5: Select Agent Using Formula](#step-5-select-agent-using-formula)
-- [Checklist](#checklist)
-- [Examples](#examples)
-  - [Example: Python API Development](#example-python-api-development)
-  - [Example: JavaScript Test Writing](#example-javascript-test-writing)
-  - [Example: Code Search](#example-code-search)
-- [Error Handling](#error-handling)
-- [Related Operations](#related-operations)
+- Triggers
+- Prerequisites
+- Steps
+- Checklist
+- Examples
+- Errors
+- Related
 
 ## When to Use
 
@@ -183,5 +170,8 @@ Report: [DONE/FAILED] legacy-auth-search - count of usages found
 ## Related Operations
 
 - [op-classify-task-complexity.md](op-classify-task-complexity.md) - Classify before selecting
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-define-scope-boundaries.md](op-define-scope-boundaries.md) - Define clear scope for agent
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-identify-task-dependencies.md](op-identify-task-dependencies.md) - Check dependencies before parallelizing
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

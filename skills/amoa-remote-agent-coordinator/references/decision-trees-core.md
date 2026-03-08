@@ -1,3 +1,13 @@
+## Table of Contents
+- [1. Escalate vs Retry Decision Tree](#1-escalate-vs-retry-decision-tree)
+- [2. Reassign vs Wait Decision Tree](#2-reassign-vs-wait-decision-tree)
+- [3. Conflicting Multi-Agent Responses Decision Tree](#3-conflicting-multi-agent-responses-decision-tree)
+- [4. Verification Loop Outcome Decision Tree](#4-verification-loop-outcome-decision-tree)
+- [5. Agent Recovery Decision Tree](#5-agent-recovery-decision-tree)
+- [6. Direct Handling vs Delegation Decision Tree](#6-direct-handling-vs-delegation-decision-tree)
+- [7. Post-Task Interview Escalation Decision Tree](#7-post-task-interview-escalation-decision-tree)
+- [Cross-References Between Trees](#cross-references-between-trees)
+
 # Decision Trees Core: 7 Essential Operational Decision Points
 
 This reference defines the 7 most important decision trees that the AI Maestro Orchestrator Agent (AMOA) uses during daily operations. Each tree addresses a specific scenario where AMOA must choose between competing actions. The trees use measurable input variables so decisions are consistent and auditable.
@@ -6,53 +16,6 @@ This reference defines the 7 most important decision trees that the AI Maestro O
 - [escalation-procedures.md](./escalation-procedures.md) for escalation message formats
 - [verification-loops-protocol.md](./verification-loops-protocol.md) for verification loop mechanics
 - [messaging-protocol-part2-send-receive.md](./messaging-protocol-part2-send-receive.md) for how to send messages to other agents
-
----
-
-## Table of Contents
-
-- [1. Escalate vs Retry Decision Tree](#1-escalate-vs-retry-decision-tree)
-  - 1.1 When to use this tree
-  - 1.2 Input variables AMOA must gather
-  - 1.3 Full decision tree with all branches
-  - 1.4 Outcome actions at each leaf node
-  - 1.5 Concrete example
-- [2. Reassign vs Wait Decision Tree](#2-reassign-vs-wait-decision-tree)
-  - 2.1 When to use this tree
-  - 2.2 Input variables AMOA must gather
-  - 2.3 Full decision tree with all branches
-  - 2.4 Outcome actions at each leaf node
-  - 2.5 Concrete example
-- [3. Conflicting Multi-Agent Responses Decision Tree](#3-conflicting-multi-agent-responses-decision-tree)
-  - 3.1 When to use this tree
-  - 3.2 Input variables AMOA must gather
-  - 3.3 Full decision tree with all branches
-  - 3.4 Outcome actions at each leaf node
-  - 3.5 Concrete example
-- [4. Verification Loop Outcome Decision Tree](#4-verification-loop-outcome-decision-tree)
-  - 4.1 When to use this tree
-  - 4.2 Input variables AMOA must gather
-  - 4.3 Full decision tree with all branches
-  - 4.4 Outcome actions at each leaf node
-  - 4.5 Concrete example
-- [5. Agent Recovery Decision Tree](#5-agent-recovery-decision-tree)
-  - 5.1 When to use this tree
-  - 5.2 Input variables AMOA must gather
-  - 5.3 Full decision tree with all branches
-  - 5.4 Outcome actions at each leaf node
-  - 5.5 Concrete example
-- [6. Direct Handling vs Delegation Decision Tree](#6-direct-handling-vs-delegation-decision-tree)
-  - 6.1 When to use this tree
-  - 6.2 Input variables AMOA must gather
-  - 6.3 Full decision tree with all branches
-  - 6.4 Outcome actions at each leaf node
-  - 6.5 Concrete example
-- [7. Post-Task Interview Escalation Decision Tree](#7-post-task-interview-escalation-decision-tree)
-  - 7.1 When to use this tree
-  - 7.2 Input variables AMOA must gather
-  - 7.3 Full decision tree with all branches
-  - 7.4 Outcome actions at each leaf node
-  - 7.5 Concrete example
 
 ---
 

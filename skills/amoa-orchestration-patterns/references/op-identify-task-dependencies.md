@@ -1,32 +1,19 @@
 ---
 operation: identify-task-dependencies
 procedure: proc-decompose-design
-workflow-instruction: Step 10 - Design Decomposition
 parent-skill: amoa-orchestration-patterns
-parent-plugin: ai-maestro-orchestrator-agent
-version: 1.0.0
 ---
 
 # Identify Task Dependencies
 
-
 ## Contents
-
-- [When to Use](#when-to-use)
-- [Prerequisites](#prerequisites)
-- [Procedure](#procedure)
-  - [Step 1: List All Tasks](#step-1-list-all-tasks)
-  - [Step 2: Identify Dependency Types](#step-2-identify-dependency-types)
-  - [Step 3: Build Dependency Matrix](#step-3-build-dependency-matrix)
-  - [Step 4: Identify Parallel Opportunities](#step-4-identify-parallel-opportunities)
-  - [Step 5: Document with Claude Tasks Blocking](#step-5-document-with-claude-tasks-blocking)
-- [Checklist](#checklist)
-- [Examples](#examples)
-  - [Example: API Feature Implementation](#example-api-feature-implementation)
-  - [Example: Microservices Feature](#example-microservices-feature)
-  - [Example: Circular Dependency Detection](#example-circular-dependency-detection)
-- [Error Handling](#error-handling)
-- [Related Operations](#related-operations)
+- Triggers
+- Prerequisites
+- Steps
+- Checklist
+- Examples
+- Errors
+- Related
 
 ## When to Use
 
@@ -193,3 +180,4 @@ T3 depends on T2
 - [op-decompose-goals-to-modules.md](op-decompose-goals-to-modules.md) - Decomposition before dependency analysis
 - [op-schedule-claude-tasks.md](op-schedule-claude-tasks.md) - Schedule with dependencies
 - [op-define-scope-boundaries.md](op-define-scope-boundaries.md) - Scope affects dependencies
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

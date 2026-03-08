@@ -1,3 +1,15 @@
+## Table of Contents
+- [Contents](#contents)
+- [Summary](#summary)
+- [Frontmatter Field Comparison](#frontmatter-field-comparison)
+- [Open Agent Skills Specification](#open-agent-skills-specification)
+- [Claude Code Skills Specification](#claude-code-skills-specification)
+- [Compatibility](#compatibility)
+- [Recommendations](#recommendations)
+- [Validation Strategy](#validation-strategy)
+- [Best Practices](#best-practices)
+- [References](#references)
+
 # Skill Format Comparison: Open Spec vs Claude Code Skills
 
 Comparison between the Anthropic Open Agent Skills Specification and the Claude Code Skills format (the skills subset of the plugin spec).

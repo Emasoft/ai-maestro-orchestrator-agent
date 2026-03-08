@@ -1,16 +1,18 @@
+## Table of Contents
+- [1.1 Acknowledging Task Assignment from AMCOS/AMAMA](#11-acknowledging-task-assignment-from-amcosamama)
+- [1.2 Delegating Task to Sub-Agent](#12-delegating-task-to-sub-agent)
+- [1.3 Requesting Status Update from Sub-Agent](#13-requesting-status-update-from-sub-agent)
+- [1.4 Reporting Task Completion to AMCOS](#14-reporting-task-completion-to-amcos)
+- [1.5 Escalating Blocked Task to AMCOS](#15-escalating-blocked-task-to-amcos)
+- [1.6 Escalating Blocked Task to AMAMA (User Decision Needed)](#16-escalating-blocked-task-to-amama-user-decision-needed)
+- [1.7 Standard AI Maestro API Format and Conventions](#17-standard-ai-maestro-api-format-and-conventions)
+- [Quick Reference: Common Patterns](#quick-reference-common-patterns)
+- [Notes](#notes)
+- [Decision Trees for AI Maestro Message Handling](#decision-trees-for-ai-maestro-message-handling)
+
 # AI Maestro Message Templates for AMOA
 
 Complete reference for all AI Maestro message templates used by AI Maestro Orchestrator Agent (AMOA). Use the `agent-messaging` skill for all message operations.
-
-## Contents
-
-- 1.1 Acknowledging task assignment from AMCOS/AMAMA
-- 1.2 Delegating task to sub-agent (implementer/tester)
-- 1.3 Requesting status update from sub-agent
-- 1.4 Reporting task completion to AMCOS
-- 1.5 Escalating blocked task to AMCOS
-- 1.6 Escalating blocked task to AMAMA (user decision needed)
-- 1.7 Standard AI Maestro API format and conventions
 
 ---
 

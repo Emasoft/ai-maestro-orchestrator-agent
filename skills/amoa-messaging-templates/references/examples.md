@@ -1,13 +1,12 @@
-# AI Maestro Communication Examples
-
-This document provides intent-based examples for common AI Maestro messaging scenarios. Use the `agent-messaging` skill for all message operations.
-
 ## Table of Contents
-
 - [Full Task Assignment Flow](#full-task-assignment-flow)
 - [Example 1: Send Task Assignment](#example-1-send-task-assignment)
 - [Example 2: Send Status Request](#example-2-send-status-request)
 - [Example 3: Escalate to Assistant Manager](#example-3-escalate-to-assistant-manager)
+
+# AI Maestro Communication Examples
+
+This document provides intent-based examples for common AI Maestro messaging scenarios. Use the `agent-messaging` skill for all message operations.
 
 ---
 

@@ -2082,9 +2082,16 @@ def extract_toc_headings(md_content: str) -> list[str]:
         title = (entry_match.group(1) or entry_match.group(2) or "").strip()
         if not title or title.startswith("---"):
             continue
-        # Strip leading numbering like "1. " or "3a. "
-        title_clean = re.sub(r"^\d+[a-z]?\.\s*", "", title).strip()
-        if title_clean:
+        # Skip code fences, table rows, and formatting artifacts
+        if title.startswith("```") or title.startswith("|") or title.startswith("*"):
+            continue
+        if len(title) < 4 or title in ("--", "-"):
+            continue
+        # Strip leading numbering like "1. ", "3a. ", "1.0 ", "2.1 "
+        title_clean = re.sub(r"^\d+(?:[a-z]|\.\d+)*\.?\s+", "", title).strip()
+        # Strip leading ### sub-heading markers
+        title_clean = re.sub(r"^#{1,4}\s+", "", title_clean).strip()
+        if title_clean and len(title_clean) >= 4:
             headings.append(title_clean)
 
     return headings

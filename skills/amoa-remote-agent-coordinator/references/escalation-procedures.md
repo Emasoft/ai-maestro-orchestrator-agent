@@ -1,3 +1,18 @@
+## Table of Contents
+- [Overview](#overview)
+- [Contents](#contents)
+- [Escalation Hierarchy](#escalation-hierarchy)
+- [What Remote Agents Handle (Level 0)](#what-remote-agents-handle-level-0)
+- [What Orchestrator Handles (Level 1)](#what-orchestrator-handles-level-1)
+- [What Requires User Escalation (Level 2)](#what-requires-user-escalation-level-2)
+- [Escalation Message Formats](#escalation-message-formats)
+- [Escalation Categories](#escalation-categories)
+- [Escalation Response Handling](#escalation-response-handling)
+- [Escalation Queue Management](#escalation-queue-management)
+- [Do's and Don'ts](#dos-and-donts)
+- [Metrics](#metrics)
+- [Decision Trees for Escalation Handling](#decision-trees-for-escalation-handling)
+
 # Escalation Procedures
 
 ## Overview

@@ -1,3 +1,13 @@
+## Table of Contents
+- [Purpose](#purpose)
+- [When to Use](#when-to-use)
+- [Prerequisites](#prerequisites)
+- [Steps](#steps)
+- [Output](#output)
+- [Error Handling](#error-handling)
+- [Example](#example)
+- [Critical Rule](#critical-rule)
+
 # Operation: Check AI Maestro Inbox
 
 ---

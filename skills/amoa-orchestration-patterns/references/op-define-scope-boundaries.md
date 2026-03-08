@@ -1,35 +1,19 @@
 ---
 operation: define-scope-boundaries
 procedure: proc-decompose-design
-workflow-instruction: Step 10 - Design Decomposition
 parent-skill: amoa-orchestration-patterns
-parent-plugin: ai-maestro-orchestrator-agent
-version: 1.0.0
 ---
 
 # Define Scope Boundaries
 
-
 ## Contents
-
-- [When to Use](#when-to-use)
-- [Prerequisites](#prerequisites)
-- [Procedure](#procedure)
-  - [Step 1: Identify Scope Dimensions](#step-1-identify-scope-dimensions)
-  - [Step 2: Document Explicit Boundaries](#step-2-document-explicit-boundaries)
-- [Task: [Task Name]](#task-task-name)
-  - [In Scope](#in-scope)
-  - [Out of Scope (DO NOT TOUCH)](#out-of-scope-do-not-touch)
-  - [Step 3: Verify Non-Overlapping Scopes](#step-3-verify-non-overlapping-scopes)
-  - [Step 4: Define Shared Resources Protocol](#step-4-define-shared-resources-protocol)
-  - [Step 5: Include Boundaries in Task Prompt](#step-5-include-boundaries-in-task-prompt)
-- [Scope Boundaries](#scope-boundaries)
-- [Checklist](#checklist)
-- [Examples](#examples)
-  - [Example: Parallel Authentication Implementation](#example-parallel-authentication-implementation)
-  - [Example: Line-Based Division](#example-line-based-division)
-- [Error Handling](#error-handling)
-- [Related Operations](#related-operations)
+- Triggers
+- Prerequisites
+- Steps
+- Checklist
+- Examples
+- Errors
+- Related
 
 ## When to Use
 
@@ -191,5 +175,7 @@ Out of Scope:
 ## Related Operations
 
 - [op-identify-task-dependencies.md](op-identify-task-dependencies.md) - Dependencies affect scope design
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-select-agent-for-task.md](op-select-agent-for-task.md) - Select agents before defining scope
+<!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-decompose-goals-to-modules.md](op-decompose-goals-to-modules.md) - Decomposition informs boundaries

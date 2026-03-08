@@ -1,6 +1,6 @@
 ---
 name: amoa-progress-monitoring
-description: Agent progress monitoring via state-based detection. Use when tracking task completion, detecting stalls, or escalating unresponsive agents. Trigger with progress checks.
+description: "Use when monitoring agent progress. Trigger with status check or stall detection requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:
@@ -15,14 +15,12 @@ agent: amoa-main
 
 ## Overview
 
-Monitors agent progress using **state transitions** and **response order** (not fixed time intervals). Agents collaborate asynchronously and may be hibernated. The orchestrator tracks agent states and escalates through ordered steps when issues are detected.
+Monitors agent progress via **state transitions** and **response order**. Tracks states, detects stalls, escalates issues.
 
 ## Prerequisites
 
-1. Read **AGENT_OPERATIONS.md** for orchestrator workflow
-2. Read **amoa-label-taxonomy** for status labels and workflow states
-3. Read **amoa-messaging-templates** for message formats and escalation templates
-4. Access to AI Maestro API and GitHub CLI
+1. **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**
+2. Access to AI Maestro API and GitHub CLI
 
 ---
 
@@ -30,96 +28,94 @@ Monitors agent progress using **state transitions** and **response order** (not 
 
 | State | Definition | Action |
 |-------|------------|--------|
-| **Acknowledged** | Agent sent ACK for assigned task | Normal monitoring |
-| **No ACK** | Task assigned but no acknowledgment | Send reminder |
-| **Active** | Agent sending progress updates | Continue monitoring |
-| **No Progress** | Agent acknowledged but no updates | Send status request |
-| **Stale** | Last update predates significant events | Escalate priority |
-| **Unresponsive** | Multiple reminders without response | Consider reassignment |
-| **Blocked** | Agent reported blocker | Address blocker |
-| **Complete** | Agent reported task done | Verify and close |
+| **Acknowledged** | Agent sent ACK | Normal monitoring |
+| **No ACK** | No acknowledgment | Send reminder |
+| **Active** | Sending updates | Continue monitoring |
+| **No Progress** | ACK but no updates | Send status request |
+| **Stale** | Outdated last update | Escalate priority |
+| **Unresponsive** | No response to reminders | Consider reassignment |
+| **Blocked** | Reported blocker | Address blocker |
+| **Complete** | Task done reported | Verify and close |
 
 ## 2. State Detection
 
-Use `agent-messaging` skill to retrieve last message timestamp. State transitions:
-
-```
-Assigned → (ACK received) → Acknowledged → (progress) → Active
-Acknowledged → (no updates) → No Progress
-Active → (no updates) → Stale → (no response) → Unresponsive
-Any → (blocker reported) → Blocked
-Active → (completion reported) → Complete
-```
+Via `agent-messaging` timestamps. Transitions: Assigned→Acknowledged→Active→Complete. Stalls: No Progress→Stale→Unresponsive. Any→Blocked on blocker.
 
 ## 3. Escalation
 
-Three-step escalation: (1) First reminder at Normal priority, (2) Urgent reminder if no response, (3) User notification and reassignment consideration. See: `references/escalation-and-messaging.md`
+(1) First reminder, (2) Urgent reminder, (3) User notification + reassignment. See: `references/escalation-and-messaging.md`
+<!-- TOC: Escalation|Reminders|Reassignment|Progress|Completion -->
 
 ## 4. Progress Report Format
 
-Agents report using `[IN_PROGRESS]`, `[DONE]`, or `[BLOCKED]` prefixed messages with task-id, progress, blockers, and next steps. See: `references/escalation-and-messaging.md`
+Agents use `[IN_PROGRESS]`, `[DONE]`, or `[BLOCKED]` prefixed messages. See: `references/escalation-and-messaging.md`
+<!-- TOC: Escalation|Reminders|Reassignment|Progress|Completion -->
 
 ## 5. Blocker Handling
 
-**IRON RULE**: User must ALWAYS be informed of blockers immediately. Verify blocker is real, create a separate GitHub issue (`type:blocker`), escalate to AMAMA immediately, and restore previous status when resolved. See: `references/blocker-handling-protocol.md`
+**IRON RULE**: User informed of blockers immediately. Verify, create `type:blocker` issue, escalate. See: `references/blocker-handling-protocol.md`
+<!-- TOC: IronRule|BlockerDef|Protocol|Labels|Resolution|Lifecycle -->
 
 ## 6. Completion Verification
 
-Verify: PR exists, tests pass, code review approved, docs updated, checklist complete. Update labels and close issue on pass; send clarification request on fail. See: `references/escalation-and-messaging.md`
+Verify: PR exists, tests pass, review approved, docs updated. See: `references/escalation-and-messaging.md`
+<!-- TOC: Escalation|Reminders|Reassignment|Progress|Completion -->
 
 ---
 
 ## Instructions
 
 1. Query all issues with `status:in-progress` label
-2. For each assigned task:
-   1. Determine current agent state (section 1)
-   2. Check AI Maestro for agent's last message timestamp
-   3. Compare task assignment time vs. last agent update
-   4. If No ACK → send first reminder; if No Progress/Stale → send status request
-   5. If Unresponsive → send urgent escalation
-   6. If Blocked → handle blocker (section 5)
-   7. If Complete → verify completion (section 6)
-3. Update issue labels to reflect current state
-4. Log all state transitions and escalations
+2. For each task, determine agent state and check last message timestamp
+3. Send reminders or status requests based on state (No ACK, No Progress, Stale)
+4. Escalate unresponsive agents; handle blockers immediately
+5. Verify completion for tasks marked complete; update issue labels
+6. Log all state transitions and escalations
+
+Copy this checklist and track your progress:
+
+- [ ] Query all issues with `status:in-progress` label
+- [ ] For each task: determine agent state, check last message timestamp
+- [ ] No ACK → reminder; No Progress/Stale → status request
+- [ ] Unresponsive → urgent escalation
+- [ ] Blocked → handle blocker; Complete → verify completion
+- [ ] Update issue labels to reflect current state
+- [ ] Log all state transitions and escalations
 
 ## Output
 
-| Output Type | Format |
-|-------------|--------|
-| Agent state report | Markdown table (task, agent, state, last update) |
-| Escalation message | AI Maestro JSON message |
-| Dashboard view | Markdown table of all in-progress tasks |
-| Blocker report | Issue comment with blocker details |
-| Completion verification | Boolean + checklist |
-
-## References
-
-- `references/blocker-handling-protocol.md` - Full blocker handling, labels, lifecycle checklists
-- `references/escalation-and-messaging.md` - Escalation steps, message templates, report formats, completion verification
-- `references/monitoring-examples.md` - Worked examples, dashboard queries, error handling
-- **AGENT_OPERATIONS.md** - Core orchestrator workflow
-- **amoa-label-taxonomy** - Status labels and workflow states
-- **amoa-messaging-templates** - Escalation message templates
-- **amoa-task-distribution** - Assignment protocol and agent states
-- **amoa-implementer-interview-protocol** - Post-task verification protocol
+- **State report**: Table (task, agent, state, last update)
+- **Escalation**: AI Maestro JSON message
+- **Dashboard**: Table of in-progress tasks
+- **Blocker report**: Issue comment
+- **Completion**: Boolean + checklist
 
 ## Error Handling
 
-See `references/monitoring-examples.md`.
-
-## Examples
-
-See same reference file above.
-
-## Script Output Rules
-
-Scripts MUST follow the token-efficient output protocol:
-
-1. Verbose output goes to `docs_dev/reports/` (timestamped)
-2. Stdout: only `[OK/ERROR] script_name - summary` + `Report: path`
-3. **EXCEPTION**: `scripts/amoa_stop_check/` MUST output JSON to stdout (hook requirement)
+Unresponsive agents escalate: reminder→urgent→reassignment. Blockers create `type:blocker` issues. See `references/monitoring-examples.md`.
+<!-- TOC: QueryState|Reminder|Escalate|Blocker|Completion|Dashboard|Errors -->
 
 ## Resources
 
-See References.
+- `references/blocker-handling-protocol.md` - Blocker handling and lifecycle
+  <!-- TOC: Iron Rule | Blocker Definition | Response Protocol | Update Labels | Resolution | When Resolved | Lifecycle Checklist -->
+- `references/escalation-and-messaging.md` - Escalation, templates, completion
+  <!-- TOC: Escalation Order | First Reminder | Urgent Reminder | Reassignment Decision | Progress Report Format | Completion Verification -->
+- `references/monitoring-examples.md` - Examples and error handling
+  <!-- TOC: Query Agent State | Send First Reminder | Escalate to Urgent | Handle Blocker Report | Verify Completion | Dashboard Queries | Error Handling -->
+- **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**
+
+## Examples
+
+**Input:** Query agent state for task #42 assigned to `libs-svg-svgbbox`
+**Output:** `| #42 | libs-svg-svgbbox | Stale | 2h ago |` → sends status request message
+
+**Input:** Agent reports `[BLOCKED] #42 - missing API credentials`
+**Output:** Creates `type:blocker` issue, escalates to user immediately
+
+See `references/monitoring-examples.md` for full worked examples.
+<!-- TOC: QueryState|Reminder|Escalate|Blocker|Completion|Dashboard|Errors -->
+
+## Script Output Rules
+
+Verbose output to `docs_dev/reports/`. Stdout: `[OK/ERROR] name - summary`. `scripts/amoa_stop_check/` outputs JSON (hook).

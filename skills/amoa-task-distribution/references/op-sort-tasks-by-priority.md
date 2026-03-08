@@ -1,3 +1,6 @@
+## Table of Contents
+- [Metadata](#metadata) - [Purpose](#purpose) - [Preconditions](#preconditions) - [Priority Order](#priority-order) - [Input](#input) - [Procedure](#procedure) - [Command](#command) - [Output](#output) - [Error Handling](#error-handling) - [Related Operations](#related-operations)
+
 # Operation: Sort Tasks by Priority
 
 ## Metadata

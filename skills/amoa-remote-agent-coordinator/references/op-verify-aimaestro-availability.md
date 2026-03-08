@@ -4,6 +4,16 @@ workflow-instruction: Step 17 - Task Execution
 operation: verify-aimaestro-availability
 ---
 
+## Table of Contents
+- [Purpose](#purpose)
+- [When to Use](#when-to-use)
+- [Inputs](#inputs)
+- [Outputs](#outputs)
+- [Steps](#steps)
+- [Success Criteria](#success-criteria)
+- [Error Handling](#error-handling)
+- [Related Operations](#related-operations)
+
 # Operation: Verify AI Maestro Availability
 
 ## Purpose

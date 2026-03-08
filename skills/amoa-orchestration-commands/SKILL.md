@@ -1,8 +1,8 @@
 ---
 name: amoa-orchestration-commands
-description: "Use when managing orchestration phase commands. Trigger with start, monitor, loop control, cancellation, or stop hook enforcement requests."
+description: "Use when running orchestration phase commands. Trigger with start, monitor, or loop control requests."
 license: Apache-2.0
-compatibility: "Requires Python 3.8+, PyYAML, GitHub CLI. Works with AI Maestro for remote agent communication. Requires AI Maestro installed."
+compatibility: "Python 3.8+, PyYAML, GitHub CLI, AI Maestro."
 metadata:
   author: Emasoft
   version: 1.0.0
@@ -15,89 +15,98 @@ agent: amoa-main
 
 ## Overview
 
-Manages the execution loop that coordinates remote agents to implement approved plans. Covers starting orchestration, monitoring status, loop control, cancellation, and stop hook enforcement.
+Coordinates remote agents to implement approved plans via execution loop commands.
 
 ## Prerequisites
 
 1. Plan Phase complete (via `/approve-plan`)
 2. State file `design/state/exec-phase.md` exists
-3. Two-Phase Mode workflow understood (Plan Phase then Orchestration Phase)
 
 ## Command Summary
 
-| Command | Purpose | When to Use |
-|---------|---------|-------------|
-| `/start-orchestration` | Activate orchestration phase | After plan approval |
-| `/orchestration-status` | View module/agent progress | To monitor implementation |
-| `/orchestrator-status` | Check loop state and tasks | To see pending tasks |
-| `/orchestrator-loop` | Start continuous task loop | To activate dev loop |
-| `/cancel-orchestrator` | Cancel active loop | To stop the loop |
+| Command | Purpose |
+|---------|---------|
+| `/start-orchestration` | Activate orchestration phase |
+| `/orchestration-status` | View module/agent progress |
+| `/orchestrator-status` | Check loop state and tasks |
+| `/orchestrator-loop` | Start continuous task loop |
+| `/cancel-orchestrator` | Cancel active loop |
 
-Full syntax and options: See [references/command-details.md](references/command-details.md)
-
-## Output
-
-| Output Type | Format |
-|-------------|--------|
-| Status report | Markdown table (modules, agents) |
-| Loop state | Text summary (iteration, tasks) |
-| Cancellation | Confirmation message |
-| Error messages | Hook blocking reasons |
-
-## Quick Start
-
-1. `/start-orchestration` (optionally with `--project-id`)
-2. Register agents with `/register-agent`
-3. Assign modules with `/assign-module`
-4. Monitor with `/orchestration-status` every 10-15 min
-
-## Instructions
-
-1. Run `/start-orchestration` to activate orchestration phase after plan approval.
-2. Register agents with `/register-agent` and assign modules with `/assign-module`.
-3. Monitor progress with `/orchestration-status` every 10-15 minutes.
-4. Use `/orchestrator-loop` to activate continuous task processing if needed.
-5. Cancel the loop with `/cancel-orchestrator` when tasks are complete or need to stop.
-
-For full command syntax and flags see [references/command-details.md](references/command-details.md) and [references/checklists.md](references/checklists.md).
+Full syntax: [command-details.md](references/command-details.md)
+<!-- TOC: /orchestrator-status - Check loop state | /cancel-orchestrator - Cancel active loop -->
 
 ## Examples
 
-See [references/examples.md](references/examples.md) for complete usage examples covering start, monitor, loop, and cancel workflows.
+**Input:** `/start-orchestration --project-id PVT_kwDOB1234567`
+**Output:** Phase activated, stop hook enabled, agent tracking ready.
+
+**Input:** `/orchestrator-loop "Complete auth tasks" --max-iterations 50`
+**Output:** Loop state created, continuous task processing begins.
+
+**Input:** `/orchestration-status --verbose`
+**Output:** Table with modules, agents, assignments, polling history.
+
+More examples: [examples.md](references/examples.md)
+<!-- TOC: Complete Orchestration Start - Full startup workflow | Orchestrator Loop Usage - Loop start, status, cancel -->
+
+## Instructions
+
+1. Run `/start-orchestration` to activate the orchestration phase
+2. Register agents with `/register-agent` and assign modules with `/assign-module`
+3. Monitor progress with `/orchestration-status` every 10-15 minutes
+4. Use `/orchestrator-loop` for continuous task processing when needed
+5. Cancel with `/cancel-orchestrator` when all tasks are complete
+
+Copy this checklist and track your progress:
+
+- [ ] Run `/start-orchestration` (optionally with `--project-id`)
+- [ ] Register agents with `/register-agent`
+- [ ] Assign modules with `/assign-module`
+- [ ] Monitor with `/orchestration-status` every 10-15 min
+- [ ] Use `/orchestrator-loop` for continuous task processing
+- [ ] Cancel with `/cancel-orchestrator` when done
+
+Details: [checklists.md](references/checklists.md)
+<!-- TOC: Cancellation checklist | Monitoring Progress checklist -->
+
+## Output
+
+Status as Markdown tables; loop state as text; cancellation as confirmation; errors as hook blocking reasons.
 
 ## Orchestrator Loop
 
-Monitors multiple task sources and prevents exit until ALL are complete: Claude Tasks, GitHub Projects, task file checklists, Claude TODO list. Uses 4-loop verification after completion.
+Monitors task sources (Claude Tasks, GitHub Projects, task files, TODO list), prevents exit until ALL complete, uses 4-loop verification.
 
-See [references/orchestration-loop-mechanics.md](references/orchestration-loop-mechanics.md)
+See [orchestration-loop-mechanics.md](references/orchestration-loop-mechanics.md)
+<!-- TOC: What the orchestrator loop does | Task source monitoring and priority -->
 
 ## Stop Hook
 
-Blocks exit when plan/orchestration incomplete, tasks pending, or verification loops remaining. Signals completion via `ALL_TASKS_COMPLETE` or configured promise phrase.
+Blocks exit when incomplete or tasks pending. Signal completion via `ALL_TASKS_COMPLETE`.
 
-See [references/stop-hook-behavior.md](references/stop-hook-behavior.md)
+See [stop-hook-behavior.md](references/stop-hook-behavior.md)
+<!-- TOC: Recovery behavior - Fail-safe and retry logic | Completion signals - How to signal task completion -->
 
 ## State Files
 
 - `design/state/loop.md` - Loop state
 - `design/state/exec-phase.md` - Execution phase state
 
-See [references/state-file-format.md](references/state-file-format.md)
+See [state-file-format.md](references/state-file-format.md)
+<!-- TOC: Frontmatter field definitions | State file corruption recovery -->
 
 ## Error Handling
 
-Hook blocking errors and common failure modes are documented in [references/troubleshooting.md](references/troubleshooting.md). The stop hook signals completion via `ALL_TASKS_COMPLETE`; see [references/stop-hook-behavior.md](references/stop-hook-behavior.md) for recovery procedures.
+See [troubleshooting.md](references/troubleshooting.md)
+<!-- TOC: Using /reload-plugins | Helper script failures -->
 
 ## Resources
 
-- [command-details.md](references/command-details.md) - Full command syntax and options
-- [start-orchestration-procedure.md](references/start-orchestration-procedure.md) - Starting orchestration
-- [status-monitoring.md](references/status-monitoring.md) - Reading status output
-- [orchestration-loop-mechanics.md](references/orchestration-loop-mechanics.md) - Loop behavior
-- [stop-hook-behavior.md](references/stop-hook-behavior.md) - Stop hook blocking and recovery
-- [cancellation-cleanup.md](references/cancellation-cleanup.md) - Cancellation procedures
-- [state-file-format.md](references/state-file-format.md) - State file schemas
-- [checklists.md](references/checklists.md) - Step-by-step checklists
-- [examples.md](references/examples.md) - Usage examples
-- [python-scripts.md](references/python-scripts.md) - Script inventory and output rules
-- [troubleshooting.md](references/troubleshooting.md) - Common issues and solutions
+- [start-orchestration-procedure.md](references/start-orchestration-procedure.md)
+  <!-- TOC: Command syntax and options | GitHub Project integration setup -->
+- [status-monitoring.md](references/status-monitoring.md)
+  <!-- TOC: Reading module status indicators | Interpreting agent registry information -->
+- [cancellation-cleanup.md](references/cancellation-cleanup.md)
+  <!-- TOC: Cleanup of state files and locks | Cancellation procedure step-by-step -->
+- [python-scripts.md](references/python-scripts.md)
+  <!-- TOC: Script inventory - Scripts and their command mappings | Script output rules - Token-efficient output protocol -->

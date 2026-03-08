@@ -1,18 +1,18 @@
+## Table of Contents
+- [1. AMCOS Wake Message to AMOA](#1-amcos-wake-message-to-amoa)
+- [2. AMOA Wake Acknowledgment to AMCOS](#2-amoa-wake-acknowledgment-to-amcos)
+- [3. AMCOS Hibernate Directive to AMOA](#3-amcos-hibernate-directive-to-amoa)
+- [4. AMOA Hibernate Acknowledgment to AMCOS](#4-amoa-hibernate-acknowledgment-to-amcos)
+- [5. AMCOS Terminate Directive to AMOA](#5-amcos-terminate-directive-to-amoa)
+- [6. AMOA Final Termination Report to AMCOS](#6-amoa-final-termination-report-to-amcos)
+- [7. AMOA Periodic Status Report to AMCOS (30-minute intervals)](#7-amoa-periodic-status-report-to-amcos-30-minute-intervals)
+- [Troubleshooting](#troubleshooting)
+
 # Session Lifecycle Message Templates
 
 Complete reference for all session lifecycle message templates used between AMCOS (Chief of Staff) and AMOA (Orchestrator Agent). These templates cover the full agent lifecycle: waking, hibernating, terminating, and periodic status reporting.
 
 > All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
-
-## Table of Contents
-
-- [1. AMCOS Wake Message to AMOA](#1-amcos-wake-message-to-eoa)
-- [2. AMOA Wake Acknowledgment to AMCOS](#2-amoa-wake-acknowledgment-to-ecos)
-- [3. AMCOS Hibernate Directive to AMOA](#3-amcos-hibernate-directive-to-eoa)
-- [4. AMOA Hibernate Acknowledgment to AMCOS](#4-amoa-hibernate-acknowledgment-to-ecos)
-- [5. AMCOS Terminate Directive to AMOA](#5-amcos-terminate-directive-to-eoa)
-- [6. AMOA Final Termination Report to AMCOS](#6-amoa-final-termination-report-to-ecos)
-- [7. AMOA Periodic Status Report to AMCOS (30-minute intervals)](#7-amoa-periodic-status-report-to-amcos-30-minute-intervals)
 
 ---
 

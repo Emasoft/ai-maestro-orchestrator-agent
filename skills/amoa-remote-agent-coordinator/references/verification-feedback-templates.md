@@ -1,3 +1,12 @@
+## Table of Contents
+- [Contents](#contents)
+- [1. Verification Loop 2 Feedback (AMOA sends to Agent)](#1-verification-loop-2-feedback-amoa-sends-to-agent)
+- [2. Verification Loop 3 Feedback (AMOA sends to Agent)](#2-verification-loop-3-feedback-amoa-sends-to-agent)
+- [3. Verification Loop 4 Feedback (AMOA sends to Agent)](#3-verification-loop-4-feedback-amoa-sends-to-agent)
+- [4. Verification Restart Notification (AMOA sends to Agent)](#4-verification-restart-notification-amoa-sends-to-agent)
+- [5. Verification Completion Summary (AMOA sends to AMCOS)](#5-verification-completion-summary-amoa-sends-to-amcos)
+- [6. Verification Loop Outcome Decision Tree](#6-verification-loop-outcome-decision-tree)
+
 # Verification Loop 2-4 Feedback Templates
 
 This document provides differentiated feedback message templates for verification loops 2 through 4, plus the restart notification and completion summary. Each loop has a progressively deeper focus area so that agents address distinct quality dimensions on each pass rather than repeating the same generic review.

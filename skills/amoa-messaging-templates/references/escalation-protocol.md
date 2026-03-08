@@ -1,13 +1,12 @@
-# Escalation Order and Priority Protocol
-
-AI agents collaborate asynchronously across unpredictable timeframes. Agents may be hibernated for days and resume later. Therefore, escalation is based on **order**, **priority**, and **state transitions** - not fixed time intervals.
-
 ## Table of Contents
-
 - [Escalation Order](#escalation-order)
 - [State-Based Triggers](#state-based-triggers)
 - [Priority Escalation](#priority-escalation)
 - [Important Notes](#important-notes)
+
+# Escalation Order and Priority Protocol
+
+AI agents collaborate asynchronously across unpredictable timeframes. Agents may be hibernated for days and resume later. Therefore, escalation is based on **order**, **priority**, and **state transitions** - not fixed time intervals.
 
 ---
 

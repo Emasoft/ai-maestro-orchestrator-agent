@@ -1,29 +1,17 @@
 ---
 operation: define-acceptance-criteria
 procedure: proc-decompose-design
-workflow-instruction: Step 10 - Design Decomposition
 parent-skill: amoa-two-phase-mode
-parent-plugin: ai-maestro-orchestrator-agent
-version: 1.0.0
 ---
 
 # Define Acceptance Criteria
 
-
 ## Contents
-
 - [When to Use](#when-to-use)
 - [Prerequisites](#prerequisites)
 - [Procedure](#procedure)
-  - [Step 1: Apply SMART Criteria](#step-1-apply-smart-criteria)
-  - [Step 2: Write Criterion Statement](#step-2-write-criterion-statement)
-  - [Step 3: Add Verification Method](#step-3-add-verification-method)
-  - [Step 4: Group by Category](#step-4-group-by-category)
-  - [Step 5: Document in Module Definition](#step-5-document-in-module-definition)
 - [Checklist](#checklist)
 - [Examples](#examples)
-  - [Example: User Profile Module](#example-user-profile-module)
-  - [Example: File Upload Module](#example-file-upload-module)
 - [Error Handling](#error-handling)
 - [Related Operations](#related-operations)
 
@@ -202,5 +190,8 @@ acceptance_criteria:
 ## Related Operations
 
 - [op-decompose-goals-to-modules.md](op-decompose-goals-to-modules.md) - Modules need acceptance criteria
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-create-github-issues.md](op-create-github-issues.md) - Criteria go into GitHub issues
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-approve-plan-transition.md](op-approve-plan-transition.md) - Validation checks criteria completeness
+  <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

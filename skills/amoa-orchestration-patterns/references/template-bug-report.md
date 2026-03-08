@@ -1,41 +1,18 @@
 ---
 name: template-bug-report
-description: "Universal bug report YAML form for GitHub Issues, used by the orchestrator when filing bugs discovered during task execution."
+description: "Bug report template for GitHub Issues."
 ---
 
-# Universal Bug Report Issue Template (Orchestrator Perspective)
+# Bug Report Template
 
-## Table of Contents
-
-- 1. When the Orchestrator Files Bug Reports
-  - 1.1 When to file a bug report directly versus delegating
-  - 1.2 Installing the bug report form in a repository
-  - 1.3 How GitHub Issue YAML forms work
-- 2. YAML Form Syntax Overview
-  - 2.1 Top-level fields (name, description, labels, assignees)
-  - 2.2 Body field types (input, textarea, dropdown, checkboxes, markdown)
-  - 2.3 Validation attributes (required, placeholder, render)
-- 3. Template Fields Explained
-  - 3.1 Duplicate check checkbox
-  - 3.2 Area dropdown for module classification
-  - 3.3 Operating system dropdown
-  - 3.4 Version input field
-  - 3.5 "What happened?" description textarea
-  - 3.6 Steps to reproduce textarea
-  - 3.7 Expected behavior textarea
-  - 3.8 Logs and screenshots textarea with code rendering
-- 4. Auto-Labeling Strategy
-  - 4.1 Default labels for bug reports
-  - 4.2 How labels integrate with triage workflows
-- 5. Orchestrator Bug Reporting Guidelines
-  - 5.1 When the orchestrator files bug reports itself
-  - 5.2 When the orchestrator delegates bug reporting
-  - 5.3 How to write high-quality bug reports from agent observations
-  - 5.4 Adding task context to bug reports
-- 6. Complete YAML Template (Ready to Copy)
-- 7. Customization Notes
-  - 7.1 Adding project-specific fields
-  - 7.2 Modifying the area dropdown for your project
+## Contents
+- Filing Bugs
+- YAML Syntax
+- Fields
+- Labels
+- Guidelines
+- Template
+- Customization
 
 ---
 

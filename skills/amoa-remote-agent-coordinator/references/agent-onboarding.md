@@ -1,3 +1,14 @@
+## Table of Contents
+- [Overview](#overview)
+- [Contents](#contents)
+- [Onboarding Checklist](#onboarding-checklist)
+- [Environment Setup](#environment-setup)
+- [Verification Task](#verification-task)
+- [Required Reading List](#required-reading-list)
+- [Roster Registration](#roster-registration)
+- [Common Setup Issues](#common-setup-issues)
+- [Next Steps After Onboarding](#next-steps-after-onboarding)
+
 # Agent Onboarding
 
 ## Overview

@@ -1,15 +1,15 @@
+## Table of Contents
+- [1. Agent Resource Request (Agent to AMOA)](#1-agent-resource-request-agent-to-amoa)
+- [2. AMOA Resource Response (AMOA to Agent)](#2-amoa-resource-response-amoa-to-agent)
+- [3. Agent Skill/Capability Request (Agent to AMOA)](#3-agent-skillcapability-request-agent-to-amoa)
+- [4. AMOA Skill Response (AMOA to Agent)](#4-amoa-skill-response-amoa-to-agent)
+- [5. AMOA Formal ACK of AMCOS Task Assignment (AMOA to AMCOS)](#5-amoa-formal-ack-of-amcos-task-assignment-amoa-to-amcos)
+- [6. Resource Request Decision Tree](#6-resource-request-decision-tree)
+- [Notes](#notes)
+
 # Resource and Skill Request Templates
 
 Templates for agents requesting resources or capabilities from AMOA, and the formal JSON format for AMOA acknowledging AMCOS task assignments. Use the `agent-messaging` skill for all message operations.
-
-## Table of Contents
-
-- [1. Agent Resource Request (Agent to AMOA)](#1-agent-resource-request-agent-to-eoa)
-- [2. AMOA Resource Response (AMOA to Agent)](#2-amoa-resource-response-amoa-to-agent)
-- [3. Agent Skill/Capability Request (Agent to AMOA)](#3-agent-skillcapability-request-agent-to-eoa)
-- [4. AMOA Skill Response (AMOA to Agent)](#4-amoa-skill-response-amoa-to-agent)
-- [5. AMOA Formal ACK of AMCOS Task Assignment (AMOA to AMCOS)](#5-amoa-formal-ack-of-amcos-task-assignment-amoa-to-ecos)
-- [6. Resource Request Decision Tree](#6-resource-request-decision-tree)
 
 ---
 

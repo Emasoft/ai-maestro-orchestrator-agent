@@ -1,6 +1,6 @@
 ---
 name: amoa-orchestration-patterns
-description: "Use when breaking down tasks for human developers. NOT for AI agents or plan-execute workflows. Trigger with task decomposition requests."
+description: "Use when breaking down tasks for human developers. Trigger with task decomposition requests."
 license: Apache-2.0
 compatibility: Requires AI Maestro installed, task agents, GitHub issues.
 metadata:
@@ -15,92 +15,89 @@ agent: amoa-main
 
 ## Overview
 
-Coordinates work among multiple developers using orchestration patterns: task decomposition, assignment, monitoring, escalation, and verification.
-
-## Output
-
-| Output Type | Description |
-|-------------|-------------|
-| TaskCreate calls | Task definitions with success criteria |
-| Task assignments | Agent assignments via AI Maestro or Task tool |
-| Progress reports | Regular status updates from monitoring |
-| Completion signals | Verification of all tasks done |
-| Escalation requests | Blocked task escalations to user/AMAMA |
-
-## Procedure
-
-1. **Task Decomposition** - Break goal into independent, parallelizable tasks
-2. **Task Assignment** - Assign tasks with clear instructions and success criteria
-3. **Progress Monitoring** - Track completion, identify blocks proactively
-4. **Escalation & Unblocking** - Handle blocked tasks immediately
-5. **Integration & Verification** - Combine results, require 4 verification loops before PR
+Coordinates work via task decomposition, assignment, monitoring, escalation, and verification patterns for human developer teams.
 
 ## Key Rules
 
-- **Never block the orchestrator** - Delegate all long-running tasks
-- **One task per agent** - Clear boundaries prevent conflicts
-- **Minimal reports** - Request 1-2 lines: "[DONE] task-name - result"
-- **PROACTIVE monitoring** - Poll agents regularly; never wait passively
+- **Never block orchestrator** - delegate all long-running tasks
+- **One task per agent** - up to 20 parallel agents
+- **Minimal reports** - "[DONE] task-name - result" (1-2 lines)
+- **PROACTIVE monitoring** - poll regularly; never wait passively
 - **4 verification loops** before any PR approval
-- **Orchestrator-exclusive comms** - Sub-agents NEVER send externally
-- **Parallel spawning** - Up to 20 agents for independent tasks
+- **Orchestrator-exclusive comms** - sub-agents NEVER send externally
+
+## Output
+
+Task assignment confirmations, progress dashboards, verification reports, and integration results.
+
+## Instructions
+
+1. Decompose the goal into independent tasks with clear success criteria
+2. Assign each task to one agent (up to 20 parallel agents)
+3. Monitor every 10-15 minutes; escalate blocked tasks immediately
+4. Run 4 verification loops before PR approval
+5. Integrate verified results and archive completed work
+
+Copy this checklist and track your progress:
+
+- [ ] Decompose goal into independent tasks with success criteria
+- [ ] Assign each task to one agent (up to 20 parallel)
+- [ ] Monitor every 10-15 min; escalate blocked tasks immediately
+- [ ] Run 4 verification loops before PR approval
+- [ ] Integrate verified results and archive
+
+## Examples
+
+**Input:** `Implement OAuth2 authentication for the web app`
+**Output:** 5 parallel tasks: DB schema, OAuth config, login flow, token refresh, integration tests — each assigned to a dedicated agent.
+
+More: [orchestration-examples](references/orchestration-examples.md)
+<!-- TOC: Authentication Module Implementation | CI Failure Coordination | Parallel Code Review | Blocked Dependency Handling -->
+
+## Error Handling
+
+Blocked tasks escalate per [progress-monitoring](references/progress-monitoring.md). Failed agents respawn once, then escalate to user.
+<!-- TOC: Proactive Monitoring Principles | PROACTIVE Status Request Protocol | Troubleshooting -->
 
 ## Quick Reference
 
-See: [references/quick-reference-checklist.md](references/quick-reference-checklist.md)
+[quick-reference-checklist.md](references/quick-reference-checklist.md)
+<!-- TOC: Quick Reference Checklist | Phase 1: Decomposition | Phase 5: Integration and Verification -->
 
-## Example
+## Resources
 
-See: [references/decomposition-example.md](references/decomposition-example.md)
-
-## Reference Files
-
-| Reference | Purpose |
-|-----------|---------|
-| [task-complexity-classifier](references/task-complexity-classifier.md) | Task complexity evaluation |
-| [agent-selection-guide](references/agent-selection-guide.md) | Agent selection by language/domain |
-| [project-setup-menu](references/project-setup-menu.md) | Interactive project setup |
-| [language-verification-checklists](references/language-verification-checklists.md) | Code quality checklists |
-| [progress-monitoring](references/progress-monitoring.md) | Agent monitoring protocols |
-| [verification-loops](references/verification-loops.md) | 4-loop PR verification |
-| [orchestrator-no-implementation](references/orchestrator-no-implementation.md) | RULE 15: No code writing |
-| [user-requirements-immutable](references/user-requirements-immutable.md) | RULE 14: User approval |
-| [rule-14-enforcement](references/rule-14-enforcement.md) | RULE 14 enforcement |
-| [orchestrator-exclusive-communications](references/orchestrator-exclusive-communications.md) | RULE 16: Comms control |
-| [non-blocking-patterns](references/non-blocking-patterns.md) | RULE 17: Stay responsive |
-| [orchestrator-guardrails](references/orchestrator-guardrails.md) | Role boundaries |
-| [delegation-checklist](references/delegation-checklist.md) | Delegation procedures |
-| [orchestration-examples](references/orchestration-examples.md) | Workflow examples |
-| [orchestration-api-commands](references/orchestration-api-commands.md) | API commands |
-| [sub-agent-role-boundaries-template](references/sub-agent-role-boundaries-template.md) | Worker role template |
-| [workflow-checklists](references/workflow-checklists.md) | Execution checklists |
-| [log-formats](references/log-formats.md) | Log format specs |
-| [archive-structure](references/archive-structure.md) | Archive structure |
-| [script-output-rules](references/script-output-rules.md) | Script output protocol |
+- [task-complexity-classifier](references/task-complexity-classifier.md)
+  <!-- TOC: Task Complexity Assessment | Decision Matrix | Classification Process -->
+- [agent-selection-guide](references/agent-selection-guide.md)
+  <!-- TOC: Overview | Quick Navigation by Problem | Golden Rules -->
+- [project-setup-menu](references/project-setup-menu.md)
+  <!-- TOC: Overview | Document Structure | Storage Keys Reference -->
+- [language-verification-checklists](references/language-verification-checklists.md)
+  <!-- TOC: Quick Navigation | Cross-Language Resources -->
+- [verification-loops](references/verification-loops.md)
+  <!-- TOC: Overview | Steps 1-5 | Enforcement Rules -->
+- [orchestrator-no-implementation](references/orchestrator-no-implementation.md)
+  <!-- TOC: See Also | Core Principle -->
+- [user-requirements-immutable](references/user-requirements-immutable.md)
+  <!-- TOC: Core Principle | Enforcement | Forbidden Actions | Issue Workflow -->
+- [rule-14-enforcement](references/rule-14-enforcement.md)
+  <!-- TOC: 1 When handling user requirements in any workflow | 2 When detecting potential requirement deviations -->
+- [orchestrator-exclusive-communications](references/orchestrator-exclusive-communications.md)
+  <!-- TOC: Core Principle | Sub-Agent Restrictions | Communication Flow -->
+- [non-blocking-patterns](references/non-blocking-patterns.md)
+  <!-- TOC: Summary | Overview -->
+- [orchestrator-guardrails](references/orchestrator-guardrails.md)
+  <!-- TOC: Quick Reference Summary | Related Documents -->
+- [delegation-checklist](references/delegation-checklist.md)
+  <!-- TOC: Tracking | Objective -->
+- [orchestration-api-commands](references/orchestration-api-commands.md)
+  <!-- TOC: Claude Code Tasks API | Message types for AMOA -->
+- [workflow-checklists](references/workflow-checklists.md)
+  <!-- TOC: Checklist: Receiving New Task | Checklist: Delegating Task | Checklist: Reporting Results -->
+- [decomposition-example](references/decomposition-example.md)
+  <!-- TOC: Example: Decompose and Delegate a Feature | Error Handling Reference -->
 
 ## Prerequisites
 
 - AI Maestro running (`http://localhost:23000`)
 - GitHub CLI (`gh`) authenticated
-
-## Instructions
-
-1. Decompose the goal into independent, parallelizable tasks with clear success criteria.
-2. Assign each task to the appropriate agent (one task per agent, up to 20 in parallel).
-3. Monitor agent progress proactively every 10-15 minutes; escalate blocked tasks immediately.
-4. Collect results and run 4 verification loops before approving any PR.
-5. Integrate verified results and archive completed work.
-
-API details: [orchestration-api-commands](references/orchestration-api-commands.md).
-
-## Error Handling
-
-Blocked tasks escalate per [progress-monitoring](references/progress-monitoring.md). Failed agents respawn once, then escalate to user.
-
-## Examples
-
-See [orchestration-examples](references/orchestration-examples.md) and [decomposition-example](references/decomposition-example.md).
-
-## Resources
-
-See **Reference Files** table above.

@@ -1,40 +1,15 @@
+## Table of Contents
+- [1. Reassignment Notification to Old Agent (AMOA to Old Agent)](#1-reassignment-notification-to-old-agent-amoa-to-old-agent)
+- [2. Old Agent Work Summary Response (Old Agent to AMOA)](#2-old-agent-work-summary-response-old-agent-to-amoa)
+- [3. Reassignment Assignment to New Agent (AMOA to New Agent)](#3-reassignment-assignment-to-new-agent-amoa-to-new-agent)
+- [4. Agent Recovery Decision Notification (AMOA to Both Agents)](#4-agent-recovery-decision-notification-amoa-to-both-agents)
+- [5. AMOA Response to Agent Recovery Decision](#5-amoa-response-to-agent-recovery-decision)
+- [6. Reassignment Flow Decision Tree](#6-reassignment-flow-decision-tree)
+- [See Also](#see-also)
+
 # Reassignment Communication Templates
 
 This document provides complete message templates for the full reassignment flow when an agent is replaced or reassigned to a different task. Each section covers one step of the reassignment protocol, including the message to send, the expected response, and a decision tree for handling outcomes.
-
----
-
-## Table of Contents
-
-- 1. Reassignment Notification to Old Agent (AMOA to Old Agent)
-  - 1.1 When to send a reassignment notification
-  - 1.2 Reassignment notification message template
-  - 1.3 Expected acknowledgment from old agent
-  - 1.4 Decision tree for reassignment notification outcomes
-- 2. Old Agent Work Summary Response (Old Agent to AMOA)
-  - 2.1 When to expect a work summary response
-  - 2.2 Work summary response message template
-  - 2.3 Work summary data fields explained
-  - 2.4 Decision tree for work summary outcomes
-- 3. Reassignment Assignment to New Agent (AMOA to New Agent)
-  - 3.1 When to send a reassignment assignment
-  - 3.2 Reassignment assignment message template
-  - 3.3 Expected acknowledgment from new agent
-  - 3.4 Decision tree for new agent assignment outcomes
-- 4. Agent Recovery Decision Notification (AMOA to Both Agents)
-  - 4.1 When a recovery decision notification is needed
-  - 4.2 Recovery decision notification message template
-  - 4.3 Graceful stop message template for removed agent
-  - 4.4 Continuation confirmation message template for kept agent
-  - 4.5 Decision tree for recovery decision outcomes
-- 5. AMOA Response to Agent Recovery Decision
-  - 5.1 When AMOA must respond to AMCOS recovery report
-  - 5.2 AMOA response to keep replacement agent template
-  - 5.3 AMOA response to revert to original agent template
-  - 5.4 Decision tree for AMOA recovery response
-- 6. Reassignment Flow Decision Tree
-  - 6.1 Complete reassignment decision tree
-  - 6.2 Timeout thresholds reference
 
 ---
 

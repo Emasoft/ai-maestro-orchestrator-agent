@@ -2,7 +2,7 @@
 name: amoa-verification-patterns
 description: "Use when verifying implementations. Trigger with verification, testing, or evidence requests."
 license: Apache-2.0
-compatibility: "Requires Python 3.8+, Bash shell, Git. Supports Windows, macOS, and Linux. Optional dependencies: Selenium for E2E browser testing, Docker for service orchestration, SQLite/PostgreSQL for database examples. Requires AI Maestro installed."
+compatibility: "Python 3.8+, Bash, Git. Optional: Selenium, Docker, SQLite/PostgreSQL."
 metadata:
   author: Emasoft
   version: "1.0.0"
@@ -11,66 +11,80 @@ context: fork
 user-invocable: false
 ---
 
-# Verification Patterns for AMOA (AI Maestro Orchestrator Agent)
+# Verification Patterns for AMOA
 
 ## Overview
 
-Evidence-based verification techniques for proving that code, systems, and operations work correctly. Verification is about collecting measurable, reproducible evidence -- not assumptions.
-
-## Core Patterns
-
-1. **Evidence-based verification** -- Collecting measurable proof. See: [references/evidence-based-verification.md](./references/evidence-based-verification.md)
-2. **Exit code proof** -- Using process exit codes as success/failure signals. See: [references/exit-code-proof.md](./references/exit-code-proof.md)
-3. **End-to-end testing** -- Testing complete workflows from input to output. See: [references/end-to-end-testing.md](./references/end-to-end-testing.md)
-4. **Integration verification** -- Testing how components work together. See: [references/integration-verification.md](./references/integration-verification.md)
-
-## Verification Principles
-
-Never trust assumptions; measure what matters; ensure reproducibility; fail fast; document evidence. See: [references/verification-principles.md](./references/verification-principles.md)
+Evidence-based verification for proving code and systems work correctly. Collect measurable, reproducible evidence -- not assumptions.
 
 ## Prerequisites
 
-- Python 3.8+ with Bash shell and Git
-- Optional: Selenium (E2E), Docker (orchestration), SQLite/PostgreSQL (database examples)
-
-## References
-
-| Topic | Reference |
-|-------|-----------|
-| Combining patterns | [references/combining-patterns.md](./references/combining-patterns.md) |
-| Cross-platform support | [references/cross-platform-support.md](./references/cross-platform-support.md) |
-| Evidence format for handoff | [references/evidence-format.md](./references/evidence-format.md) |
-| Testing protocol | [references/testing-protocol.md](./references/testing-protocol.md) |
-| GitHub integration | [references/github-integration.md](./references/github-integration.md) |
-| Troubleshooting | [references/troubleshooting.md](./references/troubleshooting.md) |
-| Docker troubleshooting | [references/docker-troubleshooting.md](./references/docker-troubleshooting.md) |
-| Automation scripts | [references/automation-scripts.md](./references/automation-scripts.md) |
-| Test report format | [references/test-report-format.md](./references/test-report-format.md) |
-| Examples | [references/examples.md](./references/examples.md) |
-| Quick reference & checklist | [references/quick-reference.md](./references/quick-reference.md) |
-
-## Instructions
-
-1. Select the appropriate verification pattern from Core Patterns (evidence-based, exit code, E2E, or integration).
-2. Set up the test environment per [references/testing-protocol.md](./references/testing-protocol.md).
-3. Execute verification and collect measurable, reproducible evidence.
-4. Format results per [references/evidence-format.md](./references/evidence-format.md) and [references/test-report-format.md](./references/test-report-format.md).
-5. Report pass/fail with evidence; escalate failures immediately (fail-fast, no fallbacks).
-
-## Examples
-
-See [references/examples.md](./references/examples.md) for worked examples of each verification pattern, including evidence collection and reporting.
+- Python 3.8+, Bash, Git
+- Optional: Selenium (E2E), Docker (containerized tests), SQLite/PostgreSQL (integration)
 
 ## Output
 
-Verification results should follow the evidence format in [references/evidence-format.md](./references/evidence-format.md) and the test report format in [references/test-report-format.md](./references/test-report-format.md).
+Verification reports with pass/fail status, collected evidence, and formatted results per test-report-format.md.
 
-## Error Handling
+## Core Patterns
 
-Verification follows a fail-fast approach: failures propagate immediately with no fallbacks. See [references/troubleshooting.md](./references/troubleshooting.md) and [references/docker-troubleshooting.md](./references/docker-troubleshooting.md) for common issues.
+1. **Evidence-based** -- [evidence-based-verification.md](./references/evidence-based-verification.md)
+  <!-- TOC: What is Evidence | Evidence-Based Verification Steps -->
+2. **Exit code proof** -- [exit-code-proof.md](./references/exit-code-proof.md)
+  <!-- TOC: What is an Exit Code | Exit Code Proof Steps -->
+3. **E2E testing** -- [end-to-end-testing.md](./references/end-to-end-testing.md)
+  <!-- TOC: What is E2E Testing | E2E Testing Steps -->
+4. **Integration** -- [integration-verification.md](./references/integration-verification.md)
+  <!-- TOC: What is Integration Verification | Integration Verification Steps -->
+
+## Principles
+
+See: [verification-principles.md](./references/verification-principles.md)
+<!-- TOC: Principle 4: Fail Fast | Principle 3: Reproducibility -->
+
+## Instructions
+
+1. Select the appropriate verification pattern (evidence-based, exit code, E2E, or integration)
+2. Set up the test environment per testing-protocol.md
+3. Execute verification and collect measurable evidence
+4. Format results per evidence-format.md and test-report-format.md
+5. Report pass/fail with evidence; escalate failures immediately (fail-fast)
+6. Update GitHub issues per github-integration.md and clean up test environment
+
+Copy this checklist and track your progress:
+
+- [ ] Select the appropriate verification pattern
+- [ ] Set up the test environment
+- [ ] Execute verification and collect evidence
+- [ ] Format results and report pass/fail
+- [ ] Update GitHub issues and clean up environment
+
+## Examples
+
+**Input:** Agent receives verification request for a new function.
+**Output:** Verification report with pass/fail, collected evidence, formatted results.
+
+See [examples.md](./references/examples.md) for worked examples.
+<!-- TOC: Example 1: Evidence-Based Verification | Example 2: Exit Code Proof -->
 
 ## Resources
 
-- [references/automation-scripts.md](./references/automation-scripts.md) -- Reusable verification scripts
-- [references/github-integration.md](./references/github-integration.md) -- CI/CD integration
-- [references/cross-platform-support.md](./references/cross-platform-support.md) -- Platform-specific guidance
+- [combining-patterns.md](./references/combining-patterns.md) -- Combining patterns
+  <!-- TOC: Pattern Combinations | Verification Pyramid | Complete Strategy Example -->
+- [cross-platform-support.md](./references/cross-platform-support.md) -- Cross-platform
+  <!-- TOC: Platform-Specific Behavior | UTF-8 Encoding | Platform Detection | Path Handling | Command Execution -->
+- [troubleshooting.md](./references/troubleshooting.md) -- Troubleshooting
+  <!-- TOC: E2E Test is Flaky | Exit Code is 0 but Process Failed -->
+- [docker-troubleshooting.md](./references/docker-troubleshooting.md) -- Docker
+  <!-- TOC: Checking container logs | Configuring DNS settings -->
+- [quick-reference.md](./references/quick-reference.md) -- Quick reference & checklist
+  <!-- TOC: Pattern Selection Guide | Exit Codes | Output Format | Error Handling | Verification Checklist | Script Output Rules -->
+
+## Error Handling
+
+Fail-fast: failures propagate immediately, no fallbacks. See:
+
+- [troubleshooting.md](./references/troubleshooting.md)
+  <!-- TOC: E2E Test is Flaky | Integration Test Fails with Timeout -->
+- [docker-troubleshooting.md](./references/docker-troubleshooting.md)
+  <!-- TOC: Checking container logs | Using environment files -->
