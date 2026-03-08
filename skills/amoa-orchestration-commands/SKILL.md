@@ -15,85 +15,55 @@ agent: amoa-main
 
 ## Overview
 
-Coordinates remote agents to implement approved plans via execution loop commands.
+Runs orchestration phase commands to coordinate agents executing approved plans.
 
 ## Prerequisites
 
-1. Plan Phase complete (via `/approve-plan`)
-2. State file `design/state/exec-phase.md` exists
-
-## Command Summary
-
-| Command | Purpose |
-|---------|---------|
-| `/start-orchestration` | Activate orchestration phase |
-| `/orchestration-status` | View module/agent progress |
-| `/orchestrator-status` | Check loop state and tasks |
-| `/orchestrator-loop` | Start continuous task loop |
-| `/cancel-orchestrator` | Cancel active loop |
-
-Full syntax: [command-details.md](references/command-details.md)
-<!-- TOC: /orchestrator-status - Check loop state | /cancel-orchestrator - Cancel active loop -->
-
-## Examples
-
-**Input:** `/start-orchestration --project-id PVT_kwDOB1234567`
-**Output:** Phase activated, stop hook enabled, agent tracking ready.
-
-**Input:** `/orchestrator-loop "Complete auth tasks" --max-iterations 50`
-**Output:** Loop state created, continuous task processing begins.
-
-**Input:** `/orchestration-status --verbose`
-**Output:** Table with modules, agents, assignments, polling history.
-
-More examples: [examples.md](references/examples.md)
-<!-- TOC: Complete Orchestration Start - Full startup workflow | Orchestrator Loop Usage - Loop start, status, cancel -->
+Plan Phase complete (`/approve-plan`), state file `design/state/exec-phase.md` exists.
 
 ## Instructions
 
-1. Run `/start-orchestration` to activate the orchestration phase
-2. Register agents with `/register-agent` and assign modules with `/assign-module`
-3. Monitor progress with `/orchestration-status` every 10-15 minutes
-4. Use `/orchestrator-loop` for continuous task processing when needed
-5. Cancel with `/cancel-orchestrator` when all tasks are complete
+Commands: `/start-orchestration`, `/orchestration-status`, `/orchestrator-status`, `/orchestrator-loop`, `/cancel-orchestrator`. Full syntax: [command-details.md](references/command-details.md)
+<!-- TOC: /orchestrator-status - Check loop state | /cancel-orchestrator - Cancel active loop -->
+
+1. Run `/start-orchestration` to activate
+2. Register agents and assign modules
+3. Monitor with `/orchestration-status` every 10-15 min
+4. Use `/orchestrator-loop` for continuous processing; cancel with `/cancel-orchestrator` when done
 
 Copy this checklist and track your progress:
 
-- [ ] Run `/start-orchestration` (optionally with `--project-id`)
-- [ ] Register agents with `/register-agent`
-- [ ] Assign modules with `/assign-module`
-- [ ] Monitor with `/orchestration-status` every 10-15 min
-- [ ] Use `/orchestrator-loop` for continuous task processing
-- [ ] Cancel with `/cancel-orchestrator` when done
+- [ ] Run `/start-orchestration`
+- [ ] Register agents, assign modules
+- [ ] Monitor with `/orchestration-status`
+- [ ] Use loop or cancel when complete
 
 Details: [checklists.md](references/checklists.md)
 <!-- TOC: Cancellation checklist | Monitoring Progress checklist -->
 
-## Output
-
-Status as Markdown tables; loop state as text; cancellation as confirmation; errors as hook blocking reasons.
-
-## Orchestrator Loop
-
-Monitors task sources (Claude Tasks, GitHub Projects, task files, TODO list), prevents exit until ALL complete, uses 4-loop verification.
+Loop monitors task sources (Claude Tasks, GitHub Projects, task files, TODO list), uses 4-loop verification, prevents exit until complete. Stop hook blocks exit when tasks pending; signal `ALL_TASKS_COMPLETE`. State: `design/state/loop.md`, `design/state/exec-phase.md`.
 
 See [orchestration-loop-mechanics.md](references/orchestration-loop-mechanics.md)
 <!-- TOC: What the orchestrator loop does | Task source monitoring and priority -->
-
-## Stop Hook
-
-Blocks exit when incomplete or tasks pending. Signal completion via `ALL_TASKS_COMPLETE`.
-
 See [stop-hook-behavior.md](references/stop-hook-behavior.md)
 <!-- TOC: Recovery behavior - Fail-safe and retry logic | Completion signals - How to signal task completion -->
-
-## State Files
-
-- `design/state/loop.md` - Loop state
-- `design/state/exec-phase.md` - Execution phase state
-
 See [state-file-format.md](references/state-file-format.md)
 <!-- TOC: Frontmatter field definitions | State file corruption recovery -->
+
+## Output
+
+Status as Markdown tables; loop state as text; errors as hook blocking reasons.
+
+## Examples
+
+**Input:** `/start-orchestration --project-id PVT_kwDOB1234567`
+**Output:** Phase activated, stop hook enabled, agents ready for assignment.
+
+**Input:** `/orchestrator-loop "Complete auth tasks" --max-iterations 50`
+**Output:** Continuous processing started, monitoring all task sources.
+
+More: [examples.md](references/examples.md)
+<!-- TOC: Complete Orchestration Start - Full startup workflow | Orchestrator Loop Usage - Loop start, status, cancel -->
 
 ## Error Handling
 

@@ -18,70 +18,62 @@ agent: amoa-main
 
 ## Overview
 
-This skill teaches effective communication with **human developers** across code reviews, issues, technical discussions, and status updates.
+Effective communication with human developers in code reviews, issues, and status updates.
 
 ## Prerequisites
 
-- Code review process familiarity
-- Access to communication channels (GitHub, Slack, etc.)
+Code review familiarity and access to communication channels.
 
 ## Output
 
-- **Communication Type** (String) — PR comment, issue response, explanation, status update
-- **Tone Assessment** (Pass/Fail) — Respectful, specific, constructive
-- **Blocking Status** — "Blocking" or "Non-blocking"
-- **Message Content** (Markdown) — The communication to send
-- **References** (URL list) — Links to relevant code, issues, docs
+Markdown message with communication type, tone assessment, blocking status, and reference links.
 
 ## Instructions
 
-1. **Identify the communication type** — PR comment, issue, explanation, status, or conflict.
-2. **Understand human-AI communication differences** — See: [references/key-principles.md](references/key-principles.md)
+1. **Identify type** — PR comment, issue, explanation, status, or conflict.
+2. **Review principles** in [references/key-principles.md](references/key-principles.md)
    <!-- TOC: Assume Good Intent | Be Specific, Not Vague | Separate Blocking from Non-Blocking | Acknowledge Good Work | Provide Context for Your Feedback -->
-3. **Use the decision tree** to select the right reference. See: [references/decision-tree.md](references/decision-tree.md)
+3. **Select reference** via [references/decision-tree.md](references/decision-tree.md)
    <!-- TOC: Decision Tree: Choosing Communication Type -->
-4. **Apply key principles** — Assume good intent, be specific, separate blocking/non-blocking.
-5. **Draft your message** following the relevant reference document patterns.
-6. **Run the pre-send checklist**. See: [references/tone-quick-reference.md](references/tone-quick-reference.md)
+4. **Draft message** following reference patterns.
+5. **Run pre-send checklist** from [references/tone-quick-reference.md](references/tone-quick-reference.md)
    <!-- TOC: Examples of Constructive Communication | Error Handling in Communication | Pre-Send Checklist -->
-7. **Send and monitor** for responses or follow-up needs.
+6. **Send and monitor** for follow-up.
 
 Copy this checklist and track your progress:
 
-- [ ] Identified communication type
-- [ ] Selected reference document via decision tree
+- [ ] Identified type and selected reference via decision tree
 - [ ] Applied key principles (good intent, specific, blocking status)
-- [ ] Drafted message following reference patterns
-- [ ] Passed pre-send checklist
+- [ ] Drafted message and passed pre-send checklist
 - [ ] Sent and monitoring for follow-up
 
 ---
 
 ## Error Handling
 
-Consult [references/conflict-resolution.md](references/conflict-resolution.md) for de-escalation
+See [references/conflict-resolution.md](references/conflict-resolution.md)
 <!-- TOC: Disagreeing Professionally | Offering Alternatives | Finding Compromise | Escalation Paths | When to Involve Maintainers -->
-and [references/tone-quick-reference.md](references/tone-quick-reference.md) for the pre-send checklist.
+and [references/tone-quick-reference.md](references/tone-quick-reference.md)
 <!-- TOC: Constructive Communication | Error Handling in Communication | Pre-Send Checklist -->
 
 ## Examples
 
 **Input:** PR uses unsafe string concatenation for SQL queries.
-**Output:** Non-blocking suggestion: "Consider parameterized queries to prevent SQL injection — e.g. `cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))`."
+**Output:** Non-blocking: "Consider parameterized queries — e.g. `cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))`."
 
-See `references/op-*.md` runbooks for more walkthroughs.
+See `references/op-*.md` for walkthroughs.
 
 ## Resources
 
-- [reference-catalog.md](references/reference-catalog.md) — Full reference catalog
+- [reference-catalog.md](references/reference-catalog.md)
   <!-- TOC: PR Comment Writing | Issue Communication | Technical Explanation | Conflict Resolution | Status Updates | Templates for Humans -->
-- [key-principles.md](references/key-principles.md) — Communication principles
+- [key-principles.md](references/key-principles.md)
   <!-- TOC: Assume Good Intent | Be Specific, Not Vague | Separate Blocking from Non-Blocking | Acknowledge Good Work | Provide Context -->
-- [decision-tree.md](references/decision-tree.md) — Communication type selection
+- [decision-tree.md](references/decision-tree.md)
   <!-- TOC: Decision Tree: Choosing Communication Type -->
-- [tone-quick-reference.md](references/tone-quick-reference.md) — Tone and pre-send checklist
+- [tone-quick-reference.md](references/tone-quick-reference.md)
   <!-- TOC: Constructive Communication | Error Handling in Communication | Pre-Send Checklist -->
 
 ## Script Output Rules
 
-Scripts MUST: write verbose output to `docs_dev/reports/`, emit only `[OK/ERROR] name - summary` + `Report: path` to stdout. Exception: `scripts/amoa_stop_check/` outputs JSON (hook requirement).
+Scripts write verbose output to `docs_dev/reports/`, emit `[OK/ERROR] name - summary` to stdout.
