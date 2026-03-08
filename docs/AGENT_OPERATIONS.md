@@ -461,7 +461,8 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 ## Recent Changes (2026-03-06)
 
-- Added `amoa-kanban-management` to Available AMOA Skills table, updated version to 1.1.0
+- Added `amoa-kanban-management` to Available AMOA Skills table
+- Updated document version to 1.5.3 to match plugin.json
 
 ## Recent Changes (2026-02-07)
 
@@ -492,6 +493,6 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 ---
 
-**Document Version**: 1.1.0
-**Last Updated**: 2026-03-06
+**Document Version**: 1.5.3
+**Last Updated**: 2026-03-08
 **Maintained By**: claude-skills-factory

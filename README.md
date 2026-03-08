@@ -1,6 +1,6 @@
 # AI Maestro Orchestrator Agent (amoa-)
 
-**Version**: 1.4.1
+**Version**: 1.5.3
 
 ## Overview
 
@@ -144,9 +144,9 @@ The pre-push hook automatically syncs validators and runs validation before each
 
 ## Development
 
-- **Sync validators**: `python3 scripts/sync_cpv_validators.py`
-- **Kanban management**: `python3 scripts/amoa_kanban_manager.py <command>`
-- **GitHub project columns**: `python3 scripts/gh-project-add-columns.py`
+- **Sync validators**: `uv run python scripts/sync_cpv_validators.py`
+- **Kanban management**: `uv run python scripts/amoa_kanban_manager.py <command>`
+- **GitHub project columns**: `uv run python scripts/gh-project-add-columns.py`
 
 ## License
 

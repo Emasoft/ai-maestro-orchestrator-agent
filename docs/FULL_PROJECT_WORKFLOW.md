@@ -1,7 +1,7 @@
 # Full Project Workflow: From Requirements to Delivery
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-06
+**Version**: 1.5.3
+**Last Updated**: 2026-03-08
 
 This document describes the complete workflow for how the AI Maestro agent system handles a project from initial requirements to delivery. All agents must understand this workflow to coordinate effectively.
 
@@ -446,26 +446,36 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 
 ---
 
-## Wave 1-7 Skill Additions (2026-02-06 — 2026-02-07)
+## Skill Inventory (as of v1.5.3)
 
-The following skills were added to AMIA and AMOA plugins, integrating techniques from the DOCS_AND_SCRIPTS reference collection:
+The AMOA plugin includes **16 skills**, **6 agents**, **15 commands**, and **4 hooks**.
 
-### AMIA (Integrator) New Skills
+### AMOA (Orchestrator) Skills (16 total)
+- **amoa-agent-replacement**: Agent failure detection and replacement protocols
+- **amoa-checklist-compilation-patterns**: Checklist compilation and tracking patterns
+- **amoa-developer-communication**: Developer communication protocols and templates
+- **amoa-github-action-integration**: GitHub Actions integration and CI/CD coordination
+- **amoa-implementer-interview-protocol**: Interviewing implementer agents for task readiness
+- **amoa-kanban-management**: Kanban column management and task routing
+- **amoa-label-taxonomy**: GitHub label taxonomy and standardized labeling
+- **amoa-messaging-templates**: Standardized AI Maestro message templates
+- **amoa-module-management**: Module lifecycle and dependency tracking
+- **amoa-orchestration-commands**: Orchestration command definitions and workflows
+- **amoa-orchestration-patterns**: Task distribution, load balancing, dependency management
+- **amoa-progress-monitoring**: Progress monitoring and reporting patterns
+- **amoa-remote-agent-coordinator**: Remote agent coordination and multi-host management
+- **amoa-task-distribution**: Task distribution strategies and parallel assignment
+- **amoa-two-phase-mode**: Two-phase orchestration mode (planning then execution)
+- **amoa-verification-patterns**: Task verification and acceptance criteria patterns
+
+### Cross-Plugin Skills (AMIA Integrator)
+The following skills belong to the AMIA plugin and integrate with AMOA workflows:
 - **amia-ci-cd-pipeline**: CI/CD pipeline management, GitHub Actions workflows
 - **amia-pr-review-workflow**: PR review automation, code quality checks
 - **amia-release-management**: Version management, changelog generation, release automation
 - **amia-quality-gates**: Code quality enforcement, linting, type checking
 - **amia-github-projects-sync**: GitHub Projects kanban synchronization
 - **amia-kanban-management**: Kanban column management and task routing
-
-### AMOA (Orchestrator) New Skills
-- **amoa-agent-replacement**: Agent failure detection and replacement protocols
-- **amoa-remote-agent-coordinator**: Remote agent coordination and multi-host management
-- **amoa-messaging-templates**: Standardized AI Maestro message templates
-- **amoa-orchestration-patterns**: Task distribution, load balancing, dependency management
-- **amoa-module-management**: Module lifecycle and dependency tracking
-
-These skills integrate CI/CD best practices, PR review workflows, release automation, quality gates, and multi-agent coordination patterns into the AI Maestro ecosystem.
 
 ---
 
