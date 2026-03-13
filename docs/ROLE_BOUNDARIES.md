@@ -193,6 +193,21 @@ AMOA: Sends handoff to agent-456
 
 ---
 
+## Session Naming Convention
+
+All AI Maestro agents use the `domain-subdomain-name` format for session names:
+
+| Agent | Session Name | Governance Title |
+|-------|-------------|------------------|
+| AMAMA | `amama-main-manager` | manager |
+| AMCOS | `amcos-controller` | chief-of-staff |
+| AMOA | `amoa-orchestrator` | member |
+| AMIA | `amia-integrator` | member |
+| AMAA | `amaa-architect` | member |
+| AMPA | `ampa-programmer` | member |
+
+---
+
 **Document Version**: 1.5.3
 **Last Updated**: 2026-03-13
 **Author**: AMOA Plugin Development

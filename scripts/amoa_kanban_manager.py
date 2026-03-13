@@ -24,6 +24,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, cast
 
+# AI Maestro sync integration (same-directory import, resolved at runtime)
+from amoa_aimaestro_sync import sync_task, bulk_sync, notify_sync_result  # type: ignore[import-not-found]
+
 # GitHub configuration
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_OWNER = os.environ.get("GITHUB_OWNER", "Emasoft")
@@ -31,6 +34,7 @@ GITHUB_REPO = os.environ.get("GITHUB_REPO", "")
 
 # Project configuration
 PROJECT_ID = os.environ.get("GITHUB_PROJECT_ID", "")
+TEAM_ID = os.environ.get("AIMAESTRO_TEAM_ID", "")
 
 # Kanban columns
 KANBAN_COLUMNS = {
@@ -123,7 +127,6 @@ def send_ai_maestro_message(
     subject: str,
     content: dict[str, Any],
     priority: str = "normal",
-    from_agent: str = "amoa-orchestrator",
 ) -> bool:
     """Send a message via AI Maestro AMP CLI."""
     try:
@@ -225,6 +228,17 @@ def create_task_issue(
     issue_url = stdout.strip()
     issue_number = int(issue_url.split("/")[-1])
 
+    # Sync to AI Maestro
+    if TEAM_ID:
+        sync_task(
+            team_id=TEAM_ID,
+            issue_number=issue_number,
+            issue_title=title,
+            status="todo",
+            agent_id=assigned_agent,
+            priority=priority,
+        )
+
     return {
         "number": issue_number,
         "url": issue_url,
@@ -293,6 +307,20 @@ def assign_task_to_agent(issue_number: int, agent_name: str) -> bool:
         print(f"Failed to assign task: {stderr}", file=sys.stderr)
         return False
 
+    # Sync assignment to AI Maestro
+    if TEAM_ID:
+        view_args = ["issue", "view", str(issue_number), "--repo", f"{GITHUB_OWNER}/{GITHUB_REPO}", "--json", "title,labels"]
+        rc, out, _ = run_gh_command(view_args)
+        if rc == 0:
+            data = json.loads(out)
+            title = data.get("title", f"Issue #{issue_number}")
+            labels = data.get("labels", [])
+            status = "backlog"
+            for l in labels:
+                if l.get("name", "").startswith("status:"):
+                    status = l["name"].removeprefix("status:")
+            sync_task(team_id=TEAM_ID, issue_number=issue_number, issue_title=title, status=status, agent_id=agent_name)
+
     return True
 
 
@@ -357,6 +385,14 @@ def update_task_status(issue_number: int, status: str) -> bool:
     if returncode != 0:
         print(f"Failed to update status: {stderr}", file=sys.stderr)
         return False
+
+    # Sync status change to AI Maestro
+    if TEAM_ID:
+        # Get issue title for sync
+        view_args = ["issue", "view", str(issue_number), "--repo", f"{GITHUB_OWNER}/{GITHUB_REPO}", "--json", "title"]
+        rc, out, _ = run_gh_command(view_args)
+        title = json.loads(out).get("title", f"Issue #{issue_number}") if rc == 0 else f"Issue #{issue_number}"
+        sync_task(team_id=TEAM_ID, issue_number=issue_number, issue_title=title, status=status)
 
     return True
 
@@ -736,6 +772,10 @@ def main() -> int:
     )
     pr_parser.add_argument("--agent", required=True, help="Submitting agent")
 
+    # Full sync with AI Maestro
+    sync_parser_am = subparsers.add_parser("sync-to-aimaestro", help="Full sync GitHub→AI Maestro")
+    sync_parser_am.add_argument("--team-id", default=TEAM_ID, help="AI Maestro team ID")
+
     args = parser.parse_args()
 
     # Pre-flight check: verify gh auth has project scopes
@@ -867,6 +907,16 @@ def main() -> int:
                 print(f"Requested PR review for #{args.pr}")
                 return 0
             return 1
+
+        elif args.command == "sync-to-aimaestro":
+            team_id = getattr(args, "team_id", TEAM_ID)
+            if not team_id:
+                print("ERROR: --team-id or AIMAESTRO_TEAM_ID required", file=sys.stderr)
+                return 1
+            counts = bulk_sync(team_id)
+            notify_sync_result(team_id, counts)
+            print(json.dumps(counts, indent=2))
+            return 0
 
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

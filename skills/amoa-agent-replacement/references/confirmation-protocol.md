@@ -302,7 +302,7 @@ If replacement could not be completed:
   event: "agent_replacement"
   orchestrator: "orchestrator-master"
 
-  ecos_notification:
+  amcos_notification:
     received_at: "2026-01-31T14:25:00Z"
     notification_id: "amcos-notif-uuid"
     urgency: "immediate"
@@ -334,7 +334,7 @@ If replacement could not be completed:
     status: "ready_to_proceed"
     understanding_verified: true
 
-  ecos_confirmation:
+  amcos_confirmation:
     sent_at: "2026-01-31T14:36:00Z"
     status: "success"
 

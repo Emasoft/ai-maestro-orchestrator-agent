@@ -15,11 +15,11 @@ This document provides message templates for cross-project dependency coordinati
 
 ## Contents
 
-- [1. Cross-Project Dependency Notification (AMOA to AMOA via AMCOS)](#1-cross-project-dependency-notification-amoa-to-amoa-via-ecos)
-- [2. Cross-Project Status Request (AMOA to AMCOS to Other AMOA)](#2-cross-project-status-request-amoa-to-amcos-to-other-eoa)
-- [3. Cross-Project Status Response (Other AMOA to AMCOS to AMOA)](#3-cross-project-status-response-other-amoa-to-amcos-to-eoa)
+- [1. Cross-Project Dependency Notification (AMOA to AMOA via AMCOS)](#1-cross-project-dependency-notification-amoa-to-amoa-via-amcos)
+- [2. Cross-Project Status Request (AMOA to AMCOS to Other AMOA)](#2-cross-project-status-request-amoa-to-amcos-to-other-amoa)
+- [3. Cross-Project Status Response (Other AMOA to AMCOS to AMOA)](#3-cross-project-status-response-other-amoa-to-amcos-to-amoa)
 - [4. Human Developer Task Assignment (AMOA to GitHub)](#4-human-developer-task-assignment-amoa-to-github)
-- [5. Human Developer Completion Report (GitHub to AMOA)](#5-human-developer-completion-report-github-to-eoa)
+- [5. Human Developer Completion Report (GitHub to AMOA)](#5-human-developer-completion-report-github-to-amoa)
 - [6. Cross-Project Conflict Decision Tree](#6-cross-project-conflict-decision-tree)
 
 ---

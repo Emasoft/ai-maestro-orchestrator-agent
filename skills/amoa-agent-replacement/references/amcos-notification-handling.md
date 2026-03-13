@@ -286,7 +286,7 @@ All AMCOS notifications arrive via AI Maestro. Use the `agent-messaging` skill t
 Update orchestrator state when processing notifications:
 
 ```yaml
-ecos_notifications:
+amcos_notifications:
   - id: "notification-uuid"
     received: "2026-01-31T14:30:00Z"
     type: "agent_replacement"

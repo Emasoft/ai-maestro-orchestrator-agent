@@ -16,7 +16,7 @@ Process and dependency blocker reporting templates for implementer agents. These
 
 ## Contents
 
-- [1. Agent Blocker Report (Agent to AMOA)](#1-agent-blocker-report-agent-to-eoa) - When an implementer agent is blocked and needs AMOA intervention
+- [1. Agent Blocker Report (Agent to AMOA)](#1-agent-blocker-report-agent-to-amoa) - When an implementer agent is blocked and needs AMOA intervention
 - [2. AMOA Blocker Triage Response (AMOA to Agent)](#2-amoa-blocker-triage-response-amoa-to-agent) - When AMOA has triaged the blocker and responds with a resolution path
 - [3. AMOA Blocker Resolution Notification (AMOA to Agent)](#3-amoa-blocker-resolution-notification-amoa-to-agent) - When AMOA has fully resolved the blocker and the agent can resume work
 - [4. Blocker Triage Decision Tree](#4-blocker-triage-decision-tree) - How AMOA decides what action to take for each blocker type

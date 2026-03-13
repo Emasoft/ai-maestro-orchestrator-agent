@@ -110,7 +110,7 @@ with open('design/state/exec-phase.md', 'r') as f:
 ### Step 6: Notify AMCOS of Completion
 
 Send a completion notification using the `agent-messaging` skill:
-- **Recipient**: `ecos`
+- **Recipient**: `amcos`
 - **Subject**: "Replacement Complete: <FAILED_AGENT> -> <REPLACEMENT_AGENT>"
 - **Content**: "Agent replacement completed successfully."
 - **Type**: `replacement_complete`, **Priority**: `normal`
@@ -223,7 +223,7 @@ EOF
 # 4. Notify AMCOS
 echo "Notifying AMCOS..."
 # Use the agent-messaging skill to notify AMCOS:
-  # - Recipient: ecos
+  # - Recipient: amcos
   # - Subject: "Replacement Complete"
   # - Content: replacement details
   # - Type: replacement_complete, Priority: normal

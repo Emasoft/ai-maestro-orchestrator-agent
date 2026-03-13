@@ -108,7 +108,7 @@ This document has been split into 3 parts for better navigation. Each part is un
 | Task | Go To |
 |------|-------|
 | Understand pipeline stages | [Part 1 - Pipeline Mapping](./TOOLCHAIN_INTEGRATION-part1-pipeline-variables.md#pipeline-stage-to-toolchain-mapping) |
-| Learn toolchain lifecycle | [Part 1 - Lifecycle](./TOOLCHAIN_INTEGRATION-part1-pipeline-variables.md#toolchain-lifecycle-in-eoa) |
+| Learn toolchain lifecycle | [Part 1 - Lifecycle](./TOOLCHAIN_INTEGRATION-part1-pipeline-variables.md#toolchain-lifecycle-in-amoa) |
 | Understand variables | [Part 1 - Variables](./TOOLCHAIN_INTEGRATION-part1-pipeline-variables.md#variable-substitution-rules) |
 | Detect project language | [Part 2 - Language Detection](./TOOLCHAIN_INTEGRATION-part2-language-platform.md#language-detection-rules) |
 | Select toolchain | [Part 2 - Selection Matrix](./TOOLCHAIN_INTEGRATION-part2-language-platform.md#toolchain-selection-matrix) |

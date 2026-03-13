@@ -51,7 +51,7 @@ memory_requirements: medium
 
 ```python
 Task(
-  subagent_type="eoa:experimenter",
+  subagent_type="amoa:experimenter",
   prompt="""Experimental validation agent. Test hypothesis with multiple approaches.
 CONSTRAINTS: Ephemeral code in Docker, minimum 3 approaches, 50% documentation.
 OUTPUT: Report with evidence-based recommendation.
@@ -113,3 +113,4 @@ After completion:
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
 
 **Exception**: Scripts in `scripts/amoa_stop_check/` must output JSON to stdout (Claude Code hook requirement) — do not redirect their output.
+

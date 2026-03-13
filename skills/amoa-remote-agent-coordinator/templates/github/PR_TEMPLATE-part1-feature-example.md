@@ -26,9 +26,9 @@ Closes #42
 - Implemented key rotation mechanism
 
 ### Files Modified
-- `src/eoa/security/ssh_manager.py` - New SSH key management module
-- `src/eoa/agents/remote_connection.py` - Added SSH authentication
-- `src/eoa/config/security.py` - Added SSH configuration
+- `src/amoa/security/ssh_manager.py` - New SSH key management module
+- `src/amoa/agents/remote_connection.py` - Added SSH authentication
+- `src/amoa/config/security.py` - Added SSH configuration
 - `tests/test_ssh_manager.py` - SSH manager tests
 - `tests/test_remote_connection.py` - Updated connection tests
 - `docs/ssh-authentication.md` - New documentation

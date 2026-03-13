@@ -20,7 +20,7 @@
   - [Step 4: Reassign GitHub Project Tasks](#step-4-reassign-github-project-tasks)
   - [Step 5: Send Handoff to Replacement Agent](#step-5-send-handoff-to-replacement-agent)
   - [Step 6: Wait for Acknowledgment](#step-6-wait-for-acknowledgment)
-  - [Step 7: Confirm to AMCOS](#step-7-confirm-to-ecos)
+  - [Step 7: Confirm to AMCOS](#step-7-confirm-to-amcos)
 - [Quick Command Reference](#quick-command-reference)
 - [Critical Rules](#critical-rules)
   - [Rule 1: Preserve Task UUIDs](#rule-1-preserve-task-uuids)

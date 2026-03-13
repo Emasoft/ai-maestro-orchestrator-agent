@@ -40,7 +40,7 @@ AMCOS notifications arrive via AI Maestro with specific message format:
 
 ```json
 {
-  "from": "ecos",
+  "from": "amcos",
   "subject": "Agent Replacement Required",
   "priority": "urgent",
   "content": {
@@ -55,7 +55,7 @@ AMCOS notifications arrive via AI Maestro with specific message format:
 
 ### Step 2: Check Message Queue
 
-Use the `agent-messaging` skill to check your inbox for unread messages, then filter for messages from AMCOS (where `from` equals `ecos`).
+Use the `agent-messaging` skill to check your inbox for unread messages, then filter for messages from AMCOS (where `from` equals `amcos`).
 
 ### Step 3: Identify Notification Type
 
@@ -70,7 +70,7 @@ Use the `agent-messaging` skill to check your inbox for unread messages, then fi
 ### Step 4: Acknowledge Notification
 
 Send an acknowledgment using the `agent-messaging` skill:
-- **Recipient**: `ecos`
+- **Recipient**: `amcos`
 - **Subject**: "ACK: Replacement for <failed_agent>"
 - **Content**: "Received replacement notification. Beginning context compilation."
 - **Type**: `acknowledgment`, **Priority**: `high`
@@ -132,7 +132,7 @@ if [ -n "$AMCOS_MSG" ]; then
 
   # 4. Acknowledge
   # Use the agent-messaging skill to send acknowledgment:
-  # - Recipient: ecos
+  # - Recipient: amcos
   # - Subject: "ACK: Replacement for $FAILED"
   # - Content: "Beginning replacement process"
   # - Type: acknowledgment, Priority: high
@@ -152,3 +152,4 @@ fi
 - [ ] Pause new agent assignments
 - [ ] Log the replacement event
 - [ ] Proceed to context compilation
+
