@@ -1,5 +1,7 @@
 # Team Registry Specification
 
+> **Note**: This document is a local reference copy. The authoritative source for team configuration is the AI Maestro teams API (`/api/teams`). Role cardinality and membership rules listed here should be verified against the governance API before enforcement.
+
 **Version**: 1.5.3
 **Last Updated**: 2026-03-08
 

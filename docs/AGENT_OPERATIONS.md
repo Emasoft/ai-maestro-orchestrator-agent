@@ -1,5 +1,7 @@
 # AGENT_OPERATIONS.md - AMOA Orchestrator
 
+> **Note**: This document is a local reference copy. Agent registration and capabilities should be verified against the AI Maestro agent registry API (`/api/sessions`) at runtime.
+
 **Single Source of Truth for AI Maestro Orchestrator Agent (AMOA) Operations**
 
 ---

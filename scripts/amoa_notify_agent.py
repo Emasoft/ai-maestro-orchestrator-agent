@@ -2,12 +2,12 @@
 """
 AMOA Notify Agent -- Send AI Maestro Message to a Specific Agent
 
-Sends an arbitrary message to a specific agent via the AI Maestro messaging
-API. This is a general-purpose notification utility, unlike the poll-specific
+Sends an arbitrary message to a specific agent via the AI Maestro AMP wrapper
+scripts. This is a general-purpose notification utility, unlike the poll-specific
 scripts (amoa_poll_agent.py, amoa_check_remote_agents.py).
 
 NO external dependencies -- Python 3.8+ stdlib only.
-Uses curl subprocess to send HTTP requests to the AI Maestro API.
+Uses amp-send.sh wrapper script (globally installed at ~/.local/bin/).
 
 Usage:
     python3 amoa_notify_agent.py AGENT_ID --subject "Subject" --message "Body"
@@ -38,28 +38,49 @@ Examples:
 """
 
 import argparse
-import json
 import os
+import shutil
 import subprocess
 import sys
 
 
-# Default AI Maestro API base URL
-DEFAULT_API_URL = "http://localhost:23000"
+# Map our message type names to amp-send.sh --type values.
+# amp-send.sh accepts: request | response | notification | task | status
+# This script's CLI accepts: request | info | status
+# "info" maps to "notification" in amp-send.sh parlance.
+_TYPE_MAP = {
+    "request": "request",
+    "info": "notification",
+    "status": "status",
+}
 
 
-def get_api_url() -> str:
-    """Get the AI Maestro API base URL from environment or default.
+def _find_amp_send() -> str:
+    """Locate the amp-send.sh wrapper script.
 
-    Reads the AIMAESTRO_API environment variable. Falls back to
-    http://localhost:23000 if not set.
+    Uses shutil.which() first (respects PATH), then falls back to the
+    canonical install location at ~/.local/bin/amp-send.sh.
 
     Returns:
-        The base URL string (without trailing slash).
+        Absolute path to amp-send.sh.
+
+    Raises:
+        FileNotFoundError: If amp-send.sh cannot be found anywhere.
     """
-    url = os.environ.get("AIMAESTRO_API", DEFAULT_API_URL)
-    # Remove trailing slash if present
-    return url.rstrip("/")
+    # Try PATH first
+    path = shutil.which("amp-send.sh")
+    if path:
+        return path
+
+    # Fallback to canonical location
+    fallback = os.path.expanduser("~/.local/bin/amp-send.sh")
+    if os.path.isfile(fallback) and os.access(fallback, os.X_OK):
+        return fallback
+
+    raise FileNotFoundError(
+        "amp-send.sh not found on PATH or at ~/.local/bin/amp-send.sh -- "
+        "ensure AI Maestro AMP scripts are installed"
+    )
 
 
 def send_message(
@@ -68,8 +89,8 @@ def send_message(
     message: str,
     priority: str,
     message_type: str,
-) -> tuple[bool, str]:
-    """Send a message to an agent via the AI Maestro API using curl.
+) -> tuple:
+    """Send a message to an agent via the amp-send.sh AMP wrapper script.
 
     Args:
         agent_id: The target agent identifier (full session name).
@@ -80,72 +101,56 @@ def send_message(
 
     Returns:
         Tuple of (success, detail_message).
-        success is True if the API returned a successful response.
-        detail_message contains the API response or error description.
+        success is True if amp-send.sh exited with code 0.
+        detail_message contains the script output or error description.
     """
-    api_url = get_api_url()
-    endpoint = "{}/api/messages".format(api_url)
+    # Resolve amp-send.sh location
+    try:
+        amp_send_path = _find_amp_send()
+    except FileNotFoundError as exc:
+        return False, str(exc)
 
-    # Build the JSON payload
-    payload = {
-        "to": agent_id,
-        "subject": subject,
-        "priority": priority,
-        "content": {
-            "type": message_type,
-            "message": message,
-        },
-    }
+    # Map message_type to amp-send.sh --type value
+    amp_type = _TYPE_MAP.get(message_type, "notification")
 
-    payload_json = json.dumps(payload)
+    # Build the command: amp-send <recipient> <subject> <message> [options]
+    cmd = [
+        amp_send_path,
+        agent_id,
+        subject,
+        message,
+        "--priority", priority,
+        "--type", amp_type,
+    ]
 
     try:
         result = subprocess.run(
-            [
-                "curl",
-                "-s",          # Silent mode (no progress bar)
-                "-S",          # Show errors even in silent mode
-                "-X", "POST",
-                endpoint,
-                "-H", "Content-Type: application/json",
-                "-d", payload_json,
-                "-w", "\n%{http_code}",  # Append HTTP status code on new line
-                "--connect-timeout", "10",
-                "--max-time", "30",
-            ],
+            cmd,
             capture_output=True,
             text=True,
             timeout=45,
         )
-    except FileNotFoundError:
-        return False, "curl command not found -- install curl to use this script"
     except subprocess.TimeoutExpired:
-        return False, "Request timed out after 45 seconds"
+        return False, "amp-send.sh timed out after 45 seconds"
 
-    if result.returncode != 0:
-        stderr_text = result.stderr.strip()
-        return False, "curl failed with exit code {}: {}".format(
-            result.returncode, stderr_text
-        )
+    stdout_text = result.stdout.strip()
+    stderr_text = result.stderr.strip()
 
-    # Parse response: body lines + last line is HTTP status code
-    output_lines = result.stdout.strip().split("\n")
-    if len(output_lines) < 1:
-        return False, "Empty response from API"
-
-    http_code = output_lines[-1].strip()
-    response_body = "\n".join(output_lines[:-1]).strip()
-
-    # Check HTTP status code
-    try:
-        status_int = int(http_code)
-    except ValueError:
-        return False, "Could not parse HTTP status code: {}".format(http_code)
-
-    if 200 <= status_int < 300:
-        return True, "Message sent (HTTP {}): {}".format(status_int, response_body)
+    if result.returncode == 0:
+        # Success -- return whatever amp-send.sh printed
+        detail = stdout_text if stdout_text else "Message sent successfully"
+        return True, detail
     else:
-        return False, "API returned HTTP {}: {}".format(status_int, response_body)
+        # Failure -- combine stderr and stdout for diagnostics
+        parts = []
+        if stderr_text:
+            parts.append(stderr_text)
+        if stdout_text:
+            parts.append(stdout_text)
+        error_detail = " | ".join(parts) if parts else "Unknown error"
+        return False, "amp-send.sh failed (exit {}): {}".format(
+            result.returncode, error_detail
+        )
 
 
 def main() -> int:

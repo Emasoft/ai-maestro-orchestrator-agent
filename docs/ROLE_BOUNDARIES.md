@@ -1,5 +1,7 @@
 # AI Maestro Role Boundaries
 
+> **Note**: This document is a local reference copy. The authoritative source for governance rules is the `team-governance` skill, which provides runtime governance rule discovery. Role permissions listed here should be verified against the governance API before enforcement.
+
 **CRITICAL: This document defines the strict boundaries between agent roles. Violating these boundaries breaks the system architecture.**
 
 ---

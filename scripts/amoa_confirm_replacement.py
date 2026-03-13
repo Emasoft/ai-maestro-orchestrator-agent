@@ -13,7 +13,7 @@ Performs four verification checks:
   4. Audit logging - appends an audit entry to the replacement audit log
 
 Data sources:
-  - AI Maestro inbox (via curl to localhost API) for ACK messages
+  - AI Maestro inbox (via amp-inbox.sh AMP wrapper) for ACK messages
   - Orchestration state file (.ai-maestro/orchestration-state.json) for assignments
   - Exec-phase state file (.claude/orchestrator-exec-phase.local.md) as fallback
 
@@ -50,6 +50,7 @@ Examples:
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -64,11 +65,25 @@ STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 AUDIT_LOG_DIR = "logs"
 AUDIT_LOG_FILE = "replacement_audit.json"
 
-# AI Maestro API base URL
-AIMAESTRO_API = os.environ.get("AIMAESTRO_API", "http://localhost:23000")
 
-# Default AMCOS session name for notifications
-DEFAULT_AMCOS_SESSION = "amcos-controller"
+def _find_amp_script(name):
+    """Locate an AMP wrapper script by name (e.g. 'amp-inbox.sh').
+
+    Checks PATH via shutil.which first, then falls back to ~/.local/bin/.
+
+    Args:
+        name: The script filename (e.g. 'amp-inbox.sh' or 'amp-send.sh').
+
+    Returns:
+        The absolute path to the script, or None if not found.
+    """
+    path = shutil.which(name)
+    if path:
+        return path
+    fallback = os.path.expanduser("~/.local/bin/{}".format(name))
+    if os.path.isfile(fallback) and os.access(fallback, os.X_OK):
+        return fallback
+    return None
 
 
 def load_state(project_root):
@@ -138,9 +153,9 @@ def save_state(project_root, state):
 def check_ack_received(new_agent, handoff_id):
     """Check AI Maestro inbox for an ACK message from the replacement agent.
 
-    Queries the AI Maestro API for unread messages, then filters for a
-    message from the new agent whose content contains the matching handoff_id
-    and a status of 'ready_to_proceed'.
+    Uses the amp-inbox.sh AMP wrapper to list unread messages in JSON format,
+    then filters for a message from the new agent whose payload context
+    contains the matching handoff_id and a status of 'ready_to_proceed'.
 
     Args:
         new_agent: The agent ID of the replacement agent.
@@ -155,14 +170,14 @@ def check_ack_received(new_agent, handoff_id):
           - understanding_summary: The agent's summary of the task
           - questions: Any questions the agent raised
     """
+    amp_inbox = _find_amp_script("amp-inbox.sh")
+    if not amp_inbox:
+        return None
+
     try:
+        # amp-inbox.sh --json returns a JSON array of AMP messages
         result = subprocess.run(
-            [
-                "curl", "-s",
-                "{}/api/messages?agent={}&action=list&status=unread".format(
-                    AIMAESTRO_API, new_agent
-                ),
-            ],
+            [amp_inbox, "--json"],
             capture_output=True,
             text=True,
             timeout=15,
@@ -170,26 +185,30 @@ def check_ack_received(new_agent, handoff_id):
         if result.returncode != 0:
             return None
 
-        data = json.loads(result.stdout)
-        messages = data.get("messages", [])
+        messages = json.loads(result.stdout)
+        if not isinstance(messages, list):
+            return None
 
         for msg in messages:
-            content = msg.get("content", {})
-            if not isinstance(content, dict):
+            # AMP message structure: envelope.from, payload.context, etc.
+            envelope = msg.get("envelope", {})
+            payload = msg.get("payload", {})
+            context = payload.get("context", {})
+            if not isinstance(context, dict):
                 continue
 
-            # Match by handoff_id in the content
-            msg_handoff_id = content.get("handoff_id", "")
+            # Match by handoff_id in the payload context
+            msg_handoff_id = context.get("handoff_id", "")
             if msg_handoff_id != handoff_id:
                 continue
 
             # Found a matching ACK message
             return {
-                "received_at": msg.get("timestamp", msg.get("created_at", "")),
-                "status": content.get("status", "unknown"),
-                "starting_from": content.get("starting_from", ""),
-                "understanding_summary": content.get("understanding_summary", ""),
-                "questions": content.get("questions", []),
+                "received_at": envelope.get("timestamp", ""),
+                "status": context.get("status", "unknown"),
+                "starting_from": context.get("starting_from", ""),
+                "understanding_summary": context.get("understanding_summary", ""),
+                "questions": context.get("questions", []),
             }
 
     except (subprocess.TimeoutExpired, FileNotFoundError, json.JSONDecodeError, OSError):
@@ -331,8 +350,9 @@ def update_state_for_replacement(project_root, state, failed_agent, new_agent, h
 def send_amcos_notification(ecos_session, status, failed_agent, new_agent, handoff_id, details):
     """Send replacement confirmation notification to AMCOS via AI Maestro.
 
-    Sends a structured JSON message to the AMCOS controller agent with the
-    replacement outcome (success, partial, or failed).
+    Uses the amp-send.sh AMP wrapper to send a structured message to the
+    AMCOS controller agent with the replacement outcome (success, partial,
+    or failed).
 
     Args:
         ecos_session: The AI Maestro session name for AMCOS.
@@ -345,6 +365,10 @@ def send_amcos_notification(ecos_session, status, failed_agent, new_agent, hando
     Returns:
         True if the notification was sent successfully, False otherwise.
     """
+    amp_send = _find_amp_script("amp-send.sh")
+    if not amp_send:
+        return False
+
     # Determine priority based on status
     priority_map = {
         "success": "normal",
@@ -361,45 +385,35 @@ def send_amcos_notification(ecos_session, status, failed_agent, new_agent, hando
     }
     subject = subject_map.get(status, "[AMOA] Agent Replacement Status Update")
 
-    # Build the message content payload
-    message_content = {
+    # Build the message body with structured replacement details
+    message_details = dict(details) if details else {}
+    if handoff_id:
+        message_details["handoff_id"] = handoff_id
+    message_body = json.dumps({
         "type": "replacement_confirmation",
-        "message": "Agent replacement {}".format(status),
         "status": status,
         "failed_agent": {"id": failed_agent},
         "replacement_agent": {"id": new_agent},
-        "details": details,
-    }
-    if handoff_id:
-        message_content["details"]["handoff_id"] = handoff_id
-
-    payload = {
-        "to": ecos_session,
-        "subject": subject,
-        "priority": priority,
-        "content": message_content,
-    }
+        "details": message_details,
+    }, ensure_ascii=False)
 
     try:
+        # amp-send.sh <recipient> <subject> <message> [--priority P] [--type T]
         result = subprocess.run(
             [
-                "curl", "-s", "-X", "POST",
-                "{}/api/messages".format(AIMAESTRO_API),
-                "-H", "Content-Type: application/json",
-                "-d", json.dumps(payload),
+                amp_send,
+                ecos_session,
+                subject,
+                message_body,
+                "--priority", priority,
+                "--type", "notification",
             ],
             capture_output=True,
             text=True,
             timeout=15,
         )
-        if result.returncode == 0:
-            # Check if the API returned a success response
-            try:
-                response = json.loads(result.stdout)
-                return response.get("success", False) or response.get("id") is not None
-            except json.JSONDecodeError:
-                # Non-JSON response but curl succeeded -- assume sent
-                return True
+        # amp-send.sh exits 0 on success
+        return result.returncode == 0
     except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
         pass
 
@@ -547,9 +561,12 @@ def main():
         "--reason", type=str, default="context_loss",
         help="Reason for replacement (default: context_loss)"
     )
+    # Resolve AMCOS session dynamically from environment, falling back to a
+    # sensible default.  amp-send.sh handles routing internally.
+    default_amcos = os.environ.get("AMCOS_SESSION", "amcos-controller")
     parser.add_argument(
-        "--amcos-session", type=str, default=DEFAULT_AMCOS_SESSION,
-        help="AI Maestro session name for AMCOS (default: {})".format(DEFAULT_AMCOS_SESSION)
+        "--amcos-session", type=str, default=default_amcos,
+        help="AI Maestro session name for AMCOS (default: AMCOS_SESSION env or 'amcos-controller')"
     )
     parser.add_argument(
         "--project-root", type=str, default=".",
