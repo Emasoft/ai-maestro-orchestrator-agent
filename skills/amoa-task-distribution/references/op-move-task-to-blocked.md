@@ -10,7 +10,7 @@
 - [Input](#input)
 - [Procedure](#procedure)
 - [Commands](#commands)
-- [Escalation Message to AMAMA](#escalation-message-to-eama)
+- [Escalation Message to AMAMA](#escalation-message-to-amama)
 - [Checklist](#checklist)
 - [Error Handling](#error-handling)
 - [Related Operations](#related-operations)

@@ -15,7 +15,7 @@
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│        EAMA (Enterprise AI Maestro Agent) [manager]              │
+│    AMAMA (AI Maestro Assistant Manager Agent) [manager]          │
 │              - User's sole interlocutor                          │
 │              - Creates projects                                  │
 │              - Approves AMCOS requests                            │
@@ -40,23 +40,23 @@
 ## AMCOS (Chief of Staff) - Responsibilities
 
 ### AMCOS CAN:
-- ✅ Create agents (with EAMA approval)
-- ✅ Terminate agents (with EAMA approval)
-- ✅ Hibernate/wake agents (with EAMA approval)
+- ✅ Create agents (with AMAMA approval)
+- ✅ Terminate agents (with AMAMA approval)
+- ✅ Hibernate/wake agents (with AMAMA approval)
 - ✅ Configure agents with skills and plugins
 - ✅ Assign agents to project teams
 - ✅ Handle handoff protocols between agents
 - ✅ Monitor agent health and availability
-- ✅ Replace failed agents (with EAMA approval)
-- ✅ Report agent performance to EAMA
+- ✅ Replace failed agents (with AMAMA approval)
+- ✅ Report agent performance to AMAMA
 
 ### AMCOS CANNOT:
-- ❌ Create projects (EAMA only)
+- ❌ Create projects (AMAMA only)
 - ❌ Assign tasks to agents (AMOA only)
 - ❌ Manage GitHub Project kanban (AMOA only)
 - ❌ Make architectural decisions (AMAA only)
 - ❌ Perform code review (AMIA only)
-- ❌ Communicate directly with user (EAMA only)
+- ❌ Communicate directly with user (AMAMA only)
 
 ### AMCOS Scope:
 - **Team-scoped** [chief-of-staff]: One AMCOS per team, manages agents within that team
@@ -79,7 +79,7 @@
 ### AMOA CANNOT:
 - ❌ Create agents directly (request via AMCOS)
 - ❌ Configure agent skills/plugins (AMCOS only)
-- ❌ Create projects (EAMA only)
+- ❌ Create projects (AMAMA only)
 - ❌ Manage agents outside their project
 
 ### AMOA Scope:
@@ -89,9 +89,9 @@
 
 ---
 
-## EAMA (Enterprise AI Maestro Agent) [manager] - Responsibilities
+## AMAMA (AI Maestro Assistant Manager Agent) [manager] - Responsibilities
 
-### EAMA CAN:
+### AMAMA CAN:
 - ✅ Create projects
 - ✅ Approve/reject AMCOS requests (agent create/terminate/etc.)
 - ✅ Communicate with user
@@ -99,11 +99,11 @@
 - ✅ Override any agent decision
 - ✅ Grant autonomous operation directives
 
-### EAMA CANNOT:
+### AMAMA CANNOT:
 - ❌ Create agents directly (delegates to AMCOS)
 - ❌ Assign tasks directly (delegates to AMOA)
 
-### EAMA Scope:
+### AMAMA Scope:
 - **Team-scoped** [manager]: Oversees all projects and agents within the team
 - **User-facing**: Only agent that talks to user
 - **Decision authority**: Final approval on all significant operations
@@ -121,10 +121,10 @@ AMOA: "I need a frontend developer agent for Project X"
 AMCOS: Receives request, prepares agent specification
   │
   ▼
-AMCOS → EAMA: "Request approval to spawn frontend-dev for Project X"
+AMCOS → AMAMA: "Request approval to spawn frontend-dev for Project X"
   │
   ▼
-EAMA: Approves (or rejects with reason)
+AMAMA: Approves (or rejects with reason)
   │
   ▼
 AMCOS: Creates agent, configures skills, assigns to Project X team
@@ -139,7 +139,7 @@ AMOA: Assigns tasks from kanban to new agent
 ### Task Assignment
 
 ```
-User/EAMA: Creates GitHub issue in Project X
+User/AMAMA: Creates GitHub issue in Project X
   │
   ▼
 AMOA (Project X): Detects new issue, decides assignment
@@ -158,10 +158,10 @@ Agent: Receives task, begins work
 AMCOS: Detects agent-123 is unresponsive (terminal failure)
   │
   ▼
-AMCOS → EAMA: "Request approval to replace agent-123"
+AMCOS → AMAMA: "Request approval to replace agent-123"
   │
   ▼
-EAMA: Approves
+AMAMA: Approves
   │
   ▼
 AMCOS: Creates replacement agent-456, configures it
@@ -179,8 +179,8 @@ AMOA: Sends handoff to agent-456
 
 ## Summary Table
 
-| Responsibility | EAMA | AMCOS | AMOA | AMIA | AMAA |
-|----------------|------|------|-----|-----|-----|
+| Responsibility | AMAMA | AMCOS | AMOA | AMIA | AMAA |
+|----------------|-------|------|-----|-----|-----|
 | Create projects | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Create agents | Approves | ✅ | Requests | ❌ | ❌ |
 | Configure agents | ❌ | ✅ | ❌ | ❌ | ❌ |
@@ -193,6 +193,6 @@ AMOA: Sends handoff to agent-456
 
 ---
 
-**Document Version**: 1.1.0
-**Last Updated**: 2026-03-06
-**Author**: EAMA Plugin Development
+**Document Version**: 1.5.3
+**Last Updated**: 2026-03-13
+**Author**: AMOA Plugin Development
