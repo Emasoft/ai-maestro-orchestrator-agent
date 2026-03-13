@@ -27,7 +27,7 @@ The Orchestrator Agent handles **task distribution, agent coordination, and prog
 
 | Agent | Description |
 |-------|-------------|
-| `amoa-orchestrator-main-agent` | Main orchestrator — delegates to sub-agents |
+| `ai-maestro-orchestrator-agent-main-agent` | Main orchestrator — delegates to sub-agents |
 | `amoa-team-orchestrator` | Coordinates team of remote agents |
 | `amoa-task-summarizer` | Summarizes task progress and state |
 | `amoa-checklist-compiler` | Creates verification checklists |
@@ -122,7 +122,7 @@ claude --plugin-dir /path/to/ai-maestro-orchestrator-agent
 Start a session with the main orchestrator agent:
 
 ```bash
-claude --agent amoa-orchestrator-main-agent
+claude --agent ai-maestro-orchestrator-agent-main-agent
 ```
 
 After modifying plugin files, reload without restarting:

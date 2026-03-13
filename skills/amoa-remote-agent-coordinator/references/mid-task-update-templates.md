@@ -27,7 +27,7 @@ This is the message format AMOA receives from AMCOS. AMOA does not send this mes
 ```json
 {
   "from": "amcos-chief-of-staff-main-agent",
-  "to": "amoa-orchestrator-main-agent",
+  "to": "ai-maestro-orchestrator-agent-main-agent",
   "subject": "Mid-Task Requirement Update - [task identifier]",
   "priority": "high",
   "content": {
@@ -100,7 +100,7 @@ Send this acknowledgment after receiving and processing a mid-task requirement u
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "amcos-chief-of-staff-main-agent",
   "subject": "ACK: Mid-Task Requirement Update - [task identifier]",
   "priority": "normal",
@@ -160,7 +160,7 @@ Use this template when AMOA needs to inform a working agent that one or more mod
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "svgbbox-programmer-001",
   "subject": "Module Modification - [module identifier]",
   "priority": "high",
@@ -200,7 +200,7 @@ The agent should reply with this format to confirm they have processed the modif
 ```json
 {
   "from": "svgbbox-programmer-001",
-  "to": "amoa-orchestrator-main-agent",
+  "to": "ai-maestro-orchestrator-agent-main-agent",
   "subject": "ACK: Module Modification - [module identifier]",
   "priority": "normal",
   "content": {
@@ -262,7 +262,7 @@ Use this template when the priority of an active task changes. Priority changes 
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "svgbbox-programmer-001",
   "subject": "Priority Change - [task identifier]",
   "priority": "high",
@@ -295,7 +295,7 @@ Field definitions for `data`:
 ```json
 {
   "from": "svgbbox-programmer-001",
-  "to": "amoa-orchestrator-main-agent",
+  "to": "ai-maestro-orchestrator-agent-main-agent",
   "subject": "ACK: Priority Change - [task identifier]",
   "priority": "normal",
   "content": {
@@ -358,7 +358,7 @@ This is the message format AMOA receives from AMAMA. AMOA does not send this mes
 ```json
 {
   "from": "amama-assistant-manager-main-agent",
-  "to": "amoa-orchestrator-main-agent",
+  "to": "ai-maestro-orchestrator-agent-main-agent",
   "subject": "User Decision - Escalation [escalation identifier]",
   "priority": "high",
   "content": {
@@ -388,7 +388,7 @@ After receiving the user decision, AMOA relays it to the agent that originally r
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "svgbbox-programmer-001",
   "subject": "User Decision Received - Escalation [escalation identifier]",
   "priority": "high",

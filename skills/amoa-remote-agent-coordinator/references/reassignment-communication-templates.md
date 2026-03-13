@@ -25,7 +25,7 @@ Send this message when the Orchestrator (AMOA) decides to remove an agent from a
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "<old-agent-session-name>",
   "subject": "[REASSIGN] Task <task-uuid> - You Are Being Reassigned",
   "priority": "high",
@@ -58,7 +58,7 @@ The old agent should respond with a brief acknowledgment and then follow up with
 ```json
 {
   "from": "<old-agent-session-name>",
-  "to": "amoa-orchestrator-main-agent",
+  "to": "ai-maestro-orchestrator-agent-main-agent",
   "subject": "[ACK] Reassignment Notification Received - Task <task-uuid>",
   "priority": "high",
   "content": {
@@ -104,7 +104,7 @@ After the old agent acknowledges the reassignment notification, it should provid
 ```json
 {
   "from": "<old-agent-session-name>",
-  "to": "amoa-orchestrator-main-agent",
+  "to": "ai-maestro-orchestrator-agent-main-agent",
   "subject": "[SUMMARY] Work Summary for Task <task-uuid>",
   "priority": "high",
   "content": {
@@ -190,7 +190,7 @@ Send this message after receiving and processing the old agent's work summary (o
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "<new-agent-session-name>",
   "subject": "[TASK] Reassignment - Continue Task <task-uuid>",
   "priority": "high",
@@ -240,7 +240,7 @@ Send this message after receiving and processing the old agent's work summary (o
 ```json
 {
   "from": "<new-agent-session-name>",
-  "to": "amoa-orchestrator-main-agent",
+  "to": "ai-maestro-orchestrator-agent-main-agent",
   "subject": "[ACK] Reassignment Accepted - Task <task-uuid>",
   "priority": "high",
   "content": {
@@ -305,7 +305,7 @@ Send this to both agents simultaneously. The `decision` field tells each agent w
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "<both-agent-session-names>",
   "subject": "[RECOVERY] Agent Recovery Decision - Task <task-uuid>",
   "priority": "high",
@@ -336,7 +336,7 @@ Send this to whichever agent is being removed from the task (either the original
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "<removed-agent-session-name>",
   "subject": "[STOP] Graceful Release from Task <task-uuid>",
   "priority": "normal",
@@ -358,7 +358,7 @@ Send this to the agent that will continue working on the task:
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "<continuing-agent-session-name>",
   "subject": "[CONFIRMED] Continue Task <task-uuid>",
   "priority": "normal",
@@ -423,7 +423,7 @@ When AMCOS sends a recovery report indicating that a previously failed or remove
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "amcos-chief-of-staff-main-agent",
   "subject": "[DECISION] Recovery Decision - Keep Replacement - Task <task-uuid>",
   "priority": "normal",
@@ -445,7 +445,7 @@ When AMCOS sends a recovery report indicating that a previously failed or remove
 
 ```json
 {
-  "from": "amoa-orchestrator-main-agent",
+  "from": "ai-maestro-orchestrator-agent-main-agent",
   "to": "amcos-chief-of-staff-main-agent",
   "subject": "[DECISION] Recovery Decision - Revert to Original - Task <task-uuid>",
   "priority": "normal",

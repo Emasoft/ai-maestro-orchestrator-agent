@@ -68,7 +68,7 @@ This loads ONLY the ai-maestro-orchestrator-agent plugin into that Claude Code s
 │   │       ├── .claude-plugin/
 │   │       │   └── plugin.json
 │   │       ├── agents/
-│   │       │   └── amoa-orchestrator-main-agent.md
+│   │       │   └── ai-maestro-orchestrator-agent-main-agent.md
 │   │       ├── skills/
 │   │       │   ├── amoa-orchestration-patterns/
 │   │       │   ├── amoa-task-distribution/
@@ -100,7 +100,7 @@ AMCOS (Chief of Staff) spawns AMOA instances using the `ai-maestro-agents-manage
 - **Working directory**: `~/agents/<session-name>`
 - **Task**: "Orchestrate tasks for <project>"
 - **Plugin**: `ai-maestro-orchestrator-agent` (loaded via `--plugin-dir`)
-- **Agent**: `amoa-orchestrator-main-agent`
+- **Agent**: `ai-maestro-orchestrator-agent-main-agent`
 - **Additional flags**: skip permissions for automation, enable Chrome DevTools MCP, add `/tmp` as working directory
 
 **Verify**: confirm the agent session was created and is responsive.

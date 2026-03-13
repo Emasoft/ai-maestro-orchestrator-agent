@@ -1,5 +1,5 @@
 ---
-name: amoa-orchestrator-main-agent
+name: ai-maestro-orchestrator-agent-main-agent
 description: Orchestrator main agent - task distribution, kanban management, agent coordination. Requires AI Maestro installed.
 model: opus
 skills:
