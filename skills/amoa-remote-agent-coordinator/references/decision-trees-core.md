@@ -494,7 +494,7 @@ New request or task has arrived
     │
     ├─ Does the task require writing, modifying, or debugging code?
     │     │
-    │     ├─ Yes → DELEGATE TO EPA (Programmer Agent) always
+    │     ├─ Yes → DELEGATE TO AMPA (Programmer Agent) always
     │     │         AMOA must NEVER write code directly
     │     │         This is a hard rule with no exceptions
     │     │         Action: prepare task delegation using
@@ -529,8 +529,8 @@ New request or task has arrived
     │                         │    │     ├─ Yes → Delegate to AMCOS (Chief of Staff)
     │                         │    │     └─ No ↓
     │                         │    │
-    │                         │    └─ General research → Delegate to EPA with
-    │                         │         research-focused instructions (EPA can
+    │                         │    └─ General research → Delegate to AMPA with
+    │                         │         research-focused instructions (AMPA can
     │                         │         use SERENA, grep, and other tools)
     │                         │
     │                         └─ No → HANDLE DIRECTLY
@@ -544,12 +544,12 @@ New request or task has arrived
 
 | Leaf | Action | Template to use |
 |------|--------|-----------------|
-| DELEGATE TO EPA | Prepare full task delegation with context, acceptance criteria, and deadline. | [op-prepare-task-delegation.md](./op-prepare-task-delegation.md) |
+| DELEGATE TO AMPA | Prepare full task delegation with context, acceptance criteria, and deadline. | [op-prepare-task-delegation.md](./op-prepare-task-delegation.md) |
 | HANDLE DIRECTLY (status) | Respond immediately from AMOA's task tracking data. | No template needed -- respond conversationally. |
 | DELEGATE TO AMAA | Send architecture question with relevant context and constraints. | [escalation-procedures.md](./escalation-procedures.md) |
 | DELEGATE TO AMIA | Send quality/review request with the code or artifact to review. | [op-review-completion-report.md](./op-review-completion-report.md) |
 | DELEGATE TO AMCOS | Send coordination question to AMCOS. | [messaging-protocol-part2-send-receive.md](./messaging-protocol-part2-send-receive.md) |
-| DELEGATE TO EPA (research) | Send research task with specific questions to answer and where to look. | [task-instruction-format-part1-core-template.md](./task-instruction-format-part1-core-template.md) |
+| DELEGATE TO AMPA (research) | Send research task with specific questions to answer and where to look. | [task-instruction-format-part1-core-template.md](./task-instruction-format-part1-core-template.md) |
 | HANDLE DIRECTLY (operational) | AMOA performs the operational task itself (updating boards, sending reports). | Use appropriate operational procedure (op-*.md files). |
 
 ### 6.5 Concrete example
@@ -558,7 +558,7 @@ Scenario: AMCOS sends AMOA a message: "The SVG bounding box library needs a new 
 
 Walking the tree:
 1. Does it require writing code? Yes (implementing a new function).
-2. Result: **DELEGATE TO EPA** always.
+2. Result: **DELEGATE TO AMPA** always.
 
 AMOA prepares a task delegation: "Task TSK-060: Implement `combinedBoundingBox(elements: SVGElement[]): BBox` function. Requirements: Given an array of SVG elements, compute the smallest bounding box that contains all of them. Handle edge cases: empty array (return null), single element (return its bbox), overlapping elements. Write tests. Deadline: 3 hours. Acceptance criteria: function passes all tests, handles edge cases, has JSDoc comments."
 

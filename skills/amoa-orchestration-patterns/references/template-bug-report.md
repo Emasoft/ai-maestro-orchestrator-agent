@@ -334,11 +334,11 @@ so Python uses the Windows system encoding (cp1252) which cannot decode UTF-8 by
 When the orchestrator files a bug discovered during task execution, it should add context about the task:
 
 ```markdown
-**Discovery context**: This bug was found during task EPA-042 (implement user
+**Discovery context**: This bug was found during task AMPA-042 (implement user
 profile export). The programmer agent was blocked because the export function
 calls parse_config() which fails on Windows test runners.
 
-**Impact**: Blocks task EPA-042 and potentially any other task that reads
+**Impact**: Blocks task AMPA-042 and potentially any other task that reads
 configuration files on Windows.
 ```
 

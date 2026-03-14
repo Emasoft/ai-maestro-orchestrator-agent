@@ -93,7 +93,7 @@ The programmer agent added exponential backoff with a maximum of 3 retries
 for 5xx status codes. Integration tests confirm recovery after transient
 server errors.
 
-Task assignment: EPA-001 (programmer agent session svgbbox-programmer-001)
+Task assignment: AMPA-001 (programmer agent session svgbbox-programmer-001)
 ```
 
 ### 3.2 Linking related issues with closing keywords
@@ -157,7 +157,7 @@ test(api): add integration tests for user endpoint
 ### 6.1 Why AI disclosure matters for orchestrator-created PRs
 
 When the orchestrator or any implementer agent produces code, the pull request must disclose AI involvement. This is especially important in the agent ecosystem because:
-- All code produced by programmer agents (EPA) is AI-generated
+- All code produced by programmer agents (AMPA) is AI-generated
 - Reviewers need to know the testing level applied to the generated code
 - The human owner must attest they understand the changes before merging
 
@@ -169,7 +169,7 @@ When the orchestrator or any implementer agent produces code, the pull request m
 - [ ] This pull request includes AI-generated or AI-assisted code
 
 If checked:
-- **Tool used**: <!-- e.g., Claude Code (EPA agent), GitHub Copilot -->
+- **Tool used**: <!-- e.g., Claude Code (AMPA agent), GitHub Copilot -->
 - **Testing level**:
   - [ ] Untested -- AI output used as-is without manual verification
   - [ ] Lightly tested -- Ran basic scenarios, reviewed output

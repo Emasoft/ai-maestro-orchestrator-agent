@@ -347,7 +347,7 @@ def update_state_for_replacement(project_root, state, failed_agent, new_agent, h
     return updates_summary
 
 
-def send_amcos_notification(ecos_session, status, failed_agent, new_agent, handoff_id, details):
+def send_amcos_notification(amcos_session, status, failed_agent, new_agent, handoff_id, details):
     """Send replacement confirmation notification to AMCOS via AI Maestro.
 
     Uses the amp-send.sh AMP wrapper to send a structured message to the
@@ -355,7 +355,7 @@ def send_amcos_notification(ecos_session, status, failed_agent, new_agent, hando
     or failed).
 
     Args:
-        ecos_session: The AI Maestro session name for AMCOS.
+        amcos_session: The AI Maestro session name for AMCOS.
         status: The replacement status ('success', 'partial', or 'failed').
         failed_agent: The agent ID of the failed agent.
         new_agent: The agent ID of the replacement agent.
@@ -402,7 +402,7 @@ def send_amcos_notification(ecos_session, status, failed_agent, new_agent, hando
         result = subprocess.run(
             [
                 amp_send,
-                ecos_session,
+                amcos_session,
                 subject,
                 message_body,
                 "--priority", priority,
@@ -476,7 +476,7 @@ def build_audit_entry(
     reason,
     ack_info,
     state_updates,
-    ecos_notified,
+    amcos_notified,
     outcome,
 ):
     """Build a structured audit log entry for the replacement event.
@@ -488,7 +488,7 @@ def build_audit_entry(
         reason: The reason for replacement.
         ack_info: ACK details dict from check_ack_received, or None.
         state_updates: Summary dict from update_state_for_replacement.
-        ecos_notified: Boolean indicating whether AMCOS was notified.
+        amcos_notified: Boolean indicating whether AMCOS was notified.
         outcome: The overall outcome string ('success', 'partial', 'failed').
 
     Returns:
@@ -511,9 +511,9 @@ def build_audit_entry(
         },
         "ack": {},
         "state_updates": state_updates if state_updates else {},
-        "ecos_notification": {
-            "sent": ecos_notified,
-            "sent_at": timestamp if ecos_notified else None,
+        "amcos_notification": {
+            "sent": amcos_notified,
+            "sent_at": timestamp if amcos_notified else None,
         },
         "outcome": outcome,
     }
@@ -631,7 +631,7 @@ def main():
         outcome = "failed"
 
     # Step 3: Send AMCOS notification
-    ecos_notified = False
+    amcos_notified = False
     if not args.skip_amcos_notify:
         notification_details = {
             "ack_status": ack_status,
@@ -642,8 +642,8 @@ def main():
         if state_updates and isinstance(state_updates, dict):
             notification_details["assignments_updated"] = state_updates.get("assignments_updated", 0)
 
-        ecos_notified = send_amcos_notification(
-            ecos_session=args.amcos_session,
+        amcos_notified = send_amcos_notification(
+            amcos_session=args.amcos_session,
             status=outcome,
             failed_agent=args.failed_agent,
             new_agent=args.new_agent,
@@ -659,7 +659,7 @@ def main():
         reason=args.reason,
         ack_info=ack_info,
         state_updates=state_updates if isinstance(state_updates, dict) else {},
-        ecos_notified=ecos_notified,
+        amcos_notified=amcos_notified,
         outcome=outcome,
     )
     audit_logged = append_audit_log(project_root, audit_entry)
@@ -672,7 +672,7 @@ def main():
         "handoff_id": args.handoff_id,
         "ack_status": ack_status,
         "state_updated": state is not None and isinstance(state_updates, dict),
-        "ecos_notified": ecos_notified,
+        "amcos_notified": amcos_notified,
         "audit_logged": audit_logged,
     }
     if ack_info:
