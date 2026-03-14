@@ -141,7 +141,7 @@ def sync_task(
     returncode, _, stderr = _run_task_command([
         "upsert",
         "--team", team_id,
-        "--external-ref", task_data["externalRef"],
+        "--external-ref", str(task_data["externalRef"]),
         "--data", json.dumps(task_data),
     ])
 
@@ -240,7 +240,7 @@ def bulk_sync(team_id: str) -> dict[str, int]:
     for issue in github_issues:
         issue_number = issue["number"]
         labels = issue.get("labels", [])
-        label_names = [l.get("name", "") for l in labels]
+        label_names = [lbl.get("name", "") for lbl in labels]
 
         # Skip issues without task labels
         if not any(name.startswith("status:") for name in label_names):

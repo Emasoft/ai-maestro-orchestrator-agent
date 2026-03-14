@@ -316,9 +316,9 @@ def assign_task_to_agent(issue_number: int, agent_name: str) -> bool:
             title = data.get("title", f"Issue #{issue_number}")
             labels = data.get("labels", [])
             status = "backlog"
-            for l in labels:
-                if l.get("name", "").startswith("status:"):
-                    status = l["name"].removeprefix("status:")
+            for lbl in labels:
+                if lbl.get("name", "").startswith("status:"):
+                    status = lbl["name"].removeprefix("status:")
             sync_task(team_id=TEAM_ID, issue_number=issue_number, issue_title=title, status=status, agent_id=agent_name)
 
     return True
