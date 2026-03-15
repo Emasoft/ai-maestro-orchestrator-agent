@@ -108,6 +108,14 @@ After completion:
 2. Delete all experimental code (except archived prototypes)
 3. Return minimal report to orchestrator
 
+## Token-Saving Tools
+
+When available, use these tools to save context tokens:
+
+- **LLM Externalizer MCP** (`mcp__plugin_llm-externalizer_llm-externalizer__*`): Use `code_task` to analyze experimental results, `compare_files` to diff experiment outputs. Pass file paths via `input_files_paths`, include brief context in `instructions`.
+- **Serena MCP**: Navigate codebase symbols when investigating bugs or evaluating tools.
+- **TLDR CLI**: Use `tldr cfg file func` for control flow analysis, `tldr dfg file func` for data flow, `tldr impact func` before modifying functions.
+
 ### Script Output Enforcement
 
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.

@@ -101,6 +101,16 @@ ACTION: None - ready for deployment
 Summary: [inline 3-line report or path to details file]
 ```
 
+## Token-Saving Tools
+
+When available, use these tools to save context tokens:
+
+- **LLM Externalizer MCP** (`mcp__plugin_llm-externalizer_llm-externalizer__*`): Use `chat` to summarize large log files without reading them into your context. Pass log file path via `input_files_paths`, set `ensemble: false`, and include brief context in `instructions`.
+- **Serena MCP**: Find specific functions/classes by name when tracing error locations.
+- **TLDR CLI**: Use `tldr diagnostics .` for pre-test type checking, `tldr search "pattern"` to find error-related code.
+
+**Priority:** Use LLM Externalizer for logs over 500 lines. Use TLDR/Serena for code navigation.
+
 ### Script Output Enforcement
 
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.

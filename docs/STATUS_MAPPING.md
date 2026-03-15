@@ -1,6 +1,6 @@
 # AMOA ↔ AI Maestro Status Mapping
 
-> **Version**: 1.5.3 | **Last Updated**: 2026-03-08
+> **Version**: 1.6.0 | **Last Updated**: 2026-03-08
 
 ## Overview
 

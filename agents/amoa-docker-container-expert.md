@@ -82,6 +82,13 @@ Reason: User specified Alpine (REQ-045) but Ubuntu recommended for broader tooli
 Presenting alternatives to user for decision
 </example>
 
+## Token-Saving Tools
+
+When available, use these tools to save context tokens:
+
+- **LLM Externalizer MCP** (`mcp__plugin_llm-externalizer_llm-externalizer__*`): Use `chat` to analyze Dockerfiles and docker-compose configs. Pass file paths via `input_files_paths`, include brief context in `instructions`.
+- **TLDR CLI**: Use `tldr structure .` to understand project layout for container specification.
+
 ### Script Output Enforcement
 
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.

@@ -44,6 +44,14 @@ This skill provides:
 
 ---
 
+## Token-Saving Tools
+
+When available, use these tools to save context tokens:
+
+- **LLM Externalizer MCP** (`mcp__plugin_llm-externalizer_llm-externalizer__*`): Use `chat` to extract requirements from large specification files without reading them into context. Pass file paths via `input_files_paths`, include brief context in `instructions`.
+- **Serena MCP**: Find specific requirement references and symbol definitions by name.
+- **TLDR CLI**: Use `tldr structure .` to understand project layout before compiling checklists.
+
 ### Script Output Enforcement
 
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.

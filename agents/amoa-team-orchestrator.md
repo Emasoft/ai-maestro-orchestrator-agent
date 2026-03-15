@@ -127,6 +127,16 @@ Details: docs_dev/team-orchestrator-report-20260131-143156.md
 Created GitHub Project "Race Condition Fix" with 3 investigation tasks. Assigned debugging-session-manager, debugging-cache-layer, debugging-api-gateway to separate agents via AI Maestro. Session manager agent identified root cause (non-atomic read-modify-write). Coordinated fixes: session manager implements mutex, cache layer adds retry logic, API gateway adds request deduplication. All agents confirmed TDD verification complete. Integration approved.
 </example>
 
+## Token-Saving Tools
+
+When available, use these tools to save context tokens:
+
+- **LLM Externalizer MCP** (`mcp__plugin_llm-externalizer_llm-externalizer__*`): Offload file analysis to cheaper models. Use `code_task` for code reviews, `batch_check` for multi-file checks, `scan_folder` for codebase scans. Always pass `input_files_paths`, never paste content. Include project context in `instructions`. Set `ensemble: false` for simple tasks.
+- **Serena MCP**: Precise symbol lookups — find functions, classes, references by name.
+- **TLDR CLI**: Token-efficient code analysis — `tldr structure .`, `tldr search "pattern"`, `tldr impact func`, `tldr dead src/`.
+
+**Priority:** TLDR/Serena for navigation, LLM Externalizer for analysis of 3+ files.
+
 ### Script Output Enforcement
 
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.

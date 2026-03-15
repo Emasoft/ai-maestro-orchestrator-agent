@@ -495,6 +495,6 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 ---
 
-**Document Version**: 1.5.3
+**Document Version**: 1.6.0
 **Last Updated**: 2026-03-08
 **Maintained By**: claude-skills-factory

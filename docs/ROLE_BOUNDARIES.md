@@ -208,6 +208,6 @@ All AI Maestro agents use the `domain-subdomain-name` format for session names:
 
 ---
 
-**Document Version**: 1.5.3
+**Document Version**: 1.6.0
 **Last Updated**: 2026-03-13
 **Author**: AMOA Plugin Development

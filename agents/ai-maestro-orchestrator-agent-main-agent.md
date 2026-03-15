@@ -235,6 +235,41 @@ Details: [filename if written]
 
 **COMMUNICATE ACTIVELY** - ACK all messages, send status updates, report results promptly.
 
+## Token-Saving Tools
+
+When available, use these MCP tools and CLI utilities to save context tokens:
+
+### LLM Externalizer MCP (plugin: `llm-externalizer`)
+
+Offloads bounded analysis tasks to cheaper external models. Tool prefix: `mcp__plugin_llm-externalizer_llm-externalizer__`
+
+| Tool | Use For |
+|------|---------|
+| `chat` | Summarize files, compare configs, generate boilerplate |
+| `code_task` | Code audits, reviews, bug scanning |
+| `batch_check` | Apply same check to many files (one report per file) |
+| `scan_folder` | Scan directory tree for patterns/issues |
+| `compare_files` | Diff two files with LLM summary of changes |
+| `check_references` | Validate symbol references after refactoring |
+| `check_imports` | Verify import paths exist on disk |
+
+**Rules:** Always pass `input_files_paths` (never paste content). Include project context in `instructions` (the remote LLM has zero project knowledge). Set `ensemble: false` for simple tasks. Output is saved to `llm_externalizer_output/` — tool returns only the file path.
+
+### Serena MCP
+
+Use Serena for precise symbol lookups: find functions, classes, references, and navigate code structure by name.
+
+### TLDR CLI
+
+Use `tldr` for token-efficient code analysis before reading files:
+- `tldr structure .` — see project code structure
+- `tldr search "pattern" src/` — find code patterns
+- `tldr impact func_name src/` — check what calls a function before refactoring
+- `tldr dead src/` — find unused code
+- `tldr diagnostics .` — type check + lint before running tests
+
+**Priority:** Use TLDR/Serena for navigation, LLM Externalizer for analysis of 3+ files. Read files directly only for surgical edits.
+
 ### Script Output Enforcement
 
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
