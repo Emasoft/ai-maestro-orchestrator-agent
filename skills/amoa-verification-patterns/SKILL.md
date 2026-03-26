@@ -70,15 +70,33 @@ See [examples.md](./references/examples.md) for worked examples.
 ## Resources
 
 - [combining-patterns.md](./references/combining-patterns.md) -- Combining patterns
-  <!-- TOC: Pattern Combinations | Verification Pyramid | Complete Strategy Example -->
+  - 5.1 Pattern Combinations
+  - 5.2 Verification Pyramid
+  - 5.3 Complete Verification Strategy Example
 - [cross-platform-support.md](./references/cross-platform-support.md) -- Cross-platform
-  <!-- TOC: Platform-Specific Behavior | UTF-8 Encoding | Platform Detection | Path Handling | Command Execution -->
+  - 6.1 Platform-Specific Behavior
+  - 6.2 UTF-8 Encoding
+  - 6.3 Platform Detection
+  - 6.4 Path Handling
+  - ...
 - [troubleshooting.md](./references/troubleshooting.md) -- Troubleshooting
-  <!-- TOC: E2E Test is Flaky | Exit Code is 0 but Process Failed -->
+  - 10.1 Tests Pass Locally but Fail in CI/CD
+  - 10.2 Exit Code is 0 but Process Failed
+  - 10.3 Integration Test Fails with Timeout
+  - 10.4 E2E Test is Flaky
+  - ...
 - [docker-troubleshooting.md](./references/docker-troubleshooting.md) -- Docker
-  <!-- TOC: Checking container logs | Configuring DNS settings -->
+    - 1. Assessing Docker Container Needs for a Project
+    - 2. Selecting Appropriate Base Images
+    - 3. Applying Docker Best Practices
+    - 4. Configuring Multi-Service Environments
+  - ...
 - [quick-reference.md](./references/quick-reference.md) -- Quick reference & checklist
-  <!-- TOC: Pattern Selection Guide | Exit Codes | Output Format | Error Handling | Verification Checklist | Script Output Rules -->
+  - Pattern Selection Guide
+  - Exit Codes
+  - Output Format
+  - Error Handling
+  - ...
 
 ## Error Handling
 

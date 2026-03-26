@@ -57,10 +57,30 @@ See [troubleshooting.md](references/troubleshooting.md).
 ## Resources
 
 - [command-reference.md](references/command-reference.md)
-  <!-- TOC: Command Reference | Plan Phase Commands | /start-planning | /planning-status | /add-requirement | /modify-requirement | /remove-requirement | /approve-plan | Orchestration Phase Commands | /start-orchestration | /orchestration-status | /register-agent | /assign-module | /add-module | /modify-module | /remove-module | /prioritize-module | /reassign-module | /check-agents -->
+  - 1. Plan Phase Commands
+    - 1.1 /start-planning
+    - 1.2 /planning-status
+    - 1.3 /add-requirement
+    - 1.4 /modify-requirement
+  - ...
 - [plan-phase-workflow.md](references/plan-phase-workflow.md)
-  <!-- TOC: Entering Plan Phase | Planning Activities | Modifying the Plan | Plan Phase Completion | Stop Hook Behavior -->
+  - 1. Entering Plan Phase
+    - 1.1 Using /start-planning command
+    - 1.2 State file initialization
+  - 2. Planning Activities
+    - 2.1 Gathering user goals
+  - ...
 - [state-file-formats.md](references/state-file-formats.md)
-  <!-- TOC: State File Formats | Plan Phase State File | File location | Complete YAML schema | Field descriptions | Orchestration Phase State File | File location | Complete YAML schema | Field descriptions | Agent Assignment Structure | Assignment fields | Instruction verification tracking | Progress polling tracking | Module Status Structure | Module fields | Status values | Parsing State Files -->
+  - 1. Plan Phase State File
+    - 1.1 File location
+    - 1.2 Complete YAML schema
+    - 1.3 Field descriptions
+  - 2. Orchestration Phase State File
+  - ...
 - [troubleshooting.md](references/troubleshooting.md)
-  <!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues | Communication Issues | Stop Hook Issues -->
+  - 1. Plan Phase Issues
+    - Issue: Plan Phase won't transition to Orchestration Phase
+    - Issue: USER_REQUIREMENTS.md validation fails
+    - Issue: /approve-plan creates duplicate GitHub Issues
+  - 2. Orchestration Phase Issues
+  - ...

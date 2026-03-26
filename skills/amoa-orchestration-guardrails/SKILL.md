@@ -51,20 +51,65 @@ Rule violation detected: stop, reassess, delegate to worker agent.
 ## Resources
 
 - [orchestrator-no-implementation.md](./references/orchestrator-no-implementation.md)
-  <!-- TOC: RULE 15: No Implementation by Orchestrator (ABSOLUTE) | Core Principle | What the Orchestrator Does | Why This Rule Exists | Forbidden Actions for Orchestrators | Correct Approach for Each Forbidden Action | Allowed Actions for Orchestrators | Small Experiments (ALLOWED with Limits) | Self-Check Before ANY Action | Exception: Emergency Research Commands | Practical Examples | Enforcement Mechanism | See Also -->
+  - 1. Core Principle
+    - 1.1 What the Orchestrator Does
+    - 1.2 Why This Rule Exists
+  - 2. Forbidden Actions for Orchestrators
+    - 2.1 Actions That Violate RULE 15
+  - ...
 - [user-requirements-immutable.md](./references/user-requirements-immutable.md)
-  <!-- TOC: Core Principle | Enforcement | Forbidden Actions | Issue Workflow -->
+  - 1. Core Principle
+    - 1.1 What Immutable Requirements Means
+    - 1.2 Why This Rule Exists
+  - 2. Orchestration Requirement Enforcement
+    - 2.1 At Project Start
+  - ...
 - [rule-14-enforcement.md](./references/rule-14-enforcement.md)
-  <!-- TOC: RULE 14: User Requirements Are Immutable | Core Rule | Detecting Deviations | When Technical Constraints Conflict | Requirement Compliance Documentation | Quick Reference -->
+  - 1.1 Core Rule
+  - 1.2 Detecting Deviations
+  - 1.3 When Technical Constraints Conflict
+  - 1.4 Requirement Compliance Documentation
+  - Requirement Compliance
+  - ...
 - [orchestrator-exclusive-communications.md](./references/orchestrator-exclusive-communications.md)
-  <!-- TOC: Core Principle | Sub-Agent Restrictions | Communication Flow -->
+  - 1. Core Principle
+    - 1.1 What This Rule Means
+    - 1.2 Why This Rule Exists
+  - 2. Orchestrator-Exclusive Actions
+    - 2.1 Actions ONLY the Orchestrator Can Perform
+  - ...
 - [orchestrator-guardrails.md](./references/orchestrator-guardrails.md)
-  <!-- TOC: Orchestrator Guardrails Reference | Part 1: Role Definition and Action Classification | Part 2: Decision Trees | Part 3: Common Scenarios | Part 4: Violation Detection and Examples | Quick Reference Summary | Related Documents -->
+    - Part 1: Role Definition and Action Classification
+    - Part 2: Decision Trees
+    - Part 3: Common Scenarios
+    - Part 4: Violation Detection and Examples
+  - Quick Reference Summary
+  - ...
 - [non-blocking-patterns.md](./references/non-blocking-patterns.md)
-  <!-- TOC: Summary | Overview -->
+  - Overview
+  - RULE 17: Orchestrator Must Remain Responsive (IRON RULE)
+  - 1. Async Task Delegation Patterns
+    - 1.1 Background Bash Pattern
+    - 1.2 Task Agent with Timeout
+  - ...
 - [delegation-checklist.md](./references/delegation-checklist.md)
-  <!-- TOC: Tracking | Objective -->
+  - 1.0 General Delegation Checklist
+    - Pre-Delegation Requirements
+    - Delegation Document Contents
+    - Post-Delegation Actions
+  - 2.0 Infrastructure Tasks
+  - ...
 - [workflow-checklists.md](./references/workflow-checklists.md)
-  <!-- TOC: Workflow Checklists | Checklist: Receiving New Task | Checklist: Delegating Task | Checklist: Monitoring Delegated Task | Checklist: Verifying Task Completion | Checklist: Reporting Results | Quick Reference: Checklist Selection | Notes -->
+  - Table of Contents (Use-Case Oriented)
+  - Checklist: Receiving New Task
+  - Checklist: Delegating Task
+  - Checklist: Monitoring Delegated Task
+  - Checklist: Verifying Task Completion
+  - ...
 - [sub-agent-role-boundaries-template.md](./references/sub-agent-role-boundaries-template.md)
-  <!-- TOC: AMOA Sub-Agent Role Boundaries Template | YAML Frontmatter Structure | Purpose Section | Role Boundaries with Orchestrator Section | What Agent Can/Cannot Do Section | When Invoked Section | Step-by-Step Procedure Section | Output Format Section | IRON RULES Section | Examples Section | Additional Sections | Template Usage Checklist | Design Philosophy -->
+  - YAML Frontmatter Structure
+  - Purpose Section
+  - Purpose
+  - Purpose
+  - Role Boundaries with Orchestrator Section
+  - ...

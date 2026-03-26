@@ -60,14 +60,45 @@ See [troubleshooting.md](references/troubleshooting.md)
 ## Resources
 
 - [command-details.md](references/command-details.md)
-  <!-- TOC: /start-orchestration | /orchestration-status | /orchestrator-status | /orchestrator-loop | /cancel-orchestrator -->
+  - /start-orchestration
+  - /orchestration-status
+  - /orchestrator-status
+  - /orchestrator-loop
+  - /cancel-orchestrator
 - [checklists.md](references/checklists.md)
-  <!-- TOC: Checklist: Starting Orchestration | Checklist: Monitoring Progress | Checklist: Cancellation -->
+  - Checklist: Starting Orchestration
+  - Checklist: Monitoring Progress
+  - Checklist: Cancellation
 - [start-orchestration-procedure.md](references/start-orchestration-procedure.md)
-  <!-- TOC: Command syntax and options | GitHub Project integration setup -->
+  - 1.1 When to Start Orchestration Phase
+  - 1.2 Prerequisites Verification Checklist
+  - 1.3 Command Syntax and Options
+    - Basic Usage
+    - With GitHub Project Sync
+    - Finding Your GitHub Project ID
+  - 1.4 Post-Start Agent Registration Workflow
+    - Step 1: Register AI Agents
+  - ...
 - [status-monitoring.md](references/status-monitoring.md)
-  <!-- TOC: Reading module status indicators | Interpreting agent registry information -->
+  - 2.1 Understanding the Orchestration Status Output
+    - Output Structure
+    - Header Section Fields
+    - When to Run Status Check
+  - 2.2 Reading Module Status Indicators
+    - Status Icons
+    - Module Line Format
+    - Understanding Poll Timing
+  - ...
 - [cancellation-cleanup.md](references/cancellation-cleanup.md)
-  <!-- TOC: Cleanup of state files and locks | Cancellation procedure step-by-step -->
+  - 4.1 When to Cancel vs Let Loop Complete Naturally
+    - Let the Loop Complete Naturally When
+    - Cancel the Loop When
+    - Consequences of Cancellation
+  - 4.2 Cancellation Procedure Step-by-Step
+    - Method 1: Use the Cancel Command
+    - Method 2: Manual Removal
+    - Verification After Cancellation
+  - ...
 - [python-scripts.md](references/python-scripts.md)
-  <!-- TOC: Script inventory - Scripts and their command mappings | Script output rules - Token-efficient output protocol -->
+  - Script Inventory
+  - Script Output Rules

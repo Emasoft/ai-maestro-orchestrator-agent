@@ -62,15 +62,37 @@ See [examples.md](./references/examples.md)
 ## Resources
 
 - [interview-templates.md](./references/interview-templates.md)
-  <!-- TOC: Pre-Task Interview Questions | Post-Task Interview Questions -->
+  - Pre-Task Interview Questions
+  - Pre-Task Interview: {TASK_ID}
+  - Post-Task Interview Questions
+  - Post-Task Interview: {TASK_ID}
+  - ...
 - [escalation-messages.md](./references/escalation-messages.md)
-  <!-- TOC: REVISE Message | PROCEED Message -->
+  - Design Issues → Architect
+  - Immutable Requirement Issues → Manager → User
+  - PROCEED Message
+  - PROCEED: {TASK_ID}
+  - ...
 - [exception-handling.md](./references/exception-handling.md)
-  <!-- TOC: Implementer Disagrees with Requirements | Architect Recommends Design Change | User Approves Requirement Change | Implementer Never Acknowledges | Implementer Misunderstands Task | Implementer Has Design Concerns | Implementer Reports Incomplete Work | Tests Fail in Post-Task Interview | Implementer Creates PR Before Approval -->
+  - 1. Implementer Disagrees with Requirements
+  - 2. Architect Recommends Design Change
+  - 3. User Approves Requirement Change
+  - 4. Implementer Never Acknowledges
+  - ...
 - [examples.md](./references/examples.md)
-  <!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect | Example 3: Send PROCEED After Satisfactory Interview | Example 4: Send Post-Task Verification Questions | Example 5: Send APPROVED and Handoff to Integrator -->
+  - Example 1: Send Pre-Task Interview Questions
+  - Example 2: Escalate Design Concern to Architect
+  - Example 3: Send PROCEED After Satisfactory Interview
+  - Example 4: Send Post-Task Verification Questions
+  - ...
 - [interview-workflow-steps.md](./references/interview-workflow-steps.md)
-  <!-- TOC: Pre-Task Interview Checklist | Post-Task Interview Checklist | Pre-Task Interview Steps | Post-Task Interview Steps -->
+  - Pre-Task Interview Checklist
+  - Post-Task Interview Checklist
+  - Pre-Task Interview Steps
+  - Post-Task Interview Steps
 - [handoff-and-output.md](./references/handoff-and-output.md)
-  <!-- TOC: Output Types | Handoff to Integrator -->
+  - Handoff to Integrator
+    - When PR is Created
+    - Responsibility Transfer
+  - Output Types
 

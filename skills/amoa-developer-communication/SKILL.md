@@ -61,11 +61,23 @@ See `references/op-*.md` for walkthroughs.
 ## Resources
 
 - [reference-catalog.md](references/reference-catalog.md)
-  <!-- TOC: PR Comment Writing | Issue Communication | Technical Explanation | Conflict Resolution | Status Updates | Templates for Humans -->
+    - PR Comment Writing
+    - Issue Communication
+    - Technical Explanation
+    - Conflict Resolution
+    - Status Updates
+    - Templates for Humans
 - [key-principles.md](references/key-principles.md)
-  <!-- TOC: Assume Good Intent | Be Specific, Not Vague | Separate Blocking from Non-Blocking | Acknowledge Good Work | Provide Context -->
+    - 1. Assume Good Intent
+    - 2. Be Specific, Not Vague
+    - 3. Separate Blocking from Non-Blocking
+    - 4. Acknowledge Good Work
+    - 5. Provide Context for Your Feedback
 - [decision-tree.md](references/decision-tree.md)
-  <!-- TOC: Decision Tree: Choosing Communication Type -->
 - [tone-quick-reference.md](references/tone-quick-reference.md)
-  <!-- TOC: Communication Tone Quick Reference | Examples of Constructive Communication | Example 1: Constructive Code Review Comment | Example 2: Acknowledging Good Work | Error Handling in Communication | Pre-Send Checklist -->
+  - Examples of Constructive Communication
+    - Example 1: Constructive Code Review Comment
+    - Example 2: Acknowledging Good Work
+  - Error Handling in Communication
+  - Pre-Send Checklist
 

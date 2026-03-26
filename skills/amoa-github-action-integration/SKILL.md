@@ -49,11 +49,20 @@ See [error-handling.md](references/error-handling.md) for troubleshooting trigge
 
 - [claude-code-action](https://github.com/anthropics/claude-code-action) | [GitHub Actions docs](https://docs.github.com/en/actions)
 - [template-details.md](references/template-details.md)
-  <!-- TOC: PR Review Workflow | Mention Response Workflow | Issue Triage Workflow -->
+  - PR Review Workflow
+  - Mention Response Workflow
+  - Issue Triage Workflow
 - [customization-and-examples.md](references/customization-and-examples.md)
-  <!-- TOC: Changing the Model | Restricting Tools | Custom Prompts | Example 1: Basic PR Review Setup | Example 2: @claude Mention Handler -->
+  - Changing the Model
+  - Restricting Tools
+  - Custom Prompts
+  - Example 1: Basic PR Review Setup
+  - Example 2: @claude Mention Handler
 - [error-handling.md](references/error-handling.md)
-  <!-- TOC: Workflow Not Triggering | Authentication Errors | Permission Denied Errors | Timeout Issues -->
+  - Workflow Not Triggering
+  - Authentication Errors
+  - Permission Denied Errors
+  - Timeout Issues
 
 ## Examples
 

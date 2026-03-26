@@ -55,8 +55,31 @@ Escalate: reminder→urgent→reassignment. Blockers→`type:blocker` issues. Se
 ## Resources
 
 - [references/blocker-handling-protocol.md](references/blocker-handling-protocol.md)
-  <!-- TOC: Blocker Response Protocol | When Blocker Resolved -->
+  - Iron Rule for Blockers
+  - Comprehensive Blocker Definition
+  - Blocker Response Protocol
+  - Update Labels and Create Blocker Issue
+  - Resolution
+  - When Blocker Resolved
+  - Blocker Lifecycle Checklist
 - [references/escalation-and-messaging.md](references/escalation-and-messaging.md)
-  <!-- TOC: Escalation Order | First Reminder | Urgent Reminder | Reassignment Decision | Progress Report Format | Completion Verification -->
+  - Escalation Order
+  - First Reminder
+  - Urgent Reminder
+  - Reassignment Decision
+  - Progress Report Format
+    - Status Update
+    - Completion Report
+    - Blocker Report
+  - Completion Verification
+    - Verification Checklist
+    - If Verification Passes
+    - If Verification Fails
 - [references/monitoring-examples.md](references/monitoring-examples.md)
-  <!-- TOC: Example 1: Query Agent State via AI Maestro | Example 2: Send First Reminder | Example 3: Escalate to Urgent | Example 4: Handle Blocker Report | Example 5: Verify Completion | Dashboard Queries | Error Handling -->
+  - Example 1: Query Agent State via AI Maestro
+  - Example 2: Send First Reminder
+  - Example 3: Escalate to Urgent
+  - Example 4: Handle Blocker Report
+  - Example 5: Verify Completion
+  - Dashboard Queries
+  - Error Handling

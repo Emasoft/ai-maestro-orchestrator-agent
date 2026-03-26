@@ -57,18 +57,39 @@ See [references/kanban-error-handling.md](references/kanban-error-handling.md)
 ## Resources
 
 - [Auth & OAuth Scopes](references/gh-auth-scopes.md)
-<!-- TOC: GitHub CLI Authentication and OAuth Scopes | Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
+  - 1.1 Why project scopes are required
+  - 1.2 Complete list of required OAuth scopes
+  - 1.3 How to check current scopes
+  - ...
 - [GraphQL Mutations](references/github-projects-v2-graphql.md)
-<!-- TOC: Deleting a project item - deleteProjectV2Item mutation | Common parameter mistakes - fieldId vs projectId confusion -->
+  - 2.1 Querying project fields and their IDs
+  - 2.2 Moving an item to a different column
+  - 2.3 Adding columns to a field
+  - ...
 - [Pitfalls & Guards](references/kanban-pitfalls.md)
-<!-- TOC: Safe column addition procedure | How to detect if an issue was auto-closed -->
+  - 3.1 Done column auto-closes linked issues
+    - What happens
+    - 3.1.1 How to detect if an issue was auto-closed
+  - ...
 - [Procedures](references/kanban-procedures.md)
-<!-- TOC: PROCEDURE 4: Sync Kanban Status | PROCEDURE 1: Create Project Board -->
+    - PROCEDURE 1: Create Project Board
+    - PROCEDURE 2: Add or Modify Columns
+    - PROCEDURE 3: Move Items Between Columns
+  - ...
 - [Column System](references/kanban-column-system.md)
-<!-- TOC: Available Scripts | Standard 8-Column System -->
+  - Standard 8-Column System
+  - Available Scripts
 - [Checklists](references/kanban-checklist.md)
-<!-- TOC: Pre-Flight Checklist | Board Setup Checklist -->
+  - Step-by-Step Instructions
+  - Pre-Flight Checklist
+  - Board Setup Checklist
+  - ...
 - [Error Handling](references/kanban-error-handling.md)
-<!-- TOC: Script Output Rules | Output Specification -->
+  - Error Reference Table
+  - Output Specification
+  - Script Output Rules
 - [Examples](references/kanban-examples.md)
-<!-- TOC: Example 1: Pre-Flight Scope Check | Example 2: Create Task and Add to Board | Example 3: Move Item to AI Review | Example 4: Safe Guard Before Closing Issue -->
+    - Example 1: Pre-Flight Scope Check
+    - Example 2: Create Task and Add to Board
+    - Example 3: Move Item to AI Review
+  - ...

@@ -64,17 +64,37 @@ See: [error-handling-reference.md](references/error-handling-reference.md) for e
 ## Resources
 
 - [replacement-workflow-steps.md](references/replacement-workflow-steps.md) - 6-step workflow
-  <!-- TOC: Replacement Protocol Flow | Step 1: Receive AMCOS Notification | Step 2: Compile Task Context | Step 3: Generate Handoff Document | Step 4: Reassign Kanban Tasks | Step 5: Send Handoff to New Agent | Step 6: Confirm Reassignment | Python Scripts -->
+  - 1. Replacement Protocol Flow
+  - 2. Step 1: Receive AMCOS Notification
+  - 3. Step 2: Compile Task Context
+  - 4. Step 3: Generate Handoff Document
+  - 5. Step 4: Reassign Kanban Tasks
+  - ...
 - [error-handling-reference.md](references/error-handling-reference.md) - Errors
-  <!-- TOC: Common Errors and Solutions | Troubleshooting References | Emergency Procedures -->
+  - 1. Common Errors and Solutions
+  - 2. Troubleshooting References
+  - 3. Emergency Procedures
 - [handoff-document-format.md](references/handoff-document-format.md) - Handoff format
-  <!-- TOC: Required Sections | Task Detail Format -->
+  - 3.1 Required Sections
+    - Mandatory Sections
+    - Section Order
+  - Template
+  - Handoff Metadata
+  - ...
 - [examples.md](references/examples.md) - Examples
-  <!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
+  - Example 1: Standard Replacement Flow
+  - Example 2: Emergency Replacement with Partial Context
 - [emergency-procedures.md](references/emergency-procedures.md) - Emergencies
-  <!-- TOC: Replacement Agent Also Fails | Handoff Document Corrupted -->
+  - Replacement Agent Also Fails
+  - Handoff Document Corrupted
+  - GitHub Project Access Issues
 - [context-compilation-workflow.md](references/context-compilation-workflow.md) - Context gathering
-  <!-- TOC: Information Sources | State File Extraction -->
+  - 2.1 Information Sources
+    - Primary Sources (MUST check)
+    - Secondary Sources (SHOULD check)
+    - Tertiary Sources (MAY check)
+  - 2.2 State File Extraction
+  - ...
 
 ## Related Skills
 

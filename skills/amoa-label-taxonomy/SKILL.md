@@ -62,12 +62,31 @@ See: [references/error-handling-and-output.md](./references/error-handling-and-o
 ## Resources
 
 - [label-categories-detailed.md](./references/label-categories-detailed.md)
-  <!-- TOC: Label Categories (Detailed) | Table of Contents | Assignment Labels (`assign:*`) | Status Labels (`status:*`) | Priority Labels (`priority:*`) | Type Labels (`type:*`) | Component Labels (`component:*`) | Effort Labels (`effort:*`) | Platform Labels (`platform:*`) | Toolchain Labels (`toolchain:*`) | Review Labels (`review:*`) -->
+  - Assignment Labels (`assign:*`)
+  - Status Labels (`status:*`)
+  - Priority Labels (`priority:*`)
+  - Type Labels (`type:*`)
+  - Component Labels (`component:*`)
+  - Effort Labels (`effort:*`)
+  - Platform Labels (`platform:*`)
+  - Toolchain Labels (`toolchain:*`)
+  - Review Labels (`review:*`)
 - [cli-commands.md](./references/cli-commands.md)
-  <!-- TOC: Create Labels | Query Labels | Update Labels | Validate Label Cardinality -->
+  - Create Labels
+    - Assignment Labels
+    - Status Labels
+    - Priority Labels
+    - Type Labels
+  - Query Labels
+  - Update Labels
+  - Validate Label Cardinality
 - [examples.md](./references/examples.md)
-  <!-- TOC: Example 1: Assign Task to Agent | Example 2: Update Status During Workflow | Example 3: Query Issues by Multiple Labels | Example 4: Validate Label Cardinality -->
+  - Example 1: Assign Task to Agent
+  - Example 2: Update Status During Workflow
+  - Example 3: Query Issues by Multiple Labels
+  - Example 4: Validate Label Cardinality
 - [usage-rules.md](./references/usage-rules.md)
-  <!-- TOC: Label Cardinality | Label Lifecycle | Common Mistakes to Avoid -->
+  - Label Cardinality
+  - Label Lifecycle
+  - Common Mistakes to Avoid
 - [error-handling-and-output.md](./references/error-handling-and-output.md)
-  <!-- TOC: Error Handling | Output Formats | Colors Reference -->

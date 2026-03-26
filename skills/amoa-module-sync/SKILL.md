@@ -61,10 +61,43 @@ Guide: [troubleshooting.md](./references/troubleshooting.md)
 ## Resources
 
 - [usage-examples.md](./references/usage-examples.md)
-  <!-- TOC: 1 Add New Module Mid-Orchestration | 2 Reassign Blocked Module | 3 Scripts Reference -->
+  - 1 Add New Module Mid-Orchestration
+  - 2 Reassign Blocked Module
+  - 3 Scripts Reference
 - [github-issue-sync.md](./references/github-issue-sync.md)
-  <!-- TOC: GitHub Issue Synchronization Reference | Issue Creation Format and Labels | Issue Update Synchronization | Issue Closure Protocols | Label Conventions | Manual Sync When Automation Fails | Troubleshooting Sync Issues | Sync State Diagram | Related Commands -->
+  - 6.1 Issue Creation Format and Labels
+    - Automatic Issue Creation
+    - Issue Title Format
+    - Issue Body Format
+  - Module: {module_name}
+    - Description
+    - Acceptance Criteria
+    - Priority
+    - Related
+    - Labels Applied on Creation
+    - Issue Creation Command
+    - Capturing Issue Number
+  - 6.2 Issue Update Synchronization
+    - Triggering Updates
+    - Name Change Sync
+  - ...
 - [troubleshooting.md](./references/troubleshooting.md)
-  <!-- TOC: Module Management Troubleshooting Reference | State File Corruption Recovery | GitHub Sync Failure Recovery | Agent Notification Failures | Module ID Conflicts | Force Removal Scenarios | General Troubleshooting Checklist | Error Reference Table | Related Commands -->
+  - 7.1 State File Corruption Recovery
+    - Detecting Corruption
+    - Common Corruption Causes
+    - Recovery from Git
+    - Recovery from Backup
+    - Manual Reconstruction
+    - Minimal Valid State File
+  - 7.2 GitHub Sync Failure Recovery
+    - Diagnosing Sync Failures
+    - Issue Creation Failed
+    - Issue Update Failed
+    - Issue Closure Failed
+    - Bulk Sync Recovery
+  - 7.3 Agent Notification Failures
+    - Diagnosing Notification Failures
+  - ...
 - [checklist-and-scripts.md](./references/checklist-and-scripts.md)
-  <!-- TOC: Module management checklist | Script output rules and token-efficient protocol -->
+  - 1 Module Management Checklist
+  - 2 Script Output Rules

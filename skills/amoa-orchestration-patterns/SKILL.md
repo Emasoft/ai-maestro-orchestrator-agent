@@ -48,21 +48,37 @@ Blocked tasks escalate per [progress-monitoring.md](references/progress-monitori
 ## Resources
 
 - [quick-reference-checklist.md](references/quick-reference-checklist.md)
-  <!-- TOC: Quick Reference Checklist | Phase 1: Decomposition | Phase 5: Integration and Verification -->
 - [task-complexity-classifier.md](references/task-complexity-classifier.md)
-  <!-- TOC: Task Complexity Assessment | Decision Matrix | Classification Process -->
+  - Task Complexity Assessment
+  - Use-Case Quick Reference
+  - Simple Task
+  - ...
 - [agent-selection-guide.md](references/agent-selection-guide.md)
-  <!-- TOC: Overview | Quick Navigation by Problem | Golden Rules -->
+  - Overview
+  - Use-Case Quick Reference
+    - Part 1: Language-Specific Agents
+  - ...
 - [project-setup-menu.md](references/project-setup-menu.md)
-  <!-- TOC: Overview | Document Structure | Storage Keys Reference -->
+  - Overview
+  - Document Structure
+    - [Part 1: Team, Repository & Release Configuration](project-setup-menu-part1-team-repo-release.md)
+  - ...
 - [language-verification-checklists.md](references/language-verification-checklists.md)
-  <!-- TOC: Quick Navigation | Cross-Language Resources -->
+  - Quick Navigation
+  - Cross-Language Resources
+  - Documents
+  - ...
 - [verification-loops.md](references/verification-loops.md)
-  <!-- TOC: Overview | Steps 1-5 | Enforcement Rules -->
+  - 1. Overview
+    - 1.1 Why 4 Verification Loops Are Required
+    - 1.2 The Precise Flow Diagram
+  - ...
 - [orchestration-api-commands.md](references/orchestration-api-commands.md)
-  <!-- TOC: Claude Code Tasks API | Message types for AMOA -->
+  - 1. AI Maestro Messaging for Remote Agents
+    - 1.1 When to use AI Maestro vs Task tool
+    - 1.2 Sending task assignments to remote agents
+  - ...
 - [decomposition-example.md](references/decomposition-example.md)
-  <!-- TOC: Example: Decompose and Delegate a Feature | Error Handling Reference -->
 
 ## Prerequisites
 
