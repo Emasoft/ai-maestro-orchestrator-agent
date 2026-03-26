@@ -50,7 +50,7 @@ State report table (task, agent, state, last update) + escalation messages + blo
 ## Error Handling
 
 Escalate: reminder→urgent→reassignment. Blockers→`type:blocker` issues. See [references/monitoring-examples.md](references/monitoring-examples.md).
-<!-- TOC: QueryState|Reminder|Escalate|Blocker|Completion|Dashboard|Errors -->
+<!-- TOC: Example 1: Query Agent State via AI Maestro | Example 2: Send First Reminder | Example 3: Escalate to Urgent | Example 4: Handle Blocker Report | Example 5: Verify Completion | Dashboard Queries | Error Handling -->
 
 ## Resources
 
@@ -59,4 +59,4 @@ Escalate: reminder→urgent→reassignment. Blockers→`type:blocker` issues. Se
 - [references/escalation-and-messaging.md](references/escalation-and-messaging.md)
   <!-- TOC: Escalation Order | First Reminder | Urgent Reminder | Reassignment Decision | Progress Report Format | Completion Verification -->
 - [references/monitoring-examples.md](references/monitoring-examples.md)
-  <!-- TOC: Query Agent State | Send First Reminder | Escalate to Urgent | Handle Blocker Report | Verify Completion | Dashboard Queries | Error Handling -->
+  <!-- TOC: Example 1: Query Agent State via AI Maestro | Example 2: Send First Reminder | Example 3: Escalate to Urgent | Example 4: Handle Blocker Report | Example 5: Verify Completion | Dashboard Queries | Error Handling -->

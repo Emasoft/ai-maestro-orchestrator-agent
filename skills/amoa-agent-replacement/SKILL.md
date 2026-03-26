@@ -17,25 +17,14 @@ agent: amoa-main
 
 Handle agent replacement triggered by AMCOS. When an agent fails or loses context, compile task context and generate handoff documents for the replacement.
 
-**Use this skill when**: AMCOS notifies of agent failure, context loss, or manual replacement is needed.
 
 ## Prerequisites
 
-- Python 3.8+ with PyYAML
-- GitHub CLI (gh) authenticated
-- AI Maestro running
-- AMCOS system operational
+Python 3.8+, PyYAML, GitHub CLI (gh) authenticated, AI Maestro running, AMCOS operational.
 
 ## Output
 
-| Output Type | Location | Format |
-|-------------|----------|--------|
-| Handoff Document | GitHub issue comment | Markdown with context and next steps |
-| State File | Orchestrator state YAML | Updated agent assignment |
-| AMCOS Confirmation | AI Maestro message | JSON replacement status |
-| Kanban Update | GitHub Project board | Reassigned task cards |
-
----
+Handoff document (GitHub issue comment), state file update, AMCOS confirmation, kanban reassignment.
 
 ## Instructions
 
@@ -45,8 +34,6 @@ Handle agent replacement triggered by AMCOS. When an agent fails or loses contex
 
 See: [replacement-workflow-steps.md](references/replacement-workflow-steps.md) for detailed steps.
 <!-- TOC: Replacement Protocol Flow | Step 1: Receive AMCOS Notification | Step 2: Compile Task Context | Step 3: Generate Handoff Document | Step 4: Reassign Kanban Tasks | Step 5: Send Handoff to New Agent | Step 6: Confirm Reassignment | Python Scripts -->
-
----
 
 ## Checklist
 
@@ -61,8 +48,6 @@ Copy this checklist and track your progress:
 - [ ] Update orchestrator state file
 - [ ] Notify AMCOS of successful replacement
 
----
-
 ## Examples
 
 **Input:** AMCOS notification `{"type": "agent-failed", "agent": "libs-svg-svgbbox", "reason": "context-loss"}`
@@ -71,14 +56,10 @@ Copy this checklist and track your progress:
 See: [examples.md](references/examples.md) for full examples.
 <!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
 
----
-
 ## Error Handling
 
 See: [error-handling-reference.md](references/error-handling-reference.md) for errors and solutions.
 <!-- TOC: Common Errors and Solutions | Troubleshooting References | Emergency Procedures -->
-
----
 
 ## Resources
 
@@ -95,13 +76,7 @@ See: [error-handling-reference.md](references/error-handling-reference.md) for e
 - [context-compilation-workflow.md](references/context-compilation-workflow.md) - Context gathering
   <!-- TOC: Information Sources | State File Extraction -->
 
----
-
 ## Related Skills
 
 - `amoa-remote-agent-coordinator` - Agent registration and remote agent communication
 - `amoa-orchestration-patterns` - General orchestration patterns
-
----
-
-**Version**: 1.0.0 | **Last Updated**: 2026-02-03

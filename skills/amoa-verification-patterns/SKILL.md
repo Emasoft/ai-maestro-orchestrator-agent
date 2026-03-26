@@ -82,9 +82,4 @@ See [examples.md](./references/examples.md) for worked examples.
 
 ## Error Handling
 
-Fail-fast: failures propagate immediately, no fallbacks. See:
-
-- [troubleshooting.md](./references/troubleshooting.md)
-  <!-- TOC: E2E Test is Flaky | Integration Test Fails with Timeout -->
-- [docker-troubleshooting.md](./references/docker-troubleshooting.md)
-  <!-- TOC: Checking container logs | Using environment files -->
+Fail-fast: failures propagate immediately, no fallbacks. See troubleshooting.md and docker-troubleshooting.md in Resources.

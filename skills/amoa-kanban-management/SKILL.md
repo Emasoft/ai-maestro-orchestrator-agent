@@ -20,7 +20,7 @@ Manage GitHub Projects V2 kanban boards: create boards, columns, move items, syn
 ## Prerequisites
 
 `gh` CLI authenticated with `project` and `read:project` OAuth scopes. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md)
-<!-- TOC: Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
+<!-- TOC: GitHub CLI Authentication and OAuth Scopes | Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
 
 ## Instructions
 
@@ -57,7 +57,7 @@ See [references/kanban-error-handling.md](references/kanban-error-handling.md)
 ## Resources
 
 - [Auth & OAuth Scopes](references/gh-auth-scopes.md)
-<!-- TOC: Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
+<!-- TOC: GitHub CLI Authentication and OAuth Scopes | Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
 - [GraphQL Mutations](references/github-projects-v2-graphql.md)
 <!-- TOC: Deleting a project item - deleteProjectV2Item mutation | Common parameter mistakes - fieldId vs projectId confusion -->
 - [Pitfalls & Guards](references/kanban-pitfalls.md)

@@ -19,7 +19,7 @@ Interview implementers pre/post task to verify readiness and quality before PR c
 
 ## Prerequisites
 
-Read **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**, and **rule-14-immutable-requirements.md**.
+AGENT_OPERATIONS.md, amoa-label-taxonomy, amoa-messaging-templates.
 
 ## Output
 
@@ -34,7 +34,6 @@ Interview decision (PROCEED/APPROVED/REVISE), handoff doc, and issue label updat
    <!-- TOC: REVISE Message | PROCEED Message -->
 2. Evaluate responses; send PROCEED or REVISE
 3. After execution, send Post-Task Interview. All pass → APPROVED, major → REVISE
-   <!-- TOC: Pre-Task Interview Questions | Post-Task Interview Questions -->
 4. On APPROVED, create PR, set `status:ai-review`, notify Integrator per [handoff-and-output.md](./references/handoff-and-output.md)
    <!-- TOC: Output Types | Handoff to Integrator -->
 
@@ -52,12 +51,6 @@ Steps: [interview-workflow-steps.md](./references/interview-workflow-steps.md)
 
 See: [exception-handling.md](./references/exception-handling.md)
 <!-- TOC: Implementer Disagrees with Requirements | Architect Recommends Design Change | User Approves Requirement Change | Implementer Never Acknowledges | Implementer Misunderstands Task | Implementer Has Design Concerns | Implementer Reports Incomplete Work | Tests Fail in Post-Task Interview | Implementer Creates PR Before Approval -->
-
-| Error | Solution |
-|-------|----------|
-| No ACK | Reminder → escalate |
-| Misunderstands task | Clarify, re-interview |
-| Incomplete/tests fail | REVISE with specifics |
 
 ## Examples
 

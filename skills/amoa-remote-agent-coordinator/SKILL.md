@@ -48,7 +48,7 @@ ACK confirmations, progress reports, verification results, PR decisions.
 ## Error Handling
 
 See [error-handling-protocol.md](./references/error-handling-protocol.md).
-<!-- TOC: Overview | FAIL-FAST Principle | When Agents Must Stop and Report | Error Reporting Format | Error Report Message Schema | Error Types | Orchestrator Response to Errors | Acknowledging Error Reports | Providing Solutions | Escalation When Needed | Troubleshooting | Problem: Agent Not Reporting Errors | Problem: Agent Reports Same Error Repeatedly | Problem: Unclear Error Type | Problem: False Blocker Reports -->
+<!-- TOC: Error Handling Protocol | Overview | FAIL-FAST Principle | When Agents Must Stop and Report | Error Reporting Format | Error Report Message Schema | Error Types | Orchestrator Response to Errors | Acknowledging Error Reports | Providing Solutions | Escalation When Needed | Troubleshooting | Problem: Agent Not Reporting Errors | Problem: Agent Reports Same Error Repeatedly | Problem: Unclear Error Type | Problem: False Blocker Reports -->
 
 ## Resources
 
@@ -61,7 +61,7 @@ See [error-handling-protocol.md](./references/error-handling-protocol.md).
 - [progress-monitoring-protocol.md](./references/progress-monitoring-protocol.md)
   <!-- TOC: Overview | Monitoring | Status | Completion | Templates -->
 - [error-handling-protocol.md](./references/error-handling-protocol.md)
-  <!-- TOC: Overview | FAIL-FAST Principle | When Agents Must Stop and Report | Error Reporting Format | Error Report Message Schema | Error Types | Orchestrator Response to Errors | Acknowledging Error Reports | Providing Solutions | Escalation When Needed | Troubleshooting | Problem: Agent Not Reporting Errors | Problem: Agent Reports Same Error Repeatedly | Problem: Unclear Error Type | Problem: False Blocker Reports -->
+  <!-- TOC: Error Handling Protocol | Overview | FAIL-FAST Principle | When Agents Must Stop and Report | Error Reporting Format | Error Report Message Schema | Error Types | Orchestrator Response to Errors | Acknowledging Error Reports | Providing Solutions | Escalation When Needed | Troubleshooting | Problem: Agent Not Reporting Errors | Problem: Agent Reports Same Error Repeatedly | Problem: Unclear Error Type | Problem: False Blocker Reports -->
 - [escalation-procedures.md](./references/escalation-procedures.md)
   <!-- TOC: Overview | Metrics | Escalation Categories -->
 - [messaging-protocol.md](./references/messaging-protocol.md)
