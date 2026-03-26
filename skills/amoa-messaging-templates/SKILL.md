@@ -50,10 +50,10 @@ Standard JSON message structure with from, to, subject, priority, and content fi
 ## 2. Message Templates by Scenario
 
 JSON templates: [references/message-templates.md](references/message-templates.md)
-<!-- TOC: Task Assignment (AMOA to Remote Agent) | Task Completion Report (Agent to AMOA) | Decision Trees for Core Message Templates -->
+<!-- TOC: Task Assignment (AMOA → Remote Agent) | Task Completion Report (Agent → AMOA) | Status Request (AMOA → Agent) | Status Response (Agent → AMOA) | Approval Request (AMCOS → AMAMA) | Approval Response (AMAMA → AMCOS) | Escalation (Any Agent → AMCOS/AMAMA) | Acknowledgment (Any Agent) | Design Handoff (AMAA → AMOA) | Integration Request (AMOA → AMIA) | Integration Result (AMIA → AMOA) | Decision Trees for Core Message Templates | Task Assignment Decision Tree | Task Completion Report Decision Tree | Status Request/Response Decision Tree -->
 
 Curl templates: [references/ai-maestro-message-templates.md](references/ai-maestro-message-templates.md)
-<!-- TOC: Acknowledging Task Assignment from AMCOS/AMAMA | Delegating Task to Sub-Agent | Decision Trees for AI Maestro Message Handling -->
+<!-- TOC: Acknowledging Task Assignment from AMCOS/AMAMA | Delegating Task to Sub-Agent | Requesting Status Update from Sub-Agent | Reporting Task Completion to AMCOS | Escalating Blocked Task to AMCOS | Escalating Blocked Task to AMAMA (User Decision Needed) | Standard AI Maestro API Format and Conventions | Quick Reference: Common Patterns | Notes | Decision Trees for AI Maestro Message Handling | Receiving Task from AMCOS Decision Tree | Reporting to AMCOS Decision Tree -->
 
 ---
 
@@ -69,7 +69,7 @@ Error resolution and scenario mapping: [references/error-handling-quickref.md](r
 ## Examples
 
 See: [references/examples.md](references/examples.md)
-<!-- TOC: Full Task Assignment Flow | Example 1: Send Task Assignment | Example 2: Send Status Request -->
+<!-- TOC: Full Task Assignment Flow | Example 1: Send Task Assignment | Example 2: Send Status Request | Example 3: Escalate to Assistant Manager -->
 
 **Input:** Send task assignment to agent via `agent-messaging` skill with scenario=task_assignment, to=agent-name, subject="Run tests"
 **Output:** `{"status":"sent","message_id":"msg-12345"}`

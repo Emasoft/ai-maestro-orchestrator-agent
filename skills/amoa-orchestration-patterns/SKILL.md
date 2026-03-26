@@ -38,12 +38,12 @@ Copy this checklist and track your progress:
 `Implement OAuth2` → 5 parallel agents: DB schema, OAuth config, login flow, token refresh, tests.
 
 [orchestration-examples](references/orchestration-examples.md)
-<!-- TOC: Authentication Module Implementation | CI Failure Coordination | Parallel Code Review | Blocked Dependency Handling -->
+<!-- TOC: Authentication Module Implementation | When you receive a plan handoff from AMAMA for authentication | Task creation pattern for multi-component modules | CI Failure Coordination | When CI tests fail and need coordinated fixes | Investigation-first pattern for unknown root causes | Parallel Code Review | When coordinating reviews across multiple developers | Section-based decomposition for large codebases | Blocked Dependency Handling | When one task blocks on external dependency | Parallel escalation pattern for infrastructure blockers -->
 
 ## Error Handling
 
 Blocked tasks escalate per [progress-monitoring](references/progress-monitoring.md). Failed agents respawn once, then escalate.
-<!-- TOC: Proactive Monitoring Principles | PROACTIVE Status Request Protocol | Troubleshooting -->
+<!-- TOC: Proactive Monitoring Principles | Why Proactive Monitoring is Critical | The Five Proactive Principles | PROACTIVE Status Request Protocol | When to Send Status Requests | Status Request Message Template | PROACTIVE Unblocking Protocol | When an Agent Reports a Blocker | Unblocking Response Template | PROACTIVE Task Completion Enforcement | Before Allowing Agent to Stop | Verification Requirements | Troubleshooting | Agent Not Responding to Status Requests | Agent Reports Same Blocker Repeatedly | Agent Claims Completion But Evidence Missing | See Also -->
 
 ## Resources
 

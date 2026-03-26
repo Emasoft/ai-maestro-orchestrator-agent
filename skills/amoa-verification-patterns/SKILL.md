@@ -40,7 +40,7 @@ Verification reports with pass/fail status, collected evidence, and formatted re
 ## Principles
 
 See: [verification-principles.md](./references/verification-principles.md)
-<!-- TOC: Principle 4: Fail Fast | Principle 3: Reproducibility -->
+<!-- TOC: Principle 1: Never Trust Assumptions | Principle 2: Measure What Matters | Principle 3: Reproducibility | Principle 4: Fail Fast | Principle 5: Document Evidence -->
 
 ## Instructions
 

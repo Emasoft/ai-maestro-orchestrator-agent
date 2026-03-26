@@ -46,12 +46,12 @@ Copy this checklist and track your progress:
 - [ ] On APPROVED, execute handoff
 
 Steps: [interview-workflow-steps.md](./references/interview-workflow-steps.md)
-<!-- TOC: Pre-Task Interview Steps | Post-Task Interview Steps -->
+<!-- TOC: Pre-Task Interview Checklist | Post-Task Interview Checklist | Pre-Task Interview Steps | Post-Task Interview Steps -->
 
 ## Error Handling
 
 See: [exception-handling.md](./references/exception-handling.md)
-<!-- TOC: Implementer Misunderstands Task | Implementer Never Acknowledges -->
+<!-- TOC: Implementer Disagrees with Requirements | Architect Recommends Design Change | User Approves Requirement Change | Implementer Never Acknowledges | Implementer Misunderstands Task | Implementer Has Design Concerns | Implementer Reports Incomplete Work | Tests Fail in Post-Task Interview | Implementer Creates PR Before Approval -->
 
 | Error | Solution |
 |-------|----------|
@@ -62,7 +62,7 @@ See: [exception-handling.md](./references/exception-handling.md)
 ## Examples
 
 See [examples.md](./references/examples.md)
-<!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect -->
+<!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect | Example 3: Send PROCEED After Satisfactory Interview | Example 4: Send Post-Task Verification Questions | Example 5: Send APPROVED and Handoff to Integrator -->
 
 **Input:** Issue #42 assigned to `libs-svg-svgbbox`. **Output:** Pre-task → PROCEED → post-task → APPROVED → Integrator notified.
 
@@ -73,11 +73,11 @@ See [examples.md](./references/examples.md)
 - [escalation-messages.md](./references/escalation-messages.md)
   <!-- TOC: REVISE Message | PROCEED Message -->
 - [exception-handling.md](./references/exception-handling.md)
-  <!-- TOC: Implementer Misunderstands Task | Implementer Never Acknowledges -->
+  <!-- TOC: Implementer Disagrees with Requirements | Architect Recommends Design Change | User Approves Requirement Change | Implementer Never Acknowledges | Implementer Misunderstands Task | Implementer Has Design Concerns | Implementer Reports Incomplete Work | Tests Fail in Post-Task Interview | Implementer Creates PR Before Approval -->
 - [examples.md](./references/examples.md)
-  <!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect -->
+  <!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect | Example 3: Send PROCEED After Satisfactory Interview | Example 4: Send Post-Task Verification Questions | Example 5: Send APPROVED and Handoff to Integrator -->
 - [interview-workflow-steps.md](./references/interview-workflow-steps.md)
-  <!-- TOC: Pre-Task Interview Steps | Post-Task Interview Steps -->
+  <!-- TOC: Pre-Task Interview Checklist | Post-Task Interview Checklist | Pre-Task Interview Steps | Post-Task Interview Steps -->
 - [handoff-and-output.md](./references/handoff-and-output.md)
   <!-- TOC: Output Types | Handoff to Integrator -->
 

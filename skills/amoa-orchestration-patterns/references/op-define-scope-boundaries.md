@@ -178,4 +178,4 @@ Out of Scope:
 <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-select-agent-for-task.md](op-select-agent-for-task.md) - Select agents before defining scope
 <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
-- [op-decompose-goals-to-modules.md](op-decompose-goals-to-modules.md) - Decomposition informs boundaries
+- [op-decompose-goals-to-modules.md](../../amoa-two-phase-mode/references/op-decompose-goals-to-modules.md) - Decomposition informs boundaries

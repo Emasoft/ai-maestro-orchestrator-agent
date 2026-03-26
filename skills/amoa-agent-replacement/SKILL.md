@@ -44,7 +44,7 @@ Handle agent replacement triggered by AMCOS. When an agent fails or loses contex
 3. Wait for ACK, confirm reassignment, and notify AMCOS of successful replacement.
 
 See: [replacement-workflow-steps.md](references/replacement-workflow-steps.md) for detailed steps.
-<!-- TOC: Python Scripts | Replacement Protocol Flow -->
+<!-- TOC: Replacement Protocol Flow | Step 1: Receive AMCOS Notification | Step 2: Compile Task Context | Step 3: Generate Handoff Document | Step 4: Reassign Kanban Tasks | Step 5: Send Handoff to New Agent | Step 6: Confirm Reassignment | Python Scripts -->
 
 ---
 
@@ -76,16 +76,16 @@ See: [examples.md](references/examples.md) for full examples.
 ## Error Handling
 
 See: [error-handling-reference.md](references/error-handling-reference.md) for errors and solutions.
-<!-- TOC: Emergency Procedures | Common Errors and Solutions -->
+<!-- TOC: Common Errors and Solutions | Troubleshooting References | Emergency Procedures -->
 
 ---
 
 ## Resources
 
 - [replacement-workflow-steps.md](references/replacement-workflow-steps.md) - 6-step workflow
-  <!-- TOC: Python Scripts | Replacement Protocol Flow -->
+  <!-- TOC: Replacement Protocol Flow | Step 1: Receive AMCOS Notification | Step 2: Compile Task Context | Step 3: Generate Handoff Document | Step 4: Reassign Kanban Tasks | Step 5: Send Handoff to New Agent | Step 6: Confirm Reassignment | Python Scripts -->
 - [error-handling-reference.md](references/error-handling-reference.md) - Errors
-  <!-- TOC: Emergency Procedures | Common Errors and Solutions -->
+  <!-- TOC: Common Errors and Solutions | Troubleshooting References | Emergency Procedures -->
 - [handoff-document-format.md](references/handoff-document-format.md) - Handoff format
   <!-- TOC: Required Sections | Task Detail Format -->
 - [examples.md](references/examples.md) - Examples

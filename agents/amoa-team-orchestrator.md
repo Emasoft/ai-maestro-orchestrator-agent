@@ -79,18 +79,18 @@ REMOTE AGENTS (via AI Maestro)
 | 8 | Integration decision | Merge authorization |
 
 > For detailed step-by-step orchestration workflow, see [amoa-remote-agent-coordinator/references/agent-onboarding.md](../skills/amoa-remote-agent-coordinator/references/agent-onboarding.md).
-<!-- TOC: *When starting agent onboarding** → [Onboarding Checklist](#onboarding-checklist) | *When setting up your development environment** → [Environment Setup](#environment-setup) | *When verifying agent capability through a test task** → [Verification Task](#verification-task) -->
+<!-- TOC: Overview | Onboarding Checklist | Phase 1: Knowledge Acquisition | Phase 2: Environment Setup | Phase 3: Verification Task | Phase 4: Registration | Environment Setup | Prerequisites | Step-by-Step Setup | Verification Task | Task Description | Report Format | Required Reading List | Roster Registration | Common Setup Issues | Next Steps After Onboarding -->
 
 > For AMCOS replacement protocol when agents fail, see [amoa-remote-agent-coordinator/references/amcos-replacement-protocol.md](../skills/amoa-remote-agent-coordinator/references/amcos-replacement-protocol.md).
-<!-- TOC: Overview | AMCOS Notification Format | Urgency Levels -->
+<!-- TOC: Overview | AMCOS Notification Format | Urgency Levels | Replacement Protocol Steps | Step 1: Acknowledge AMCOS Notification | Step 2: Compile Context for Failed Agent | Step 3: Generate Handoff Document | Step 4: Reassign GitHub Project Tasks | Step 5: Send Handoff to Replacement Agent | Step 6: Wait for Acknowledgment | Step 7: Confirm to AMCOS | Quick Command Reference | Critical Rules | Emergency Procedures | Audit Trail | Handoff Quality Checklist | Context Transfer Best Practices | Success Criteria | See Also -->
 
 > For message templates and communication patterns, see [amoa-remote-agent-coordinator/references/messaging-protocol.md](../skills/amoa-remote-agent-coordinator/references/messaging-protocol.md) and [amoa-remote-agent-coordinator/references/task-instruction-format.md](../skills/amoa-remote-agent-coordinator/references/task-instruction-format.md).
-<!-- TOC: This document is the **index** for task instruction format documentation. Each section below links to detailed reference files. | ### Quick Reference | **[Overview](#overview)** - Critical principle: teach agents in every message -->
-<!-- TOC: IMPORTANT: Official Skill Reference | Overview | Document Structure -->
+<!-- TOC: Quick Reference | Detailed References | Overview | Agent Response Templates | Mandatory ACK Block | Part File Contents | Navigation -->
+<!-- TOC: IMPORTANT: Official Skill Reference | Overview | Document Structure | Part 1: API and Schema Reference | Part 2: Sending and Receiving Messages | Part 3: Message Types by Category | Part 4: Agents, Errors, and Best Practices | Part 5: Notifications and Response Expectations | Part 6: Timeouts and Protocol Integration | Part 7: Troubleshooting | Quick Reference | Navigation -->
 
 > For orchestrator implementation boundaries and guardrails, see [amoa-orchestration-patterns/references/orchestrator-no-implementation.md](../skills/amoa-orchestration-patterns/references/orchestrator-no-implementation.md) and [amoa-orchestration-patterns/references/orchestrator-guardrails.md](../skills/amoa-orchestration-patterns/references/orchestrator-guardrails.md).
-<!-- TOC: Table of Contents | Part 1: Role Definition and Action Classification | Part 2: Decision Trees -->
-<!-- TOC: Table of Contents | Core Principle | 1 What the Orchestrator Does -->
+<!-- TOC: Part 1: Role Definition and Action Classification | Part 2: Decision Trees | Part 3: Common Scenarios | Part 4: Violation Detection and Examples | Quick Reference Summary | Related Documents -->
+<!-- TOC: Core Principle | What the Orchestrator Does | Why This Rule Exists | Forbidden Actions for Orchestrators | Correct Approach for Each Forbidden Action | Allowed Actions for Orchestrators | Small Experiments (ALLOWED with Limits) | Self-Check Before ANY Action | Exception: Emergency Research Commands | Practical Examples | Enforcement Mechanism | See Also -->
 
 ## When to Use / When NOT to Use
 

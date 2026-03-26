@@ -40,15 +40,13 @@ jobs:
           set -e
 
           # Exit codes: 0=PASS, 1=CRITICAL, 2=MAJOR, 3=MINOR
-          # Quality gate: block on CRITICAL and MAJOR only
+          # Quality gate: ONLY exit 0 passes. All issues block.
           if [ $EXIT_CODE -eq 0 ]; then
             echo "=== Validation PASSED ==="
-          elif [ $EXIT_CODE -le 2 ]; then
-            echo "=== BLOCKED: CRITICAL or MAJOR issues found (exit $EXIT_CODE) ==="
+          else
+            echo "=== BLOCKED: Validation issues found (exit $EXIT_CODE) ==="
             cat validation-report.md 2>/dev/null || true
             exit $EXIT_CODE
-          else
-            echo "=== PASSED with minor issues (exit $EXIT_CODE) ==="
           fi
 
       - name: Upload validation report

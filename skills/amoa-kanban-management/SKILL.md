@@ -20,7 +20,7 @@ Manage GitHub Projects V2 kanban boards: create boards, columns, move items, syn
 ## Prerequisites
 
 `gh` CLI authenticated with `project` and `read:project` OAuth scopes. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md)
-<!-- TOC: Troubleshooting - Common scope-related errors | How to check current scopes - Verifying your authentication -->
+<!-- TOC: Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
 
 ## Instructions
 
@@ -47,7 +47,7 @@ JSON from GraphQL mutations and board state reports.
 **Input:** `move-item --project 42 --item ITEM_ID --column "AI Review"`
 **Output:** `{"updateProjectV2ItemFieldValue":{"projectV2Item":{"id":"ITEM_ID"}}}`
 See [references/kanban-examples.md](references/kanban-examples.md)
-<!-- TOC: Example 1: Pre-Flight Scope Check | Example 3: Move Item to AI Review -->
+<!-- TOC: Example 1: Pre-Flight Scope Check | Example 2: Create Task and Add to Board | Example 3: Move Item to AI Review | Example 4: Safe Guard Before Closing Issue -->
 
 ## Error Handling
 
@@ -57,7 +57,7 @@ See [references/kanban-error-handling.md](references/kanban-error-handling.md)
 ## Resources
 
 - [Auth & OAuth Scopes](references/gh-auth-scopes.md)
-<!-- TOC: Troubleshooting - Common scope-related errors | How to check current scopes - Verifying your authentication -->
+<!-- TOC: Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
 - [GraphQL Mutations](references/github-projects-v2-graphql.md)
 <!-- TOC: Deleting a project item - deleteProjectV2Item mutation | Common parameter mistakes - fieldId vs projectId confusion -->
 - [Pitfalls & Guards](references/kanban-pitfalls.md)
@@ -71,4 +71,4 @@ See [references/kanban-error-handling.md](references/kanban-error-handling.md)
 - [Error Handling](references/kanban-error-handling.md)
 <!-- TOC: Script Output Rules | Output Specification -->
 - [Examples](references/kanban-examples.md)
-<!-- TOC: Example 1: Pre-Flight Scope Check | Example 3: Move Item to AI Review -->
+<!-- TOC: Example 1: Pre-Flight Scope Check | Example 2: Create Task and Add to Board | Example 3: Move Item to AI Review | Example 4: Safe Guard Before Closing Issue -->

@@ -24,7 +24,7 @@ AI Maestro messaging, GitHub CLI (gh), remote agents registered.
 ## Instructions
 
 Use [native-task-persistence.md](references/native-task-persistence.md) for Claude Tasks.
-<!-- TOC: Task Lifecycle - Creating, tracking, and completing tasks | Best Practices - Effective task management patterns -->
+<!-- TOC: Overview | Why Native Tasks? | Key Advantages | Task Tool Reference | Task Lifecycle | Persistence Across Compacting | Stop Hook Integration | Best Practices | Summary -->
 
 1. `/start-planning` — create state file, document requirements
 2. `/approve-plan` — transition to Orchestration Phase, create GitHub Issues
@@ -38,7 +38,7 @@ Copy this checklist and track your progress:
 - [ ] Assign modules, verify agents, monitor progress
 
 Details: [command-reference.md](references/command-reference.md) | [skill-overview-details.md](references/skill-overview-details.md)
-<!-- TOC: Plan Phase Commands | Orchestration Phase Commands | Output Types | Instructions | Agent Types | Stop Hook | Examples -->
+<!-- TOC: Plan Phase Commands | /start-planning | /planning-status | /add-requirement | /modify-requirement | /remove-requirement | /approve-plan | Orchestration Phase Commands | /start-orchestration | /orchestration-status | /register-agent | /assign-module | /add-module | /modify-module | /remove-module | /prioritize-module | /reassign-module | /check-agents | Output Types and Locations | Step-by-Step Instructions | Agent Types | Stop Hook Enforcement | File Structure | Examples | Example 1: Complete Two-Phase Workflow | Example 2: Dynamic Module Addition -->
 
 ## Examples
 
@@ -46,12 +46,12 @@ Details: [command-reference.md](references/command-reference.md) | [skill-overvi
 **Input:** `/approve-plan` — **Output:** Creates GitHub Issues per module, starts Orchestration Phase.
 
 More: [skill-overview-details.md](references/skill-overview-details.md)
-<!-- TOC: Output Types | Instructions | Agent Types | Stop Hook | Examples -->
+<!-- TOC: Output Types and Locations | Step-by-Step Instructions | Agent Types | Stop Hook Enforcement | File Structure | Examples | Example 1: Complete Two-Phase Workflow | Example 2: Dynamic Module Addition -->
 
 ## Output
 
 State YAML, GitHub Issues, phase confirmations. See [state-file-formats.md](references/state-file-formats.md).
-<!-- TOC: Plan Phase State File | Orchestration Phase State File | Agent Assignment Structure | Module Status Structure | Parsing State Files -->
+<!-- TOC: Plan Phase State File | File location | Complete YAML schema | Field descriptions | Orchestration Phase State File | File location | Complete YAML schema | Field descriptions | Agent Assignment Structure | Assignment fields | Instruction verification tracking | Progress polling tracking | Module Status Structure | Module fields | Status values | Parsing State Files -->
 
 ## Error Handling
 
@@ -61,7 +61,7 @@ See [troubleshooting.md](references/troubleshooting.md).
 ## Resources
 
 - [command-reference.md](references/command-reference.md)
-  <!-- TOC: Plan Phase Commands (6) | Orchestration Phase Commands (10) -->
+  <!-- TOC: Plan Phase Commands | /start-planning | /planning-status | /add-requirement | /modify-requirement | /remove-requirement | /approve-plan | Orchestration Phase Commands | /start-orchestration | /orchestration-status | /register-agent | /assign-module | /add-module | /modify-module | /remove-module | /prioritize-module | /reassign-module | /check-agents -->
 - [plan-phase-workflow.md](references/plan-phase-workflow.md)
   <!-- TOC: Entering Plan Phase | Planning Activities | Modifying the Plan | Plan Phase Completion | Stop Hook Behavior -->
 - [orchestration-phase-workflow.md](references/orchestration-phase-workflow.md)
@@ -69,6 +69,6 @@ See [troubleshooting.md](references/troubleshooting.md).
 - [instruction-verification-protocol.md](references/instruction-verification-protocol.md)
   <!-- TOC: Why This Protocol Exists | The 8-Step Protocol Flow | Message Templates | Tracking Verification Status | Failure Conditions -->
 - [state-file-formats.md](references/state-file-formats.md)
-  <!-- TOC: Plan Phase State File | Orchestration Phase State File | Agent Assignment Structure | Module Status Structure -->
+  <!-- TOC: Plan Phase State File | File location | Complete YAML schema | Field descriptions | Orchestration Phase State File | File location | Complete YAML schema | Field descriptions | Agent Assignment Structure | Assignment fields | Instruction verification tracking | Progress polling tracking | Module Status Structure | Module fields | Status values | Parsing State Files -->
 - [troubleshooting.md](references/troubleshooting.md)
   <!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues | Communication Issues | Stop Hook Issues -->

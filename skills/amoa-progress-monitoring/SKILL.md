@@ -49,7 +49,7 @@ State report table (task, agent, state, last update) + escalation messages + blo
 
 ## Error Handling
 
-Escalate: reminder→urgent→reassignment. Blockers→`type:blocker` issues. See `references/monitoring-examples.md`.
+Escalate: reminder→urgent→reassignment. Blockers→`type:blocker` issues. See [references/monitoring-examples.md](references/monitoring-examples.md).
 <!-- TOC: QueryState|Reminder|Escalate|Blocker|Completion|Dashboard|Errors -->
 
 ## Resources

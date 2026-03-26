@@ -38,22 +38,22 @@ Copy this checklist and track your progress:
 - [ ] Confirm Issue sync and notify agents
 
 Commands: `/add-module`, `/modify-module`, `/remove-module`, `/prioritize-module`, `/reassign-module`. Syntax: [command-details.md](./references/command-details.md)
-<!-- TOC: /add-module command syntax and arguments | /modify-module command syntax and restrictions -->
+<!-- TOC: 1 /add-module | 2 /modify-module | 3 /remove-module | 4 /prioritize-module | 5 /reassign-module -->
 
 `/add-module` -- [module-creation.md](./references/module-creation.md)
-<!-- TOC: When to add modules during orchestration | Required fields for new modules (name, criteria) -->
+<!-- TOC: When to Add Modules During Orchestration | Appropriate Scenarios for Adding Modules | When NOT to Add Modules | Dynamic Flexibility Concept | Required Fields for New Modules | Optional Fields | Automatic GitHub Issue Creation | State File Update After Addition | Complete Examples with All Variations | Next Steps After Adding a Module | Related Commands -->
 
 `/modify-module` -- [module-modification.md](./references/module-modification.md)
-<!-- TOC: What can be modified (name, criteria, priority) | Modification restrictions by status -->
+<!-- TOC: What Can Be Modified | Modifiable Fields | When to Modify Each Field | What Cannot Be Modified | Modification Restrictions by Status | Agent Notification Protocol | GitHub Issue Synchronization | Complete Modification Examples | Best Practices for Modifications | Related Commands -->
 
 `/remove-module` (pending only) -- [module-removal-rules.md](./references/module-removal-rules.md)
-<!-- TOC: Which modules can be removed (pending only) | Removal process step by step -->
+<!-- TOC: Which Modules Can Be Removed | Removal Eligibility by Status | Why In-Progress Modules Cannot Be Removed | Removal Process Step by Step | GitHub Issue Closure with Wontfix Label | Alternatives to Removal (Scope Reduction) | Error Handling and Recovery | Force Removal Flag | Related Commands -->
 
 `/prioritize-module` -- [module-prioritization.md](./references/module-prioritization.md)
-<!-- TOC: Priority levels explained (critical, high, medium, low) | Effects on assignment queue -->
+<!-- TOC: Priority Levels Explained | Priority Level Definitions | Effects on Assignment Queue | GitHub Issue Label Updates | When to Escalate vs Downgrade | Complete Priority Change Examples | Priority Labels Visual Reference | Best Practices | Related Commands -->
 
 `/reassign-module` -- [module-reassignment.md](./references/module-reassignment.md)
-<!-- TOC: When reassignment is appropriate | New agent assignment message -->
+<!-- TOC: When Reassignment Is Appropriate | Reassignment Workflow Step by Step | Old Agent Notification Protocol | New Agent Assignment Message | State File Updates During Reassignment | Instruction Verification Protocol Reset | Reassignment Command Reference | Related Commands -->
 
 ## Examples
 
@@ -64,22 +64,22 @@ Commands: `/add-module`, `/modify-module`, `/remove-module`, `/prioritize-module
 **Output:** Old agent stopped, new agent assigned, verification reset
 
 More: [usage-examples.md](./references/usage-examples.md)
-<!-- TOC: Add new module mid-orchestration | Reassign a blocked module -->
+<!-- TOC: 1 Add New Module Mid-Orchestration | 2 Reassign Blocked Module | 3 Scripts Reference -->
 
 Issue sync: [github-issue-sync.md](./references/github-issue-sync.md)
-<!-- TOC: Issue creation format and labels | Issue closure protocols -->
+<!-- TOC: Issue Creation Format and Labels | Issue Update Synchronization | Issue Closure Protocols | Label Conventions | Manual Sync When Automation Fails | Troubleshooting Sync Issues | Sync State Diagram | Related Commands -->
 
 ## Error Handling
 
 Module not found: run `/orchestration-status`. Cannot remove: status not pending. Issue not created: run `gh auth login`. Agent not notified: check AI Maestro AMP.
 
 Guide: [troubleshooting.md](./references/troubleshooting.md)
-<!-- TOC: Module ID conflicts | Force removal scenarios -->
+<!-- TOC: State File Corruption Recovery | GitHub Sync Failure Recovery | Agent Notification Failures | Module ID Conflicts | Force Removal Scenarios | General Troubleshooting Checklist | Error Reference Table | Related Commands -->
 
 ## Resources
 
 - [command-details.md](./references/command-details.md)
-  <!-- TOC: /add-module command syntax and arguments | /modify-module command syntax and restrictions -->
+  <!-- TOC: 1 /add-module | 2 /modify-module | 3 /remove-module | 4 /prioritize-module | 5 /reassign-module -->
 - [checklist-and-scripts.md](./references/checklist-and-scripts.md)
   <!-- TOC: Module management checklist | Script output rules and token-efficient protocol -->
 

@@ -24,7 +24,7 @@ Plan Phase complete (`/approve-plan`), state file `design/state/exec-phase.md` e
 ## Instructions
 
 Commands: `/start-orchestration`, `/orchestration-status`, `/orchestrator-status`, `/orchestrator-loop`, `/cancel-orchestrator`. Full syntax: [command-details.md](references/command-details.md)
-<!-- TOC: /orchestrator-status - Check loop state | /cancel-orchestrator - Cancel active loop -->
+<!-- TOC: /start-orchestration | /orchestration-status | /orchestrator-status | /orchestrator-loop | /cancel-orchestrator -->
 
 1. Run `/start-orchestration` to activate
 2. Register agents and assign modules
@@ -39,16 +39,16 @@ Copy this checklist and track your progress:
 - [ ] Use loop or cancel when complete
 
 Details: [checklists.md](references/checklists.md)
-<!-- TOC: Cancellation checklist | Monitoring Progress checklist -->
+<!-- TOC: Checklist: Starting Orchestration | Checklist: Monitoring Progress | Checklist: Cancellation -->
 
 Loop monitors task sources (Claude Tasks, GitHub Projects, task files, TODO list), uses 4-loop verification, prevents exit until complete. Stop hook blocks exit when tasks pending; signal `ALL_TASKS_COMPLETE`. State: `design/state/loop.md`, `design/state/exec-phase.md`.
 
 See [orchestration-loop-mechanics.md](references/orchestration-loop-mechanics.md)
-<!-- TOC: What the orchestrator loop does | Task source monitoring and priority -->
+<!-- TOC: What the Orchestrator Loop Does | Loop Lifecycle | State File Structure | Task Source Monitoring and Priority | Iteration Counting and Max Iterations | Verification Mode (4-Loop Quadruple-Check) | Completion Signals (ALL_TASKS_COMPLETE) | Stop Hook Behavior and Blocking Logic -->
 See [stop-hook-behavior.md](references/stop-hook-behavior.md)
-<!-- TOC: Recovery behavior - Fail-safe and retry logic | Completion signals - How to signal task completion -->
+<!-- TOC: Blocking Conditions | Completion Signals | Recovery Behavior -->
 See [state-file-format.md](references/state-file-format.md)
-<!-- TOC: Frontmatter field definitions | State file corruption recovery -->
+<!-- TOC: Loop State File Format and Fields | Execution Phase State File Format | Frontmatter Field Definitions | How to Manually Edit State Files | State File Corruption Recovery -->
 
 ## Output
 
@@ -63,12 +63,12 @@ Status as Markdown tables; loop state as text; errors as hook blocking reasons.
 **Output:** Continuous processing started, monitoring all task sources.
 
 More: [examples.md](references/examples.md)
-<!-- TOC: Complete Orchestration Start - Full startup workflow | Orchestrator Loop Usage - Loop start, status, cancel -->
+<!-- TOC: Example 1: Complete Orchestration Start | Example 2: Orchestrator Loop Usage | Example 3: Monitoring During Implementation -->
 
 ## Error Handling
 
 See [troubleshooting.md](references/troubleshooting.md)
-<!-- TOC: Using /reload-plugins | Helper script failures -->
+<!-- TOC: Loop Won't Start - Common Causes | Stop Hook Not Firing - Debugging Steps | Tasks Showing as Pending Incorrectly | Lock File Issues and Stale Locks | Concurrent Execution Conflicts | Verification Mode Stuck | Helper Script Failures | Using /reload-plugins | General Debugging Workflow -->
 
 ## Resources
 

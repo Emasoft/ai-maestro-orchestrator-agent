@@ -37,7 +37,7 @@ Markdown message with communication type, tone assessment, blocking status, and 
    <!-- TOC: Decision Tree: Choosing Communication Type -->
 4. **Draft message** following reference patterns.
 5. **Run pre-send checklist** from [references/tone-quick-reference.md](references/tone-quick-reference.md)
-   <!-- TOC: Examples of Constructive Communication | Error Handling in Communication | Pre-Send Checklist -->
+   <!-- TOC: Examples of Constructive Communication | Example 1: Constructive Code Review Comment | Example 2: Acknowledging Good Work | Error Handling in Communication | Pre-Send Checklist -->
 6. **Send and monitor** for follow-up.
 
 Copy this checklist and track your progress:
@@ -52,9 +52,9 @@ Copy this checklist and track your progress:
 ## Error Handling
 
 See [references/conflict-resolution.md](references/conflict-resolution.md)
-<!-- TOC: Disagreeing Professionally | Offering Alternatives | Finding Compromise | Escalation Paths | When to Involve Maintainers -->
+<!-- TOC: Disagreeing Professionally | Separating the Idea from the Person | Starting with Understanding | Using "I Think" Not "You're Wrong" | Offering Alternatives | The "Yes, And" Technique | Presenting Options Without Attachment | Showing Concrete Examples | Finding Compromise | Identifying Shared Goals | Proposing Incremental Solutions | Time-Boxing Experiments | Escalation Paths | When to Bring in a Third Party | Technical Leads and Architects | Documenting the Disagreement | When to Involve Maintainers | Stalled Discussions | Blocking PRs | Community Conduct Issues | Summary: Conflict Resolution Checklist -->
 and [references/tone-quick-reference.md](references/tone-quick-reference.md)
-<!-- TOC: Constructive Communication | Error Handling in Communication | Pre-Send Checklist -->
+<!-- TOC: Examples of Constructive Communication | Example 1: Constructive Code Review Comment | Example 2: Acknowledging Good Work | Error Handling in Communication | Pre-Send Checklist -->
 
 ## Examples
 
@@ -72,7 +72,7 @@ See `references/op-*.md` for walkthroughs.
 - [decision-tree.md](references/decision-tree.md)
   <!-- TOC: Decision Tree: Choosing Communication Type -->
 - [tone-quick-reference.md](references/tone-quick-reference.md)
-  <!-- TOC: Constructive Communication | Error Handling in Communication | Pre-Send Checklist -->
+  <!-- TOC: Examples of Constructive Communication | Example 1: Constructive Code Review Comment | Example 2: Acknowledging Good Work | Error Handling in Communication | Pre-Send Checklist -->
 
 ## Script Output Rules
 
