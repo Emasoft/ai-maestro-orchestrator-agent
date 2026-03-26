@@ -1,7 +1,6 @@
 name: Plugin Validation
 
 on:
-  workflow_dispatch:
   push:
     branches: [main, master]
     paths:
@@ -11,14 +10,16 @@ on:
       - 'skills/**'
       - 'hooks/**'
       - 'scripts/**'
+      - 'rules/**'
       - '*.mcp.json'
+      - '.lsp.json'
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -30,33 +31,31 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Validate plugin
+      - name: Run CPV validation (full suite)
         run: |
-          echo "=== Plugin Validation (strict mode) ==="
-          echo ""
-
-          # Check that validator script exists
-          if [ ! -f "scripts/validate_plugin.py" ]; then
-            echo "ERROR: scripts/validate_plugin.py not found"
-            exit 1
+          echo "=== CPV Plugin Validation (remote via uvx) ==="
+          uvx --from git+https://github.com/Emasoft/claude-plugins-validation --with pyyaml cpv-validate . --verbose --report validation-report.md
+          EXIT_CODE=$?
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "=== Validation PASSED ==="
+          else
+            echo "=== Validation FAILED (exit code: $EXIT_CODE) ==="
+            cat validation-report.md 2>/dev/null || true
+            exit $EXIT_CODE
           fi
 
-          # Run validator with pyyaml dependency
-          # Exit codes: 0=pass, 1=CRITICAL, 2=MAJOR, 3=MINOR, 4=NIT
-          # CI blocks on CRITICAL (1) and MAJOR (2) only
-          set +e
-          uv run --with pyyaml --with mypy --with types-PyYAML python scripts/validate_plugin.py . --verbose
-          exit_code=$?
-          set -e
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: validation-report.md
+          if-no-files-found: ignore
 
-          echo ""
-          if [ $exit_code -eq 0 ]; then
-            echo "=== Validation PASSED ==="
-            exit 0
-          elif [ $exit_code -eq 1 ] || [ $exit_code -eq 2 ]; then
-            echo "=== Validation FAILED (CRITICAL/MAJOR issues, exit code: $exit_code) ==="
-            exit $exit_code
-          else
-            echo "=== Validation PASSED (MINOR/NIT issues only, exit code: $exit_code) ==="
-            exit 0
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Plugin Validation" >> $GITHUB_STEP_SUMMARY
+          if [ -f validation-report.md ]; then
+            cat validation-report.md >> $GITHUB_STEP_SUMMARY
           fi
