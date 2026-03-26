@@ -61,7 +61,7 @@ Blocked tasks escalate per [progress-monitoring.md](references/progress-monitori
 - [project-setup-menu.md](references/project-setup-menu.md)
   - Overview
   - Document Structure
-    - [Part 1: Team, Repository & Release Configuration](project-setup-menu-part1-team-repo-release.md)
+    - [Part 1: Team, Repository & Release Configuration](references/project-setup-menu-part1-team-repo-release.md)
   - ...
 - [language-verification-checklists.md](references/language-verification-checklists.md)
   - Quick Navigation
