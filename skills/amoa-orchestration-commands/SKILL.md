@@ -24,7 +24,7 @@ Plan Phase complete (`/approve-plan`), state file `design/state/exec-phase.md` e
 ## Instructions
 
 Commands: `/start-orchestration`, `/orchestration-status`, `/orchestrator-status`, `/cancel-orchestrator`. Full syntax: [command-details.md](references/command-details.md)
-<!-- TOC: /start-orchestration | /orchestration-status | /orchestrator-status | /orchestrator-loop | /cancel-orchestrator -->
+<!-- TOC: /start-orchestration - Enter orchestration phase | /orchestration-status - View phase progress | /orchestrator-status - Check loop state | /orchestrator-loop - Start continuous loop | /cancel-orchestrator - Cancel active loop -->
 
 1. Run `/start-orchestration` to activate
 2. Register agents and assign modules
@@ -39,7 +39,7 @@ Copy this checklist and track your progress:
 - [ ] Cancel when complete
 
 Details: [checklists.md](references/checklists.md)
-<!-- TOC: Checklist: Starting Orchestration | Checklist: Monitoring Progress | Checklist: Cancellation -->
+<!-- TOC: Starting Orchestration checklist | Monitoring Progress checklist | Cancellation checklist -->
 
 For loop mechanics and stop hook, see skill `amoa-orchestration-loop`.
 
@@ -55,50 +55,13 @@ Status as Markdown tables; errors as hook blocking reasons.
 ## Error Handling
 
 See [troubleshooting.md](references/troubleshooting.md)
-<!-- TOC: Troubleshooting | Loop Won't Start - Common Causes | Stop Hook Not Firing - Debugging Steps | Tasks Showing as Pending Incorrectly | Lock File Issues and Stale Locks | Concurrent Execution Conflicts | Verification Mode Stuck | Helper Script Failures | Using /reload-plugins | General Debugging Workflow -->
+<!-- TOC: 1 Loop won't start - common causes | 2 Stop hook not firing - debugging steps | 3 Tasks showing as pending incorrectly | 4 Lock file issues and stale locks | 5 Concurrent execution conflicts | 6 Verification mode stuck | 7 Helper script failures | 8 Using /reload-plugins -->
 
 ## Resources
 
 - [command-details.md](references/command-details.md)
-  - /start-orchestration
-  - /orchestration-status
-  - /orchestrator-status
-  - /orchestrator-loop
-  - /cancel-orchestrator
 - [checklists.md](references/checklists.md)
-  - Checklist: Starting Orchestration
-  - Checklist: Monitoring Progress
-  - Checklist: Cancellation
 - [start-orchestration-procedure.md](references/start-orchestration-procedure.md)
-  - 1.1 When to Start Orchestration Phase
-  - 1.2 Prerequisites Verification Checklist
-  - 1.3 Command Syntax and Options
-    - Basic Usage
-    - With GitHub Project Sync
-    - Finding Your GitHub Project ID
-  - 1.4 Post-Start Agent Registration Workflow
-    - Step 1: Register AI Agents
-  - ...
 - [status-monitoring.md](references/status-monitoring.md)
-  - 2.1 Understanding the Orchestration Status Output
-    - Output Structure
-    - Header Section Fields
-    - When to Run Status Check
-  - 2.2 Reading Module Status Indicators
-    - Status Icons
-    - Module Line Format
-    - Understanding Poll Timing
-  - ...
 - [cancellation-cleanup.md](references/cancellation-cleanup.md)
-  - 4.1 When to Cancel vs Let Loop Complete Naturally
-    - Let the Loop Complete Naturally When
-    - Cancel the Loop When
-    - Consequences of Cancellation
-  - 4.2 Cancellation Procedure Step-by-Step
-    - Method 1: Use the Cancel Command
-    - Method 2: Manual Removal
-    - Verification After Cancellation
-  - ...
 - [python-scripts.md](references/python-scripts.md)
-  - Script Inventory
-  - Script Output Rules

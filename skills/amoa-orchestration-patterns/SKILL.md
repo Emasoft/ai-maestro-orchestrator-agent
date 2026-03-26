@@ -38,12 +38,12 @@ Copy this checklist and track your progress:
 `Implement OAuth2` -- 5 parallel agents: DB schema, OAuth config, login flow, token refresh, tests.
 
 [orchestration-examples.md](references/orchestration-examples.md)
-<!-- TOC: Orchestration Examples | Authentication Module Implementation | When you receive a plan handoff from AMAMA for authentication | Task creation pattern for multi-component modules | CI Failure Coordination | When CI tests fail and need coordinated fixes | Investigation-first pattern for unknown root causes | Parallel Code Review | When coordinating reviews across multiple developers | Section-based decomposition for large codebases | Blocked Dependency Handling | When one task blocks on external dependency | Parallel escalation pattern for infrastructure blockers -->
+<!-- TOC: Authentication Module Implementation | 1 When you receive a plan handoff from AMAMA for authentication | 2 Task creation pattern for multi-component modules | CI Failure Coordination | 1 When CI tests fail and need coordinated fixes | 2 Investigation-first pattern for unknown root causes | Parallel Code Review | 1 When coordinating reviews across multiple developers | 2 Section-based decomposition for large codebases | Blocked Dependency Handling | 1 When one task blocks on external dependency | 2 Parallel escalation pattern for infrastructure blockers -->
 
 ## Error Handling
 
 Blocked tasks escalate per [progress-monitoring.md](references/progress-monitoring.md). Failed agents respawn once, then escalate.
-<!-- TOC: Progress Monitoring (PROACTIVE ENFORCEMENT) | Proactive Monitoring Principles | Why Proactive Monitoring is Critical | The Five Proactive Principles | PROACTIVE Status Request Protocol | When to Send Status Requests | Status Request Message Template | PROACTIVE Unblocking Protocol | When an Agent Reports a Blocker | Unblocking Response Template | PROACTIVE Task Completion Enforcement | Before Allowing Agent to Stop | Verification Requirements | Troubleshooting | Agent Not Responding to Status Requests | Agent Reports Same Blocker Repeatedly | Agent Claims Completion But Evidence Missing | See Also -->
+<!-- TOC: Table of Contents | Proactive Monitoring Principles | 1 Why Proactive Monitoring is Critical | 2 The Five Proactive Principles | PROACTIVE Status Request Protocol | 1 When to Send Status Requests | 2 Status Request Message Template | PROACTIVE Unblocking Protocol | 1 When an Agent Reports a Blocker | 2 Unblocking Response Template | PROACTIVE Task Completion Enforcement | 1 Before Allowing Agent to Stop | 2 Verification Requirements | Troubleshooting | Agent Not Responding to Status Requests | Agent Reports Same Blocker Repeatedly | Agent Claims Completion But Evidence Missing | See Also -->
 
 ## Resources
 

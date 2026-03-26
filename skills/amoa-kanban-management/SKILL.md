@@ -20,22 +20,21 @@ Manage GitHub Projects V2 kanban boards: create boards, columns, move items, syn
 ## Prerequisites
 
 `gh` CLI authenticated with `project` and `read:project` OAuth scopes. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md)
-<!-- TOC: GitHub CLI Authentication and OAuth Scopes | Why project scopes are required | Complete list of required OAuth scopes | How to check current scopes | How to add missing scopes | Pre-flight validation command | Scope provisioning is a manual pre-deployment step | Troubleshooting -->
+<!-- TOC: 1 Why project scopes are required - Default gh auth login does not include them | 2 Complete list of required OAuth scopes - All scopes needed for agent operations | 3 How to check current scopes - Verifying your authentication | 4 How to add missing scopes - Interactive browser flow required | 5 Pre-flight validation command - One-liner to check before operations | 6 Scope provisioning is a manual pre-deployment step - Cannot be automated by agents | 7 Troubleshooting - Common scope-related errors -->
 
 ## Instructions
 
 1. Verify scopes: `gh auth status 2>&1 | grep -q "project" || echo "ERROR: gh auth refresh -h github.com -s project,read:project"`
 2. Query board/column IDs via GraphQL. See [references/kanban-procedures.md](references/kanban-procedures.md)
-<!-- TOC: PROCEDURE 4: Sync Kanban Status | PROCEDURE 1: Create Project Board -->
+<!-- TOC: Table of Contents | Add new columns safely (preserves existing columns and their assignments) -->
 3. Execute procedure. NEVER call `updateProjectV2Field` directly -- use `scripts/gh-project-add-columns.py`
 4. Verify JSON output. Columns: [references/kanban-column-system.md](references/kanban-column-system.md)
-<!-- TOC: Standard 8-Column System | Available Scripts -->
+<!-- TOC: Table of Contents | Standard 8-Column System | Available Scripts -->
 
 Copy this checklist and track your progress:
 
 - [ ] Verify OAuth scopes with pre-flight check
 - [ ] Query board/column IDs, execute procedure from [references/kanban-procedures.md](references/kanban-procedures.md)
-<!-- TOC: PROCEDURE 4: Sync Kanban Status | PROCEDURE 1: Create Project Board -->
 - [ ] Confirm JSON output matches expected format
 
 ## Output
@@ -52,44 +51,15 @@ See [references/kanban-examples.md](references/kanban-examples.md)
 ## Error Handling
 
 See [references/kanban-error-handling.md](references/kanban-error-handling.md)
-<!-- TOC: Error Reference Table | Output Specification | Script Output Rules -->
+<!-- TOC: Table of Contents | Error Reference Table | Output Specification | Script Output Rules -->
 
 ## Resources
 
 - [Auth & OAuth Scopes](references/gh-auth-scopes.md)
-  - 1.1 Why project scopes are required
-  - 1.2 Complete list of required OAuth scopes
-  - 1.3 How to check current scopes
-  - ...
 - [GraphQL Mutations](references/github-projects-v2-graphql.md)
-  - 2.1 Querying project fields and their IDs
-  - 2.2 Moving an item to a different column
-  - 2.3 Adding columns to a field
-  - ...
 - [Pitfalls & Guards](references/kanban-pitfalls.md)
-  - 3.1 Done column auto-closes linked issues
-    - What happens
-    - 3.1.1 How to detect if an issue was auto-closed
-  - ...
 - [Procedures](references/kanban-procedures.md)
-    - PROCEDURE 1: Create Project Board
-    - PROCEDURE 2: Add or Modify Columns
-    - PROCEDURE 3: Move Items Between Columns
-  - ...
 - [Column System](references/kanban-column-system.md)
-  - Standard 8-Column System
-  - Available Scripts
 - [Checklists](references/kanban-checklist.md)
-  - Step-by-Step Instructions
-  - Pre-Flight Checklist
-  - Board Setup Checklist
-  - ...
 - [Error Handling](references/kanban-error-handling.md)
-  - Error Reference Table
-  - Output Specification
-  - Script Output Rules
 - [Examples](references/kanban-examples.md)
-    - Example 1: Pre-Flight Scope Check
-    - Example 2: Create Task and Add to Board
-    - Example 3: Move Item to AI Review
-  - ...

@@ -46,10 +46,10 @@ Standard JSON message structure with from, to, subject, priority, and content fi
 ## 2. Message Templates by Scenario
 
 JSON templates: [references/message-templates.md](references/message-templates.md)
-<!-- TOC: Message Templates by Scenario | Task Assignment (AMOA → Remote Agent) | Task Completion Report (Agent → AMOA) | Status Request (AMOA → Agent) | Status Response (Agent → AMOA) | Approval Request (AMCOS → AMAMA) | Approval Response (AMAMA → AMCOS) | Escalation (Any Agent → AMCOS/AMAMA) | Acknowledgment (Any Agent) | Design Handoff (AMAA → AMOA) | Integration Request (AMOA → AMIA) | Integration Result (AMIA → AMOA) | Decision Trees for Core Message Templates | Task Assignment Decision Tree | Task Completion Report Decision Tree | Status Request/Response Decision Tree -->
+<!-- TOC: 1 Task Assignment (AMOA to Remote Agent) | 2 Task Completion Report (Agent to AMOA) | 3 Status Request (AMOA to Agent) | 4 Status Response (Agent to AMOA) | 5 Approval Request (AMCOS to AMAMA) | 6 Approval Response (AMAMA to AMCOS) | 7 Escalation (Any Agent to AMCOS/AMAMA) | 8 Acknowledgment (Any Agent) | 9 Design Handoff (AMAA to AMOA) | 10 Integration Request (AMOA to AMIA) | 11 Integration Result (AMIA to AMOA) | Decision Trees for Core Message Templates -->
 
 Curl templates: [references/ai-maestro-message-templates.md](references/ai-maestro-message-templates.md)
-<!-- TOC: AI Maestro Message Templates for AMOA | Acknowledging Task Assignment from AMCOS/AMAMA | Delegating Task to Sub-Agent | Requesting Status Update from Sub-Agent | Reporting Task Completion to AMCOS | Escalating Blocked Task to AMCOS | Escalating Blocked Task to AMAMA (User Decision Needed) | Standard AI Maestro API Format and Conventions | Quick Reference: Common Patterns | Notes | Decision Trees for AI Maestro Message Handling | Receiving Task from AMCOS Decision Tree | Reporting to AMCOS Decision Tree -->
+<!-- TOC: 1 Acknowledging Task Assignment from AMCOS/AMAMA | 2 Delegating Task to Sub-Agent | 3 Requesting Status Update from Sub-Agent | 4 Reporting Task Completion to AMCOS | 5 Escalating Blocked Task to AMCOS | 6 Escalating Blocked Task to AMAMA (User Decision Needed) | 7 Standard AI Maestro API Format and Conventions | Quick Reference: Common Patterns | Notes | Decision Trees for AI Maestro Message Handling -->
 
 ## Error Handling
 

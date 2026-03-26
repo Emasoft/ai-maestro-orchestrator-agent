@@ -38,10 +38,10 @@ Copy this checklist and track your progress:
 - [ ] Confirm GitHub Issues match local state
 
 Usage examples: [usage-examples.md](./references/usage-examples.md)
-<!-- TOC: 1 Add New Module Mid-Orchestration | 2 Reassign Blocked Module | 3 Scripts Reference -->
+<!-- TOC: 1 Add new module mid-orchestration | 2 Reassign a blocked module | 3 Scripts reference for programmatic access -->
 
 Issue sync: [github-issue-sync.md](./references/github-issue-sync.md)
-<!-- TOC: GitHub Issue Synchronization Reference | Issue Creation Format and Labels | Issue Update Synchronization | Issue Closure Protocols | Label Conventions | Manual Sync When Automation Fails | Troubleshooting Sync Issues | Sync State Diagram | Related Commands -->
+<!-- TOC: 1 Issue creation format and labels | 2 Issue update synchronization | 3 Issue closure protocols | 4 Label conventions (module, priority:*, status:*) | 5 Manual sync when automation fails | 6 Troubleshooting sync issues -->
 
 ## Examples
 
@@ -56,15 +56,17 @@ Issue sync: [github-issue-sync.md](./references/github-issue-sync.md)
 Issue not created: run `gh auth login`. State corruption: see troubleshooting guide.
 
 Guide: [troubleshooting.md](./references/troubleshooting.md)
-<!-- TOC: Module Management Troubleshooting Reference | State File Corruption Recovery | GitHub Sync Failure Recovery | Agent Notification Failures | Module ID Conflicts | Force Removal Scenarios | General Troubleshooting Checklist | Error Reference Table | Related Commands -->
+<!-- TOC: 1 State file corruption recovery | 2 GitHub sync failure recovery | 3 Agent notification failures | 4 Module ID conflicts | 5 Force removal scenarios -->
 
 ## Resources
 
 - [usage-examples.md](./references/usage-examples.md)
+<!-- TOC: 1 Add new module mid-orchestration | 2 Reassign a blocked module | 3 Scripts reference for programmatic access -->
   - 1 Add New Module Mid-Orchestration
   - 2 Reassign Blocked Module
   - 3 Scripts Reference
 - [github-issue-sync.md](./references/github-issue-sync.md)
+<!-- TOC: 1 Issue creation format and labels | 2 Issue update synchronization | 3 Issue closure protocols | 4 Label conventions (module, priority:*, status:*) | 5 Manual sync when automation fails | 6 Troubleshooting sync issues -->
   - 6.1 Issue Creation Format and Labels
     - Automatic Issue Creation
     - Issue Title Format
@@ -82,6 +84,7 @@ Guide: [troubleshooting.md](./references/troubleshooting.md)
     - Name Change Sync
   - ...
 - [troubleshooting.md](./references/troubleshooting.md)
+<!-- TOC: 1 State file corruption recovery | 2 GitHub sync failure recovery | 3 Agent notification failures | 4 Module ID conflicts | 5 Force removal scenarios -->
   - 7.1 State File Corruption Recovery
     - Detecting Corruption
     - Common Corruption Causes

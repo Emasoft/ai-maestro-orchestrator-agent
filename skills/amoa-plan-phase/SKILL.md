@@ -24,7 +24,7 @@ AI Maestro messaging, GitHub CLI (gh).
 ## Instructions
 
 Use [native-task-persistence.md](references/native-task-persistence.md) for Claude Tasks.
-<!-- TOC: Native Task Persistence Principle | Overview | Why Native Tasks? | Key Advantages | Task Tool Reference | Task Lifecycle | Persistence Across Compacting | Stop Hook Integration | Best Practices | Summary -->
+<!-- TOC: Overview - Why use Claude Code native Tasks | Task Tool Reference - TaskCreate, TaskUpdate, TaskList, TaskGet | Task Lifecycle - Creating, tracking, and completing tasks | Persistence Across Compacting - How tasks survive context limits | Stop Hook Integration - How orchestrator checks task completion | Best Practices - Effective task management patterns -->
 
 1. `/start-planning` -- create state file, document requirements
 2. Add/modify/remove requirements as needed
@@ -37,12 +37,12 @@ Copy this checklist and track your progress:
 - [ ] `/approve-plan` -- create Issues, start orchestration
 
 Commands: [command-reference.md](references/command-reference.md)
-<!-- TOC: Command Reference | Plan Phase Commands | /start-planning | /planning-status | /add-requirement | /modify-requirement | /remove-requirement | /approve-plan | Orchestration Phase Commands | /start-orchestration | /orchestration-status | /register-agent | /assign-module | /add-module | /modify-module | /remove-module | /prioritize-module | /reassign-module | /check-agents -->
+<!-- TOC: Plan Phase Commands (6) | 1 /start-planning | 2 /planning-status | 3 /add-requirement | 4 /modify-requirement | 5 /remove-requirement | 6 /approve-plan | Orchestration Phase Commands (10) | 1 /start-orchestration | 2 /orchestration-status | 3 /register-agent | 4 /assign-module | 5 /add-module | 6 /modify-module | 7 /remove-module | 8 /prioritize-module | 9 /reassign-module | 10 /check-agents -->
 
 ## Output
 
 State YAML, GitHub Issues, phase confirmations. See [state-file-formats.md](references/state-file-formats.md).
-<!-- TOC: State File Formats | Plan Phase State File | File location | Complete YAML schema | Field descriptions | Orchestration Phase State File | File location | Complete YAML schema | Field descriptions | Agent Assignment Structure | Assignment fields | Instruction verification tracking | Progress polling tracking | Module Status Structure | Module fields | Status values | Parsing State Files -->
+<!-- TOC: Plan Phase State File | 1 File location | 2 Complete YAML schema | 3 Field descriptions | Orchestration Phase State File | 1 File location | 2 Complete YAML schema | 3 Field descriptions | Agent Assignment Structure | 1 Assignment fields | 2 Instruction verification tracking | 3 Progress polling tracking | Module Status Structure | 1 Module fields | 2 Status values -->
 
 ## Examples
 
@@ -52,35 +52,11 @@ State YAML, GitHub Issues, phase confirmations. See [state-file-formats.md](refe
 ## Error Handling
 
 See [troubleshooting.md](references/troubleshooting.md).
-<!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues | Communication Issues | Stop Hook Issues -->
+<!-- TOC: Two-Phase Mode Troubleshooting | Contents | 1. Plan Phase Issues | 2. Orchestration Phase Issues | 3. State File Issues | 4. Communication Issues | 5. Stop Hook Issues | Related References -->
 
 ## Resources
 
 - [command-reference.md](references/command-reference.md)
-  - 1. Plan Phase Commands
-    - 1.1 /start-planning
-    - 1.2 /planning-status
-    - 1.3 /add-requirement
-    - 1.4 /modify-requirement
-  - ...
 - [plan-phase-workflow.md](references/plan-phase-workflow.md)
-  - 1. Entering Plan Phase
-    - 1.1 Using /start-planning command
-    - 1.2 State file initialization
-  - 2. Planning Activities
-    - 2.1 Gathering user goals
-  - ...
 - [state-file-formats.md](references/state-file-formats.md)
-  - 1. Plan Phase State File
-    - 1.1 File location
-    - 1.2 Complete YAML schema
-    - 1.3 Field descriptions
-  - 2. Orchestration Phase State File
-  - ...
 - [troubleshooting.md](references/troubleshooting.md)
-  - 1. Plan Phase Issues
-    - Issue: Plan Phase won't transition to Orchestration Phase
-    - Issue: USER_REQUIREMENTS.md validation fails
-    - Issue: /approve-plan creates duplicate GitHub Issues
-  - 2. Orchestration Phase Issues
-  - ...

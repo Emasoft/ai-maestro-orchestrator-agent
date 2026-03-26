@@ -47,7 +47,7 @@ Copy this checklist and track your progress:
 ## Error Handling
 
 See [references/conflict-resolution.md](references/conflict-resolution.md)
-<!-- TOC: Conflict Resolution Guide | Disagreeing Professionally | Separating the Idea from the Person | Starting with Understanding | Using "I Think" Not "You're Wrong" | Offering Alternatives | The "Yes, And" Technique | Presenting Options Without Attachment | Showing Concrete Examples | Finding Compromise | Identifying Shared Goals | Proposing Incremental Solutions | Time-Boxing Experiments | Escalation Paths | When to Bring in a Third Party | Technical Leads and Architects | Documenting the Disagreement | When to Involve Maintainers | Stalled Discussions | Blocking PRs | Community Conduct Issues | Summary: Conflict Resolution Checklist -->
+<!-- TOC: 1 Disagreeing professionally | 1.1 Separating the idea from the person | 1.2 Starting with understanding | 1.3 Using "I think" not "You're wrong" | 2 Offering alternatives | 2.1 The "Yes, and" technique | 2.2 Presenting options without attachment | 2.3 Showing concrete examples | 3 Finding compromise | 3.1 Identifying shared goals | 3.2 Proposing incremental solutions | 3.3 Time-boxing experiments | 4 Escalation paths | 4.1 When to bring in a third party | 4.2 Technical leads and architects | 4.3 Documenting the disagreement | 5 When to involve maintainers | 5.1 Stalled discussions | 5.2 Blocking PRs | 5.3 Community conduct issues -->
 and [references/tone-quick-reference.md](references/tone-quick-reference.md)
 <!-- TOC: Communication Tone Quick Reference | Examples of Constructive Communication | Example 1: Constructive Code Review Comment | Example 2: Acknowledging Good Work | Error Handling in Communication | Pre-Send Checklist -->
 

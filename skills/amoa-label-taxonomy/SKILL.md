@@ -36,7 +36,7 @@ Copy this checklist and track your progress:
 - [ ] Verify label applied correctly
 
 Categories: `assign:`(0-1) `status:`(1) `priority:`(1) `type:`(1) `component:`(1+) `effort:`(1) `platform:`(0+) `toolchain:`(0+) `review:`(0-1). Details: [label-categories-detailed.md](./references/label-categories-detailed.md)
-<!-- TOC: Label Categories (Detailed) | Table of Contents | Assignment Labels (`assign:*`) | Status Labels (`status:*`) | Priority Labels (`priority:*`) | Type Labels (`type:*`) | Component Labels (`component:*`) | Effort Labels (`effort:*`) | Platform Labels (`platform:*`) | Toolchain Labels (`toolchain:*`) | Review Labels (`review:*`) -->
+<!-- TOC: Assignment Labels (`assign:*`) | Rules | Assignment Authority | Conflict Resolution | Status Labels (`status:*`) | Rules | Status Workflow | Priority Labels (`priority:*`) | Rules | Type Labels (`type:*`) | Rules | Component Labels (`component:*`) | Rules | Effort Labels (`effort:*`) | Rules | Platform Labels (`platform:*`) | Rules | Toolchain Labels (`toolchain:*`) | Rules | Review Labels (`review:*`) | Rules -->
 
 Kanban: `backlog`→`todo`→`in-progress`→`ai-review`→`human-review`→`merge-release`→`done` (+`blocked`). CLI ref: [cli-commands.md](./references/cli-commands.md)
 <!-- TOC: Create Labels | Query Labels | Update Labels | Validate Label Cardinality -->
@@ -62,31 +62,7 @@ See: [references/error-handling-and-output.md](./references/error-handling-and-o
 ## Resources
 
 - [label-categories-detailed.md](./references/label-categories-detailed.md)
-  - Assignment Labels (`assign:*`)
-  - Status Labels (`status:*`)
-  - Priority Labels (`priority:*`)
-  - Type Labels (`type:*`)
-  - Component Labels (`component:*`)
-  - Effort Labels (`effort:*`)
-  - Platform Labels (`platform:*`)
-  - Toolchain Labels (`toolchain:*`)
-  - Review Labels (`review:*`)
 - [cli-commands.md](./references/cli-commands.md)
-  - Create Labels
-    - Assignment Labels
-    - Status Labels
-    - Priority Labels
-    - Type Labels
-  - Query Labels
-  - Update Labels
-  - Validate Label Cardinality
 - [examples.md](./references/examples.md)
-  - Example 1: Assign Task to Agent
-  - Example 2: Update Status During Workflow
-  - Example 3: Query Issues by Multiple Labels
-  - Example 4: Validate Label Cardinality
 - [usage-rules.md](./references/usage-rules.md)
-  - Label Cardinality
-  - Label Lifecycle
-  - Common Mistakes to Avoid
 - [error-handling-and-output.md](./references/error-handling-and-output.md)

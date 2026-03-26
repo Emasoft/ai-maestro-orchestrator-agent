@@ -39,13 +39,13 @@ Copy this checklist and track your progress:
 - [ ] Cancel with `/cancel-orchestrator` when complete
 
 See [orchestration-loop-mechanics.md](references/orchestration-loop-mechanics.md)
-<!-- TOC: Orchestration Loop Mechanics | What the Orchestrator Loop Does | Loop Lifecycle | State File Structure | Task Source Monitoring and Priority | Iteration Counting and Max Iterations | Verification Mode (4-Loop Quadruple-Check) | Completion Signals (ALL_TASKS_COMPLETE) | Stop Hook Behavior and Blocking Logic -->
+<!-- TOC: 1 What the orchestrator loop does | 2 Task source monitoring and priority | 3 Iteration counting and max iterations | 4 Verification mode (4-loop quadruple-check) | 5 Completion signals (ALL_TASKS_COMPLETE) | 6 Stop hook behavior and blocking logic -->
 
 See [stop-hook-behavior.md](references/stop-hook-behavior.md)
-<!-- TOC: Blocking Conditions | Completion Signals | Recovery Behavior -->
+<!-- TOC: Blocking conditions - When the stop hook prevents exit | Completion signals - How to signal task completion | Recovery behavior - Fail-safe and retry logic -->
 
 See [state-file-format.md](references/state-file-format.md)
-<!-- TOC: State File Format | Loop State File Format and Fields | Execution Phase State File Format | Frontmatter Field Definitions | How to Manually Edit State Files | State File Corruption Recovery -->
+<!-- TOC: 1 Loop state file format and fields | 2 Execution phase state file format | 3 Frontmatter field definitions | 4 How to manually edit state files | 5 State file corruption recovery -->
 
 ## Examples
 
@@ -53,12 +53,12 @@ See [state-file-format.md](references/state-file-format.md)
 **Output:** Continuous processing started, monitoring all task sources.
 
 More: [examples.md](references/examples.md)
-<!-- TOC: Example 1: Complete Orchestration Start | Example 2: Orchestrator Loop Usage | Example 3: Monitoring During Implementation -->
+<!-- TOC: Complete Orchestration Start - Full startup workflow | Orchestrator Loop Usage - Loop start, status, cancel | Monitoring During Implementation - Agent checking workflow -->
 
 ## Error Handling
 
 See [troubleshooting.md](references/troubleshooting.md)
-<!-- TOC: Troubleshooting | Loop Won't Start - Common Causes | Stop Hook Not Firing - Debugging Steps | Tasks Showing as Pending Incorrectly | Lock File Issues and Stale Locks | Concurrent Execution Conflicts | Verification Mode Stuck | Helper Script Failures | Using /reload-plugins | General Debugging Workflow -->
+<!-- TOC: 1 Loop won't start - common causes | 2 Stop hook not firing - debugging steps | 3 Tasks showing as pending incorrectly | 4 Lock file issues and stale locks | 5 Concurrent execution conflicts | 6 Verification mode stuck | 7 Helper script failures | 8 Using /reload-plugins -->
 
 ## Resources
 
