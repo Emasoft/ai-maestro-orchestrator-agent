@@ -24,6 +24,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.MARKETPLACE_DISPATCH_TOKEN }}
-          repository: 23blocks-OS/ai-maestro-plugins
+          repository: Emasoft/ai-maestro-plugins
           event-type: plugin-version-update
           client-payload: '{"plugin_name": "${{ steps.version.outputs.name }}", "version": "${{ steps.version.outputs.version }}"}'
