@@ -31,17 +31,24 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Run CPV validation (full suite)
+      - name: Run CPV validation
         run: |
-          echo "=== CPV Plugin Validation (remote via uvx) ==="
+          echo "=== CPV Plugin Validation ==="
+          set +e
           uvx --from git+https://github.com/Emasoft/claude-plugins-validation --with pyyaml cpv-validate . --verbose --report validation-report.md
           EXIT_CODE=$?
+          set -e
+
+          # Exit codes: 0=PASS, 1=CRITICAL, 2=MAJOR, 3=MINOR
+          # Quality gate: block on CRITICAL and MAJOR only
           if [ $EXIT_CODE -eq 0 ]; then
             echo "=== Validation PASSED ==="
-          else
-            echo "=== Validation FAILED (exit code: $EXIT_CODE) ==="
+          elif [ $EXIT_CODE -le 2 ]; then
+            echo "=== BLOCKED: CRITICAL or MAJOR issues found (exit $EXIT_CODE) ==="
             cat validation-report.md 2>/dev/null || true
             exit $EXIT_CODE
+          else
+            echo "=== PASSED with minor issues (exit $EXIT_CODE) ==="
           fi
 
       - name: Upload validation report

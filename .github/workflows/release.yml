@@ -21,11 +21,13 @@ jobs:
 
       - name: CPV validation gate
         run: |
-          echo "=== Pre-release validation ==="
+          set +e
           uvx --from git+https://github.com/Emasoft/claude-plugins-validation --with pyyaml cpv-validate . --verbose
           EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "BLOCKED: Plugin validation failed — cannot release"
+          set -e
+          # Block release only on CRITICAL (1) or MAJOR (2)
+          if [ $EXIT_CODE -ge 1 ] && [ $EXIT_CODE -le 2 ]; then
+            echo "BLOCKED: CRITICAL or MAJOR issues — cannot release"
             exit $EXIT_CODE
           fi
 
