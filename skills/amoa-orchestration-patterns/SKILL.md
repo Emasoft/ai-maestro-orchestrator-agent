@@ -35,7 +35,8 @@ Copy this checklist and track your progress:
 
 ## Examples
 
-`Implement OAuth2` -- 5 parallel agents: DB schema, OAuth config, login flow, token refresh, tests.
+**Input:** "Implement OAuth2 login"
+**Output:** 5 parallel agents: db-schema, oauth-config, login-flow, token-refresh, auth-tests. Monitor 10 min, 4 loops before PR.
 
 [orchestration-examples.md](references/orchestration-examples.md)
 <!-- TOC: Authentication Module Implementation | 1 When you receive a plan handoff from AMAMA for authentication | 2 Task creation pattern for multi-component modules | CI Failure Coordination | 1 When CI tests fail and need coordinated fixes | 2 Investigation-first pattern for unknown root causes | Parallel Code Review | 1 When coordinating reviews across multiple developers | 2 Section-based decomposition for large codebases | Blocked Dependency Handling | 1 When one task blocks on external dependency | 2 Parallel escalation pattern for infrastructure blockers -->
