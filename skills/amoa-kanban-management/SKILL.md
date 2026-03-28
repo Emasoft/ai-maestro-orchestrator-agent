@@ -1,6 +1,6 @@
 ---
 name: amoa-kanban-management
-description: GitHub Projects V2 kanban board management via AI Maestro scripts. Use when creating tasks, moving cards, listing items. Trigger with kanban, task, or board requests.
+description: GitHub Projects V2 kanban board management. Use when creating boards, adding columns, moving items. Trigger with kanban or column requests.
 license: Apache-2.0
 compatibility: Requires gh CLI authenticated with project scopes. Requires AI Maestro installed.
 metadata:
@@ -20,32 +20,53 @@ Manage GitHub Projects V2 kanban boards: create boards, columns, move items, syn
 ## Prerequisites
 
 `gh` CLI authenticated with `project` and `read:project` OAuth scopes. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md)
-<!-- TOC: Troubleshooting - Common scope-related errors | How to check current scopes - Verifying your authentication -->
+<!-- TOC: 1 Why project scopes are required - Default gh auth login does not include them | 2 Complete list of required OAuth scopes - All scopes needed for agent operations | 3 How to check current scopes - Verifying your authentication | 4 How to add missing scopes - Interactive browser flow required | 5 Pre-flight validation command - One-liner to check before operations | 6 Scope provisioning is a manual pre-deployment step - Cannot be automated by agents | 7 Troubleshooting - Common scope-related errors -->
 
 ## Instructions
 
-**CRITICAL: ORCHESTRATOR is the PRIMARY kanban manager (governance title). COS and MANAGER are secondary.**
+1. Verify scopes: `gh auth status 2>&1 | grep -q "project" || echo "ERROR: gh auth refresh -h github.com -s project,read:project"`
+2. Query board/column IDs via GraphQL. See [references/kanban-procedures.md](references/kanban-procedures.md)
+<!-- TOC: Table of Contents | Add new columns safely (preserves existing columns and their assignments) -->
+3. Execute procedure. NEVER call `updateProjectV2Field` directly -- use `scripts/gh-project-add-columns.py`
+4. Verify JSON output. Columns: [references/kanban-column-system.md](references/kanban-column-system.md)
+<!-- TOC: Table of Contents | Standard 8-Column System | Available Scripts -->
 
-**Multi-Repo Rule:** All gh commands MUST specify `--repo <owner/repo>`. Determine the target repo BEFORE any operation.
+## Full Pipeline Workflow
 
-1. Verify OAuth scopes: `gh auth status 2>&1 | grep -q "project" || echo "ERROR: gh auth refresh -h github.com -s project,read:project"`
-2. Determine target repo: `REPO_PATH=$AGENT_DIR/repos/<repo-name>` and `OWNER_REPO=<owner>/<repo>`
-3. Use AI Maestro kanban scripts for all operations:
-   - **Create task:** `amp-kanban-create-task.sh "<title>" --repo "$OWNER_REPO" --assignee <agent>`
-   - **Move card:** `amp-kanban-move.sh <itemId> <status>` (status: backlog, todo, in_progress, review, done)
-   - **List tasks:** `amp-kanban-list.sh [--status <status>] [--assignee <agent>]`
-4. For advanced GraphQL operations, see [references/kanban-procedures.md](references/kanban-procedures.md)
-   - All `gh project` commands need `--owner "$OWNER"`
-   - All `gh issue` commands need `--repo "$OWNER_REPO"`
-5. After creating a task, send assignment via AMP: `amp-send.sh <agent> "Task Assignment" "<details>"`
-6. When agent reports done: `amp-kanban-move.sh <itemId> review` → notify Integrator
+The orchestrator is the PRIMARY kanban manager and drives the entire Issue-to-Release pipeline.
+See [references/pipeline-workflow.md](references/pipeline-workflow.md) for the complete step-by-step.
+
+**Pipeline Phases (kanban perspective):**
+
+| Phase | Kanban Action | Card Movement |
+|-------|--------------|---------------|
+| 1. Task Creation | Create issue + kanban card | → **Backlog** or **Todo** |
+| 2. Agent Request | Request agent from COS (NEVER create directly) | — |
+| 3. Task Assignment | Assign agent to card, send task details | → **In Progress** |
+| 4. Development Done | Agent reports completion | → **AI Review** |
+| 5. AI Review (Integrator) | Integrator reviews PR | PASS → **Merge/Release** / FAIL → back to **In Progress** |
+| 6. PR Merge | Integrator merges PR | → **Done** |
+| 7. Release | All cards done → release PR from dev to main | — |
+
+**Key Rules:**
+- Orchestrator moves ALL cards — agents report status, orchestrator updates the board
+- Orchestrator NEVER creates agents — always request via COS using `amp-send.sh`
+- Each issue = separate branch = separate PR (isolation principle)
+- Integrator = quality gate (reviews + merges)
+- Multiple integrators can run in parallel for speed
+- Failed reviews create sub-issues and move the card back to In Progress
+
+**Parallel Review Optimization:**
+- Create MULTIPLE integrator agents via COS for parallel PR reviews
+- Monitor all reviews via `amp-kanban-list.sh --status ai-review`
+- After review, integrators can be deleted or reassigned
 
 Copy this checklist and track your progress:
-- [ ] Verify OAuth scopes
-- [ ] Create task with amp-kanban-create-task.sh
-- [ ] Assign to agent via amp-send.sh
-- [ ] Track status with amp-kanban-list.sh
-- [ ] Move cards through columns as work progresses
+
+- [ ] Verify OAuth scopes with pre-flight check
+- [ ] Query board/column IDs, execute procedure from [references/kanban-procedures.md](references/kanban-procedures.md)
+- [ ] Confirm JSON output matches expected format
+- [ ] For pipeline: follow step-by-step in [references/pipeline-workflow.md](references/pipeline-workflow.md)
 
 ## Output
 
@@ -56,28 +77,21 @@ JSON from GraphQL mutations and board state reports.
 **Input:** `move-item --project 42 --item ITEM_ID --column "AI Review"`
 **Output:** `{"updateProjectV2ItemFieldValue":{"projectV2Item":{"id":"ITEM_ID"}}}`
 See [references/kanban-examples.md](references/kanban-examples.md)
-<!-- TOC: Example 1: Pre-Flight Scope Check | Example 3: Move Item to AI Review -->
+<!-- TOC: Example 1: Pre-Flight Scope Check | Example 2: Create Task and Add to Board | Example 3: Move Item to AI Review | Example 4: Safe Guard Before Closing Issue -->
 
 ## Error Handling
 
 See [references/kanban-error-handling.md](references/kanban-error-handling.md)
-<!-- TOC: Error Reference Table | Output Specification | Script Output Rules -->
+<!-- TOC: Table of Contents | Error Reference Table | Output Specification | Script Output Rules -->
 
 ## Resources
 
 - [Auth & OAuth Scopes](references/gh-auth-scopes.md)
-<!-- TOC: Troubleshooting - Common scope-related errors | How to check current scopes - Verifying your authentication -->
 - [GraphQL Mutations](references/github-projects-v2-graphql.md)
-<!-- TOC: Deleting a project item - deleteProjectV2Item mutation | Common parameter mistakes - fieldId vs projectId confusion -->
 - [Pitfalls & Guards](references/kanban-pitfalls.md)
-<!-- TOC: Safe column addition procedure | How to detect if an issue was auto-closed -->
 - [Procedures](references/kanban-procedures.md)
-<!-- TOC: PROCEDURE 4: Sync Kanban Status | PROCEDURE 1: Create Project Board -->
 - [Column System](references/kanban-column-system.md)
-<!-- TOC: Available Scripts | Standard 8-Column System -->
 - [Checklists](references/kanban-checklist.md)
-<!-- TOC: Pre-Flight Checklist | Board Setup Checklist -->
 - [Error Handling](references/kanban-error-handling.md)
-<!-- TOC: Script Output Rules | Output Specification -->
 - [Examples](references/kanban-examples.md)
-<!-- TOC: Example 1: Pre-Flight Scope Check | Example 3: Move Item to AI Review -->
+- [Pipeline Workflow](references/pipeline-workflow.md)

@@ -13,11 +13,9 @@ agent: amoa-main
 
 # AMOA Shared Communication Templates
 
-Message templates and protocols for agent coordination, task assignment, status reporting, and escalation.
-
 ## Overview
 
-Reusable JSON message templates for inter-agent communication.
+Reusable JSON message templates for agent coordination, task assignment, status reporting, and escalation.
 
 ## Prerequisites
 
@@ -45,40 +43,32 @@ Copy this checklist and track your progress:
 Standard JSON message structure with from, to, subject, priority, and content fields. See: [references/message-format.md](references/message-format.md)
 <!-- TOC: Standard Message Structure | Sending Messages | Checking Inbox -->
 
----
-
 ## 2. Message Templates by Scenario
 
 JSON templates: [references/message-templates.md](references/message-templates.md)
-<!-- TOC: Task Assignment (AMOA to Remote Agent) | Task Completion Report (Agent to AMOA) | Decision Trees for Core Message Templates -->
+<!-- TOC: 1 Task Assignment (AMOA to Remote Agent) | 2 Task Completion Report (Agent to AMOA) | 3 Status Request (AMOA to Agent) | 4 Status Response (Agent to AMOA) | 5 Approval Request (AMCOS to AMAMA) | 6 Approval Response (AMAMA to AMCOS) | 7 Escalation (Any Agent to AMCOS/AMAMA) | 8 Acknowledgment (Any Agent) | 9 Design Handoff (AMAA to AMOA) | 10 Integration Request (AMOA to AMIA) | 11 Integration Result (AMIA to AMOA) | Decision Trees for Core Message Templates -->
 
 Curl templates: [references/ai-maestro-message-templates.md](references/ai-maestro-message-templates.md)
-<!-- TOC: Acknowledging Task Assignment from AMCOS/AMAMA | Delegating Task to Sub-Agent | Decision Trees for AI Maestro Message Handling -->
-
----
+<!-- TOC: 1 Acknowledging Task Assignment from AMCOS/AMAMA | 2 Delegating Task to Sub-Agent | 3 Requesting Status Update from Sub-Agent | 4 Reporting Task Completion to AMCOS | 5 Escalating Blocked Task to AMCOS | 6 Escalating Blocked Task to AMAMA (User Decision Needed) | 7 Standard AI Maestro API Format and Conventions | Quick Reference: Common Patterns | Notes | Decision Trees for AI Maestro Message Handling -->
 
 ## Error Handling
 
 On failure, retry once then escalate per [references/escalation-protocol.md](references/escalation-protocol.md)
 <!-- TOC: Escalation Order | State-Based Triggers | Priority Escalation | Important Notes -->
-Error resolution and scenario mapping: [references/error-handling-quickref.md](references/error-handling-quickref.md)
+See also: [references/error-handling-quickref.md](references/error-handling-quickref.md)
 <!-- TOC: Error Handling | Quick Reference Card -->
-
----
 
 ## Examples
 
 See: [references/examples.md](references/examples.md)
-<!-- TOC: Full Task Assignment Flow | Example 1: Send Task Assignment | Example 2: Send Status Request -->
+<!-- TOC: Full Task Assignment Flow | Example 1: Send Task Assignment | Example 2: Send Status Request | Example 3: Escalate to Assistant Manager -->
 
 **Input:** Send task assignment to agent via `agent-messaging` skill with scenario=task_assignment, to=agent-name, subject="Run tests"
 **Output:** `{"status":"sent","message_id":"msg-12345"}`
 
----
-
 ## Output
 
-JSON messages (task/status/approval), API confirmations with message_id, message history arrays, and markdown delegation log entries.
+JSON messages, API confirmations with message_id, and markdown delegation log entries.
 
 ## Resources
 

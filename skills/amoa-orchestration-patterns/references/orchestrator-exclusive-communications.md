@@ -112,10 +112,10 @@
 |--------|-------------|---------------|
 | Send AI Maestro messages | Use the `agent-messaging` skill | Requires coordination context |
 | Check AI Maestro inbox | Use the `agent-messaging` skill | Must process in priority order |
-| `git -C "$REPO_PATH" commit` | Commit staged changes (always specify repo with -C) | Must track all commits |
-| `git -C "$REPO_PATH" push` | Push to remote (always specify repo with -C) | Must coordinate with PR workflow |
-| `gh pr create --repo "$OWNER/$REPO"` | Create pull requests (always specify --repo) | Must track all PRs |
-| `gh release create --repo "$OWNER/$REPO"` | Publish releases (always specify --repo) | Must coordinate release timing |
+| `git commit` | Commit staged changes | Must track all commits |
+| `git push` | Push to remote | Must coordinate with PR workflow |
+| `gh pr create` | Create pull requests | Must track all PRs |
+| `gh release create` | Publish releases | Must coordinate release timing |
 | Notify external systems | Webhooks, Slack, email | Single source of notifications |
 
 ### 2.2 Why Each Action is Exclusive

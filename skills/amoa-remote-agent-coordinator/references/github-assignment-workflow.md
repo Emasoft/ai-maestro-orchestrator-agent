@@ -157,8 +157,8 @@ gh issue edit 42 --remove-label "status:pending"
 ### Monitor Issue Activity
 
 ```bash
-# View issue with comments (always --repo)
-gh issue view 42 --repo "$OWNER_REPO" --comments
+# View issue with comments
+gh issue view 42 --comments
 
 # List recent comments
 gh api repos/{owner}/{repo}/issues/42/comments \
@@ -168,11 +168,11 @@ gh api repos/{owner}/{repo}/issues/42/comments \
 ### Monitor Pull Requests
 
 ```bash
-# List PRs that reference this issue (always --repo)
-gh pr list --repo "$OWNER_REPO" --search "fixes #42"
+# List PRs that reference this issue
+gh pr list --search "fixes #42"
 
-# View PR status (always --repo)
-gh pr view <PR_NUMBER> --repo "$OWNER_REPO" --json state,reviews,checks
+# View PR status
+gh pr view <PR_NUMBER> --json state,reviews,checks
 ```
 
 ### Activity Indicators
@@ -331,40 +331,38 @@ gh pr merge <PR_NUMBER> --merge --delete-branch
 
 ## 7.8 GitHub CLI Commands Reference
 
-**CRITICAL: ALL gh commands MUST include `--repo "$OWNER/$REPO"`.**
-
 ### Issue Commands
 
 | Command | Purpose |
 |---------|---------|
-| `gh issue create --repo "$OWNER_REPO"` | Create new issue |
-| `gh issue edit --repo "$OWNER_REPO"` | Update issue |
-| `gh issue view --repo "$OWNER_REPO"` | View issue details |
-| `gh issue comment --repo "$OWNER_REPO"` | Add comment |
-| `gh issue close --repo "$OWNER_REPO"` | Close issue |
-| `gh issue list --repo "$OWNER_REPO"` | List issues |
+| `gh issue create` | Create new issue |
+| `gh issue edit` | Update issue |
+| `gh issue view` | View issue details |
+| `gh issue comment` | Add comment |
+| `gh issue close` | Close issue |
+| `gh issue list` | List issues |
 
 ### PR Commands
 
 | Command | Purpose |
 |---------|---------|
-| `gh pr list --repo "$OWNER_REPO"` | List pull requests |
-| `gh pr view --repo "$OWNER_REPO"` | View PR details |
-| `gh pr review --repo "$OWNER_REPO"` | Review PR |
-| `gh pr merge --repo "$OWNER_REPO"` | Merge PR |
-| `gh pr checks --repo "$OWNER_REPO"` | View CI status |
+| `gh pr list` | List pull requests |
+| `gh pr view` | View PR details |
+| `gh pr review` | Review PR |
+| `gh pr merge` | Merge PR |
+| `gh pr checks` | View CI status |
 
 ### Common Options
 
 ```bash
-# View in JSON format (always --repo)
-gh issue view 42 --repo "$OWNER_REPO" --json title,state,assignees
+# View in JSON format
+gh issue view 42 --json title,state,assignees
 
-# Filter lists (always --repo)
-gh pr list --repo "$OWNER_REPO" --state open --assignee dev-alice
+# Filter lists
+gh pr list --state open --assignee dev-alice
 
-# Search (always --repo)
-gh issue list --repo "$OWNER_REPO" --search "module in:title"
+# Search
+gh issue list --search "module in:title"
 ```
 
 ---

@@ -17,38 +17,23 @@ agent: amoa-main
 
 Handle agent replacement triggered by AMCOS. When an agent fails or loses context, compile task context and generate handoff documents for the replacement.
 
-**Use this skill when**: AMCOS notifies of agent failure, context loss, or manual replacement is needed.
 
 ## Prerequisites
 
-- Python 3.8+ with PyYAML
-- GitHub CLI (gh) authenticated — all commands need `--repo "$OWNER/$REPO"`
-- AI Maestro running
-- AMCOS system operational
+Python 3.8+, PyYAML, GitHub CLI (gh) authenticated, AI Maestro running, AMCOS operational.
 
 ## Output
 
-| Output Type | Location | Format |
-|-------------|----------|--------|
-| Handoff Document | GitHub issue comment | Markdown with context and next steps |
-| State File | Orchestrator state YAML | Updated agent assignment |
-| AMCOS Confirmation | AI Maestro message | JSON replacement status |
-| Kanban Update | GitHub Project board | Reassigned task cards |
-
----
+Handoff document (GitHub issue comment), state file update, AMCOS confirmation, kanban reassignment.
 
 ## Instructions
 
-**Multi-Repo Rule:** When compiling task context, use `gh issue list --repo "$OWNER/$REPO"` for each repo the failed agent worked on. All handoff documents go to `$AGENT_DIR/reports/`.
-
-1. On AMCOS notification, compile task context from the failed agent's GitHub issues (using `--repo`), kanban cards, and AI Maestro message history.
-2. Generate a handoff document and deliver it to the replacement agent via AI Maestro `agent-messaging` skill. Include target repo path(s) in the handoff.
+1. On AMCOS notification, compile task context from the failed agent's GitHub issues, kanban cards, and AI Maestro message history.
+2. Generate a handoff document and deliver it to the replacement agent via AI Maestro `agent-messaging` skill.
 3. Wait for ACK, confirm reassignment, and notify AMCOS of successful replacement.
 
 See: [replacement-workflow-steps.md](references/replacement-workflow-steps.md) for detailed steps.
-<!-- TOC: Python Scripts | Replacement Protocol Flow -->
-
----
+<!-- TOC: Replacement Protocol Flow | Step 1: Receive AMCOS Notification | Step 2: Compile Task Context | Step 3: Generate Handoff Document | Step 4: Reassign Kanban Tasks | Step 5: Send Handoff to New Agent | Step 6: Confirm Reassignment | Python Scripts -->
 
 ## Checklist
 
@@ -63,8 +48,6 @@ Copy this checklist and track your progress:
 - [ ] Update orchestrator state file
 - [ ] Notify AMCOS of successful replacement
 
----
-
 ## Examples
 
 **Input:** AMCOS notification `{"type": "agent-failed", "agent": "libs-svg-svgbbox", "reason": "context-loss"}`
@@ -73,37 +56,47 @@ Copy this checklist and track your progress:
 See: [examples.md](references/examples.md) for full examples.
 <!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
 
----
-
 ## Error Handling
 
 See: [error-handling-reference.md](references/error-handling-reference.md) for errors and solutions.
-<!-- TOC: Emergency Procedures | Common Errors and Solutions -->
-
----
+<!-- TOC: Common Errors and Solutions | Troubleshooting References | Emergency Procedures -->
 
 ## Resources
 
 - [replacement-workflow-steps.md](references/replacement-workflow-steps.md) - 6-step workflow
-  <!-- TOC: Python Scripts | Replacement Protocol Flow -->
+  - 1. Replacement Protocol Flow
+  - 2. Step 1: Receive AMCOS Notification
+  - 3. Step 2: Compile Task Context
+  - 4. Step 3: Generate Handoff Document
+  - 5. Step 4: Reassign Kanban Tasks
+  - ...
 - [error-handling-reference.md](references/error-handling-reference.md) - Errors
-  <!-- TOC: Emergency Procedures | Common Errors and Solutions -->
+  - 1. Common Errors and Solutions
+  - 2. Troubleshooting References
+  - 3. Emergency Procedures
 - [handoff-document-format.md](references/handoff-document-format.md) - Handoff format
-  <!-- TOC: Required Sections | Task Detail Format -->
+  - 3.1 Required Sections
+    - Mandatory Sections
+    - Section Order
+  - Template
+  - Handoff Metadata
+  - ...
 - [examples.md](references/examples.md) - Examples
-  <!-- TOC: Example 1: Standard Replacement Flow | Example 2: Emergency Replacement with Partial Context -->
+  - Example 1: Standard Replacement Flow
+  - Example 2: Emergency Replacement with Partial Context
 - [emergency-procedures.md](references/emergency-procedures.md) - Emergencies
-  <!-- TOC: Replacement Agent Also Fails | Handoff Document Corrupted -->
+  - Replacement Agent Also Fails
+  - Handoff Document Corrupted
+  - GitHub Project Access Issues
 - [context-compilation-workflow.md](references/context-compilation-workflow.md) - Context gathering
-  <!-- TOC: Information Sources | State File Extraction -->
-
----
+  - 2.1 Information Sources
+    - Primary Sources (MUST check)
+    - Secondary Sources (SHOULD check)
+    - Tertiary Sources (MAY check)
+  - 2.2 State File Extraction
+  - ...
 
 ## Related Skills
 
 - `amoa-remote-agent-coordinator` - Agent registration and remote agent communication
 - `amoa-orchestration-patterns` - General orchestration patterns
-
----
-
-**Version**: 1.0.0 | **Last Updated**: 2026-02-03

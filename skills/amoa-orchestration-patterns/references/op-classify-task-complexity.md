@@ -161,6 +161,6 @@ Copy this checklist and track your progress:
 
 - [op-select-agent-for-task.md](op-select-agent-for-task.md) - Select agent after classification
 <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
-- [op-decompose-goals-to-modules.md](op-decompose-goals-to-modules.md) - Decompose complex tasks
+- [op-decompose-goals-to-modules.md](../../amoa-two-phase-mode/references/op-decompose-goals-to-modules.md) - Decompose complex tasks
 - [op-define-scope-boundaries.md](op-define-scope-boundaries.md) - Define boundaries for medium/complex tasks
 <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

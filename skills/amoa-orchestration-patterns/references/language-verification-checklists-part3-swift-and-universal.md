@@ -29,7 +29,7 @@
 
 This document provides the Swift/iOS/macOS verification checklist and universal resources applicable to all languages.
 
-**Parent document:** [language-verification-checklists-index.md](./language-verification-checklists-index.md)
+**Parent document:** [language-verification-checklists.md](./language-verification-checklists.md)
 
 ## Table of Contents
 

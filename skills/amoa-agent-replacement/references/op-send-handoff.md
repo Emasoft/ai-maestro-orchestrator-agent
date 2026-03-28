@@ -40,30 +40,27 @@ Use this operation after kanban tasks are reassigned to deliver the handoff docu
 ### Step 1: Upload Handoff to GitHub
 
 ```bash
-# All gh commands MUST include --repo; all git commands MUST use -C
-REPO_PATH="$AGENT_DIR/repos/<repo-name>"
-
 # Option A: Add to GitHub issue as comment
-gh issue comment <PRIMARY_ISSUE_NUM> --repo "$OWNER_REPO" --body "$(cat handoff-document.md)"
+gh issue comment <PRIMARY_ISSUE_NUM> --body "$(cat handoff-document.md)"
 
 # Option B: Add to dedicated handoff issue
-gh issue create --repo "$OWNER_REPO" \
+gh issue create \
   --title "Handoff: $FAILED_AGENT -> $REPLACEMENT_AGENT" \
   --body "$(cat handoff-document.md)" \
   --label "type:handoff,assign:$REPLACEMENT_AGENT"
 
 # Option C: Add to repository file
-cp handoff-document.md "$REPO_PATH/docs/handoffs/handoff-$FAILED_AGENT-$REPLACEMENT_AGENT-$(date +%Y%m%d).md"
-git -C "$REPO_PATH" add docs/handoffs/
-git -C "$REPO_PATH" commit -m "Add handoff document for $REPLACEMENT_AGENT"
-git -C "$REPO_PATH" push
+cp handoff-document.md docs/handoffs/handoff-$FAILED_AGENT-$REPLACEMENT_AGENT-$(date +%Y%m%d).md
+git add docs/handoffs/
+git commit -m "Add handoff document for $REPLACEMENT_AGENT"
+git push
 ```
 
 ### Step 2: Get Handoff URL
 
 ```bash
-# If using issue comment, get URL (always --repo)
-HANDOFF_URL=$(gh issue view <ISSUE_NUM> --repo "$OWNER_REPO" --json url --jq '.url')
+# If using issue comment, get URL
+HANDOFF_URL=$(gh issue view <ISSUE_NUM> --json url --jq '.url')
 
 # If using file, get raw URL
 HANDOFF_URL="https://github.com/<OWNER>/<REPO>/blob/main/docs/handoffs/handoff-*.md"

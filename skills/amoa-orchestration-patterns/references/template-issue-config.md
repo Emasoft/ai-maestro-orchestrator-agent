@@ -203,11 +203,11 @@ The orchestrator should:
 When the orchestrator or any implementer agent files an issue via the GitHub CLI (`gh issue create`), they should use the `--template` flag to ensure the structured template is used:
 
 ```bash
-# File a bug report using the structured template (always specify --repo)
-gh issue create --repo "$OWNER/$REPO" --template bug_report.yml --title "parse_config() fails on Windows with non-ASCII" --body "..."
+# File a bug report using the structured template
+gh issue create --template bug_report.yml --title "parse_config() fails on Windows with non-ASCII" --body "..."
 
-# If the body is complex, write it to a file first (use $AGENT_DIR/tmp/, NOT /tmp/)
-gh issue create --repo "$OWNER/$REPO" --template bug_report.yml --title "Title" --body-file "$AGENT_DIR/tmp/issue-body.md"
+# If the body is complex, write it to a file first
+gh issue create --template bug_report.yml --title "Title" --body-file /tmp/issue-body.md
 ```
 
 When filing via the GitHub API, the agent should format the issue body to match the template's field structure so the issue is consistent with user-filed issues.
