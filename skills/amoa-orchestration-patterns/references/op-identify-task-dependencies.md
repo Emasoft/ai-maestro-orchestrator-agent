@@ -177,7 +177,7 @@ T3 depends on T2
 
 ## Related Operations
 
-- [op-decompose-goals-to-modules.md](../../amoa-two-phase-mode/references/op-decompose-goals-to-modules.md) - Decomposition before dependency analysis
-- [op-schedule-claude-tasks.md](../../amoa-two-phase-mode/references/op-schedule-claude-tasks.md) - Schedule with dependencies
+- [op-decompose-goals-to-modules.md](op-decompose-goals-to-modules.md) - Decomposition before dependency analysis
+- [op-schedule-claude-tasks.md](op-schedule-claude-tasks.md) - Schedule with dependencies
 - [op-define-scope-boundaries.md](op-define-scope-boundaries.md) - Scope affects dependencies
 <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

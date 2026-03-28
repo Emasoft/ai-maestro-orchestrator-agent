@@ -62,11 +62,13 @@ Generate a comprehensive view of all active tasks, agent states, and progress me
 
 ## Steps
 
+**IMPORTANT: All gh commands below MUST include `--repo "$OWNER/$REPO"`. Set OWNER_REPO before running.**
+
 ### Step 1: Query All In-Progress Tasks
 
 ```bash
 # Get all tasks with in-progress status
-IN_PROGRESS=$(gh issue list --label "status:in-progress" --json number,title,labels,updatedAt | \
+IN_PROGRESS=$(gh issue list --repo "$OWNER_REPO" --label "status:in-progress" --json number,title,labels,updatedAt | \
   jq -r '.[] | {number, title, labels: [.labels[].name], updated: .updatedAt}')
 
 echo "In-progress tasks:"
@@ -77,7 +79,7 @@ echo "$IN_PROGRESS"
 
 ```bash
 # Get all blocked tasks
-BLOCKED=$(gh issue list --label "status:blocked" --json number,title,labels,updatedAt | \
+BLOCKED=$(gh issue list --repo "$OWNER_REPO" --label "status:blocked" --json number,title,labels,updatedAt | \
   jq -r '.[] | {number, title, labels: [.labels[].name], updated: .updatedAt}')
 
 BLOCKED_COUNT=$(echo "$BLOCKED" | jq -s 'length')
@@ -88,7 +90,7 @@ echo "Blocked tasks: $BLOCKED_COUNT"
 
 ```bash
 # Get all assigned tasks grouped by agent
-ASSIGNMENTS=$(gh issue list --search "label:assign:" --json number,title,labels | \
+ASSIGNMENTS=$(gh issue list --repo "$OWNER_REPO" --search "label:assign:" --json number,title,labels | \
   jq -r '.[] | {
     number,
     title,
@@ -188,7 +190,7 @@ echo "$BLOCKED" | jq -c '.' | while read -r task; do
   UPDATED=$(echo "$task" | jq -r '.updated')
 
   # Get blocker info from comments
-  BLOCKER_INFO=$(gh issue view $TASK_NUM --json comments | jq -r '.comments[] | select(.body | contains("BLOCKED:")) | .body' | head -1 | cut -c1-40)
+  BLOCKER_INFO=$(gh issue view $TASK_NUM --repo "$OWNER_REPO" --json comments | jq -r '.comments[] | select(.body | contains("BLOCKED:")) | .body' | head -1 | cut -c1-40)
 
   echo "| #$TASK_NUM | $AGENT | $BLOCKER_INFO | $UPDATED |"
 done

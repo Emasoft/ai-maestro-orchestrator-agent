@@ -19,14 +19,16 @@ Monitors agent progress via state transitions, detects stalls, and escalates iss
 
 ## Prerequisites
 
-Requires **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**, AI Maestro API, GitHub CLI.
+Requires **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**, AI Maestro API, GitHub CLI. All `gh issue list` commands must include `--repo "$OWNER/$REPO"`.
 
 ## Instructions
+
+**Multi-Repo Rule:** All gh commands MUST include `--repo "$OWNER/$REPO"`. Determine which repo each task belongs to before querying.
 
 States: Acknowledged, No ACK, Active, No Progress, Stale, Unresponsive, Blocked, Complete. Transitions: Assigned→Acknowledged→Active→Complete. Stalls: No Progress→Stale→Unresponsive.
 <!-- TOC: Escalation|Reminders|Reassignment|Progress|Completion -->
 
-1. Query `status:in-progress` issues; determine each agent's state via timestamps
+1. Query `status:in-progress` issues (with `--repo`); determine each agent's state via timestamps
 2. No ACK/No Progress/Stale → send reminder or status request
 3. Unresponsive → escalate; Blocked → create `type:blocker` issue, notify user
 4. Complete → verify PR, tests, review, docs; update labels
@@ -49,37 +51,14 @@ State report table (task, agent, state, last update) + escalation messages + blo
 
 ## Error Handling
 
-Escalate: reminder→urgent→reassignment. Blockers→`type:blocker` issues. See [references/monitoring-examples.md](references/monitoring-examples.md).
-<!-- TOC: Example 1: Query Agent State via AI Maestro | Example 2: Send First Reminder | Example 3: Escalate to Urgent | Example 4: Handle Blocker Report | Example 5: Verify Completion | Dashboard Queries | Error Handling -->
+Escalate: reminder→urgent→reassignment. Blockers→`type:blocker` issues. See `references/monitoring-examples.md`.
+<!-- TOC: QueryState|Reminder|Escalate|Blocker|Completion|Dashboard|Errors -->
 
 ## Resources
 
 - [references/blocker-handling-protocol.md](references/blocker-handling-protocol.md)
-  - Iron Rule for Blockers
-  - Comprehensive Blocker Definition
-  - Blocker Response Protocol
-  - Update Labels and Create Blocker Issue
-  - Resolution
-  - When Blocker Resolved
-  - Blocker Lifecycle Checklist
+  <!-- TOC: Blocker Response Protocol | When Blocker Resolved -->
 - [references/escalation-and-messaging.md](references/escalation-and-messaging.md)
-  - Escalation Order
-  - First Reminder
-  - Urgent Reminder
-  - Reassignment Decision
-  - Progress Report Format
-    - Status Update
-    - Completion Report
-    - Blocker Report
-  - Completion Verification
-    - Verification Checklist
-    - If Verification Passes
-    - If Verification Fails
+  <!-- TOC: Escalation Order | First Reminder | Urgent Reminder | Reassignment Decision | Progress Report Format | Completion Verification -->
 - [references/monitoring-examples.md](references/monitoring-examples.md)
-  - Example 1: Query Agent State via AI Maestro
-  - Example 2: Send First Reminder
-  - Example 3: Escalate to Urgent
-  - Example 4: Handle Blocker Report
-  - Example 5: Verify Completion
-  - Dashboard Queries
-  - Error Handling
+  <!-- TOC: Query Agent State | Send First Reminder | Escalate to Urgent | Handle Blocker Report | Verify Completion | Dashboard Queries | Error Handling -->

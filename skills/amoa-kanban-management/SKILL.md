@@ -24,14 +24,21 @@ Manage GitHub Projects V2 kanban boards: create boards, columns, move items, syn
 
 ## Instructions
 
+**CRITICAL: ORCHESTRATOR is the PRIMARY kanban manager (governance title). COS and MANAGER are secondary.**
+
+**Multi-Repo Rule:** All gh commands MUST specify `--repo <owner/repo>`. Determine the target repo BEFORE any operation.
+
 1. Verify OAuth scopes: `gh auth status 2>&1 | grep -q "project" || echo "ERROR: gh auth refresh -h github.com -s project,read:project"`
-2. Use AI Maestro kanban scripts for all operations:
-   - **Create task:** `amp-kanban-create-task.sh "<title>" --repo <repo> --assignee <agent>`
+2. Determine target repo: `REPO_PATH=$AGENT_DIR/repos/<repo-name>` and `OWNER_REPO=<owner>/<repo>`
+3. Use AI Maestro kanban scripts for all operations:
+   - **Create task:** `amp-kanban-create-task.sh "<title>" --repo "$OWNER_REPO" --assignee <agent>`
    - **Move card:** `amp-kanban-move.sh <itemId> <status>` (status: backlog, todo, in_progress, review, done)
    - **List tasks:** `amp-kanban-list.sh [--status <status>] [--assignee <agent>]`
-3. For advanced GraphQL operations, see [references/kanban-procedures.md](references/kanban-procedures.md)
-4. After creating a task, send assignment via AMP: `amp-send.sh <agent> "Task Assignment" "<details>"`
-5. When agent reports done: `amp-kanban-move.sh <itemId> review` → notify Integrator
+4. For advanced GraphQL operations, see [references/kanban-procedures.md](references/kanban-procedures.md)
+   - All `gh project` commands need `--owner "$OWNER"`
+   - All `gh issue` commands need `--repo "$OWNER_REPO"`
+5. After creating a task, send assignment via AMP: `amp-send.sh <agent> "Task Assignment" "<details>"`
+6. When agent reports done: `amp-kanban-move.sh <itemId> review` → notify Integrator
 
 Copy this checklist and track your progress:
 - [ ] Verify OAuth scopes

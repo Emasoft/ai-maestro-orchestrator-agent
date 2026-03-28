@@ -2,10 +2,12 @@
 
 > **Note**: This document is a local reference copy. The authoritative source for team configuration is the AI Maestro teams API (`/api/teams`). Role cardinality and membership rules listed here should be verified against the governance API before enforcement.
 
-**Version**: 1.6.0
-**Last Updated**: 2026-03-08
+**Version**: 2.0.0
+**Last Updated**: 2026-03-28
 
 This document specifies the format and location of team registries, agent contacts, and naming conventions.
+
+**Governance Model v3:** There are 4 governance titles: MANAGER, CHIEF-OF-STAFF, ORCHESTRATOR, MEMBER. ORCHESTRATOR is the primary kanban manager and can message MANAGER directly. All teams are closed. Each agent belongs to at most one team.
 
 ---
 

@@ -105,23 +105,23 @@ gh issue comment {ISSUE_NUM} --body "[ACK] Starting work."
 ### Step 2: Create Branch
 
 ```bash
-# Create feature branch named after issue
-git checkout -b feature/GH-{ISSUE_NUM}-{short-description}
-git push -u origin feature/GH-{ISSUE_NUM}-{short-description}
+# Create feature branch named after issue (use git -C to target specific repo)
+git -C "$REPO_PATH" checkout -b feature/GH-{ISSUE_NUM}-{short-description}
+git -C "$REPO_PATH" push -u origin feature/GH-{ISSUE_NUM}-{short-description}
 ```
 
 ### Step 3: Progress Updates
 
 ```bash
-# Add progress comment to issue
-gh issue comment {ISSUE_NUM} --body "[PROGRESS] Checkpoint 2: Implementation 60% complete"
+# Add progress comment to issue (always --repo)
+gh issue comment {ISSUE_NUM} --repo "$OWNER_REPO" --body "[PROGRESS] Checkpoint 2: Implementation 60% complete"
 ```
 
 ### Step 4: Create PR
 
 ```bash
-# Create PR linked to issue
-gh pr create --title "feat: {description}" \
+# Create PR linked to issue (always --repo)
+gh pr create --repo "$OWNER_REPO" --title "feat: {description}" \
   --body "Closes #{ISSUE_NUM}
 
 ## Summary

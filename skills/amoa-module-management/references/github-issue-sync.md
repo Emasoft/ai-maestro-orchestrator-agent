@@ -66,10 +66,10 @@ Implementation of the {module_name} module (added during orchestration).
 
 ### Issue Creation Command
 
-The script uses this gh command:
+The script uses this gh command (**always include --repo**):
 
 ```bash
-gh issue create \
+gh issue create --repo "$OWNER_REPO" \
   --title "[Module] {module_name}" \
   --body "{body}" \
   --label "module,priority:{priority},status:todo"

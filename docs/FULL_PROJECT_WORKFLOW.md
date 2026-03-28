@@ -1,9 +1,13 @@
 # Full Project Workflow: From Requirements to Delivery
 
-**Version**: 1.6.0
-**Last Updated**: 2026-03-08
+**Version**: 2.0.0
+**Last Updated**: 2026-03-28
 
 This document describes the complete workflow for how the AI Maestro agent system handles a project from initial requirements to delivery. All agents must understand this workflow to coordinate effectively.
+
+**Governance Model v3:** 4 titles: MANAGER, CHIEF-OF-STAFF, ORCHESTRATOR, MEMBER. ORCHESTRATOR is the primary kanban manager and can message MANAGER directly. All teams are closed. Each agent belongs to at most one team.
+
+**Multi-Repo Rule:** All git commands need `git -C "$REPO_PATH"`, all gh commands need `--repo "$OWNER/$REPO"`. Never write outside the agent folder (`~/agents/<persona-name>/`).
 
 ---
 

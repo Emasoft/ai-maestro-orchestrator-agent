@@ -200,7 +200,7 @@ modules:
 
 - [op-define-acceptance-criteria.md](op-define-acceptance-criteria.md) - Define criteria for each module
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
-- [op-identify-task-dependencies.md](../../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Analyze dependencies
+- [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Analyze dependencies
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-prioritize-task-assignments.md](op-prioritize-task-assignments.md) - Set module priorities
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

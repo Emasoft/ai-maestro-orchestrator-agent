@@ -207,7 +207,7 @@ TaskUpdate(taskId=final_verify, addBlockedBy=[auth_tests])
 
 ## Related Operations
 
-- [op-identify-task-dependencies.md](../../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies inform task blocking
+- [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies inform task blocking
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-create-github-issues.md](op-create-github-issues.md) - GitHub issues parallel Claude tasks
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

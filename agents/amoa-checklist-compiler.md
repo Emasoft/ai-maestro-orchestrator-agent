@@ -21,7 +21,7 @@ You are the **Checklist Compiler Agent** - a specialized agent responsible for c
 
 **Before compiling any checklist, read:**
 [amoa-checklist-compilation-patterns SKILL.md](../skills/amoa-checklist-compilation-patterns/SKILL.md)
-<!-- TOC: checklist-types-reference.md | checklist-templates.md | checklist-compilation-workflow.md | checklist-best-practices.md | checklist-examples.md | skill-quick-reference.md -->
+<!-- TOC: checklist-types-reference.md | checklist-templates.md -->
 
 This skill provides:
 - Checklist types and their elements
@@ -81,7 +81,7 @@ Details written to: docs_dev/checklists/svg-parser-quality-gate.md
 ## Checklist Types
 
 > For detailed descriptions and elements of each checklist type, see [amoa-checklist-compilation-patterns/references/checklist-types-reference.md](../skills/amoa-checklist-compilation-patterns/references/checklist-types-reference.md)
-<!-- TOC: Table of Contents | Module Completion Checklists | 1 When to Use | 2 Standard Elements | Quality Gate Checklists | 1 When to Use | 2 Standard Elements | Review Checklists | 1 When to Use | 2 Standard Elements | Test Coverage Checklists | 1 When to Use | 2 Standard Elements | Release Readiness Checklists | 1 When to Use | 2 Standard Elements | Task Assignment Checklists | 1 When to Use | 2 Standard Elements | Checklist Type Selection Guide -->
+<!-- TOC: Module Completion Checklists | Quality Gate Checklists -->
 
 | Type | Purpose |
 |------|---------|
@@ -97,7 +97,7 @@ Details written to: docs_dev/checklists/svg-parser-quality-gate.md
 ## RULE 14: Requirement Compliance
 
 > For full RULE 14 specification and implementation details, see [amoa-orchestration-patterns/references/rule-14-enforcement.md](../skills/amoa-orchestration-patterns/references/rule-14-enforcement.md)
-<!-- TOC: 1 When handling user requirements in any workflow | 2 When detecting potential requirement deviations | 3 When a technical constraint conflicts with a requirement | 4 When documenting requirement compliance -->
+<!-- TOC: 1 When handling user requirements in any workflow | 2 When detecting potential requirement deviations | 3 When a technical constraint conflicts with a requirement -->
 
 **Mandatory:** Every verification checklist MUST include a "Requirement Compliance (RULE 14)" section.
 
@@ -112,7 +112,6 @@ When compiling:
 ## Role Boundaries
 
 > For sub-agent role boundaries with orchestrator, see [amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md)
-<!-- TOC: YAML Frontmatter Structure | Purpose Section | Purpose | Purpose | Role Boundaries with Orchestrator Section | Role Boundaries with Orchestrator | Role Boundaries with Orchestrator | What Agent Can/Cannot Do Section | What This Agent Can Do | What This Agent CANNOT Do | What This Agent Can Do | What This Agent CANNOT Do | When Invoked Section | When Invoked | Invocation Scenarios | When Invoked | Invocation Scenarios | Step-by-Step Procedure Section | Step-by-Step Procedure | [Step 1: [Action Name]](#step-1-action-name) | [Step 2: [Action Name]](#step-2-action-name) | [Step 3: [Action Name]](#step-3-action-name) | Step-by-Step Procedure | Step 1: Receive Input | Step 2: Analyze Content | Output Format Section | Output Format | Output Format | IRON RULES Section (Optional - for agents with strict requirements) | IRON RULES | IRON RULES | Examples Section | Examples | Examples | Additional Sections (Optional) | AI Maestro Integration (if applicable) | AI Maestro Integration | Docker Requirements (if applicable) | Docker Containerization | Template Usage Checklist | Design Philosophy -->
 
 **Summary:** You are a WORKER agent receiving compilation requests. Orchestrator may create planning checklists directly; you create execution/verification checklists. You do NOT execute checklist items.
 

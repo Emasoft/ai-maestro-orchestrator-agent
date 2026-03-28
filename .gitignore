@@ -39,23 +39,6 @@ env/
 # Node.js
 node_modules/
 
-# Claude Code
-.claude/
-
-# Test artifacts
-coverage/
-*.log
-
-# Cache
-.cache/
-.pytest_cache/
-
-# LLM Externalizer
-llm_externalizer_output/
-
-# TLDR
-.tldr/
-
 # Dev folders (NEVER PUBLISH - development artifacts only)
 # Wildcard pattern catches all: docs_dev, scripts_dev, tests_dev, samples_dev,
 # examples_dev, downloads_dev, libs_dev, builds_dev, etc.

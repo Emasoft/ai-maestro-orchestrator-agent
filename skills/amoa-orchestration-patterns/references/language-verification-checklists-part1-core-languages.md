@@ -31,7 +31,7 @@
 
 This document provides comprehensive verification checklists for core programming languages (Python, Go, JavaScript/TypeScript, Rust). Use these checklists to ensure code quality, build success, and release readiness before delegating tasks or accepting deliverables.
 
-**Parent document:** [language-verification-checklists.md](./language-verification-checklists.md)
+**Parent document:** [language-verification-checklists-index.md](./language-verification-checklists-index.md)
 
 ## Table of Contents
 

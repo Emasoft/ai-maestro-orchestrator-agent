@@ -159,16 +159,19 @@ TDD Verification:
 
 ### Git Commands
 ```bash
+# All git commands must target the specific repo with -C
+REPO_PATH="$AGENT_DIR/repos/{{REPO_NAME}}"
+
 # Create feature branch
-git checkout -b {{BRANCH_NAME}}
+git -C "$REPO_PATH" checkout -b {{BRANCH_NAME}}
 
 # Commit strategy
-git add {{FILES}}
-git commit -m "{{COMMIT_MESSAGE_TEMPLATE}}"
+git -C "$REPO_PATH" add {{FILES}}
+git -C "$REPO_PATH" commit -m "{{COMMIT_MESSAGE_TEMPLATE}}"
 
-# Push and create PR
-git push -u origin {{BRANCH_NAME}}
-gh pr create --title "{{PR_TITLE}}" --body "{{PR_BODY}}" --label "{{LABELS}}"
+# Push and create PR (gh commands need --repo)
+git -C "$REPO_PATH" push -u origin {{BRANCH_NAME}}
+gh pr create --repo "{{OWNER}}/{{REPO_NAME}}" --title "{{PR_TITLE}}" --body "{{PR_BODY}}" --label "{{LABELS}}"
 ```
 
 ---

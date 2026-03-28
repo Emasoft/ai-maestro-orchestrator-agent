@@ -186,9 +186,9 @@ Copy this checklist and track your progress:
 
 ## Related Operations
 
-- [op-identify-task-dependencies.md](../../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies affect priority
+- [op-identify-task-dependencies.md](../amoa-orchestration-patterns/references/op-identify-task-dependencies.md) - Dependencies affect priority
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
 - [op-schedule-claude-tasks.md](op-schedule-claude-tasks.md) - Priority determines task order
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->
-- [op-select-agent-for-task.md](../../amoa-orchestration-patterns/references/op-select-agent-for-task.md) - Agent selection after prioritization
+- [op-select-agent-for-task.md](../amoa-orchestration-patterns/references/op-select-agent-for-task.md) - Agent selection after prioritization
   <!-- TOC: When to Use | Prerequisites | Procedure | Checklist | Examples | Error Handling | Related Operations -->

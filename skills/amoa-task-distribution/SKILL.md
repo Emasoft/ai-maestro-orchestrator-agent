@@ -19,11 +19,13 @@ Distributes tasks to agents by priority, dependencies, and agent state.
 
 ## Prerequisites
 
-Requires `gh` CLI, AI Maestro API, and familiarity with **amoa-label-taxonomy** and **amoa-messaging-templates**.
+Requires `gh` CLI (with `--repo` on ALL commands), AI Maestro API, and familiarity with **amoa-label-taxonomy** and **amoa-messaging-templates**.
 
 ## Instructions
 
-1. Query `status:ready` tasks, sort by priority (critical > high > normal > low), skip tasks with unresolved blockedBy deps
+**Multi-Repo Rule:** Every gh command MUST include `--repo "$OWNER/$REPO"`. Identify the target repo BEFORE any operation. All subagent prompts MUST include the target repo path (`$AGENT_DIR/repos/<repo-name>`) and report output path (`$AGENT_DIR/reports/`).
+
+1. Query `status:ready` tasks (with `--repo`), sort by priority (critical > high > normal > low), skip tasks with unresolved blockedBy deps
 2. Select agent by availability, skill match, and load — see [op-select-agent.md](references/op-select-agent.md)
 <!-- TOC: Purpose | Selection Criteria | Procedure | Specialization Preferences | Error Handling -->
 3. Assign: add `assign:<agent>` + `status:in-progress` labels, send message via `agent-messaging` — see [op-assign-task.md](references/op-assign-task.md)
@@ -38,7 +40,7 @@ Load balancing: prefer lowest-load agent. See [load-balancing.md](references/loa
 <!-- TOC: Even Distribution | Specialization -->
 
 Blocked tasks: acknowledge, record, move to Blocked column, escalate. See [blocked-task-handling.md](references/blocked-task-handling.md)
-<!-- TOC: Blocker Response Steps | Blocker Escalation Message Example | Verification Before Escalation | Checklist: Move Task to Blocked Column | Checklist: Restore Task from Blocked -->
+<!-- TOC: Blocker Response Steps | Verification Before Escalation -->
 
 Copy this checklist and track your progress:
 
@@ -57,8 +59,7 @@ Assignment confirmation (label + ACK) and delegation log.
 ## Examples
 
 **Input:** 3 ready tasks, 2 agents — **Output:** Critical task assigned, labels updated, ACK received. See [examples.md](references/examples.md)
-<!-- TOC: Query and Sort Ready Tasks | Check Agent Availability | Assign Task with Full Protocol | Handle Circular Dependency | Query the agent registry for `implementer-1` to get their current task count | Check the agent's last seen timestamp to determine if they are responsive -->
-
+<!-- TOC: Query and Sort Ready Tasks | Check Agent Availability -->
 
 ## Error Handling
 

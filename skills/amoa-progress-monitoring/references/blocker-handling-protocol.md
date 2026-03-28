@@ -48,11 +48,11 @@ When agent reports `[BLOCKED]`:
 # BEFORE moving to blocked, record current status
 CURRENT_STATUS=$(gh issue view $ISSUE --json labels | jq -r '.labels[] | select(.name | startswith("status:")) | .name')
 
-# Mark task as blocked
-gh issue edit $ISSUE --remove-label "$CURRENT_STATUS" --add-label "status:blocked"
+# Mark task as blocked (always specify --repo)
+gh issue edit $ISSUE --repo "$OWNER_REPO" --remove-label "$CURRENT_STATUS" --add-label "status:blocked"
 
-# Create a GitHub issue for the blocker (the problem preventing progress)
-BLOCKER_ISSUE=$(gh issue create --title "BLOCKER: <one-line description of the blocking problem>" --label "type:blocker" \
+# Create a GitHub issue for the blocker (always specify --repo)
+BLOCKER_ISSUE=$(gh issue create --repo "$OWNER_REPO" --title "BLOCKER: <one-line description of the blocking problem>" --label "type:blocker" \
   --body "## Blocker
 
 This issue tracks a problem that is blocking task #$ISSUE.

@@ -23,11 +23,14 @@ AI Maestro (AMP) running, Python 3.9+, registered agents.
 
 ## Instructions
 
+**Multi-Repo Rule:** Every task delegation MUST include the target repo path (`$AGENT_DIR/repos/<repo-name>`), remote URL (`<owner>/<repo>`), and report output path (`$AGENT_DIR/reports/`). All git commands need `git -C "$REPO_PATH"`, all gh commands need `--repo "$OWNER/$REPO"`.
+
 1. Verify AI Maestro running and agents registered
-2. Prepare task with ACK block, context, scope, criteria
-3. Send via AMP, wait for ACK (5 min timeout)
-4. Monitor progress every 10-15 min
-5. Enforce 4 verification loops before PR approval
+2. Identify target repo for the task: `REPO_PATH=$AGENT_DIR/repos/<repo-name>`
+3. Prepare task with ACK block, context, scope, criteria, **target repo path and remote URL**
+4. Send via AMP, wait for ACK (5 min timeout)
+5. Monitor progress every 10-15 min
+6. Enforce 4 verification loops before PR approval
 
 Copy this checklist and track your progress:
 
@@ -48,20 +51,32 @@ ACK confirmations, progress reports, verification results, PR decisions.
 ## Error Handling
 
 See [error-handling-protocol.md](./references/error-handling-protocol.md).
-<!-- TOC: Table of Contents | 0 Overview | 1 FAIL-FAST Principle | 2 When Agents Must Stop and Report | 0 Error Reporting Format | 1 Error Report Message Schema | 2 Error Types | 0 Orchestrator Response to Errors | 1 Acknowledging Error Reports | 2 Providing Solutions | 3 Escalation When Needed | 0 Troubleshooting | Problem: Agent Not Reporting Errors | Problem: Agent Reports Same Error Repeatedly | Problem: Unclear Error Type | Problem: False Blocker Reports -->
+<!-- TOC: Overview | Error Format | Response | Troubleshooting -->
 
 ## Resources
 
 - [agent-registration.md](./references/agent-registration.md)
+  <!-- TOC: Overview | Active Agents | Full Template -->
 - [echo-acknowledgment-protocol.md](./references/echo-acknowledgment-protocol.md)
+  <!-- TOC: Message flow reference | Integration with other protocols -->
 - [verification-loops-protocol.md](./references/verification-loops-protocol.md)
+  <!-- TOC: Overview | Flow | Steps | 5 PR Requests | Rules | Troubleshooting -->
 - [progress-monitoring-protocol.md](./references/progress-monitoring-protocol.md)
+  <!-- TOC: Overview | Monitoring | Status | Completion | Templates -->
 - [error-handling-protocol.md](./references/error-handling-protocol.md)
+  <!-- TOC: Overview | Error Format | Response | Troubleshooting -->
 - [escalation-procedures.md](./references/escalation-procedures.md)
+  <!-- TOC: Overview | Metrics | Escalation Categories -->
 - [messaging-protocol.md](./references/messaging-protocol.md)
+  <!-- TOC: Overview | Structure | Quick Ref | Navigation -->
 - [task-instruction-format.md](./references/task-instruction-format.md)
+  <!-- TOC: Quick Reference | Detailed References -->
 - [rule-15-no-implementation.md](./references/rule-15-no-implementation.md)
+  <!-- TOC: Overview | Never Write Code | Self-Check Questions -->
 - [rule-14-immutable-requirements.md](./references/rule-14-immutable-requirements.md)
+  <!-- TOC: Overview | Mandatory Elements | Template Reqs | Violation Handling -->
 - [script-output-rules.md](./references/script-output-rules.md)
+  <!-- TOC: Token-Efficient Protocol | Output Format | Exceptions -->
 - [examples-remote-coordination.md](./references/examples-remote-coordination.md)
+  <!-- TOC: Loop counter tracking | Proactive polling sequence -->
 

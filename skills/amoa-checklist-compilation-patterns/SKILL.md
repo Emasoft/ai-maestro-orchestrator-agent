@@ -46,16 +46,17 @@ Copy this checklist and track your progress:
 4. [checklist-best-practices.md](references/checklist-best-practices.md)
   <!-- TOC: Checklist Design Principles | Common Pitfalls to Avoid | Checklist Maintenance -->
 5. [checklist-examples.md](references/checklist-examples.md)
-  <!-- TOC: Checklist Compilation Examples | Table of Contents | Complete Example: SVG Parser Quality Gate Checklist | Scenario and Requirements | Compiled Checklist Document | Prerequisites | Section 1: Implementation Completeness | Section 2: Test Coverage and Pass Rate | Section 3: Code Quality | Section 4: Documentation | Section 5: Security | Completion Criteria | Sign-Off | Compilation Process Walkthrough | Reading Requirements | Identifying Verification Points | Structuring the Checklist | Writing the Document | Orchestrator Interaction Example | Request from Orchestrator | Completion Report Format -->
+  <!-- TOC: Complete Example: SVG Parser Quality Gate Checklist | Compilation Process Walkthrough | Orchestrator Interaction Example -->
 6. [skill-quick-reference.md](references/skill-quick-reference.md)
   <!-- TOC: Inline Examples | Output Deliverables | Error Handling | Progress Tracking Checklist -->
 
 ## Examples
 
 **Input:** "Compile a quality gate checklist for auth-core"
-**Output:** Checklist at project docs/checklists/ directory (e.g., auth-core-quality-gate.md) with grouped items, criteria, RULE 14 section.
+**Output:** Checklist at `docs/checklists/auth-core-quality-gate.md` with grouped items, criteria, RULE 14 section.
 
-See checklist-examples.md in Contents above for walkthroughs.
+See [checklist-examples.md](references/checklist-examples.md) for walkthroughs.
+<!-- TOC: Complete Example: SVG Parser Quality Gate Checklist | Compilation Process Walkthrough | Orchestrator Interaction Example -->
 
 ## Error Handling
 
@@ -69,4 +70,16 @@ Markdown checklist with grouped items, criteria, and RULE 14 section.
 
 ## Resources
 
-See Contents section above for all reference files.
+- [checklist-types-reference.md](references/checklist-types-reference.md)
+<!-- TOC: Module Completion Checklists | Quality Gate Checklists -->
+- [checklist-templates.md](references/checklist-templates.md)
+<!-- TOC: Standard Checklist Template | Priority-Annotated Checklist Template -->
+- [checklist-compilation-workflow.md](references/checklist-compilation-workflow.md)
+<!-- TOC: Phase 1: Requirements Gathering | Step-by-Step Procedure -->
+- [checklist-best-practices.md](references/checklist-best-practices.md)
+<!-- TOC: Checklist Design Principles | Common Pitfalls to Avoid -->
+- [checklist-examples.md](references/checklist-examples.md)
+<!-- TOC: Compilation Process Walkthrough | Orchestrator Interaction Example -->
+- [skill-quick-reference.md](references/skill-quick-reference.md)
+<!-- TOC: Inline Examples | Error Handling -->
+

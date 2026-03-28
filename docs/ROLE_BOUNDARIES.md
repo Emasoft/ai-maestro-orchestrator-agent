@@ -28,7 +28,7 @@
 ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
 │      AMCOS       │ │      AMOA        │ │      AMIA        │
 │ Chief of Staff  │ │  Orchestrator   │ │   Integrator    │
-│ [chief-of-staff]│ │    [member]     │ │    [member]     │
+│ [chief-of-staff]│ │ [orchestrator]  │ │    [member]     │
 │ TEAM-SCOPED     │ │ PROJECT-        │ │ PROJECT-        │
 │ (one per team)  │ │ LINKED          │ │ LINKED          │
 │                 │ │ (one per proj)  │ │ (one per proj)  │
@@ -83,9 +83,10 @@
 - ❌ Manage agents outside their project
 
 ### AMOA Scope:
-- **Project-linked** [member]: One AMOA per project
+- **Project-linked** [orchestrator]: One AMOA per project. ORCHESTRATOR is a governance title (not just a specialization).
 - **Task-focused**: Manages what agents DO, not what agents EXIST
-- **Kanban owner**: Owns the GitHub Project board for their project
+- **Primary kanban manager**: Owns the GitHub Project board for their project
+- **Direct MANAGER communication**: Can message MANAGER directly (no COS relay needed)
 
 ---
 
@@ -199,15 +200,23 @@ All AI Maestro agents use the `domain-subdomain-name` format for session names:
 
 | Agent | Session Name | Governance Title |
 |-------|-------------|------------------|
-| AMAMA | `amama-main-manager` | manager |
-| AMCOS | `amcos-controller` | chief-of-staff |
-| AMOA | `amoa-orchestrator` | member |
-| AMIA | `amia-integrator` | member |
-| AMAA | `amaa-architect` | member |
-| AMPA | `ampa-programmer` | member |
+| AMAMA | `amama-main-manager` | MANAGER |
+| AMCOS | `amcos-controller` | CHIEF-OF-STAFF |
+| AMOA | `amoa-orchestrator` | ORCHESTRATOR |
+| AMIA | `amia-integrator` | MEMBER |
+| AMAA | `amaa-architect` | MEMBER |
+| AMPA | `ampa-programmer` | MEMBER |
+
+**Note:** There are 4 governance titles: MANAGER, CHIEF-OF-STAFF, ORCHESTRATOR, MEMBER. All teams are closed. Each agent belongs to at most one team.
 
 ---
 
-**Document Version**: 1.6.0
-**Last Updated**: 2026-03-13
+## Multi-Repo Rules
+
+All git/gh commands must specify the target repo. Use `--repo <owner/repo>` for gh commands, `git -C <path>` for git commands. Reports go to `$AGENT_DIR/reports/`, temp files to `$AGENT_DIR/tmp/`. Never write outside the agent folder (`~/agents/<persona-name>/`).
+
+---
+
+**Document Version**: 2.0.0
+**Last Updated**: 2026-03-28
 **Author**: AMOA Plugin Development

@@ -25,9 +25,8 @@ You are a **task output condenser** that transforms verbose logs from tests, bui
 
 > **Before summarizing, read:** [amoa-orchestration-patterns skill](../skills/amoa-orchestration-patterns/SKILL.md)
 > - [sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md): Sub-agent role boundaries and orchestrator handoff protocol
-<!-- TOC: YAML Frontmatter Structure | Purpose Section | Purpose | Purpose | Role Boundaries with Orchestrator Section | Role Boundaries with Orchestrator | Role Boundaries with Orchestrator | What Agent Can/Cannot Do Section | What This Agent Can Do | What This Agent CANNOT Do | What This Agent Can Do | What This Agent CANNOT Do | When Invoked Section | When Invoked | Invocation Scenarios | When Invoked | Invocation Scenarios | Step-by-Step Procedure Section | Step-by-Step Procedure | [Step 1: [Action Name]](#step-1-action-name) | [Step 2: [Action Name]](#step-2-action-name) | [Step 3: [Action Name]](#step-3-action-name) | Step-by-Step Procedure | Step 1: Receive Input | Step 2: Analyze Content | Output Format Section | Output Format | Output Format | IRON RULES Section (Optional - for agents with strict requirements) | IRON RULES | IRON RULES | Examples Section | Examples | Examples | Additional Sections (Optional) | AI Maestro Integration (if applicable) | AI Maestro Integration | Docker Requirements (if applicable) | Docker Containerization | Template Usage Checklist | Design Philosophy -->
 > - [workflow-checklists.md](../skills/amoa-orchestration-patterns/references/workflow-checklists.md): Context memory conservation via file-based reporting
-<!-- TOC: Workflow Checklists | Checklist: Receiving New Task | Checklist: Delegating Task | Checklist: Monitoring Delegated Task | Checklist: Verifying Task Completion | Checklist: Reporting Results | Quick Reference: Checklist Selection | Notes -->
+<!-- TOC: Checklist: Receiving New Task | Checklist: Delegating Task | Checklist: Reporting Results -->
 
 ## Key Constraints
 
@@ -42,10 +41,9 @@ You are a **task output condenser** that transforms verbose logs from tests, bui
 ## Summarization Topics
 
 > For sub-agent role boundaries (WORKER vs ORCHESTRATOR), see [sub-agent-role-boundaries-template.md](../skills/amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md)
-<!-- TOC: YAML Frontmatter Structure | Purpose Section | Purpose | Purpose | Role Boundaries with Orchestrator Section | Role Boundaries with Orchestrator | Role Boundaries with Orchestrator | What Agent Can/Cannot Do Section | What This Agent Can Do | What This Agent CANNOT Do | What This Agent Can Do | What This Agent CANNOT Do | When Invoked Section | When Invoked | Invocation Scenarios | When Invoked | Invocation Scenarios | Step-by-Step Procedure Section | Step-by-Step Procedure | [Step 1: [Action Name]](#step-1-action-name) | [Step 2: [Action Name]](#step-2-action-name) | [Step 3: [Action Name]](#step-3-action-name) | Step-by-Step Procedure | Step 1: Receive Input | Step 2: Analyze Content | Output Format Section | Output Format | Output Format | IRON RULES Section (Optional - for agents with strict requirements) | IRON RULES | IRON RULES | Examples Section | Examples | Examples | Additional Sections (Optional) | AI Maestro Integration (if applicable) | AI Maestro Integration | Docker Requirements (if applicable) | Docker Containerization | Template Usage Checklist | Design Philosophy -->
 
 > For RULE 14 enforcement (requirement compliance in summaries), see [rule-14-enforcement.md](../skills/amoa-orchestration-patterns/references/rule-14-enforcement.md)
-<!-- TOC: 1 When handling user requirements in any workflow | 2 When detecting potential requirement deviations | 3 When a technical constraint conflicts with a requirement | 4 When documenting requirement compliance -->
+<!-- TOC: When handling user requirements in any workflow | When detecting potential requirement deviations | When a technical constraint conflicts with a requirement -->
 
 ## Output Format
 

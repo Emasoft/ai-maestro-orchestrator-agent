@@ -19,7 +19,7 @@ Evidence-based verification for proving code and systems work correctly. Collect
 
 ## Prerequisites
 
-- Python 3.8+, Bash, Git
+- Python 3.8+, Bash, Git (all `git` commands need `git -C "$REPO_PATH"`, all `gh` commands need `--repo "$OWNER/$REPO"`)
 - Optional: Selenium (E2E), Docker (containerized tests), SQLite/PostgreSQL (integration)
 
 ## Output
@@ -40,7 +40,7 @@ Verification reports with pass/fail status, collected evidence, and formatted re
 ## Principles
 
 See: [verification-principles.md](./references/verification-principles.md)
-<!-- TOC: Principle 1: Never Trust Assumptions | Principle 2: Measure What Matters | Principle 3: Reproducibility | Principle 4: Fail Fast | Principle 5: Document Evidence -->
+<!-- TOC: Principle 4: Fail Fast | Principle 3: Reproducibility -->
 
 ## Instructions
 
@@ -70,34 +70,21 @@ See [examples.md](./references/examples.md) for worked examples.
 ## Resources
 
 - [combining-patterns.md](./references/combining-patterns.md) -- Combining patterns
-  - 5.1 Pattern Combinations
-  - 5.2 Verification Pyramid
-  - 5.3 Complete Verification Strategy Example
+  <!-- TOC: Pattern Combinations | Verification Pyramid | Complete Strategy Example -->
 - [cross-platform-support.md](./references/cross-platform-support.md) -- Cross-platform
-  - 6.1 Platform-Specific Behavior
-  - 6.2 UTF-8 Encoding
-  - 6.3 Platform Detection
-  - 6.4 Path Handling
-  - ...
+  <!-- TOC: Platform-Specific Behavior | UTF-8 Encoding | Platform Detection | Path Handling | Command Execution -->
 - [troubleshooting.md](./references/troubleshooting.md) -- Troubleshooting
-  - 10.1 Tests Pass Locally but Fail in CI/CD
-  - 10.2 Exit Code is 0 but Process Failed
-  - 10.3 Integration Test Fails with Timeout
-  - 10.4 E2E Test is Flaky
-  - ...
+  <!-- TOC: E2E Test is Flaky | Exit Code is 0 but Process Failed -->
 - [docker-troubleshooting.md](./references/docker-troubleshooting.md) -- Docker
-    - 1. Assessing Docker Container Needs for a Project
-    - 2. Selecting Appropriate Base Images
-    - 3. Applying Docker Best Practices
-    - 4. Configuring Multi-Service Environments
-  - ...
+  <!-- TOC: Checking container logs | Configuring DNS settings -->
 - [quick-reference.md](./references/quick-reference.md) -- Quick reference & checklist
-  - Pattern Selection Guide
-  - Exit Codes
-  - Output Format
-  - Error Handling
-  - ...
+  <!-- TOC: Pattern Selection Guide | Exit Codes | Output Format | Error Handling | Verification Checklist | Script Output Rules -->
 
 ## Error Handling
 
-Fail-fast: failures propagate immediately, no fallbacks. See troubleshooting.md and docker-troubleshooting.md in Resources.
+Fail-fast: failures propagate immediately, no fallbacks. See:
+
+- [troubleshooting.md](./references/troubleshooting.md)
+  <!-- TOC: E2E Test is Flaky | Integration Test Fails with Timeout -->
+- [docker-troubleshooting.md](./references/docker-troubleshooting.md)
+  <!-- TOC: Checking container logs | Using environment files -->

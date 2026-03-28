@@ -108,8 +108,9 @@ To perform a manual release, create a git tag directly on the main branch:
 ```bash
 # WARNING: Only use this in emergencies
 # Ensure the version in your project configuration files matches the tag
-git tag -a v2.8.0 -m "Release v2.8.0"
-git push origin v2.8.0
+# All git commands must target the specific repo with -C
+git -C "$REPO_PATH" tag -a v2.8.0 -m "Release v2.8.0"
+git -C "$REPO_PATH" push origin v2.8.0
 ```
 
 Manual releases carry risk because they bypass changelog validation, automated tests, and build verification. Always return to the automated process as soon as possible.
@@ -269,11 +270,11 @@ For detailed changelog writing rules, see [changelog-writing-guidelines.md](chan
 **Example commands:**
 
 ```bash
-# Push the branch
-git push origin develop
+# Push the branch (always target specific repo)
+git -C "$REPO_PATH" push origin develop
 
-# Create the pull request using GitHub CLI
-gh pr create --base main --title "Release v2.8.0" --body "Release version 2.8.0. See CHANGELOG.md for details."
+# Create the pull request using GitHub CLI (always --repo)
+gh pr create --repo "$OWNER/$REPO" --base main --title "Release v2.8.0" --body "Release version 2.8.0. See CHANGELOG.md for details."
 ```
 
 **Orchestrator verification before approving merge:**
