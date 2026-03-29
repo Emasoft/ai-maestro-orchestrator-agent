@@ -2,6 +2,8 @@
 name = "ai-maestro-orchestrator-agent"
 description = "Task distribution, agent coordination, progress monitoring - executes plans via subagents. Requires AI Maestro for inter-agent messaging."
 version = "1.5.3"
+compatible-titles = ["ORCHESTRATOR"]
+compatible-clients = ["claude-code"]
 
 [agent.role]
 type = "orchestrator"
