@@ -40,7 +40,7 @@ from datetime import datetime, timezone
 def find_issues_by_label(agent_id):
     """Find all open issues assigned to an agent by label.
 
-    Searches for open issues that have the label 'assigned:<agent_id>'.
+    Searches for open issues that have the label 'assign:<agent_id>'.
 
     Args:
         agent_id: The agent identifier to search for.
@@ -49,7 +49,7 @@ def find_issues_by_label(agent_id):
         A list of issue dictionaries with number, title, labels, and assignees.
         Returns an empty list if gh CLI is not available or the search fails.
     """
-    label = "assigned:{}".format(agent_id)
+    label = "assign:{}".format(agent_id)
     try:
         result = subprocess.run(
             ["gh", "issue", "list",
@@ -153,7 +153,7 @@ def update_issue_assignee(issue_number, old_agent, new_agent):
 def update_issue_labels(issue_number, old_agent, new_agent):
     """Update assignment tracking labels on a GitHub issue.
 
-    Removes the 'assigned:<old_agent>' label, adds 'assigned:<new_agent>'
+    Removes the 'assign:<old_agent>' label, adds 'assign:<new_agent>'
     and 'reassigned' labels.
 
     Args:
@@ -164,8 +164,8 @@ def update_issue_labels(issue_number, old_agent, new_agent):
     Returns:
         True if the update succeeded, False otherwise.
     """
-    old_label = "assigned:{}".format(old_agent)
-    new_label = "assigned:{}".format(new_agent)
+    old_label = "assign:{}".format(old_agent)
+    new_label = "assign:{}".format(new_agent)
 
     try:
         result = subprocess.run(

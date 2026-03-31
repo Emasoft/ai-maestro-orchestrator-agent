@@ -30,7 +30,7 @@ If using labels to track agent assignments:
 
 ```bash
 # Find issues with agent label
-gh issue list --label "assigned:implementer-1" --json number,title,state
+gh issue list --label "assign:implementer-1" --json number,title,state
 ```
 
 ### By Project Card Custom Fields
@@ -205,7 +205,7 @@ When reassigning, preserve the following:
 
 | Field | Preserve | Reason |
 |-------|----------|--------|
-| Labels (except assigned:*) | Yes | Status tracking |
+| Labels (except assign:*) | Yes | Status tracking |
 | Milestone | Yes | Deadline context |
 | Priority | Yes | Work order |
 | Project column | Yes | Workflow state |
@@ -217,15 +217,15 @@ When reassigning, preserve the following:
 | Field | Update To | Reason |
 |-------|-----------|--------|
 | Assignee | New agent | Ownership |
-| `assigned:*` label | New agent ID | Tracking |
+| `assign:*` label | New agent ID | Tracking |
 | Last updated | Now | Audit |
 
 ### Label Update
 
 ```bash
 ISSUE_NUMBER=42
-OLD_LABEL="assigned:implementer-1"
-NEW_LABEL="assigned:implementer-2"
+OLD_LABEL="assign:implementer-1"
+NEW_LABEL="assign:implementer-2"
 
 # Remove old, add new
 gh issue edit "$ISSUE_NUMBER" --remove-label "$OLD_LABEL" --add-label "$NEW_LABEL"
@@ -348,7 +348,7 @@ for ISSUE in $ISSUES; do
   gh issue edit "$ISSUE" --remove-assignee "$OLD_AGENT" --add-assignee "$NEW_AGENT"
 
   # Update labels
-  gh issue edit "$ISSUE" --remove-label "assigned:$OLD_AGENT" --add-label "assigned:$NEW_AGENT" --add-label "reassigned"
+  gh issue edit "$ISSUE" --remove-label "assign:$OLD_AGENT" --add-label "assign:$NEW_AGENT" --add-label "reassigned"
 
   # Add audit comment
   gh issue comment "$ISSUE" --body "## Agent Reassignment
