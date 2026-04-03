@@ -1,6 +1,6 @@
 ---
 name: amoa-kanban-management
-description: GitHub Projects V2 kanban board management. Use when creating boards, adding columns, moving items. Trigger with kanban or column requests.
+description: GitHub Projects V2 kanban board management. Use when creating boards, adding columns, moving items. Trigger with kanban or column requests. Loaded by ai-maestro-orchestrator-agent-main-agent
 license: Apache-2.0
 compatibility: Requires gh CLI authenticated with project scopes. Requires AI Maestro installed.
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: amoa-github-action-integration
-description: "Trigger with Claude Code action requests. Use when setting up Claude Code in GitHub Actions for automated PR reviews, @claude mention responses, and issue triage."
+description: "Trigger with Claude Code action requests. Use when setting up Claude Code in GitHub Actions for automated PR reviews, @claude mention responses, and issue triage. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: amoa-developer-communication
-description: "Use when communicating with human developers in code reviews and issues. Trigger with PR review or status update requests."
+description: "Use when communicating with human developers in code reviews and issues. Trigger with PR review or status update requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

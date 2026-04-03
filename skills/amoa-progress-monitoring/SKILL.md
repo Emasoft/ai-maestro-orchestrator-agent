@@ -1,6 +1,6 @@
 ---
 name: amoa-progress-monitoring
-description: "Use when monitoring agent progress. Trigger with status check or stall detection requests."
+description: "Use when monitoring agent progress. Trigger with status check or stall detection requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

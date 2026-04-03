@@ -1,6 +1,6 @@
 ---
 name: amoa-module-management
-description: "Use when managing modules during Orchestration Phase. Trigger with module add, modify, or reassign requests."
+description: "Use when managing modules during Orchestration Phase. Trigger with module add, modify, or reassign requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Python 3.8+, PyYAML, gh CLI, AI Maestro.
 metadata:

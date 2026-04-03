@@ -1,6 +1,6 @@
 ---
 name: amoa-module-lifecycle
-description: "Use when adding, modifying, removing, prioritizing, or reassigning modules. Trigger with module CRUD requests."
+description: "Use when adding, modifying, removing, prioritizing, or reassigning modules. Trigger with module CRUD requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Python 3.8+, PyYAML, gh CLI, AI Maestro.
 metadata:

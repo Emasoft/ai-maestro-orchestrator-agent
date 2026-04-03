@@ -1,6 +1,6 @@
 ---
 name: amoa-plan-phase
-description: "Use when running Plan Phase of two-phase mode. Trigger with planning, requirements, or plan approval requests."
+description: "Use when running Plan Phase of two-phase mode. Trigger with planning, requirements, or plan approval requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: AI Maestro, GitHub CLI (gh), remote agents.
 metadata:

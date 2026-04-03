@@ -1,6 +1,6 @@
 ---
 name: amoa-verification-patterns
-description: "Use when verifying implementations. Trigger with verification, testing, or evidence requests."
+description: "Use when verifying implementations. Trigger with verification, testing, or evidence requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: "Python 3.8+, Bash, Git. Optional: Selenium, Docker, SQLite/PostgreSQL."
 metadata:
@@ -53,11 +53,10 @@ See: [verification-principles.md](./references/verification-principles.md)
 
 Copy this checklist and track your progress:
 
-- [ ] Select the appropriate verification pattern
-- [ ] Set up the test environment
-- [ ] Execute verification and collect evidence
-- [ ] Format results and report pass/fail
-- [ ] Update GitHub issues and clean up environment
+- [ ] Select pattern, set up environment
+- [ ] Execute verification, collect evidence
+- [ ] Format results, report pass/fail
+- [ ] Update GitHub issues, clean up
 
 ## Examples
 

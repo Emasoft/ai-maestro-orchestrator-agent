@@ -1,6 +1,6 @@
 ---
 name: amoa-checklist-compilation-patterns
-description: "Use when compiling verification checklists from requirements. Trigger with checklist or verification requests."
+description: "Use when compiling verification checklists from requirements. Trigger with checklist or verification requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

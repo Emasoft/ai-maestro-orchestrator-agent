@@ -1,6 +1,6 @@
 ---
 name: amoa-messaging-templates
-description: "Use when sending inter-agent messages. Trigger with task assignment, status report, or escalation needs."
+description: "Use when sending inter-agent messages. Trigger with task assignment, status report, or escalation needs. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

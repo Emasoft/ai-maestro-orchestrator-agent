@@ -1,6 +1,6 @@
 ---
 name: amoa-implementer-interview-protocol
-description: "Use when verifying implementer readiness. Trigger with interview or PR approval requests."
+description: "Use when verifying implementer readiness. Trigger with interview or PR approval requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

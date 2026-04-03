@@ -1,6 +1,6 @@
 ---
 name: amoa-task-distribution
-description: "Use when distributing tasks. Trigger with task assignment requests."
+description: "Use when distributing tasks. Trigger with task assignment requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

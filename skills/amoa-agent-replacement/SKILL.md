@@ -1,6 +1,6 @@
 ---
 name: amoa-agent-replacement
-description: "Use when replacing agents. Trigger with agent replacement or handoff requests."
+description: "Use when replacing agents. Trigger with agent replacement or handoff requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: "Python 3.8+, PyYAML, GitHub CLI, AI Maestro, AMCOS."
 metadata:
@@ -96,7 +96,3 @@ See: [error-handling-reference.md](references/error-handling-reference.md) for e
   - 2.2 State File Extraction
   - ...
 
-## Related Skills
-
-- `amoa-remote-agent-coordinator` - Agent registration and remote agent communication
-- `amoa-orchestration-patterns` - General orchestration patterns

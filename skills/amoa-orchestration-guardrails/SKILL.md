@@ -1,6 +1,6 @@
 ---
 name: amoa-orchestration-guardrails
-description: "Use when enforcing orchestrator boundaries, rules, and delegation patterns. Trigger with guardrail, rule, or boundary requests."
+description: "Use when enforcing orchestrator boundaries, rules, and delegation patterns. Trigger with guardrail, rule, or boundary requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed, task agents, GitHub issues.
 metadata:

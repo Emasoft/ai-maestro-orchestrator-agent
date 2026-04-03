@@ -1,6 +1,6 @@
 ---
 name: amoa-module-sync
-description: "Use when syncing modules with GitHub Issues or troubleshooting module state. Trigger with sync, issue, or module troubleshooting requests."
+description: "Use when syncing modules with GitHub Issues or troubleshooting module state. Trigger with sync, issue, or module troubleshooting requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Python 3.8+, PyYAML, gh CLI, AI Maestro.
 metadata:
@@ -15,7 +15,7 @@ agent: amoa-main
 
 ## Overview
 
-Synchronizes module state with GitHub Issues and provides troubleshooting for module management.
+Synchronizes module state with GitHub Issues. Provides troubleshooting.
 
 ## Prerequisites
 
@@ -53,7 +53,7 @@ Issue sync: [github-issue-sync.md](./references/github-issue-sync.md)
 
 ## Error Handling
 
-Issue not created: run `gh auth login`. State corruption: see troubleshooting guide.
+Issue not created: `gh auth login`. State corruption: see troubleshooting guide.
 
 Guide: [troubleshooting.md](./references/troubleshooting.md)
 <!-- TOC: 1 State file corruption recovery | 2 GitHub sync failure recovery | 3 Agent notification failures | 4 Module ID conflicts | 5 Force removal scenarios -->

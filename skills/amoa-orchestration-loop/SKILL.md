@@ -1,6 +1,6 @@
 ---
 name: amoa-orchestration-loop
-description: "Use when running the orchestrator loop or managing stop hook behavior. Trigger with loop, stop hook, or state file requests."
+description: "Use when running the orchestrator loop or managing stop hook behavior. Trigger with loop, stop hook, or state file requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: "Python 3.8+, PyYAML, GitHub CLI, AI Maestro."
 metadata:

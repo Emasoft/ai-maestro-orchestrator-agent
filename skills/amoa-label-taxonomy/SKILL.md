@@ -1,6 +1,6 @@
 ---
 name: amoa-label-taxonomy
-description: "Use when applying GitHub labels. Trigger with label query or assignment requests."
+description: "Use when applying GitHub labels. Trigger with label query or assignment requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed.
 metadata:

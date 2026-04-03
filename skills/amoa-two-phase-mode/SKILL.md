@@ -1,6 +1,6 @@
 ---
 name: amoa-two-phase-mode
-description: "Use when running Plan-then-Execute workflows. Trigger with plan-execute or two-phase requests."
+description: "Use when running Plan-then-Execute workflows. Trigger with plan-execute or two-phase requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: AI Maestro, GitHub CLI (gh), remote agents.
 metadata:

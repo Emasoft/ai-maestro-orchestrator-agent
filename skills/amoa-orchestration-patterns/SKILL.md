@@ -1,6 +1,6 @@
 ---
 name: amoa-orchestration-patterns
-description: "Use when breaking down tasks for human developers. Trigger with task decomposition requests."
+description: "Use when breaking down tasks for human developers. Trigger with task decomposition requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: Requires AI Maestro installed, task agents, GitHub issues.
 metadata:
@@ -29,9 +29,9 @@ Task assignments, progress updates, and verified integration results.
 
 Copy this checklist and track your progress:
 
-- [ ] Decompose goal into tasks with success criteria
-- [ ] Assign agents, monitor, escalate blocked tasks
-- [ ] Verify 4 loops before PR; integrate results
+- [ ] Decompose goal into tasks with criteria
+- [ ] Assign agents, monitor, escalate
+- [ ] Verify 4 loops before PR; integrate
 
 ## Examples
 
@@ -83,4 +83,4 @@ Blocked tasks escalate per [progress-monitoring.md](references/progress-monitori
 
 ## Prerequisites
 
-AI Maestro running (`http://localhost:23000`), GitHub CLI (`gh`) authenticated.
+AI Maestro running, GitHub CLI (`gh`) authenticated.

@@ -1,6 +1,6 @@
 ---
 name: amoa-orchestration-commands
-description: "Use when running orchestration phase commands. Trigger with start, monitor, or cancel orchestration requests."
+description: "Use when running orchestration phase commands. Trigger with start, monitor, or cancel orchestration requests. Loaded by ai-maestro-orchestrator-agent-main-agent"
 license: Apache-2.0
 compatibility: "Python 3.8+, PyYAML, GitHub CLI, AI Maestro."
 metadata:
