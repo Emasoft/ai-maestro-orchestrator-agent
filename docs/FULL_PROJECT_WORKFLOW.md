@@ -56,7 +56,7 @@ AMIA (Integrator)                                             │
   ▼                                                          │
 AMOA ◄─────────────────────────────────────────────────────►  │
   │                                                          │
-  │ 18. Reports to AMAMA                                      │
+  │ 18. Reports to AMCOS (Chief-of-Staff)                                      │
   │ 19. Assigns next tasks                                   │
   └──────────────────────────────────────────────────────────┘
 ```

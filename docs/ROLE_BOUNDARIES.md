@@ -28,7 +28,7 @@
 ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
 │      AMCOS       │ │      AMOA        │ │      AMIA        │
 │ Chief of Staff  │ │  Orchestrator   │ │   Integrator    │
-│ [chief-of-staff]│ │    [member]     │ │    [member]     │
+│ [chief-of-staff]│ │ [orchestrator]  │ │  [integrator]   │
 │ TEAM-SCOPED     │ │ PROJECT-        │ │ PROJECT-        │
 │ (one per team)  │ │ LINKED          │ │ LINKED          │
 │                 │ │ (one per proj)  │ │ (one per proj)  │
@@ -83,7 +83,7 @@
 - ❌ Manage agents outside their project
 
 ### AMOA Scope:
-- **Project-linked** [member]: One AMOA per project
+- **Project-linked** [orchestrator]: One AMOA per project
 - **Task-focused**: Manages what agents DO, not what agents EXIST
 - **Kanban owner**: Owns the GitHub Project board for their project
 
@@ -201,13 +201,13 @@ All AI Maestro agents use the `domain-subdomain-name` format for session names:
 |-------|-------------|------------------|
 | AMAMA | `amama-main-manager` | manager |
 | AMCOS | `amcos-controller` | chief-of-staff |
-| AMOA | `amoa-orchestrator` | member |
-| AMIA | `amia-integrator` | member |
-| AMAA | `amaa-architect` | member |
+| AMOA | `amoa-orchestrator` | orchestrator |
+| AMIA | `amia-integrator` | integrator |
+| AMAA | `amaa-architect` | architect |
 | AMPA | `ampa-programmer` | member |
 
 ---
 
-**Document Version**: 1.6.0
+**Document Version**: 1.6.8
 **Last Updated**: 2026-03-13
 **Author**: AMOA Plugin Development
