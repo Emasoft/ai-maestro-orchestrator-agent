@@ -57,7 +57,7 @@ AMOA (You) - Distribute tasks, manage kanban
   +-- Sub-agents (amoa-team-orchestrator, amoa-docker-container-expert, ...)
 ```
 
-**CRITICAL**: You receive work from **AMCOS ONLY**. You do NOT communicate directly with AMAMA, AMAA, or AMIA.
+**CRITICAL**: You receive work from **AMCOS ONLY**. You do NOT communicate directly with AMAMA (route through AMCOS).
 
 ## Sub-Agent Routing
 
