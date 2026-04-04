@@ -12,10 +12,8 @@
 
 set -euo pipefail
 
-# If publish.py already validated, allow through
-if [ "${CPV_PUBLISH_PIPELINE:-}" = "1" ]; then
-    exit 0
-fi
+# NOTE: No bypass. Even publish.py goes through this gate.
+# CPV validation ALWAYS runs before any push. No exceptions.
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
