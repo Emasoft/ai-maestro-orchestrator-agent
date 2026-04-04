@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# pre-push hook: blocks git push unless invoked by publish.py
+#
+# publish.py sets CPV_PUBLISH_PIPELINE=1 before pushing.
+# Direct `git push` without publish.py is BLOCKED.
+#
+# Install: cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+# Or:      git config core.hooksPath .githooks
+
+if [ "${CPV_PUBLISH_PIPELINE:-}" = "1" ]; then
+    exit 0
+fi
+
+echo ""
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║  BLOCKED: Direct git push is not allowed.                   ║"
+echo "║                                                              ║"
+echo "║  Use the publish pipeline instead:                           ║"
+echo "║    uv run python scripts/publish.py --patch                  ║"
+echo "║    uv run python scripts/publish.py --minor                  ║"
+echo "║    uv run python scripts/publish.py --major                  ║"
+echo "║                                                              ║"
+echo "║  The pipeline runs: test → lint → validate → bump → push    ║"
+echo "║                                                              ║"
+echo "║  To bypass (emergency only):                                 ║"
+echo "║    CPV_PUBLISH_PIPELINE=1 git push origin HEAD               ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""
+exit 1
