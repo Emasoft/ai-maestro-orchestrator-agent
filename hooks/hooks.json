@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/main.py",
+            "command": "cd ${CLAUDE_PLUGIN_ROOT}/scripts && python3 -m amoa_stop_check.main",
             "timeout": 120000
           }
         ]
