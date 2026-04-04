@@ -134,32 +134,6 @@ def detect_marketplace(git_root: Path) -> dict:
     return info
 
 
-def detect_cpv_scripts() -> Path | None:
-    """Find the latest CPV (claude-plugins-validation) scripts directory.
-
-    Searches the Claude plugin cache for the latest installed version.
-    Returns the scripts/ directory path, or None if CPV is not installed.
-    """
-    home = Path.home()
-    cache_base = home / ".claude" / "plugins" / "cache"
-
-    # Search known marketplace locations for CPV
-    for marketplace in ("emasoft-plugins", "ai-maestro-plugins", "buildwithclaude"):
-        cpv_dir = cache_base / marketplace / "claude-plugins-validation"
-        if cpv_dir.exists():
-            # Find latest version by semver sort
-            versions = []
-            for d in cpv_dir.iterdir():
-                if d.is_dir() and (d / "scripts" / "validate_plugin.py").exists():
-                    versions.append(d)
-            if versions:
-                # Sort by version number (lexicographic works for semver dirs)
-                latest = sorted(versions, key=lambda p: p.name)[-1]
-                return latest / "scripts"
-
-    return None
-
-
 def detect_default_branch(git_root: Path) -> str:
     """Detect the default branch (main or master)."""
     result = subprocess.run(
@@ -465,30 +439,21 @@ Examples:
     else:
         print(f"\n{YELLOW}=== Step 2: Tests skipped (--skip-tests) ==={NC}")
 
-    # ── Step 3: Lint (prefers local lint_files.py, falls back to CPV's copy) ──
-    local_lint = plugin_root / "scripts" / "lint_files.py"
-    cpv_scripts_for_lint = detect_cpv_scripts()
-    cpv_lint = cpv_scripts_for_lint / "lint_files.py" if cpv_scripts_for_lint else None
-    lint_script = local_lint if local_lint.exists() else cpv_lint
-    if lint_script and lint_script.exists():
-        print(f"\n{BLUE}=== Step 3: Lint files ==={NC}")
-        run(["python3", str(lint_script), str(plugin_root)], cwd=plugin_root)
-        print(f"{GREEN}ok Linting passed{NC}")
-    else:
-        print(f"\n{YELLOW}=== Step 3: Lint skipped (no lint_files.py found locally or in CPV) ==={NC}")
+    # ── Step 3: Lint via CPV remote launcher ──
+    print(f"\n{BLUE}=== Step 3: Lint files (via cpv-remote-validate) ==={NC}")
+    run([
+        "uvx", "--from", "git+https://github.com/Emasoft/claude-plugins-validation",
+        "--with", "pyyaml", "cpv-remote-validate", "lint", str(plugin_root),
+    ], cwd=git_root)
+    print(f"{GREEN}ok Linting passed{NC}")
 
-    # ── Step 4: Validate plugin via CPV (remote — uses installed CPV, not local copy) ──
-    cpv_scripts = detect_cpv_scripts()
-    if cpv_scripts:
-        cpv_validate = cpv_scripts / "validate_plugin.py"
-        print(f"\n{BLUE}=== Step 4: CPV Validate plugin (--strict) ==={NC}")
-        print(f"  Using CPV from: {cpv_scripts.parent.name}")
-        run(["python3", str(cpv_validate), str(plugin_root), "--strict"], cwd=cpv_scripts)
-        print(f"{GREEN}ok CPV validation passed{NC}")
-    else:
-        print(f"\n{RED}=== Step 4: FAILED — CPV (claude-plugins-validation) not installed ==={NC}")
-        print("  Install it: claude plugin install claude-plugins-validation emasoft-plugins --scope user")
-        return 1
+    # ── Step 4: Full CPV validation via remote launcher (--strict) ──
+    print(f"\n{BLUE}=== Step 4: CPV Validate plugin (--strict) ==={NC}")
+    run([
+        "uvx", "--from", "git+https://github.com/Emasoft/claude-plugins-validation",
+        "--with", "pyyaml", "cpv-remote-validate", "plugin", str(plugin_root), "--strict",
+    ], cwd=git_root)
+    print(f"{GREEN}ok CPV validation passed (--strict){NC}")
 
     # ── Step 5: Version consistency ──
     print(f"\n{BLUE}=== Step 5: Check version consistency ==={NC}")
