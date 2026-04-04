@@ -487,7 +487,7 @@ Examples:
         print(f"{GREEN}ok CPV validation passed{NC}")
     else:
         print(f"\n{RED}=== Step 4: FAILED — CPV (claude-plugins-validation) not installed ==={NC}")
-        print(f"  Install it: claude plugin install claude-plugins-validation emasoft-plugins --scope user")
+        print("  Install it: claude plugin install claude-plugins-validation emasoft-plugins --scope user")
         return 1
 
     # ── Step 5: Version consistency ──
