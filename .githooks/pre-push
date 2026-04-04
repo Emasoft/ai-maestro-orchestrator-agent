@@ -1,29 +1,107 @@
 #!/usr/bin/env bash
-# pre-push hook: blocks git push unless invoked by publish.py
+# pre-push hook: enforces CPV validation before any push to GitHub.
 #
-# publish.py sets CPV_PUBLISH_PIPELINE=1 before pushing.
-# Direct `git push` without publish.py is BLOCKED.
+# Two modes:
+# 1. Via publish.py: CPV_PUBLISH_PIPELINE=1 is set — publish.py already ran
+#    validation, so we trust it and allow the push.
+# 2. Direct git push: Runs CPV validate_plugin.py --strict itself.
+#    If CPV is not installed or validation fails, the push is BLOCKED.
 #
-# Install: cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
-# Or:      git config core.hooksPath .githooks
+# Install: git config core.hooksPath .githooks
+# Or:      cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
 
+set -euo pipefail
+
+# If publish.py already validated, allow through
 if [ "${CPV_PUBLISH_PIPELINE:-}" = "1" ]; then
     exit 0
 fi
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║  BLOCKED: Direct git push is not allowed.                   ║"
-echo "║                                                              ║"
-echo "║  Use the publish pipeline instead:                           ║"
-echo "║    uv run python scripts/publish.py --patch                  ║"
-echo "║    uv run python scripts/publish.py --minor                  ║"
-echo "║    uv run python scripts/publish.py --major                  ║"
-echo "║                                                              ║"
-echo "║  The pipeline runs: test → lint → validate → bump → push    ║"
-echo "║                                                              ║"
-echo "║  To bypass (emergency only):                                 ║"
-echo "║    CPV_PUBLISH_PIPELINE=1 git push origin HEAD               ║"
+echo "║  Pre-push: Running CPV validation (--strict)                ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
-exit 1
+
+# Find the plugin root (directory containing .claude-plugin/plugin.json)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT=""
+
+# Walk up from .githooks/ or .git/hooks/ to find plugin root
+SEARCH_DIR="$SCRIPT_DIR"
+for i in 1 2 3 4 5; do
+    SEARCH_DIR="$(dirname "$SEARCH_DIR")"
+    if [ -f "$SEARCH_DIR/.claude-plugin/plugin.json" ]; then
+        PLUGIN_ROOT="$SEARCH_DIR"
+        break
+    fi
+done
+
+if [ -z "$PLUGIN_ROOT" ]; then
+    echo "ERROR: Cannot find plugin root (.claude-plugin/plugin.json)"
+    echo "       Searched up from: $SCRIPT_DIR"
+    exit 1
+fi
+
+echo "Plugin root: $PLUGIN_ROOT"
+
+# Find CPV validate_plugin.py in the Claude plugin cache
+CPV_SCRIPT=""
+CACHE_BASE="$HOME/.claude/plugins/cache"
+
+for marketplace in emasoft-plugins ai-maestro-plugins buildwithclaude; do
+    CPV_DIR="$CACHE_BASE/$marketplace/claude-plugins-validation"
+    if [ -d "$CPV_DIR" ]; then
+        # Find latest version (sort by version dir name)
+        LATEST=$(ls -d "$CPV_DIR"/*/scripts/validate_plugin.py 2>/dev/null | sort -V | tail -1)
+        if [ -n "$LATEST" ]; then
+            CPV_SCRIPT="$LATEST"
+            break
+        fi
+    fi
+done
+
+if [ -z "$CPV_SCRIPT" ]; then
+    echo ""
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║  BLOCKED: CPV (claude-plugins-validation) not installed.    ║"
+    echo "║                                                              ║"
+    echo "║  Install it first:                                           ║"
+    echo "║    claude plugin install claude-plugins-validation           ║"
+    echo "║          emasoft-plugins --scope user                        ║"
+    echo "║                                                              ║"
+    echo "║  Or use the publish pipeline:                                ║"
+    echo "║    uv run python scripts/publish.py --patch                  ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo ""
+    exit 1
+fi
+
+CPV_SCRIPTS_DIR="$(dirname "$CPV_SCRIPT")"
+echo "Using CPV: $CPV_SCRIPT"
+echo ""
+
+# Run CPV validation in --strict mode
+# Must pass or push is blocked. No exceptions.
+cd "$CPV_SCRIPTS_DIR"
+if python3 "$CPV_SCRIPT" "$PLUGIN_ROOT" --strict; then
+    echo ""
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║  CPV validation PASSED (--strict). Push allowed.            ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo ""
+    exit 0
+else
+    EXIT_CODE=$?
+    echo ""
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║  BLOCKED: CPV validation FAILED (--strict, exit=$EXIT_CODE)  ║"
+    echo "║                                                              ║"
+    echo "║  Fix the issues above, then retry:                           ║"
+    echo "║    uv run python scripts/publish.py --patch                  ║"
+    echo "║                                                              ║"
+    echo "║  NO BYPASS. Every push must pass CPV --strict.               ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo ""
+    exit 1
+fi
