@@ -12,7 +12,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 
 # Path to the script under test
 SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "amoa_reassign_kanban_tasks.py"
