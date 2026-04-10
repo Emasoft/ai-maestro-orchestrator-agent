@@ -64,3 +64,6 @@ llm_externalizer_output/
 # Rust
 target/
 Cargo.lock
+
+# SERENA MCP state (local project metadata, not published)
+.serena/
