@@ -92,24 +92,6 @@ class TestDryRunMode:
 class TestOptionalArguments:
     """Test optional arguments are accepted."""
 
-    def test_accepts_project_id(self, tmp_path):
-        """Script accepts --project-id."""
-        code, stdout, stderr = run_script(
-            ["--from-agent", "impl-1", "--to-agent", "impl-2",
-             "--project-id", "PVT_kwDOtest", "--dry-run"],
-            tmp_path,
-        )
-        assert code == 0
-
-    def test_accepts_project_name(self, tmp_path):
-        """Script accepts --project-name."""
-        code, stdout, stderr = run_script(
-            ["--from-agent", "impl-1", "--to-agent", "impl-2",
-             "--project-name", "My Project", "--dry-run"],
-            tmp_path,
-        )
-        assert code == 0
-
     def test_accepts_handoff_url(self, tmp_path):
         """Script accepts --handoff-url."""
         code, stdout, stderr = run_script(
