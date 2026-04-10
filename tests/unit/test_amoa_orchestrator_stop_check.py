@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 # Path to the script under test
-SCRIPT_PATH = Path(__file__).resolve().parents[2] / "OUTPUT_SKILLS" / "ai-maestro-orchestrator-agent" / "scripts" / "amoa_orchestrator_stop_check.py"
+SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "amoa_orchestrator_stop_check.py"
 
 
 def run_script(cwd, extra_env=None):
