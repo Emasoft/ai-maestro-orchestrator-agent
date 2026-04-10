@@ -1,6 +1,6 @@
 [project]
 name = "ai-maestro-orchestrator-agent"
-version = "1.6.8"
+version = "1.6.9"
 description = "AI Maestro Orchestrator Agent - Task decomposition, parallel agent coordination, and verification loops"
 readme = "README.md"
 license = "Apache-2.0"
