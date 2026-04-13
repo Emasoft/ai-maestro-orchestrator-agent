@@ -1,6 +1,6 @@
 {
   "name": "ai-maestro-orchestrator-agent",
-  "version": "1.6.10",
+  "version": "1.6.11",
   "description": "Task distribution, agent coordination, progress monitoring - executes plans via subagents. Requires AI Maestro for inter-agent messaging.",
   "author": {
     "name": "Emasoft",
