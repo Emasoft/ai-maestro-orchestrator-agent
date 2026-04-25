@@ -13,14 +13,19 @@ Usage:
 import argparse
 import subprocess
 import sys
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
-from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
+from report_writer import (
+    add_output_dir_argument,
+    capture_and_report,
+    get_output_dir,
+    should_use_report,
+)
 
 # State file location
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")

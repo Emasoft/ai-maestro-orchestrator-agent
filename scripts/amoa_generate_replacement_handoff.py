@@ -39,7 +39,6 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 # State file location (matches codebase convention)
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 

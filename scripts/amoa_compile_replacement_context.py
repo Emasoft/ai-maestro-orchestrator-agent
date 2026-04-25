@@ -42,7 +42,6 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 # State file location relative to the project root
 STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 

@@ -35,12 +35,12 @@ from cpv_validation_common import (
     EXIT_MAJOR,
     EXIT_OK,
     SECRET_PATTERNS,
-    validate_component_name,
     USER_PATH_PATTERNS,
     VALID_TOOLS,
     ValidationReport,
     check_utf8_encoding,
     save_report_and_print_summary,
+    validate_component_name,
 )
 
 # =============================================================================

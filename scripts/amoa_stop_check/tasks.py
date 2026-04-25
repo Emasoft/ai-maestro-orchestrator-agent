@@ -17,7 +17,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .utils import debug, error, warn, retry_command
+from .utils import debug, error, retry_command, warn
 
 # Retry configuration constant (must match main script)
 MAX_RETRIES = 3

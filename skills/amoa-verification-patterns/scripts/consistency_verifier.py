@@ -20,7 +20,10 @@ from typing import Any, Union
 # WHY: Dynamic path insertion required before importing local modules
 SKILLS_DIR = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(SKILLS_DIR / "shared"))
-from cross_platform import run_command, atomic_write_json  # type: ignore[import-not-found]  # noqa: E402
+from cross_platform import (  # type: ignore[import-not-found]  # noqa: E402
+    atomic_write_json,
+    run_command,
+)
 from thresholds import TIMEOUTS  # type: ignore[import-not-found]  # noqa: E402
 
 

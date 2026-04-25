@@ -25,7 +25,11 @@ from pathlib import Path
 from typing import Any, cast
 
 # AI Maestro sync integration (same-directory import, resolved at runtime)
-from amoa_aimaestro_sync import sync_task, bulk_sync, notify_sync_result  # type: ignore[import-not-found]
+from amoa_aimaestro_sync import (  # type: ignore[import-not-found]
+    bulk_sync,
+    notify_sync_result,
+    sync_task,
+)
 
 # GitHub configuration
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")

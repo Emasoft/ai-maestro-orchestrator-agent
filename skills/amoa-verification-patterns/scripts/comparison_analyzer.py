@@ -22,7 +22,9 @@ from typing import Any, Dict, List, Optional, Union
 # WHY: Import cross-platform utilities for consistency
 SKILLS_DIR = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(SKILLS_DIR / "shared"))
-from cross_platform import atomic_write_json  # type: ignore[import-not-found]  # noqa: E402
+from cross_platform import (
+    atomic_write_json,  # type: ignore[import-not-found]  # noqa: E402
+)
 
 
 class ComparisonAnalyzer:

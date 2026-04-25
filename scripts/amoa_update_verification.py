@@ -83,8 +83,12 @@ from pathlib import Path
 
 # WHY: Import report_writer for token-efficient output redirection when called by orchestrator
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
-from report_writer import capture_and_report, add_output_dir_argument, should_use_report, get_output_dir
-
+from report_writer import (
+    add_output_dir_argument,
+    capture_and_report,
+    get_output_dir,
+    should_use_report,
+)
 
 # State file location relative to the project root
 STATE_FILE_REL = ".ai-maestro/update-verification-state.json"

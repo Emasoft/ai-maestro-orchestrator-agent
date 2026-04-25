@@ -12,7 +12,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 # Path to the script under test
 SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "amoa_generate_replacement_handoff.py"
 

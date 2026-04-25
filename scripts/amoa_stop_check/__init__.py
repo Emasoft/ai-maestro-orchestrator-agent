@@ -14,49 +14,49 @@ Modules:
 # Note: Relative imports work at runtime but mypy can't resolve them
 # when linting individual files in a package
 
-from .utils import (
-    log,
-    debug,
-    info,
-    warn,
-    error,
-    critical,
-    ensure_claude_dir,
-    rotate_log_if_needed,
-    safe_json_field,
-    retry_command,
-    fail_safe_exit,
-    conservative_block_exit,
-    # Configuration constants
-    ORCHESTRATOR_STATE_FILE,
-    RALPH_STATE_FILE,
-    PLAN_PHASE_STATE_FILE,
-    EXEC_PHASE_STATE_FILE,
-    LOCK_FILE,
-    LOG_FILE,
-    DEBUG,
-    RECURSION_MARKER,
-    MAX_RETRIES,
-    RETRY_DELAY,
-)
-from .lock import acquire_lock, release_lock, is_pid_alive
+from .lock import acquire_lock, is_pid_alive, release_lock
 from .phase import (
-    check_plan_phase_completion,
-    check_orchestration_phase_completion,
-    check_all_verifications,
-    check_config_feedback_requests,
-    check_completion_signals,
+    build_config_feedback_block_prompt,
     build_phase_block_prompt,
     build_verification_block_prompt,
-    build_config_feedback_block_prompt,
-    update_state_file,
+    check_all_verifications,
+    check_completion_signals,
+    check_config_feedback_requests,
+    check_orchestration_phase_completion,
+    check_plan_phase_completion,
     parse_frontmatter,
+    update_state_file,
 )
 from .tasks import (
     check_claude_tasks,
     check_github_projects,
     check_task_file,
     check_todo_list,
+)
+from .utils import (
+    DEBUG,
+    EXEC_PHASE_STATE_FILE,
+    LOCK_FILE,
+    LOG_FILE,
+    MAX_RETRIES,
+    # Configuration constants
+    ORCHESTRATOR_STATE_FILE,
+    PLAN_PHASE_STATE_FILE,
+    RALPH_STATE_FILE,
+    RECURSION_MARKER,
+    RETRY_DELAY,
+    conservative_block_exit,
+    critical,
+    debug,
+    ensure_claude_dir,
+    error,
+    fail_safe_exit,
+    info,
+    log,
+    retry_command,
+    rotate_log_if_needed,
+    safe_json_field,
+    warn,
 )
 
 __all__ = [

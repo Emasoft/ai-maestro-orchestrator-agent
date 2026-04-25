@@ -62,7 +62,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-
 # Type alias for LSP configuration dictionaries
 # WHY: Using dict[str, Any] allows flexible config structure while maintaining type safety
 # at call sites. A TypedDict would be more precise but overly complex for optional fields.

@@ -18,7 +18,6 @@ import json
 import sys
 from pathlib import Path
 
-
 # ── Per-model pricing (USD per million tokens, as of 2025-12) ──
 MODEL_PRICING: dict[str, dict[str, float]] = {
     "claude-opus-4-6":   {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},

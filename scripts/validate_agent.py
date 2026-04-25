@@ -34,7 +34,6 @@ from cpv_validation_common import (
     MAX_BODY_WORDS,
     MAX_DESCRIPTION_LENGTH,
     MIN_BODY_CHARS,
-    validate_component_name,
     SECRET_PATTERNS,
     USER_PATH_PATTERNS,
     VALID_CONTEXT_VALUES,
@@ -43,6 +42,7 @@ from cpv_validation_common import (
     ValidationReport,
     check_utf8_encoding,
     save_report_and_print_summary,
+    validate_component_name,
 )
 
 # Known frontmatter fields per official docs (agent-specific)

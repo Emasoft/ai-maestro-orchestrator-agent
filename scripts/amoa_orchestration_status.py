@@ -49,7 +49,6 @@ import json
 import sys
 from pathlib import Path
 
-
 # State file location relative to the project root
 STATE_FILE_REL = ".ai-maestro/orchestration-state.json"
 

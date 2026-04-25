@@ -23,7 +23,12 @@ import yaml
 
 # WHY: report_writer redirects verbose print output to files, saving orchestrator tokens
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
-from report_writer import add_output_dir_argument, capture_and_report, get_output_dir, should_use_report
+from report_writer import (
+    add_output_dir_argument,
+    capture_and_report,
+    get_output_dir,
+    should_use_report,
+)
 
 # State file location
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")

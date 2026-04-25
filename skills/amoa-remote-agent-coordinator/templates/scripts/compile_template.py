@@ -15,7 +15,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, Any, Optional, Set, List, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 
 class TemplateError(Exception):

@@ -20,7 +20,9 @@ from typing import Any, Dict, List, Optional, Set
 # NOTE: Dynamic path modification is required because shared modules are not installed packages
 SKILLS_DIR = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(SKILLS_DIR / "shared"))
-from cross_platform import atomic_write_json  # type: ignore[import-not-found]  # noqa: E402
+from cross_platform import (
+    atomic_write_json,  # type: ignore[import-not-found]  # noqa: E402
+)
 
 
 @dataclass

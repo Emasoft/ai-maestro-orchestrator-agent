@@ -20,7 +20,6 @@ import sys
 from datetime import datetime, timezone
 from typing import Any
 
-
 # Column mapping: AMOA 8-column → AI Maestro status key
 AMOA_TO_AIMAESTRO_STATUS = {
     "backlog": "backlog",

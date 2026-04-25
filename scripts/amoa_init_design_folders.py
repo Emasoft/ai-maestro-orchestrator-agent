@@ -22,7 +22,12 @@ import yaml
 
 # WHY: Token-efficient output redirection for orchestrator agents
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
-from report_writer import add_output_dir_argument, capture_and_report, get_output_dir, should_use_report
+from report_writer import (
+    add_output_dir_argument,
+    capture_and_report,
+    get_output_dir,
+    should_use_report,
+)
 
 # Default root location
 DEFAULT_ROOT = "design"

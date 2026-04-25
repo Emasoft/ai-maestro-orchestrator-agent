@@ -36,7 +36,6 @@ import sys
 from pathlib import Path
 from typing import NoReturn
 
-
 # Statuses considered "pending" / active work
 PENDING_STATUSES = frozenset({
     "In Progress",

@@ -18,8 +18,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from .utils import debug, info, warn, error, fail_safe_exit
-
+from .utils import debug, error, fail_safe_exit, info, warn
 
 # ==============================================================================
 # PHASE STATE FILE CONSTANTS

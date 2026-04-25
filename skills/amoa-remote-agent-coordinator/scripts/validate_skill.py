@@ -21,7 +21,7 @@ from typing import Any, TypedDict
 
 # Check if skills-ref is installed
 try:
-    from skills_ref import validate, read_properties  # type: ignore[import-not-found]
+    from skills_ref import read_properties, validate  # type: ignore[import-not-found]
 
     SKILLS_REF_AVAILABLE = True
 except ImportError:

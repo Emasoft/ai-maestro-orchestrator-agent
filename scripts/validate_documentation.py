@@ -40,7 +40,11 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from cpv_validation_common import COLORS, ValidationReport, save_report_and_print_summary
+from cpv_validation_common import (
+    COLORS,
+    ValidationReport,
+    save_report_and_print_summary,
+)
 
 # =============================================================================
 # Documentation Validation Report

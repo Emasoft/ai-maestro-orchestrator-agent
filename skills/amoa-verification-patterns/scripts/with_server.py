@@ -31,11 +31,11 @@ Part of AMOA (AI Maestro Orchestrator Agent) verification-patterns skill.
 # WHY: Future annotations for forward reference compatibility in type hints
 from __future__ import annotations
 
-import subprocess
-import socket
-import time
-import sys
 import argparse
+import socket
+import subprocess
+import sys
+import time
 
 
 def verify_config(servers: list[str], ports: list[int], command: list[str]) -> bool:

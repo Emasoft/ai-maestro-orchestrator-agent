@@ -33,7 +33,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from cpv_validation_common import COLORS, VALID_PLUGIN_ENV_VARS, ValidationReport, save_report_and_print_summary
+from cpv_validation_common import (
+    COLORS,
+    VALID_PLUGIN_ENV_VARS,
+    ValidationReport,
+    save_report_and_print_summary,
+)
 
 # Known LSP server configuration fields
 KNOWN_LSP_FIELDS = {

@@ -29,7 +29,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-
 # ==============================================================================
 # LOW-QUALITY PATTERNS (indicate build-only or skeleton tests)
 # ==============================================================================

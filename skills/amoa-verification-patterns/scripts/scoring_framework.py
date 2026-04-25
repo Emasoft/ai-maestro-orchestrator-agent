@@ -16,14 +16,16 @@ import argparse
 import json
 import sys
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Callable, Optional
 from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional
 
 # WHY: Import cross-platform utilities for consistency
 # WHY: Dynamic path insertion is needed because shared module is in a sibling directory
 SKILLS_DIR = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(SKILLS_DIR / "shared"))
-from cross_platform import atomic_write_json  # type: ignore[import-not-found]  # noqa: E402
+from cross_platform import (
+    atomic_write_json,  # type: ignore[import-not-found]  # noqa: E402
+)
 
 
 @dataclass

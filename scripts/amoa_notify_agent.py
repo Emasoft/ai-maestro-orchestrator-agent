@@ -43,7 +43,6 @@ import shutil
 import subprocess
 import sys
 
-
 # Map our message type names to amp-send.sh --type values.
 # amp-send.sh accepts: request | response | notification | task | status
 # This script's CLI accepts: request | info | status

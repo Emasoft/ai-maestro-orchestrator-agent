@@ -18,28 +18,16 @@ import os
 import sys
 from pathlib import Path
 
-from .utils import (
-    debug,
-    info,
-    warn,
-    error,
-    critical,
-    fail_safe_exit,
-    conservative_block_exit,
-    ORCHESTRATOR_STATE_FILE,
-    RALPH_STATE_FILE,
-    RECURSION_MARKER,
-)
 from .lock import acquire_lock, release_lock
 from .phase import (
-    check_plan_phase_completion,
-    check_orchestration_phase_completion,
-    check_all_verifications,
-    check_config_feedback_requests,
-    check_completion_signals,
+    build_config_feedback_block_prompt,
     build_phase_block_prompt,
     build_verification_block_prompt,
-    build_config_feedback_block_prompt,
+    check_all_verifications,
+    check_completion_signals,
+    check_config_feedback_requests,
+    check_orchestration_phase_completion,
+    check_plan_phase_completion,
     parse_frontmatter,
     update_state_file,
 )
@@ -49,7 +37,18 @@ from .tasks import (
     check_task_file,
     check_todo_list,
 )
-
+from .utils import (
+    ORCHESTRATOR_STATE_FILE,
+    RALPH_STATE_FILE,
+    RECURSION_MARKER,
+    conservative_block_exit,
+    critical,
+    debug,
+    error,
+    fail_safe_exit,
+    info,
+    warn,
+)
 
 
 def cleanup() -> None:

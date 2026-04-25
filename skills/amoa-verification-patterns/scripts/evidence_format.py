@@ -5,14 +5,14 @@ Defines required format for all verification evidence and provides
 validation functions to ensure compliance.
 """
 
-import sys
 import json
 import re
-from pathlib import Path
-from typing import Optional, Any
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
+from typing import Any, Optional
 
 SKILLS_DIR = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(SKILLS_DIR / "shared"))
