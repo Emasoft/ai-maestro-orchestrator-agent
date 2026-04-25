@@ -23,8 +23,8 @@ from typing import Any, Callable, Dict, List, Optional
 # WHY: Dynamic path insertion is needed because shared module is in a sibling directory
 SKILLS_DIR = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(SKILLS_DIR / "shared"))
-from cross_platform import (
-    atomic_write_json,  # type: ignore[import-not-found]  # noqa: E402
+from cross_platform import (  # type: ignore[import-not-found]  # noqa: E402
+    atomic_write_json,
 )
 
 
