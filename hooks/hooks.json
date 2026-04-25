@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_verification_status.py",
+            "command": "uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_verification_status.py",
             "timeout": 30000
           }
         ]
@@ -36,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_polling_due.py",
+            "command": "uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_polling_due.py",
             "timeout": 30000
           }
         ]

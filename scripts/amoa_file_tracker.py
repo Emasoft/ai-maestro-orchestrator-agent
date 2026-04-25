@@ -130,5 +130,10 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__":
+def _entry() -> None:
+    """CLI entry — keeps sys.exit out of module scope so importing this file is safe."""
     sys.exit(main())
+
+
+if __name__ == "__main__":
+    _entry()

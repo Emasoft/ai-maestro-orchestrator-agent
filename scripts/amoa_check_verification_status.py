@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pyyaml"]
+# ///
 """
 AMOA: Instruction Verification Status Check
 MANDATORY ENFORCEMENT HOOK

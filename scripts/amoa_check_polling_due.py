@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pyyaml"]
+# ///
 """
 AMOA: Proactive Progress Polling Check
 MANDATORY ENFORCEMENT HOOK
