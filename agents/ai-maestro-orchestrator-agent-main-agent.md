@@ -10,6 +10,7 @@ skills:
   - amoa-label-taxonomy
   - amoa-messaging-templates
   - amoa-remote-agent-coordinator
+  - amoa-prrd-trdd-kanban
 ---
 
 # Orchestrator Main Agent (AMOA)
