@@ -13,6 +13,18 @@ This is the ORCHESTRATOR's role-specific layer of the PRRD / TRDD /
 Kanban model. For the universal mechanics, see `prrd-trdd-kanban` in
 `ai-maestro-plugin`.
 
+## Approval discipline
+
+Check
+[references/exempt-operations.md](references/exempt-operations.md)
+in the universal skill BEFORE triggering any transition. ORCH's
+**exempt** transitions (no MANAGER approval): `dispatch → dev`
+(assignment), red-column priority bumps, within-team reassignment,
+status broadcasts to COS/MANAGER. ORCH's **non-exempt** (request
+MANAGER approval via COS): cross-team TRDD reassignment, escalating
+to `human_review`, force-`failed` of stuck TRDDs. Conservative
+default — when unsure, request approval.
+
 ORCHESTRATOR is the team's traffic controller and **owns the red
 column**. The red column — TRDDs whose `blocked-by:` list is non-empty
 — is the fundamental source of project delays. ORCH's central
