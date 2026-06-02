@@ -15,9 +15,8 @@ Kanban model. For the universal mechanics, see `prrd-trdd-kanban` in
 
 ## Approval discipline
 
-Check
-[references/exempt-operations.md](references/exempt-operations.md)
-in the universal skill BEFORE triggering any transition. ORCH's
+Check the **prrd-trdd-kanban** universal skill's `exempt-operations.md`
+reference (bundled in ai-maestro-plugin) BEFORE triggering any transition. ORCH's
 **exempt** transitions (no MANAGER approval): `dispatch → dev`
 (assignment), red-column priority bumps, within-team reassignment,
 status broadcasts to COS/MANAGER. ORCH's **non-exempt** (request
