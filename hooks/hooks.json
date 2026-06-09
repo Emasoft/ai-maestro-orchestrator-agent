@@ -23,7 +23,7 @@
           {
             "type": "command",
             "command": "cd ${CLAUDE_PLUGIN_ROOT}/scripts && python3 -m amoa_stop_check.main",
-            "timeout": 120000
+            "timeout": 120
           }
         ]
       }
@@ -37,7 +37,7 @@
           {
             "type": "command",
             "command": "uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_verification_status.py",
-            "timeout": 30000
+            "timeout": 30
           }
         ]
       }
@@ -50,7 +50,7 @@
           {
             "type": "command",
             "command": "uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_polling_due.py",
-            "timeout": 30000
+            "timeout": 30
           }
         ]
       }
@@ -64,7 +64,7 @@
           {
             "type": "command",
             "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_file_tracker.py",
-            "timeout": 10000
+            "timeout": 10
           }
         ]
       }
