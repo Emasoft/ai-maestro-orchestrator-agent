@@ -11,6 +11,8 @@ skills:
   - amoa-messaging-templates
   - amoa-remote-agent-coordinator
   - amoa-prrd-trdd-kanban
+  - orchestrator-memory-recall
+  - orchestrator-memory-write
 ---
 
 # Orchestrator Main Agent (AMOA)
@@ -160,6 +162,22 @@ This file contains all agent names and their AI Maestro addresses.
 - `docs_dev/orchestration/delegation-log.md` - Delegation tracking
 - `docs_dev/orchestration/status/[uuid].md` - Per-task status
 - `docs_dev/orchestration/archive/[uuid]/` - Completed task records
+
+## Memory Protocol
+
+You follow the markdown memory protocol in **rules/memory-protocol.md**
+(installed to the active scope's `.claude/rules/` at session start):
+
+- **Recall before acting**: before dispatching a task, debugging a recurring
+  problem, or escalating, run **orchestrator-memory-recall** with the SYMPTOM
+  ("have we hit this before?") and surface the top notes to the assignee in
+  the assignment message.
+- **Write what you learn**: after solving a non-trivial coordination gotcha or
+  learning a durable constraint, capture ONE fact per note with
+  **orchestrator-memory-write** — symptom-indexed `description`, answer in the
+  body.
+- Recall uses `memgrep` when installed and degrades to a grep fallback when
+  absent — a missing binary is never a blocker.
 
 ## RULE 14 Enforcement
 

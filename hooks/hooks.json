@@ -2,6 +2,19 @@
   "description": "Orchestrator Agent hooks - task completion enforcement, verification, polling",
   "_note": "Hook data is passed via stdin as JSON. Scripts read from stdin, not env vars.",
   "hooks": {
+    "SessionStart": [
+      {
+        "_id": "amoa-install-rules",
+        "_description": "Installs plugin-shipped rules (rules/*.md, e.g. memory-protocol.md) into the active scope's .claude/rules/ so the rule loader picks them up",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_install_rules.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "_id": "amoa-orchestrator-stop",
