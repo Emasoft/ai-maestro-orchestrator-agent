@@ -18,6 +18,7 @@ Encoding Checks Implemented:
 from __future__ import annotations
 
 import argparse
+import codecs
 import json
 import re
 import sys
@@ -195,7 +196,7 @@ def check_bom(content: bytes, file_path: str, report: EncodingValidationReport) 
         True if no BOM found, False otherwise
     """
     # UTF-8 BOM
-    if content.startswith(b"\xef\xbb\xbf"):
+    if content.startswith(codecs.BOM_UTF8):
         report.major(f"File has UTF-8 BOM (should be UTF-8 without BOM): {file_path}")
         report.stats["bom_issues"] += 1
         return False
@@ -213,13 +214,13 @@ def check_bom(content: bytes, file_path: str, report: EncodingValidationReport) 
         return False
 
     # UTF-32 LE BOM
-    if content.startswith(b"\xff\xfe\x00\x00"):
+    if content.startswith(codecs.BOM_UTF32_LE):
         report.critical(f"File has UTF-32 LE BOM (must use UTF-8): {file_path}")
         report.stats["bom_issues"] += 1
         return False
 
     # UTF-32 BE BOM
-    if content.startswith(b"\x00\x00\xfe\xff"):
+    if content.startswith(codecs.BOM_UTF32_BE):
         report.critical(f"File has UTF-32 BE BOM (must use UTF-8): {file_path}")
         report.stats["bom_issues"] += 1
         return False

@@ -242,7 +242,8 @@ python scripts/install_lsp.py --language rust --project-path /path/to/project
 go install golang.org/x/tools/gopls@latest
 
 # Ensure $GOPATH/bin is in PATH
-export PATH=$PATH:$(go env GOPATH)/bin
+PATH=$PATH:$(go env GOPATH)/bin
+export PATH
 
 # Verify installation
 which gopls
@@ -272,7 +273,8 @@ python scripts/install_lsp.py --language go --project-path /path/to/project
 brew install jdtls
 
 # Linux (via SDKMAN)
-curl -s "https://get.sdkman.io" | bash
+curl -s "https://get.sdkman.io" -o install-sdkman.sh
+bash install-sdkman.sh   # inspect install-sdkman.sh before running
 sdk install java 21-tem
 # Then download jdtls from Eclipse
 
@@ -332,7 +334,8 @@ python scripts/install_lsp.py --language kotlin --project-path /path/to/project
 ```bash
 # macOS
 brew install llvm
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export PATH
 
 # Linux (Debian/Ubuntu)
 sudo apt install clangd

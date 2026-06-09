@@ -103,7 +103,8 @@ install_swift_linux() {
   log_info "Installing Swift via swiftly..."
 
   if ! command -v swiftly &>/dev/null; then
-    curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash
+    curl -L https://swift-server.github.io/swiftly/swiftly-install.sh -o swiftly-install.sh
+    bash swiftly-install.sh   # inspect swiftly-install.sh before running
     source ~/.local/share/swiftly/env.sh || source ~/.swiftly/env.sh
   fi
 

@@ -13,6 +13,7 @@ All individual validators should import from this module to ensure consistency.
 
 from __future__ import annotations
 
+import codecs
 import fnmatch
 import getpass
 import json
@@ -1707,7 +1708,7 @@ def check_utf8_encoding(content: bytes, report: ValidationReport, filename: str)
         True if encoding is valid, False otherwise
     """
     # Check for UTF-8 BOM (should not be present)
-    if content.startswith(b"\xef\xbb\xbf"):
+    if content.startswith(codecs.BOM_UTF8):
         report.major("File has UTF-8 BOM (should be UTF-8 without BOM)", filename)
         return False
 

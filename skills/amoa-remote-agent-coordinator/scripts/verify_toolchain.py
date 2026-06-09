@@ -62,7 +62,7 @@ TOOLCHAINS = {
                 "uv",
                 "uv",
                 "--version",
-                "curl -LsSf https://astral.sh/uv/install.sh | sh",
+                "install uv — see https://docs.astral.sh/uv/getting-started/installation/",
             ),
             Tool("python", "python3", "--version", "uv python install 3.12"),
             Tool("ruff", "ruff", "--version", "uv pip install ruff"),
@@ -71,7 +71,8 @@ TOOLCHAINS = {
         ],
         "setup_script": """
 # Python Toolchain Setup
-curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -LsSf https://astral.sh/uv/install.sh -o install-uv.sh
+sh install-uv.sh   # inspect install-uv.sh before running
 source ~/.bashrc  # or restart shell
 uv venv --python 3.12
 source .venv/bin/activate
@@ -86,7 +87,7 @@ uv pip install ruff mypy pytest
                 "rustc",
                 "rustc",
                 "--version",
-                "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
+                "install rustup — see https://rustup.rs/",
             ),
             Tool("cargo", "cargo", "--version", "# included with rustup"),
             Tool("clippy", "cargo clippy", "--version", "rustup component add clippy"),
@@ -94,7 +95,8 @@ uv pip install ruff mypy pytest
         ],
         "setup_script": """
 # Rust Toolchain Setup
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh
+sh rustup-init.sh   # inspect rustup-init.sh before running
 source ~/.cargo/env
 rustup default stable
 rustup component add clippy rustfmt
@@ -104,14 +106,15 @@ rustup component add clippy rustfmt
     "javascript": {
         "description": "JavaScript/TypeScript with bun",
         "tools": [
-            Tool("bun", "bun", "--version", "curl -fsSL https://bun.sh/install | bash"),
+            Tool("bun", "bun", "--version", "install bun — see https://bun.sh/docs/installation"),
             Tool(
                 "node", "node", "--version", "# included with bun or install separately"
             ),
         ],
         "setup_script": """
 # JavaScript/TypeScript Toolchain Setup
-curl -fsSL https://bun.sh/install | bash
+curl -fsSL https://bun.sh/install -o install-bun.sh
+bash install-bun.sh   # inspect install-bun.sh before running
 source ~/.bashrc
 bun install
 """,
@@ -168,7 +171,8 @@ brew install dotnet
         ],
         "setup_script": """
 # Java Toolchain Setup
-curl -s "https://get.sdkman.io" | bash
+curl -s "https://get.sdkman.io" -o install-sdkman.sh
+bash install-sdkman.sh   # inspect install-sdkman.sh before running
 source ~/.sdkman/bin/sdkman-init.sh
 sdk install java 21-tem
 sdk install gradle
@@ -183,7 +187,8 @@ sdk install gradle
         ],
         "setup_script": """
 # Kotlin Toolchain Setup
-curl -s "https://get.sdkman.io" | bash
+curl -s "https://get.sdkman.io" -o install-sdkman.sh
+bash install-sdkman.sh   # inspect install-sdkman.sh before running
 source ~/.sdkman/bin/sdkman-init.sh
 sdk install kotlin
 sdk install gradle

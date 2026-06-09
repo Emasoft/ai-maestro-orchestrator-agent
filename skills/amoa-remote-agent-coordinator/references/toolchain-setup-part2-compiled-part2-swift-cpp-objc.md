@@ -210,8 +210,9 @@ xcodebuild clean build
 ### 2.3.3 CocoaPods (if needed)
 
 ```bash
-# Install CocoaPods
-sudo gem install cocoapods
+# Install CocoaPods (prefer a user-level Ruby via rbenv/Homebrew;
+# add elevated privileges only if installing into the system Ruby)
+gem install cocoapods
 
 # Install dependencies
 pod install

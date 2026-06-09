@@ -664,12 +664,12 @@ Docker uses host filesystem, no artificial limit. Check actual disk space:
 df -h /var/lib/docker
 ```
 
-If low on space, move Docker data directory:
+If low on space, move Docker data directory (run these steps as root, e.g. from a root shell):
 ```bash
-sudo systemctl stop docker
-sudo mv /var/lib/docker /new/path/docker
-sudo ln -s /new/path/docker /var/lib/docker
-sudo systemctl start docker
+systemctl stop docker
+mv /var/lib/docker /new/path/docker
+ln -s /new/path/docker /var/lib/docker
+systemctl start docker
 ```
 
 ---
@@ -1009,9 +1009,9 @@ CMD ["/app"]
 export DOCKER_BUILDKIT=1
 ```
 
-**Or make permanent** (add to `~/.bashrc` or `~/.zshrc`):
+**Or make permanent** by adding this line to `~/.bashrc` or `~/.zshrc`:
 ```bash
-echo 'export DOCKER_BUILDKIT=1' >> ~/.bashrc
+export DOCKER_BUILDKIT=1
 ```
 
 **Or in docker-compose.yml**:

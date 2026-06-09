@@ -195,7 +195,12 @@ case "$TOOLCHAIN" in
     echo "Installed: js-code-fixer, js-test-writer"
     ;;
 
-  rust|go|cpp|java|ruby|php|csharp|swift)
+  ruby|rust|go|cpp|java|csharp|swift)
+    echo "No specific skills required for $TOOLCHAIN"
+    echo "LSP server provides code intelligence"
+    ;;
+
+  php)
     echo "No specific skills required for $TOOLCHAIN"
     echo "LSP server provides code intelligence"
     ;;

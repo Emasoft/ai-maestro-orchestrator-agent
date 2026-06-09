@@ -22,7 +22,8 @@ This reference document provides installation instructions for development toolc
 
 ```bash
 # Install Homebrew if not present
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o install-homebrew.sh
+/bin/bash install-homebrew.sh   # inspect install-homebrew.sh before running
 
 # Install common toolchains
 brew install python@3.12
@@ -40,7 +41,8 @@ sudo apt update
 # Install common toolchains
 sudo apt install python3 python3-pip
 sudo apt install nodejs npm
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh
+sh rustup-init.sh   # inspect rustup-init.sh before running
 ```
 
 ### Linux (Fedora/RHEL)
@@ -49,7 +51,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # Install common toolchains
 sudo dnf install python3 python3-pip
 sudo dnf install nodejs npm
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh
+sh rustup-init.sh   # inspect rustup-init.sh before running
 ```
 
 ## Version Management

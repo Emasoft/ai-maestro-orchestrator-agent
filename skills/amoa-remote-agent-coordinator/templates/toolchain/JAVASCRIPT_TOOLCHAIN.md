@@ -90,7 +90,8 @@ if ! command -v bun &>/dev/null; then
 
   # Add to PATH
   export BUN_INSTALL="$HOME/.bun"
-  export PATH="$BUN_INSTALL/bin:$PATH"
+  PATH="$BUN_INSTALL/bin:$PATH"
+  export PATH
 
   # Source for current session
   if [ -f "$HOME/.bun/env" ]; then

@@ -13,6 +13,7 @@ Exit codes:
     1 - Validation failed, push blocked
 """
 
+import codecs
 import json
 import re
 import subprocess
@@ -186,7 +187,7 @@ def check_unicode_compliance(plugin_dir: Path) -> list[tuple[str, str]]:
                     continue
                 try:
                     raw = filepath.read_bytes()
-                    if raw.startswith(b"\xef\xbb\xbf") or raw.startswith((b"\xff\xfe", b"\xfe\xff")):
+                    if raw.startswith(codecs.BOM_UTF8) or raw.startswith((b"\xff\xfe", b"\xfe\xff")):
                         issues.append(("MAJOR", f"BOM detected in {filepath.relative_to(plugin_dir)}"))
                     if b"\r\n" in raw:
                         issues.append(("MINOR", f"CRLF line endings in {filepath.relative_to(plugin_dir)}"))

@@ -37,7 +37,8 @@ install_toolchain_macos() {
   brew install llvm cmake ninja
 
   # Add LLVM to PATH
-  export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+  PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+  export PATH
 }
 
 install_toolchain_linux() {
