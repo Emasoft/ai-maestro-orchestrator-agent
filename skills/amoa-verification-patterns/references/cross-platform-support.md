@@ -107,14 +107,18 @@ Use the `run_command()` helper for platform-aware subprocess execution:
 
 ```python
 import platform
-import subprocess
 
 def run_command(cmd, shell=False, check=True):
-    """Run command with platform-aware shell handling."""
+    """Run a command with platform-aware shell handling.
+
+    String commands auto-enable shell on Windows; on POSIX an explicit
+    argv list keeps shell=False. Dispatch to your process runner with the
+    computed `shell` flag and return its CompletedProcess.
+    """
     if isinstance(cmd, str) and not shell:
         # Auto-enable shell for string commands on Windows
         shell = platform.system() == 'Windows'
-    return subprocess.run(cmd, shell=shell, check=check, capture_output=True, text=True)
+    return dispatch_process(cmd, shell=shell, check=check)  # your runner
 
 # Usage
 result = run_command(['python3', 'script.py'])

@@ -62,29 +62,24 @@ See [examples.md](./references/examples.md)
 ## Resources
 
 - [interview-templates.md](./references/interview-templates.md)
+  <!-- TOC: Pre-Task Interview Questions | Pre-Task Interview: {TASK_ID} | Post-Task Interview Questions | Post-Task Interview: {TASK_ID} | Evaluating Pre-Task Responses | Evaluating Post-Task Responses | Decision Trees for Interview Evaluation | Pre-Task Interview Evaluation Decision Tree | Post-Task Interview Evaluation Decision Tree | REVISE Cycle Escalation Decision Tree -->
   - Pre-Task Interview Questions
-  - Pre-Task Interview: {TASK_ID}
   - Post-Task Interview Questions
-  - Post-Task Interview: {TASK_ID}
-  - ...
+  - Decision Trees for Interview Evaluation
 - [escalation-messages.md](./references/escalation-messages.md)
+  <!-- TOC: Design Issues → Architect | Immutable Requirement Issues → Manager → User | PROCEED Message | APPROVED Message | REVISE Message -->
   - Design Issues → Architect
   - Immutable Requirement Issues → Manager → User
-  - PROCEED Message
-  - PROCEED: {TASK_ID}
-  - ...
+  - PROCEED / APPROVED / REVISE Messages
 - [exception-handling.md](./references/exception-handling.md)
-  - 1. Implementer Disagrees with Requirements
-  - 2. Architect Recommends Design Change
-  - 3. User Approves Requirement Change
-  - 4. Implementer Never Acknowledges
-  - ...
+  <!-- TOC: Implementer Disagrees with Requirements | Architect Recommends Design Change | User Approves Requirement Change | Implementer Never Acknowledges | Implementer Misunderstands Task | Implementer Has Design Concerns | Implementer Reports Incomplete Work | Tests Fail in Post-Task Interview | Implementer Creates PR Before Approval -->
+  - Implementer Disagrees with Requirements
+  - Architect Recommends Design Change
+  - Tests Fail in Post-Task Interview
 - [examples.md](./references/examples.md)
+  <!-- TOC: Example 1: Send Pre-Task Interview Questions | Example 2: Escalate Design Concern to Architect | Example 3: Send PROCEED After Satisfactory Interview | Example 4: Send Post-Task Verification Questions | Example 5: Send APPROVED and Handoff to Integrator -->
   - Example 1: Send Pre-Task Interview Questions
-  - Example 2: Escalate Design Concern to Architect
-  - Example 3: Send PROCEED After Satisfactory Interview
-  - Example 4: Send Post-Task Verification Questions
-  - ...
+  - Example 5: Send APPROVED and Handoff to Integrator
 - [interview-workflow-steps.md](./references/interview-workflow-steps.md)
   - Pre-Task Interview Checklist
   - Post-Task Interview Checklist

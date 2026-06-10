@@ -27,7 +27,8 @@ LANGUAGE_VERSION: stable
 LANGUAGE_CMD: rustc
 LANGUAGE_VERSION_CMD: "rustc --version"
 LANGUAGE_INSTALL_CMD: |
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh
+  sh rustup-init.sh -y
   source "$HOME/.cargo/env"
 
 PACKAGE_MANAGER: cargo
@@ -84,7 +85,8 @@ log_error() { echo -e "${RED}[ERROR]${NC} $*"; }
 
 if ! command -v rustc &>/dev/null; then
   log_info "Installing Rust..."
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh
+  sh rustup-init.sh -y
   source "$HOME/.cargo/env"
 else
   log_info "Rust already installed"

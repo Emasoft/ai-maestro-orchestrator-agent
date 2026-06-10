@@ -105,7 +105,9 @@ dotnet build && dotnet test
 
 ```bash
 # Install Java (SDKMAN recommended)
-curl -s "https://get.sdkman.io" | bash
+# Download SDKMAN installer (review before running):
+curl -s "https://get.sdkman.io" -o install-sdkman.sh
+bash install-sdkman.sh
 source ~/.sdkman/bin/sdkman-init.sh
 sdk install java 21-tem
 

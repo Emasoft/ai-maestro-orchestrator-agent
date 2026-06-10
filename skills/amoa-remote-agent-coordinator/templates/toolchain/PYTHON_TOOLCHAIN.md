@@ -33,7 +33,8 @@ LANGUAGE_INSTALL_CMD: |
 PACKAGE_MANAGER: uv
 PACKAGE_MANAGER_VERSION: "0.4+"
 PACKAGE_MANAGER_INSTALL_CMD: |
-  curl -LsSf https://astral.sh/uv/install.sh | sh
+  curl -LsSf https://astral.sh/uv/install.sh -o uv-install.sh
+  sh uv-install.sh
   source "$HOME/.local/bin/env"
 INSTALL_DEPS_CMD: "uv pip install -e '.[dev]'"
 
@@ -86,10 +87,12 @@ log_error() { echo -e "${RED}[ERROR]${NC} $*"; }
 
 if ! command -v uv &>/dev/null; then
   log_info "Installing uv..."
-  curl -LsSf https://astral.sh/uv/install.sh | sh
+  curl -LsSf https://astral.sh/uv/install.sh -o uv-install.sh
+  sh uv-install.sh
 
   # Add to PATH
-  export PATH="$HOME/.local/bin:$PATH"
+  PATH="$HOME/.local/bin:$PATH"
+  export PATH
 
   # Source for current session
   if [ -f "$HOME/.local/bin/env" ]; then

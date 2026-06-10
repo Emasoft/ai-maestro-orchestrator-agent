@@ -61,7 +61,8 @@ sh rustup-init.sh   # inspect rustup-init.sh before running
 
 ```bash
 # Using uv for Python version management
-curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -LsSf https://astral.sh/uv/install.sh -o install-uv.sh
+sh install-uv.sh
 uv python install 3.12
 ```
 
@@ -69,7 +70,8 @@ uv python install 3.12
 
 ```bash
 # Install nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+curl -o install-nvm.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh
+bash install-nvm.sh
 nvm install --lts
 ```
 

@@ -53,7 +53,7 @@ memory_requirements: medium
 
 ```python
 Task(
-  subagent_type="amoa:experimenter",
+  subagent_type="amoa-experimenter",
   prompt="""Experimental validation agent. Test hypothesis with multiple approaches.
 CONSTRAINTS: Ephemeral code in Docker, minimum 3 approaches, 50% documentation.
 OUTPUT: Report with evidence-based recommendation.

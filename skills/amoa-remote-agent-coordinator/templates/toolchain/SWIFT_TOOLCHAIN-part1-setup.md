@@ -19,7 +19,8 @@ LANGUAGE_INSTALL_CMD_MACOS: |
 
 LANGUAGE_INSTALL_CMD_LINUX: |
   # Install swiftly (Swift version manager for Linux)
-  curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash
+  curl -L https://swift-server.github.io/swiftly/swiftly-install.sh -o install-swiftly.sh
+  bash install-swiftly.sh
   source ~/.local/share/swiftly/env.sh
   swiftly install latest
   swiftly use latest

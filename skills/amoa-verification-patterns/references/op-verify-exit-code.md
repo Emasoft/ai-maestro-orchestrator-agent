@@ -66,12 +66,8 @@ python3 my_script.py
 exit_code=$?
 ```
 
-**Python:**
-```python
-import subprocess
-result = subprocess.run(['python3', 'my_script.py'])
-exit_code = result.returncode
-```
+**Python:** call `subprocess.run(["python3", "my_script.py"])` and read
+`result.returncode` to obtain the exit code.
 
 ### Step 2: Check the Exit Code
 
@@ -114,12 +110,12 @@ fi
 
 ### Python Script Example
 
-```python
-import subprocess
+```text
 import sys
 
-# Step 1: Run a process
-result = subprocess.run(['pytest', 'tests/'], capture_output=True, text=True)
+# Step 1: Run a process with an explicit argv list (no shell) and capture
+# the CompletedProcess. For example, to run the test suite:
+result = run_tests(['pytest', 'tests/'])
 
 # Step 2: Get exit code
 exit_code = result.returncode

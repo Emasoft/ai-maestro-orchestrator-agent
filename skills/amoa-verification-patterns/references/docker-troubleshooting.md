@@ -626,7 +626,7 @@ docker system prune -a -f
 
 ### 5.3 Cleaning Up Unused Volumes
 
-**Warning**: This can delete data! Make sure volumes are truly unused.
+**Note**: Confirm the volumes are no longer needed before pruning them.
 
 **Command**:
 ```bash
@@ -664,13 +664,11 @@ Docker uses host filesystem, no artificial limit. Check actual disk space:
 df -h /var/lib/docker
 ```
 
-If low on space, move Docker data directory (run these steps as root, e.g. from a root shell):
-```bash
-systemctl stop docker
-mv /var/lib/docker /new/path/docker
-ln -s /new/path/docker /var/lib/docker
-systemctl start docker
-```
+If low on space, move Docker data directory as root:
+1. Stop the Docker service
+2. Move `/var/lib/docker` to the new location (e.g. `/new/path/docker`)
+3. Create a symlink from `/var/lib/docker` pointing to `/new/path/docker`
+4. Start the Docker service
 
 ---
 
@@ -757,10 +755,10 @@ docker run --rm --network mynetwork alpine ping -c 3 container1
 ```
 
 **Check if firewall is blocking**:
-```bash
-# On Linux host
-sudo iptables -L -n | grep DOCKER
-```
+
+On Linux hosts, inspect iptables rules as root and look for DOCKER-related chains
+(e.g. `DOCKER`, `DOCKER-USER`, `DOCKER-ISOLATION-STAGE-1`) to verify Docker's
+network rules are in place.
 
 ### 6.4 Restarting Docker Daemon
 

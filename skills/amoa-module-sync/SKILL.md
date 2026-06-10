@@ -102,5 +102,5 @@ Guide: [troubleshooting.md](./references/troubleshooting.md)
     - Diagnosing Notification Failures
   - ...
 - [checklist-and-scripts.md](./references/checklist-and-scripts.md)
-  - 1 Module Management Checklist
-  - 2 Script Output Rules
+  - 1 Module management checklist
+  - 2 Script output rules and token-efficient protocol

@@ -170,8 +170,9 @@ with open(test_input_file, 'w') as f:
     f.write("Alice,30\n")
     f.write("Bob,25\n")
 
-# Step 3: Execute the workflow
-result = subprocess.run([
+# Step 3: Execute the workflow with your process runner (explicit argv
+# list, no shell) and capture the CompletedProcess:
+result = run_workflow([
     'python3', 'process_data.py',
     '--input', test_input_file,
     '--output', test_output_file

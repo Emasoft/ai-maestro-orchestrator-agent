@@ -57,8 +57,9 @@ rustc --version  # Expected: 1.75+
 cargo --version
 cargo clippy --version
 
-# If missing, install:
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# If missing, install (download rustup installer, then run):
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o install-rustup.sh
+sh install-rustup.sh
 rustup component add clippy rustfmt
 ```
 
@@ -92,8 +93,9 @@ Subject: [TASK] GH-XX: Python Feature
 uv --version  # Expected: 0.4+
 python --version  # Expected: 3.12+
 
-# If missing, install:
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# If missing, install (download uv installer, then run):
+curl -LsSf https://astral.sh/uv/install.sh -o install-uv.sh
+sh install-uv.sh
 uv venv --python 3.12
 source .venv/bin/activate
 uv pip install -e ".[dev]"
@@ -121,8 +123,9 @@ Subject: [TASK] GH-XX: JS/TS Feature
 # Required tools
 bun --version  # Expected: 1.0+
 
-# If missing, install:
-curl -fsSL https://bun.sh/install | bash
+# If missing, install (download bun installer, then run):
+curl -fsSL https://bun.sh/install -o install-bun.sh
+bash install-bun.sh
 bun install
 ```
 
@@ -171,7 +174,7 @@ check_tool "Clippy" "cargo clippy" || ((MISSING++))
 if [ $MISSING -gt 0 ]; then
   echo ""
   echo "Missing $MISSING tool(s). Install with:"
-  echo "  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+  echo "  Download rustup installer from https://sh.rustup.rs and run it"
   echo "  rustup component add clippy rustfmt"
   exit 1
 fi
@@ -205,7 +208,7 @@ check_tool "ruff" ruff || ((MISSING++))
 if [ $MISSING -gt 0 ]; then
   echo ""
   echo "Missing $MISSING tool(s). Install with:"
-  echo "  curl -LsSf https://astral.sh/uv/install.sh | sh"
+  echo "  Download uv installer from https://astral.sh/uv/install.sh and run it"
   echo "  uv pip install ruff mypy"
   exit 1
 fi
@@ -238,7 +241,7 @@ check_tool "TypeScript" tsc || ((MISSING++))
 if [ $MISSING -gt 0 ]; then
   echo ""
   echo "Missing $MISSING tool(s). Install with:"
-  echo "  curl -fsSL https://bun.sh/install | bash"
+  echo "  Download bun installer from https://bun.sh/install and run it"
   echo "  bun add -d typescript"
   exit 1
 fi
@@ -319,12 +322,12 @@ Before delegating any task, ensure you include:
 
 | Language | Verify | Install | Build | Lint | Test |
 |----------|--------|---------|-------|------|------|
-| Rust | `rustc --version` | `rustup` | `cargo build` | `cargo clippy` | `cargo test` |
-| Python | `uv --version` | `curl astral.sh/uv` | N/A | `ruff check` | `pytest` |
-| JS/TS | `bun --version` | `curl bun.sh` | `tsc` | `eslint` | `bun test` |
+| Rust | `rustc --version` | `rustup` (rustup.rs installer) | `cargo build` | `cargo clippy` | `cargo test` |
+| Python | `uv --version` | uv installer (astral.sh/uv) | N/A | `ruff check` | `pytest` |
+| JS/TS | `bun --version` | bun installer (bun.sh) | `tsc` | `eslint` | `bun test` |
 | Go | `go version` | `brew install go` | `go build` | `golangci-lint` | `go test` |
 | Android | `sdkmanager --version` | SDK Manager | `./gradlew build` | `./gradlew lint` | `./gradlew test` |
-| React Native | `bun --version` | `curl bun.sh` | `npx react-native build` | `eslint` | `bun test` |
+| React Native | `bun --version` | bun installer (bun.sh) | `npx react-native build` | `eslint` | `bun test` |
 
 ---
 

@@ -277,40 +277,23 @@ python install_lsp.py --deactivate-all
 
 For automated orchestration, use the JSON API:
 
-```python
-import subprocess
-import json
+```bash
+# Get global + local status as JSON, then parse it in your orchestrator:
+python install_lsp.py --status --json
+# → {
+#     "global_binaries_installed": ["python", "typescript", ...],
+#     "local_lsp_activated": ["python"],
+#     "supported_languages": ["python", "typescript", ...]
+#   }
 
-# Get global + local status
-result = subprocess.run(
-    ["python", "install_lsp.py", "--status", "--json"],
-    capture_output=True, text=True
-)
-status = json.loads(result.stdout)
-# {
-#   "global_binaries_installed": ["python", "typescript", ...],
-#   "local_lsp_activated": ["python"],
-#   "supported_languages": ["python", "typescript", ...]
-# }
+# Orchestrator: install global binaries
+python install_lsp.py --install-binaries --all
 
-# Orchestrator: Install global binaries
-subprocess.run([
-    "python", "install_lsp.py",
-    "--install-binaries", "--all"
-], check=True)
+# Remote agent: sync activation for the project
+python install_lsp.py --project-path /path/to/project --sync -q
 
-# Remote agent: Sync activation for project
-subprocess.run([
-    "python", "install_lsp.py",
-    "--project-path", "/path/to/project",
-    "--sync", "-q"
-], check=True)
-
-# Remote agent: Cleanup after task
-subprocess.run([
-    "python", "install_lsp.py",
-    "--deactivate-all", "-q"
-], check=True)
+# Remote agent: cleanup after task
+python install_lsp.py --deactivate-all -q
 ```
 
 ## Shared Package Handling

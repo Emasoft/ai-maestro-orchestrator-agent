@@ -33,7 +33,7 @@ Handoff document (GitHub issue comment), state file update, AMCOS confirmation, 
 3. Wait for ACK, confirm reassignment, and notify AMCOS of successful replacement.
 
 See: [replacement-workflow-steps.md](references/replacement-workflow-steps.md) for detailed steps.
-<!-- TOC: Replacement Protocol Flow | Step 1: Receive AMCOS Notification | Step 2: Compile Task Context | Step 3: Generate Handoff Document | Step 4: Reassign Kanban Tasks | Step 5: Send Handoff to New Agent | Step 6: Confirm Reassignment | Python Scripts -->
+<!-- TOC: Replacement Protocol Flow · Step 1: Receive AMCOS Notification · Step 2: Compile Task Context · Step 3: Generate Handoff Document · Step 4: Reassign Kanban Tasks · Step 5: Send Handoff to New Agent · Step 6: Confirm Reassignment · Python Scripts -->
 
 ## Checklist
 
@@ -64,23 +64,16 @@ See: [error-handling-reference.md](references/error-handling-reference.md) for e
 ## Resources
 
 - [replacement-workflow-steps.md](references/replacement-workflow-steps.md) - 6-step workflow
-  - 1. Replacement Protocol Flow
-  - 2. Step 1: Receive AMCOS Notification
-  - 3. Step 2: Compile Task Context
-  - 4. Step 3: Generate Handoff Document
-  - 5. Step 4: Reassign Kanban Tasks
-  - ...
+  > Replacement Protocol Flow · Step 1: Receive AMCOS Notification · Step 2: Compile Task Context ·
+  > Step 3: Generate Handoff Document · Step 4: Reassign Kanban Tasks ·
+  > Step 5: Send Handoff to New Agent · Step 6: Confirm Reassignment · Python Scripts
 - [error-handling-reference.md](references/error-handling-reference.md) - Errors
   - 1. Common Errors and Solutions
   - 2. Troubleshooting References
   - 3. Emergency Procedures
 - [handoff-document-format.md](references/handoff-document-format.md) - Handoff format
-  - 3.1 Required Sections
-    - Mandatory Sections
-    - Section Order
-  - Template
-  - Handoff Metadata
-  - ...
+  > 3.1 Required Sections · 3.2 Task Detail Format · 3.3 Progress Documentation ·
+  > 3.4 Communication History Format · 3.5 Next Steps Clarity Requirements
 - [examples.md](references/examples.md) - Examples
   - Example 1: Standard Replacement Flow
   - Example 2: Emergency Replacement with Partial Context
@@ -89,10 +82,6 @@ See: [error-handling-reference.md](references/error-handling-reference.md) for e
   - Handoff Document Corrupted
   - GitHub Project Access Issues
 - [context-compilation-workflow.md](references/context-compilation-workflow.md) - Context gathering
-  - 2.1 Information Sources
-    - Primary Sources (MUST check)
-    - Secondary Sources (SHOULD check)
-    - Tertiary Sources (MAY check)
-  - 2.2 State File Extraction
-  - ...
+  > 2.1 Information Sources · 2.2 State File Extraction · 2.3 GitHub Issue Collection ·
+  > 2.4 Communication History Retrieval · 2.5 Git Branch Analysis
 

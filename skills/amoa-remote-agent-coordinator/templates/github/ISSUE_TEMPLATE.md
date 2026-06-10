@@ -295,12 +295,12 @@ EOF
 gh issue create \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --title "[AMOA-042] Implement SSH key management" \
-  --body "$(cat issue-body.md)" \
+  --body-file issue-body.md \
   --label "status:backlog" \
   --label "priority:high" \
   --label "platform:linux" \
   --label "type:feature" \
-  --label "toolchain:python" \
+  --label toolchain-python \
   --label "assign:remote" \
   --assignee "{{ASSIGNEE}}" \
   --project "{{PROJECT_NUMBER}}"

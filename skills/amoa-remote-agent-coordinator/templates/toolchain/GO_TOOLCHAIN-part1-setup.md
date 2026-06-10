@@ -130,7 +130,8 @@ fi
 
 log_info "Installing golangci-lint..."
 if ! command -v golangci-lint &>/dev/null; then
-  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$GOBIN" latest
+  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -o install-golangci-lint.sh
+  sh install-golangci-lint.sh -s -- -b "$GOBIN" latest
 else
   log_info "golangci-lint already installed"
 fi

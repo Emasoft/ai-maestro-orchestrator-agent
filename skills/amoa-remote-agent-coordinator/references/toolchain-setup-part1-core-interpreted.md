@@ -109,7 +109,8 @@ gh --version
 
 ```bash
 # Install uv (if not present)
-curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -LsSf https://astral.sh/uv/install.sh -o install-uv.sh
+sh install-uv.sh   # inspect install-uv.sh before running
 
 # Verify installation
 uv --version
@@ -185,9 +186,10 @@ uv run pytest tests/ -v
 ### Setup Instructions for Remote Agent
 
 ```bash
-# Install bun (if not present)
-curl -fsSL https://bun.sh/install | bash
-source ~/.bashrc  # or restart shell
+# Install bun (if not present) — download installer, review, then run:
+curl -fsSL https://bun.sh/install -o install-bun.sh
+bash install-bun.sh
+# Reload your shell or open a new terminal after install
 
 # Verify installation
 bun --version

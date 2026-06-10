@@ -73,7 +73,7 @@ TOOLCHAINS = {
 # Python Toolchain Setup
 curl -LsSf https://astral.sh/uv/install.sh -o install-uv.sh
 sh install-uv.sh   # inspect install-uv.sh before running
-source ~/.bashrc  # or restart shell
+# restart your shell to load the updated PATH
 uv venv --python 3.12
 source .venv/bin/activate
 uv pip install ruff mypy pytest
@@ -115,7 +115,7 @@ rustup component add clippy rustfmt
 # JavaScript/TypeScript Toolchain Setup
 curl -fsSL https://bun.sh/install -o install-bun.sh
 bash install-bun.sh   # inspect install-bun.sh before running
-source ~/.bashrc
+# restart your shell to load the updated PATH
 bun install
 """,
         "verify_cmd": "bun run tsc --noEmit && bun run eslint src/ && bun test",

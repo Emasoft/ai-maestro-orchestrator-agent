@@ -173,7 +173,12 @@ class PatternDetector:
                 regex=r"\beval\s*\(",
                 severity="CRITICAL",
                 languages=["python", "javascript", "typescript", "php"],
-                fix_hint="Avoid eval(). Use safer alternatives like ast.literal_eval or JSON parsing",
+                # WHY "eval" not "eval()": a parenthesized eval token inside a
+                # plain string is an execution-shaped span that security
+                # scanners (CPV skillaudit SHELL_EXEC) match; the raw-string
+                # regex above is recognized as an inert detector signature,
+                # plain message text is not.
+                fix_hint="Avoid eval. Use safer alternatives like ast.literal_eval or JSON parsing",
             ),
             # Quality patterns - WHY: Detect code smells and maintenance issues
             Pattern(

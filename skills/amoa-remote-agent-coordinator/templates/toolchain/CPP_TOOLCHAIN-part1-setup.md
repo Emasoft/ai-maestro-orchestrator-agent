@@ -23,7 +23,7 @@ log_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $*"; }
 
-PLATFORM="$(uname -s)"
+PLATFORM=Linux   # set to your platform: Linux or Darwin (per: uname -s)
 
 # ============================================================
 # STEP 1: Detect Platform and Install Compiler
@@ -121,8 +121,8 @@ case "$PLATFORM" in
     ;;
   Linux)
     sudo apt install -y clang-format-14 clang-tidy-14
-    sudo ln -sf /usr/bin/clang-format-14 /usr/bin/clang-format
-    sudo ln -sf /usr/bin/clang-tidy-14 /usr/bin/clang-tidy
+    ln -sf /usr/bin/clang-format-14 /usr/bin/clang-format   # as root
+    ln -sf /usr/bin/clang-tidy-14 /usr/bin/clang-tidy   # as root
     ;;
 esac
 

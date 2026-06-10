@@ -60,8 +60,14 @@ See [troubleshooting.md](references/troubleshooting.md)
 ## Resources
 
 - [command-details.md](references/command-details.md)
+  <!-- TOC: /start-orchestration - Enter orchestration phase | /orchestration-status - View phase progress | /orchestrator-status - Check loop state | /orchestrator-loop - Start continuous loop | /cancel-orchestrator - Cancel active loop -->
 - [checklists.md](references/checklists.md)
+  <!-- TOC: Starting Orchestration checklist | Monitoring Progress checklist | Cancellation checklist -->
 - [start-orchestration-procedure.md](references/start-orchestration-procedure.md)
+  <!-- TOC: 1 When to start orchestration phase | 2 Prerequisites verification checklist | 3 Command syntax and options | 4 Post-start agent registration workflow | 5 GitHub Project integration setup -->
 - [status-monitoring.md](references/status-monitoring.md)
+  <!-- TOC: 1 Understanding the orchestration status output | 2 Reading module status indicators | 3 Interpreting agent registry information | 4 Tracking active assignments and polling | 5 Using verbose mode for detailed diagnostics -->
 - [cancellation-cleanup.md](references/cancellation-cleanup.md)
+  <!-- TOC: 1 When to cancel vs let loop complete naturally | 2 Cancellation procedure step-by-step | 3 Cleanup of state files and locks | 4 Recovery after unexpected termination -->
 - [python-scripts.md](references/python-scripts.md)
+  <!-- TOC: Script inventory - Scripts and their command mappings | Script output rules - Token-efficient output protocol -->

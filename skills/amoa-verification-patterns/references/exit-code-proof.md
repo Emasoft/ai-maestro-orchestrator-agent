@@ -115,14 +115,13 @@ fi
 ### 2.4.2 Python Script Example
 
 ```python
-import subprocess
 import sys
 
-# Step 1: Run a process
-result = subprocess.run(['python3', 'my_script.py'])
+# Step 1: Run a process with an explicit argv list (no shell). The call
+# returns a CompletedProcess whose .returncode carries the exit status.
 
-# Step 2: Check the exit code
-exit_code = result.returncode
+# Step 2: Read the exit code from the completed process
+exit_code = completed.returncode
 
 # Step 3: Interpret the result
 if exit_code == 0:

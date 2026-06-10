@@ -78,7 +78,7 @@ To use an AI agent:
 | Capability | Description |
 |------------|-------------|
 | Code execution | Can write, run, test code |
-| File operations | Can create, edit, delete files |
+| File operations | Read/write access to files |
 | Git operations | Can commit, branch, push |
 | Tool usage | Has access to configured tools |
 | Research | Can search web, read docs |

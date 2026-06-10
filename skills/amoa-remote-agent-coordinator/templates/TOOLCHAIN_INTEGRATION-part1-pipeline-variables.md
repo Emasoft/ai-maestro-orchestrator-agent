@@ -144,7 +144,7 @@ python3 skills/remote-agent-coordinator/scripts/compile_toolchain.py \
 
 | Variable | Source | Example (macOS) | Example (Linux) |
 |----------|--------|-----------------|-----------------|
-| `{{LANGUAGE_INSTALL_CMD}}` | Platform mapping | `brew install rust` | `curl --proto '=https' ... \| sh` |
+| `{{LANGUAGE_INSTALL_CMD}}` | Platform mapping | `brew install rust` | rustup installer (download then run) |
 | `{{PACKAGE_MANAGER_INSTALL_CMD}}` | Platform mapping | Bundled with Rust | Bundled with Rust |
 | `{{DEV_TOOLS_INSTALL_CMD}}` | Platform mapping | `brew install ...` | `apt-get install ...` |
 | `{{PREREQUISITE_CHECKS}}` | Platform mapping | `check_prerequisite brew "..."` | `check_prerequisite apt-get "..."` |

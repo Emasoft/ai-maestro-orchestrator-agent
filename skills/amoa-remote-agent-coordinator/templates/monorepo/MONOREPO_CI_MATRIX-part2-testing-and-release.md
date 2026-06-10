@@ -119,7 +119,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh -o install-uv.sh
+          sh install-uv.sh
 
       - name: Build Python bindings
         run: |
@@ -134,7 +136,9 @@ jobs:
 
       # Build WASM
       - name: Install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+        run: |
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf -o install-wasm-pack.sh
+          sh install-wasm-pack.sh
 
       - name: Build WASM
         run: wasm-pack build --target web
@@ -221,7 +225,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh -o install-uv.sh
+          sh install-uv.sh
       - name: Build wheels
         run: |
           uv sync

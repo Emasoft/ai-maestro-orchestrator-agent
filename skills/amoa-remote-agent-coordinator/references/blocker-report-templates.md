@@ -352,8 +352,8 @@ When an agent encounters an obstacle, use this guide to determine whether to fil
 |---|---|---|
 | **Nature of the problem** | Process, dependency, access, or environment issue | Code defect, incorrect behavior, test failure |
 | **Root cause** | External to the agent's code (another agent, service, permission, requirement) | Internal to the codebase (wrong logic, missing handling, regression) |
-| **Agent can fix it** | No, the agent cannot resolve the obstacle alone | Sometimes, agent may be able to fix the code defect |
-| **Needs AMOA action** | Always requires AMOA to coordinate, escalate, or grant access | Sometimes requires AMOA (for triage), sometimes agent fixes directly |
+| **Agent can fix it** | No, the agent cannot resolve the obstacle alone | Sometimes, depending on the defect type |
+| **Needs AMOA action** | Always requires AMOA to coordinate, escalate, or grant access | Sometimes requires AMOA (for triage), sometimes resolvable without escalation |
 | **Has reproduction steps** | Not applicable (it is a process obstacle, not a code defect) | Required (steps to reproduce the bug in code) |
 | **Has severity levels** | Uses impact levels: `blocked_completely`, `partially_blocked`, `degraded` | Uses severity levels: `critical`, `high`, `normal`, `low` |
 | **Priority** | Always `high` or `urgent` | Varies based on severity |

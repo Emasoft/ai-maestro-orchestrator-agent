@@ -45,8 +45,9 @@ This reference provides toolchain setup instructions for Rust and Go. Remote age
 ### 1.1.1 Setup Instructions for Remote Agent
 
 ```bash
-# Install rustup (if not present)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# Install rustup (if not present) — download, review, then run
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh
+sh rustup-init.sh
 source ~/.cargo/env
 
 # Install stable toolchain

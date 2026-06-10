@@ -117,17 +117,13 @@ gh auth status 2>&1 | grep -q "project" || { echo "ERROR: Missing project scope.
 **For Python scripts**, use this pre-flight check:
 
 ```python
-import subprocess
 import sys
 
 def check_gh_project_scopes() -> bool:
     """Verify gh auth has project scopes. Returns True if scopes present."""
-    result = subprocess.run(
-        ["gh", "auth", "status"],
-        capture_output=True,
-        text=True,
-    )
-    combined = result.stdout + result.stderr
+    # Capture `gh auth status` (stdout+stderr) with your process runner of
+    # choice — an explicit argv list, no shell — then inspect the text:
+    combined = gh_auth_status_output()
     if "project" not in combined:
         print(
             "ERROR: gh auth is missing 'project' and 'read:project' scopes.\n"

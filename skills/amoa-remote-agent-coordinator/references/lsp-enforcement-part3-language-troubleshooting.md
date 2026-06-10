@@ -177,8 +177,8 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk    # Linux
 echo $JAVA_HOME
 $JAVA_HOME/bin/java --version
 
-# Add to shell profile
-echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 17)' >> ~/.zshrc
+# To persist, add to your shell profile:
+# export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 ```
 
 ## Kotlin Issues

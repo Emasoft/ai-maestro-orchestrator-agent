@@ -1,7 +1,7 @@
 ---
 name: amoa-orchestrator-loop
 description: "Start orchestrator loop - monitors tasks across Claude Tasks, GitHub, task files"
-argument-hint: "[PROMPT] [--max-iterations N] [--completion-promise TEXT] [--task-file PATH] [--check-tasks] [--check-github] [--github-project NAME]"
+argument-hint: "[PROMPT] [--max-iterations N] [--task-file PATH] [--check-tasks] [--check-github]"
 allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_setup_orchestrator_loop.py:*)"]
 ---
 

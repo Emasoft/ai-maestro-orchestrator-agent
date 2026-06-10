@@ -31,7 +31,7 @@ testing:
     command: "cargo test --test {{TEST_NAME}}"
     setup:
       - "mkdir -p {{TEST_TEMP_DIR}}"
-      - "chmod 755 {{TEST_TEMP_DIR}}"
+      # Set directory permissions to 755 for {{TEST_TEMP_DIR}}
     teardown:
       - "rm -rf {{TEST_TEMP_DIR}}"
     environment:

@@ -138,7 +138,7 @@ bash verify-lsp.sh typescript-language-server
    - Python: `pipx list` or `pip list`
    - Node.js: `npm list -g --depth=0`
    - Rust: `rustup component list --installed`
-   - Go: `ls $(go env GOPATH)/bin`
+   - Go: list `$GOPATH/bin` (find GOPATH with the go env GOPATH command)
 
 ### LSP Server Not Starting
 

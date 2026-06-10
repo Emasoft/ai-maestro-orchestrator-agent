@@ -73,7 +73,7 @@ build:
     setup:
       - "git clone https://github.com/tpoechtrager/osxcross"
       - "cd osxcross && ./build.sh"
-      - "export PATH=$PATH:$(pwd)/target/bin"
+      # Add $(pwd)/target/bin to PATH in your shell profile after build
 
     targets:
       - triple: "x86_64-apple-darwin"

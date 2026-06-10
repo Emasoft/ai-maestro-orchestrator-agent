@@ -28,12 +28,14 @@ LANGUAGE_VERSION: "5.4"
 LANGUAGE_CMD: tsc
 LANGUAGE_VERSION_CMD: "bun run tsc --version"
 LANGUAGE_INSTALL_CMD: |
-  curl -fsSL https://bun.sh/install | bash
+  curl -fsSL https://bun.sh/install -o install-bun.sh
+  bash install-bun.sh
 
 PACKAGE_MANAGER: bun
 PACKAGE_MANAGER_VERSION: "1.1+"
 PACKAGE_MANAGER_INSTALL_CMD: |
-  curl -fsSL https://bun.sh/install | bash
+  curl -fsSL https://bun.sh/install -o install-bun.sh
+  bash install-bun.sh
   source "$HOME/.bun/env"
 INSTALL_DEPS_CMD: "bun install"
 
@@ -86,7 +88,8 @@ log_error() { echo -e "${RED}[ERROR]${NC} $*"; }
 
 if ! command -v bun &>/dev/null; then
   log_info "Installing Bun..."
-  curl -fsSL https://bun.sh/install | bash
+  curl -fsSL https://bun.sh/install -o install-bun.sh
+  bash install-bun.sh
 
   # Add to PATH
   export BUN_INSTALL="$HOME/.bun"

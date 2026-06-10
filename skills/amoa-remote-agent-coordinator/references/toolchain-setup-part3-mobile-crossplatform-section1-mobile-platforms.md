@@ -49,7 +49,7 @@ This section covers mobile development toolchains: Android, React Native, Blazor
 
 # Set environment variables
 export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+# Add "$ANDROID_HOME/platform-tools" and "$ANDROID_HOME/tools" to your PATH
 
 # Accept licenses
 yes | sdkmanager --licenses
@@ -110,13 +110,14 @@ android {
 
 ```bash
 # Install Node.js (via bun or nvm)
-curl -fsSL https://bun.sh/install | bash
+curl -fsSL https://bun.sh/install -o install-bun.sh
+sh install-bun.sh   # inspect install-bun.sh before running
 
 # Install React Native CLI
 bun add -g react-native-cli
 
 # iOS (macOS only)
-sudo gem install cocoapods
+gem install cocoapods   # may require elevated permissions
 
 # Android (see Android Toolchain section)
 ```

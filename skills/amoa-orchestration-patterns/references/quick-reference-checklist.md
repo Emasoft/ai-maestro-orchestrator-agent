@@ -22,6 +22,6 @@ Copy this checklist and track your progress:
 - [ ] Escalate blocked tasks immediately
 - [ ] **PROACTIVELY** remind agents of pending tasks
 - [ ] Collect all task results
-- [ ] **Require 4 verification loops before any PR** (see [verification-loops.md](verification-loops.md))
+- [ ] **Require 4 verification loops before any PR** (see the verification-loops reference)
 - [ ] Verify completion against success criteria
 - [ ] Document lessons learned

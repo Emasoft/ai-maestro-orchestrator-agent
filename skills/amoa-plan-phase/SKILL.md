@@ -57,6 +57,10 @@ See [troubleshooting.md](references/troubleshooting.md).
 ## Resources
 
 - [command-reference.md](references/command-reference.md)
+  <!-- TOC: Plan Phase Commands (6) | 1 /start-planning | 2 /planning-status | 3 /add-requirement | 4 /modify-requirement | 5 /remove-requirement | 6 /approve-plan | Orchestration Phase Commands (10) | 1 /start-orchestration | 2 /orchestration-status | 3 /register-agent | 4 /assign-module | 5 /add-module | 6 /modify-module | 7 /remove-module | 8 /prioritize-module | 9 /reassign-module | 10 /check-agents -->
 - [plan-phase-workflow.md](references/plan-phase-workflow.md)
+  <!-- TOC: Entering Plan Phase | 1 Using /start-planning command | 2 State file initialization | Planning Activities | 1 Gathering user goals | 2 Creating USER_REQUIREMENTS.md | 3 Designing architecture | 4 Breaking down into modules | 5 Defining acceptance criteria | Modifying the Plan | 1 Adding requirements with /add-requirement | 2 Modifying requirements with /modify-requirement | 3 Removing requirements with /remove-requirement | Plan Phase Completion | 1 Exit criteria checklist | 2 Using /approve-plan to transition | 3 GitHub Issues creation -->
 - [state-file-formats.md](references/state-file-formats.md)
+  <!-- TOC: Plan Phase State File | 1 File location | 2 Complete YAML schema | 3 Field descriptions | Orchestration Phase State File | Agent Assignment Structure | 1 Assignment fields | 2 Instruction verification tracking | 3 Progress polling tracking | Module Status Structure | 1 Module fields | 2 Status values -->
 - [troubleshooting.md](references/troubleshooting.md)
+  <!-- TOC: Plan Phase Issues | Orchestration Phase Issues | State File Issues | Communication Issues | Stop Hook Issues -->
