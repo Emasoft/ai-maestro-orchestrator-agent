@@ -70,3 +70,8 @@ Cargo.lock
 
 # git-cliff scratch — ephemeral release notes between bump and push
 .git-cliff-release-notes.md
+
+# Agent/skill reports — may contain private paths, tokens, internal notes.
+# Never commit (per ~/.claude/rules/agent-reports-location.md).
+/reports/
+/reports_dev/
