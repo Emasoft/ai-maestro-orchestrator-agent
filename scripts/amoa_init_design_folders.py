@@ -3,7 +3,13 @@
 AMOA Initialize Design Folders Script
 
 Creates the standardized design folder structure for orchestration.
-Includes design/memory/, design/handoffs/, design/requirements/ with templates.
+
+Scaffolds the 3-pillars layout: the 4-zone TRDD structure
+(design/tasks/, design/proposals/, design/refused/, design/archived/) plus
+design/requirements/ (the PRRD), and the design/handoffs/ + design/config/
+working folders with templates. Memory is NOT a design/ subfolder — it lives
+in LOCAL/PROJECT/USER scopes (per the ratified fleet memory convention), so
+this script does not create a tracked design/memory/ bank.
 
 Usage:
     python3 amoa_init_design_folders.py
@@ -90,51 +96,6 @@ TEMPLATE_FILES = {
 {{OPEN_QUESTIONS}}
 """,
     },
-    "memory": {
-        "CONTEXT_TEMPLATE.md": """# Context Document
-
-## Document ID
-{{DOCUMENT_ID}}
-
-## Created
-{{CREATED_AT}}
-
-## Type
-{{CONTEXT_TYPE}}
-
-## Summary
-{{SUMMARY}}
-
-## Details
-{{DETAILS}}
-
-## Related Documents
-{{RELATED_DOCS}}
-""",
-        "DECISION_TEMPLATE.md": """# Decision Record
-
-## Decision ID
-{{DECISION_ID}}
-
-## Date
-{{DECISION_DATE}}
-
-## Status
-{{STATUS}}
-
-## Context
-{{CONTEXT}}
-
-## Decision
-{{DECISION}}
-
-## Consequences
-{{CONSEQUENCES}}
-
-## Alternatives Considered
-{{ALTERNATIVES}}
-""",
-    },
     "handoffs": {
         "HANDOFF_TEMPLATE.md": """# Agent Handoff Document
 
@@ -204,14 +165,12 @@ def create_index_file(root: Path, platforms: list[str]) -> dict[str, Any]:
         "platforms": platforms,
         "documents": {
             "requirements": [],
-            "memory": [],
             "handoffs": [],
         },
         "stats": {
             "total_documents": 0,
             "by_type": {
                 "requirements": 0,
-                "memory": 0,
                 "handoffs": 0,
             },
             "by_platform": {p: 0 for p in platforms},
@@ -247,13 +206,28 @@ def create_folder_structure(root: Path, platforms: list[str]) -> list[Path]:
     """Create the design folder structure and return created paths."""
     created: list[Path] = []
 
-    # Main folders
+    # The 4-zone TRDD structure (3-pillars convention). Each zone holds TRDD
+    # .md files directly, so it gets a .gitkeep to survive git on a fresh tree.
+    # Memory is NOT here — it lives in LOCAL/PROJECT/USER scopes, not design/.
+    trdd_zones = [
+        root / "tasks",
+        root / "proposals",
+        root / "refused",
+        root / "archived",
+    ]
+    for zone in trdd_zones:
+        zone.mkdir(parents=True, exist_ok=True)
+        created.append(zone)
+        gitkeep = zone / ".gitkeep"
+        if not gitkeep.exists():
+            gitkeep.write_text("", encoding="utf-8")
+            created.append(gitkeep)
+
+    # Working folders: requirements/ (the PRRD) plus handoffs/ + config/.
     main_folders = [
         root / "requirements",
-        root / "memory",
         root / "handoffs",
         root / "config",
-        root / "archive",
     ]
 
     for folder in main_folders:
@@ -292,16 +266,6 @@ def create_template_files(root: Path, platforms: list[str]) -> list[Path]:
             if not file_path.exists():
                 file_path.write_text(content, encoding="utf-8")
                 created.append(file_path)
-
-    # Memory templates (shared)
-    memory_dir = root / "memory"
-    templates_subdir = memory_dir / "templates"
-    templates_subdir.mkdir(parents=True, exist_ok=True)
-    for filename, content in TEMPLATE_FILES["memory"].items():
-        file_path = templates_subdir / filename
-        if not file_path.exists():
-            file_path.write_text(content, encoding="utf-8")
-            created.append(file_path)
 
     # Handoffs templates (shared)
     handoffs_dir = root / "handoffs"
@@ -408,20 +372,21 @@ def main() -> int:
             print()
             print("Structure:")
             print(f"  {root}/")
+            print("    tasks/")
+            print("    proposals/")
+            print("    refused/")
+            print("    archived/")
             print("    requirements/")
             for p in platforms:
                 print(f"      {p}/")
                 print("        templates/")
                 print("        specs/")
                 print("        rdd/")
-            print("    memory/")
-            print("      templates/")
             print("    handoffs/")
             print("      templates/")
             print("    config/")
             for p in platforms:
                 print(f"      {p}/")
-            print("    archive/")
             print("    index.yaml")
 
         return 0 if results["success"] else 1

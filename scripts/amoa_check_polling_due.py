@@ -103,7 +103,12 @@ def check_polling_status() -> tuple[list, list]:
     if not active_assignments:
         return [], []
 
-    now = datetime.now(timezone.utc)
+    # Compare in NAIVE UTC: the parsed next_poll_due below has its tzinfo
+    # stripped (see .replace(tzinfo=None) in the parse block), so `now` must be
+    # naive too — otherwise `now - next_poll_due` raises
+    # "can't subtract offset-naive and offset-aware datetimes" and crashes the
+    # hook on its main overdue path.
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     overdue = []
     warning = []
 
