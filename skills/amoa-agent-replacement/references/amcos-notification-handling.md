@@ -146,7 +146,7 @@ Non-critical replacement, handle when convenient:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA-ACK] Replacement Notification Received",
   "priority": "high",
   "content": {
@@ -200,7 +200,7 @@ If notification cannot be parsed:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA-ERROR] Invalid Notification",
   "priority": "urgent",
   "content": {
@@ -220,7 +220,7 @@ If failed agent is not in orchestrator's roster:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA-ERROR] Unknown Agent",
   "priority": "high",
   "content": {
@@ -240,7 +240,7 @@ If replacement agent is not available:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA-ERROR] Replacement Not Available",
   "priority": "urgent",
   "content": {
@@ -260,7 +260,7 @@ If replacement agent also fails during handoff:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA-ESCALATE] Multiple Agent Failures",
   "priority": "urgent",
   "content": {

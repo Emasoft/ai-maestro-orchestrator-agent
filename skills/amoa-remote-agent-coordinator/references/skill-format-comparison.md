@@ -1,3 +1,8 @@
+<!-- Location justification (M13): part of the skill-authoring guidance pocket
+(with skill-authoring-best-practices.md and skill-directory-structure.md) that the
+ORCHESTRATOR consults when scaffolding skill/agent documents for the remote agents
+it coordinates. Linked from the skill's SKILL.md Resources. -->
+
 ## Table of Contents
 - [Contents](#contents)
 - [Summary](#summary)

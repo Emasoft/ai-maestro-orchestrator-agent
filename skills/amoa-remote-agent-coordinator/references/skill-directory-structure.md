@@ -1,5 +1,10 @@
 # Remote Agent Coordinator - Directory Structure
 
+<!-- Location justification (M13): part of the skill-authoring guidance pocket
+(with skill-authoring-best-practices.md and skill-format-comparison.md) that the
+ORCHESTRATOR consults when scaffolding skill/agent documents for the remote agents
+it coordinates. Linked from the skill's SKILL.md Resources. -->
+
 ## Table of Contents
 
 - 1.0 Top-Level Structure

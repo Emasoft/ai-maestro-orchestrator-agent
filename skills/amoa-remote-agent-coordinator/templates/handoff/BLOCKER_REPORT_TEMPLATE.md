@@ -2,6 +2,13 @@
 
 **Extends**: [handoff-protocols.md](../../../amoa-agent-replacement/references/handoff-protocols.md)
 
+> **This template is the escalation artifact of the in-development issue dialog.**
+> The loop that governs WHEN an implementer raises a blocker and HOW AMOA routes
+> it (to AMAA for design flaws, AMIA for CI/merge, AMCOS → AMAMA → USER for
+> immutable-requirement questions) is defined once in
+> `docs/FULL_PROJECT_WORKFLOW.md` → *Step 18.5: In-Dev Issue Dialog (MEMBER ⇄
+> AMOA)*. Use this template to file the blocker; use Step 18.5 for the routing.
+
 ---
 
 ## DELIVERY INSTRUCTIONS (DO NOT INCLUDE IN COMPILED OUTPUT)

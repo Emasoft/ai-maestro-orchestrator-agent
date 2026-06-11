@@ -37,7 +37,7 @@ Use the `agent-messaging` skill to:
 **Manual Recovery:**
 
 Send a resend request using the `agent-messaging` skill:
-- **Recipient**: `amcos-controller`
+- **Recipient**: `amcos-chief-of-staff-main-agent`
 - **Subject**: "[AMOA] Request: Resend Replacement Notification"
 - **Content**: "Did not receive replacement notification for agent implementer-1. Please resend."
 - **Type**: `request`, **Priority**: `high`
@@ -60,7 +60,7 @@ Use the `agent-messaging` skill to:
 
 | Cause | Solution |
 |-------|----------|
-| Wrong AMCOS session name | Use correct "amcos-controller" session |
+| Wrong AMCOS session name | Use correct "amcos-chief-of-staff-main-agent" session |
 | Message queue full | Wait and retry |
 | AMCOS offline | Wait for AMCOS to come online |
 
@@ -367,7 +367,7 @@ Use the `agent-messaging` skill to:
 **Escalation Path:**
 
 After 3 reminders, send an escalation using the `agent-messaging` skill:
-- **Recipient**: `amcos-controller`
+- **Recipient**: `amcos-chief-of-staff-main-agent`
 - **Subject**: "[AMOA-ESCALATE] Replacement Agent Not Responding"
 - **Content**: "Replacement agent helper-agent-2 has not acknowledged handoff after 3 reminders. Please provide alternative agent."
 - **Type**: `escalation`, **Priority**: `urgent`

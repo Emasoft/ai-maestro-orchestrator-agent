@@ -77,3 +77,12 @@ See [error-handling-protocol.md](./references/error-handling-protocol.md).
 - [examples-remote-coordination.md](./references/examples-remote-coordination.md)
   <!-- TOC: 0 Example: Onboard and Assign Task to New Agent | 1 Step-by-step onboarding flow | 2 Task delegation with ACK instructions | 0 Example: 4-Verification Loop Sequence | 1 Complete conversation flow | 2 Loop counter tracking | 0 Example: Progress Monitoring Flow | 1 Proactive polling sequence | 2 Handling no-response scenarios -->
 
+Skill-authoring guidance (consulted when scaffolding skill/agent documents for the remote agents this skill coordinates):
+
+- [skill-authoring-best-practices.md](./references/skill-authoring-best-practices.md)
+  <!-- TOC: Core Principles | Skill Structure | Progressive Disclosure Patterns | Workflows and Feedback Loops | Content Guidelines | Common Patterns | Executable Scripts | Anti-Patterns to Avoid | Evaluation and Iteration | Checklist for Effective Skills -->
+- [skill-directory-structure.md](./references/skill-directory-structure.md)
+  <!-- TOC: 1.0 Top-Level Structure | 2.0 References Directory | 3.0 Scripts Directory | 4.0 Templates Directory -->
+- [skill-format-comparison.md](./references/skill-format-comparison.md)
+  <!-- TOC: Summary | Frontmatter Field Comparison | Open Agent Skills Specification | Claude Code Skills Specification | Compatibility | Recommendations | Validation Strategy | Best Practices | References -->
+

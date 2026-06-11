@@ -43,7 +43,7 @@
 
 ## Overview
 
-When AMCOS (Emergency Context-loss Operations System) detects an agent failure or initiates a replacement, the orchestrator must execute a structured handoff protocol to transfer tasks and context to a replacement agent without losing work progress.
+When AMCOS (the session name of the Chief of Staff — the governance title held by the `ai-maestro-chief-of-staff` agent) detects an agent failure or initiates a replacement, the orchestrator must execute a structured handoff protocol to transfer tasks and context to a replacement agent without losing work progress.
 
 ## AMCOS Notification Format
 

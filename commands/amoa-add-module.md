@@ -1,7 +1,7 @@
 ---
 name: amoa-add-module
 description: "Add a new module during Orchestration Phase (dynamic flexibility)"
-argument-hint: "<NAME> --criteria <TEXT> [--priority LEVEL]"
+argument-hint: "[--priority LEVEL] [--criteria TEXT]"
 allowed-tools: ["Bash(python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py:*)"]
 ---
 

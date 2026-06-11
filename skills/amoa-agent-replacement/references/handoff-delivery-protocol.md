@@ -239,7 +239,7 @@ After 2 reminders with no response:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA-ESCALATE] Replacement Agent Not Responding",
   "priority": "urgent",
   "content": {

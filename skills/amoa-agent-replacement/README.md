@@ -1,6 +1,6 @@
 # AMOA Agent Replacement Skill
 
-Handle agent replacement scenarios triggered by AMCOS (Emergency Context-loss Operations System).
+Handle agent replacement scenarios triggered by AMCOS (the session name of the Chief of Staff — the governance title held by the `ai-maestro-chief-of-staff` agent, which owns agent-lifecycle management).
 
 ## Purpose
 

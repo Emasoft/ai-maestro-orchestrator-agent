@@ -24,7 +24,7 @@ workflow-instruction: support
 
 ## When to Use
 
-Use this operation when AMCOS (Emergency Context-loss Operations System) sends a notification about agent failure or replacement.
+Use this operation when AMCOS (the session name of the Chief of Staff — the governance title held by the `ai-maestro-chief-of-staff` agent) sends a notification about agent failure or replacement.
 
 ## Prerequisites
 

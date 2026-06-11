@@ -82,6 +82,28 @@ findtrdd.py --column dispatch
 kanban.py --group-by assignee
 ```
 
+## Single-writer-per-domain and NPT/EHT collision avoidance
+
+Every mutable surface in `design/` has exactly one owning instance at a
+time (PRRD S5.1). A TRDD `.md` file is write-locked by the instance
+named in its `current-owner:` frontmatter field; a non-owner may mutate
+only the coordination fields (`column:`, `assignee:`) and must delegate
+any body or requirement edit to the owner or take an explicit claim
+(set `current-owner:` to itself) before writing. Never blind-write a
+file another instance owns — concurrent writes corrupt the single source
+of truth.
+
+When authoring derived NPT/EHT child TRDDs, prevent cross-instance
+collisions (PRRD S6.1): each child declares in its body the
+files/domains it will touch, and before creating it, scan the open
+TRDDs (`findtrdd.py --column dev` / `dispatch` / `testing`) for a domain
+overlap. On collision, serialise the children — make one `blocked-by:`
+the other so only one writes the shared domain at a time — or merge them
+into a single TRDD, rather than letting two instances edit the same
+files in parallel. The task-comprehension handshake (the
+`amoa-implementer-interview-protocol` skill) surfaces these domains up
+front by asking each MEMBER which files/domains it will touch.
+
 ## Resources
 
 For shared mechanics, transition numbers, and the approval matrix, read

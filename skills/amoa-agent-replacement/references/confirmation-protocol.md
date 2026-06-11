@@ -195,7 +195,7 @@ Send to AMCOS when replacement is complete:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA] Agent Replacement Complete",
   "priority": "normal",
   "content": {
@@ -231,7 +231,7 @@ If some tasks could not be reassigned:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA] Agent Replacement Partially Complete",
   "priority": "high",
   "content": {
@@ -265,7 +265,7 @@ If replacement could not be completed:
 
 ```json
 {
-  "to": "amcos-controller",
+  "to": "amcos-chief-of-staff-main-agent",
   "subject": "[AMOA] Agent Replacement Failed",
   "priority": "urgent",
   "content": {

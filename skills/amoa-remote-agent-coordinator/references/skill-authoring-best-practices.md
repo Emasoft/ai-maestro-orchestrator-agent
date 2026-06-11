@@ -1,3 +1,9 @@
+<!-- Location justification (M13): this generic skill-authoring guidance lives in the
+amoa-remote-agent-coordinator references because the ORCHESTRATOR consults it when it
+scaffolds skill/agent/onboarding documents for the remote agents it coordinates. It is
+linked from the skill's SKILL.md Resources and cross-referenced by skill-directory-structure.md
+and skill-format-comparison.md in this same references/ folder. -->
+
 ## Table of Contents
 - [Contents](#contents)
 - [Core Principles](#core-principles)
