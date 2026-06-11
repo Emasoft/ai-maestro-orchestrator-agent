@@ -80,9 +80,9 @@ See [error-handling-protocol.md](./references/error-handling-protocol.md).
 Skill-authoring guidance (consulted when scaffolding skill/agent documents for the remote agents this skill coordinates):
 
 - [skill-authoring-best-practices.md](./references/skill-authoring-best-practices.md)
-  <!-- TOC: Core Principles | Skill Structure | Progressive Disclosure Patterns | Workflows and Feedback Loops | Content Guidelines | Common Patterns | Executable Scripts | Anti-Patterns to Avoid | Evaluation and Iteration | Checklist for Effective Skills -->
+  <!-- TOC: Contents | Core Principles | Skill Structure | Progressive Disclosure Patterns | Workflows and Feedback Loops | Content Guidelines | Common Patterns | Executable Scripts | Anti-Patterns to Avoid | Evaluation and Iteration | Checklist for Effective Skills -->
 - [skill-directory-structure.md](./references/skill-directory-structure.md)
   <!-- TOC: 1.0 Top-Level Structure | 2.0 References Directory | 3.0 Scripts Directory | 4.0 Templates Directory -->
 - [skill-format-comparison.md](./references/skill-format-comparison.md)
-  <!-- TOC: Summary | Frontmatter Field Comparison | Open Agent Skills Specification | Claude Code Skills Specification | Compatibility | Recommendations | Validation Strategy | Best Practices | References -->
+  <!-- TOC: Contents | Summary | Frontmatter Field Comparison | Open Agent Skills Specification | Claude Code Skills Specification | Compatibility | Recommendations | Validation Strategy | Best Practices | References -->
 
