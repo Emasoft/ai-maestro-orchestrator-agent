@@ -1,5 +1,13 @@
 # Escalation Message Templates
 
+> **These are the message-formatting layer of the in-development issue dialog —
+> not a parallel definition of it.** The loop's routing rules, the iron rule
+> ("never silently improvise around a design flaw"), and who-resolves-what live
+> once in `docs/FULL_PROJECT_WORKFLOW.md` → **Step 18.5: In-Dev Issue Dialog
+> (MEMBER ⇄ AMOA)**. This file only provides the concrete message bodies AMOA
+> sends when that loop fires. When the routing changes, change Step 18.5; these
+> templates follow it.
+
 ## Table of Contents
 
 - [Design Issues → Architect](#design-issues--architect)

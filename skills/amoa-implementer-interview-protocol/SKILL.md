@@ -28,7 +28,10 @@ Interview decision (PROCEED/APPROVED/REVISE), handoff doc, and issue label updat
 ## Instructions
 
 1. Identify implementer and issue. Send Pre-Task Interview via `agent-messaging`
-   - Questions: [interview-templates.md](./references/interview-templates.md)
+   - 7 mandatory questions: task summary, acceptance criteria, concerns,
+     **files/domains touched (single-writer ownership check)**, **anticipated
+     NPT/EHT derived tasks**, approach, blockers — the MEMBER answers ALL before
+     coding. Questions: [interview-templates.md](./references/interview-templates.md)
    <!-- TOC: Pre-Task Interview Questions | Post-Task Interview Questions -->
    - Escalation: [escalation-messages.md](./references/escalation-messages.md)
    <!-- TOC: REVISE Message | PROCEED Message -->

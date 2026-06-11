@@ -1,5 +1,14 @@
 # Exception Handling
 
+> **In-development issue dialog — canonical definition lives elsewhere.** The
+> back-and-forth that happens when an implementer hits an issue, ambiguity,
+> blocker, or design flaw *while coding* (the in-development loop, dialog loop b)
+> is defined once in `docs/FULL_PROJECT_WORKFLOW.md` → **Step 18.5: In-Dev Issue
+> Dialog (MEMBER ⇄ AMOA)**. The cases below that involve that loop (§1, §2, §6)
+> POINT to that canonical description rather than restating it — there is no
+> parallel copy to drift out of sync. The remaining cases (§4, §5, §7, §8, §9)
+> are interview-protocol-specific exceptions and are defined here.
+
 ## Table of Contents
 
 - [1. Implementer Disagrees with Requirements](#1-implementer-disagrees-with-requirements)
@@ -15,20 +24,29 @@
 
 ## 1. Implementer Disagrees with Requirements
 
-If implementer believes requirements are wrong:
+This is an instance of the **in-development issue dialog** — route it per the
+canonical loop in `docs/FULL_PROJECT_WORKFLOW.md` → *Step 18.5: In-Dev Issue
+Dialog*. In short:
 
-1. Document the disagreement
-2. Escalate per escalation-messages.md
-3. WAIT for resolution
-4. Do NOT allow implementation to proceed with unapproved changes
+1. Document the disagreement.
+2. Mutable requirement → AMOA decides pragmatically and records the rationale.
+   Immutable (user-specified) requirement → escalate via AMCOS → AMAMA → USER
+   (see [escalation-messages.md](./escalation-messages.md) → *Immutable
+   Requirement Issues*). Do NOT modify an immutable requirement without USER
+   approval.
+3. WAIT for resolution; do NOT allow implementation to proceed with unapproved
+   changes.
 
 ## 2. Architect Recommends Design Change
 
-If architect approves a design change:
+This is the resolution side of the **in-development issue dialog** (a
+design-change-request was raised to AMAA — see `docs/FULL_PROJECT_WORKFLOW.md` →
+*Step 18.5* and *Steps 15–16*). When the Architect approves a design change:
 
-1. Update the design document
-2. Re-interview implementer with new design
-3. Document the change in the issue
+1. Update the design document.
+2. Re-interview the implementer with the new design (re-run the pre-task
+   handshake so the new files/domains and NPT/EHT are re-confirmed).
+3. Document the change in the issue.
 
 ## 3. User Approves Requirement Change
 
@@ -62,13 +80,16 @@ If user approves changing an immutable requirement:
 
 ## 6. Implementer Has Design Concerns
 
-**Cause**: Architectural incompatibility
+**Cause**: Architectural incompatibility surfaced during the pre-task handshake
+or mid-development. This is the entry point of the **in-development issue
+dialog** — route it per `docs/FULL_PROJECT_WORKFLOW.md` → *Step 18.5: In-Dev
+Issue Dialog*:
 
-**Solution**:
-1. Escalate to Architect (AMAA) for review
-2. Follow escalation-messages.md templates
-3. Wait for architect decision
-4. Update design if needed
+1. AMOA sends a design-change-request to the Architect (AMAA) — AMOA → AMAA,
+   DIRECT (see [escalation-messages.md](./escalation-messages.md) → *Design
+   Issues → Architect*).
+2. WAIT for the architect decision; never silently improvise around the flaw.
+3. Update the design and re-interview if the design changed.
 
 ## 7. Implementer Reports Incomplete Work
 

@@ -13,7 +13,7 @@
 Send a pre-task interview message using the `agent-messaging` skill:
 - **Recipient**: `implementer-1`
 - **Subject**: "Pre-Task Interview: #42"
-- **Content**: Pre-task interview questions covering: task summary, acceptance criteria, concerns, approach, and blockers. Include instruction "Reply with answers. Do NOT start until I confirm PROCEED."
+- **Content**: Pre-task interview questions covering: task summary, acceptance criteria, concerns, files/domains to be touched (single-writer ownership check), anticipated NPT/EHT derived tasks, approach, and blockers. Include instruction "Reply with answers. Do NOT start until I confirm PROCEED."
 - **Type**: `request`
 - **Priority**: `high`
 - **Data**: include `issue_number` (42)

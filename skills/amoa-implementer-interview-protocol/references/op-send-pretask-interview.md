@@ -56,10 +56,12 @@ Send structured interview questions to an implementer agent BEFORE they begin wo
 
 ## Steps
 
-1. **Construct the interview message** with the five key questions:
+1. **Construct the interview message** with the seven key questions:
    - Task summary in your own words
    - Acceptance criteria understanding
    - Concerns (requirements/design/capability/dependencies)
+   - Files/domains to be touched (single-writer ownership check)
+   - Anticipated NPT/EHT derived tasks
    - Implementation approach
    - Blockers
 
@@ -99,9 +101,20 @@ Before you begin implementation, please answer these questions:
    - Your capability/tools
    - Dependencies on other modules
 
-4. **Implementation Approach**: Briefly describe how you plan to implement this.
+4. **Files / Domains Touched** (single-writer ownership check): List the exact
+   files, modules, and mutable surfaces (config, schema, API, docs) you expect
+   to create or modify, and confirm you are the single owner of each for this
+   task. Flag any surface owned by another task/agent — it needs a domain claim
+   or a delegation (never two writers on one surface).
 
-5. **Blockers**: Are there any blockers preventing you from starting?
+5. **Derived Tasks (NPT / EHT)**: What derived tasks do you anticipate?
+   - **NPT** (necessary prerequisites that must land BEFORE this task), and
+   - **EHT** (effect-handling: caller updates, doc updates, downstream re-tests).
+   List each you foresee, or state "none anticipated".
+
+6. **Implementation Approach**: Briefly describe how you plan to implement this.
+
+7. **Blockers**: Are there any blockers preventing you from starting?
 
 Reply with your answers. Do not begin implementation until you receive PROCEED.
 ```
@@ -120,7 +133,7 @@ Reply with your answers. Do not begin implementation until you receive PROCEED.
 ## Success Criteria
 
 - Message delivered successfully (AI Maestro returns message ID)
-- Message contains all five interview questions
+- Message contains all seven interview questions
 - Priority set to "high"
 - Subject includes issue number
 

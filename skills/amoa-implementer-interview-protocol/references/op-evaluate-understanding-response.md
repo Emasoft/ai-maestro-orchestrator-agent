@@ -11,8 +11,10 @@
   - [Question 1: Task Summary](#question-1-task-summary)
   - [Question 2: Acceptance Criteria](#question-2-acceptance-criteria)
   - [Question 3: Concerns](#question-3-concerns)
-  - [Question 4: Implementation Approach](#question-4-implementation-approach)
-  - [Question 5: Blockers](#question-5-blockers)
+  - [Question 4: Files / Domains Touched (single-writer ownership)](#question-4-files--domains-touched-single-writer-ownership)
+  - [Question 5: Derived Tasks (NPT / EHT)](#question-5-derived-tasks-npt--eht)
+  - [Question 6: Implementation Approach](#question-6-implementation-approach)
+  - [Question 7: Blockers](#question-7-blockers)
 - [Steps](#steps)
 - [Decision Matrix](#decision-matrix)
 - [Output](#output)
@@ -95,7 +97,32 @@ Evaluate the implementer's pre-task interview responses to determine if they cor
 | Capability concern | Assess skill gap, reassign if needed |
 | Dependency concern | Check dependency status, resolve |
 
-### Question 4: Implementation Approach
+### Question 4: Files / Domains Touched (single-writer ownership)
+
+| Response Quality | Action |
+|-----------------|--------|
+| Sole owner of every named surface | Mark PASS |
+| Surface overlaps another task/agent's owned surface | Mark FAIL (BLOCKING) — do NOT PROCEED until ownership is resolved via a domain claim or delegation to the owner |
+| Vague / no surfaces named | Request a concrete file/module/surface list |
+
+**Check for:**
+- Every file, module, and mutable surface (config, schema, API, docs) named
+- No surface is being written by another in-flight task or agent (no two writers)
+- Cross-owned surfaces are flagged for a domain claim or delegation
+
+### Question 5: Derived Tasks (NPT / EHT)
+
+| Response Quality | Action |
+|-----------------|--------|
+| Plausible NPT/EHT surfaced (or genuinely "none") | Mark PASS — author any untracked NPT (set this task `blocked-by:` it) / EHT (gates `complete`) |
+| Obvious prerequisite or effect-handling task missed | Mark FAIL — name it, re-interview |
+
+**Check for:**
+- NPT (necessary prerequisites that must land BEFORE this task) identified
+- EHT (effect-handling: caller updates, doc updates, downstream re-tests) identified
+- Each foreseen derived task is tracked so cross-task collisions are avoided
+
+### Question 6: Implementation Approach
 
 | Response Quality | Action |
 |-----------------|--------|
@@ -108,7 +135,7 @@ Evaluate the implementer's pre-task interview responses to determine if they cor
 - No obvious anti-patterns
 - Testability considered
 
-### Question 5: Blockers
+### Question 7: Blockers
 
 | Response | Action |
 |----------|--------|
@@ -138,13 +165,18 @@ Evaluate the implementer's pre-task interview responses to determine if they cor
 
 ## Decision Matrix
 
-| Q1 | Q2 | Q3 | Q4 | Q5 | Outcome |
-|----|----|----|----|----|---------|
-| PASS | PASS | No concerns | PASS | No blockers | PROCEED |
-| PASS | PASS | Design concern | PASS | No blockers | ESCALATE to Architect |
-| CLARIFY | * | * | * | * | Request clarification |
-| * | FAIL | * | * | * | Re-interview |
-| * | * | * | * | Blockers | Resolve blockers first |
+Columns: Q1 Task Summary · Q2 Acceptance Criteria · Q3 Concerns · Q4
+Files/Domains (ownership) · Q5 Derived NPT/EHT · Q6 Approach · Q7 Blockers.
+
+| Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Outcome |
+|----|----|----|----|----|----|----|---------|
+| PASS | PASS | No concerns | PASS | PASS | PASS | No blockers | PROCEED |
+| PASS | PASS | Design concern | PASS | PASS | PASS | No blockers | ESCALATE to Architect |
+| * | * | * | FAIL (overlap) | * | * | * | Resolve ownership first — NEVER PROCEED |
+| CLARIFY | * | * | * | * | * | * | Request clarification |
+| * | FAIL | * | * | * | * | * | Re-interview |
+| * | * | * | * | FAIL | * | * | Author missing NPT/EHT, re-interview |
+| * | * | * | * | * | * | Blockers | Resolve blockers first |
 
 ---
 
@@ -160,7 +192,7 @@ Evaluate the implementer's pre-task interview responses to determine if they cor
 
 ## Success Criteria
 
-- All five questions evaluated
+- All seven questions evaluated
 - Clear decision reached (no ambiguity)
 - Evaluation documented in handoff
 - Next action identified

@@ -33,9 +33,25 @@ Please confirm your understanding:
    - Your capability (missing tools, skills, access)?
    - Dependencies (blocked by other tasks)?
 
-4. **Approach**: Briefly describe how you plan to implement this.
+4. **Files / Domains Touched** (single-writer ownership check): List the exact
+   files, modules, and mutable surfaces (config, schema, API, docs) you expect
+   to CREATE or MODIFY. For each, confirm you are the single owner of that
+   surface for this task. If you must touch a surface owned by another task or
+   agent, say so explicitly — that surface needs a domain claim or a delegation
+   to its owner (NEVER two writers on one surface).
 
-5. **Blockers**: Is anything preventing you from starting immediately?
+5. **Derived Tasks (NPT / EHT)**: What derived tasks do you anticipate?
+   - **NPT (Necessary-Prerequisite Tasks)** — work that MUST land BEFORE you can
+     proceed (e.g. "the auth schema must be migrated first").
+   - **EHT (Effects-Handling Tasks)** — work that handles the CONSEQUENCES of
+     your change (e.g. "update every caller of the renamed function", "update
+     the docs", "re-test downstream consumers").
+   List each you foresee, or state "none anticipated" — surfacing them now lets
+   the Orchestrator author them and avoids cross-task collisions later.
+
+6. **Approach**: Briefly describe how you plan to implement this.
+
+7. **Blockers**: Is anything preventing you from starting immediately?
 
 Reply with your answers. Do NOT start implementation until I confirm PROCEED.
 ```
@@ -86,6 +102,9 @@ Reply with evidence for each item.
 | Requirement concerns (immutable) | Escalate to Manager (AMAMA) → User |
 | Capability issues | Consider reassignment or skill provision |
 | Blockers identified | Resolve blockers first |
+| Files/domains overlap another task or agent's surface | Do NOT PROCEED — resolve ownership first (domain claim or delegate to the owner); two writers on one surface is forbidden |
+| Anticipated NPT not yet tracked | Author the NPT (and mark this task `blocked-by:` it) before PROCEED |
+| Anticipated EHT not yet tracked | Author the EHT(s); they gate this task's transition to `complete` (EHTs are post-conditions) |
 
 ## Evaluating Post-Task Responses
 
@@ -104,24 +123,39 @@ Reply with evidence for each item.
 
 ```
 Pre-task interview responses received from agent
-├─ Did agent answer ALL required questions?
+├─ Did agent answer ALL 7 required questions?
 │   ├─ Yes → Evaluate understanding quality for each answer:
-│   │   ├─ Question 1 (Task Scope): Does agent correctly identify all deliverables?
+│   │   ├─ Q1 (Task Summary): Does agent correctly restate scope + all deliverables?
 │   │   │   ├─ Yes → Score: PASS
 │   │   │   └─ No → Score: FAIL → Note which deliverables were missed
-│   │   ├─ Question 2 (Approach): Is proposed approach technically sound?
+│   │   ├─ Q2 (Acceptance Criteria): Does agent know what "done" means?
+│   │   │   ├─ Yes → Score: PASS
+│   │   │   └─ No → Score: FAIL → Note misunderstood criteria
+│   │   ├─ Q3 (Concerns): Are raised concerns valid / are there unraised ones?
+│   │   │   ├─ Resolvable in-team → handle per the in-development loop
+│   │   │   │   (FULL_PROJECT_WORKFLOW Step 18.5); design concern → AMAA
+│   │   │   └─ None / acceptable → Score: PASS
+│   │   ├─ Q4 (Files/Domains — single-writer check): Does any named surface
+│   │   │       overlap another task or agent's owned surface?
+│   │   │   ├─ No overlap, agent is sole owner → Score: PASS
+│   │   │   └─ Overlap → Score: FAIL (BLOCKING) → Resolve ownership first
+│   │   │       (domain claim or delegate to owner) BEFORE PROCEED
+│   │   ├─ Q5 (Derived NPT/EHT): Did agent surface plausible prerequisites and
+│   │   │       effect-handling tasks?
+│   │   │   ├─ Yes (or genuinely "none") → Score: PASS → Author any untracked
+│   │   │   │   NPT (set this task blocked-by it) / EHT (gates `complete`)
+│   │   │   └─ Obvious NPT/EHT missed → Score: FAIL → Name them, re-interview
+│   │   ├─ Q6 (Approach): Is the proposed approach technically sound?
 │   │   │   ├─ Yes → Score: PASS
 │   │   │   └─ No → Score: FAIL → Note technical concerns
-│   │   ├─ Question 3 (Dependencies): Does agent identify correct dependencies?
-│   │   │   ├─ Yes → Score: PASS
-│   │   │   └─ No → Score: FAIL → Note missing/incorrect dependencies
-│   │   ├─ Question 4 (Risks): Does agent identify realistic risks?
+│   │   ├─ Q7 (Blockers): Did agent identify realistic blockers?
 │   │   │   ├─ Yes → Score: PASS
 │   │   │   └─ No → Score: WARN (acceptable, not blocking)
 │   │   │
 │   │   └─ Overall evaluation:
 │   │       ├─ All PASS (or PASS + WARN) → Send Proceed Approval → Agent begins work
-│   │       ├─ 1 FAIL → Send REVISE with specific correction needed
+│   │       ├─ Any Q4 ownership-overlap FAIL → NEVER PROCEED until resolved
+│   │       ├─ 1 FAIL (non-Q4) → Send REVISE with specific correction needed
 │   │       │           → Agent resubmits → Re-evaluate (max 3 REVISE cycles)
 │   │       └─ 2+ FAIL → Consider reassignment → Escalate to AMCOS if needed
 │   └─ No (missing answers) → Send REVISE requesting all missing answers

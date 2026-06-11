@@ -7,6 +7,7 @@
 - [1. Overview](#1-overview)
   - [1.1 Why 4 Verification Loops Are Required](#11-why-4-verification-loops-are-required)
   - [1.2 The Precise Flow Diagram](#12-the-precise-flow-diagram)
+  - [1.3 A status report is NOT a green-light request (closing the backdoor)](#13-a-status-report-is-not-a-green-light-request-closing-the-backdoor)
 - [2. Step 1: At Task Assignment](#2-step-1-at-task-assignment)
   - [2.1 PR Notification Requirement Template](#21-pr-notification-requirement-template)
   - [2.2 Including in Every Delegation](#22-including-in-every-delegation)
@@ -36,6 +37,7 @@
 - 1. Overview
   - 1.1 Why 4 Verification Loops Are Required
   - 1.2 The Precise Flow Diagram
+  - 1.3 A status report is NOT a green-light request (closing the backdoor)
 - 2. Step 1: At Task Assignment
   - 2.1 PR Notification Requirement Template
   - 2.2 Including in Every Delegation
@@ -70,6 +72,19 @@ This catches:
 - Incomplete implementations
 
 Without verification loops, agents rush to create PRs with bugs.
+
+**Why the gate is AMOA's job — it protects INTEGRATOR tokens.** The pre-PR
+green-light is the ONLY completion-adjacent authority AMOA holds (it does NOT
+flip the task to `done`/`completed` — that is AMIA's, per
+`docs/FULL_PROJECT_WORKFLOW.md` Step 23). Its purpose is to keep premature,
+incomplete, or buggy PRs from ever reaching the Integrator. Every PR AMIA opens
+costs AMIA real tokens to review, run tests/lint against, and either merge or
+bounce back. A PR that an implementer "thinks is done" but that fails the
+done-criteria burns those tokens for nothing and forces a round-trip
+(Step 22). The 4 loops are AMOA's filter: AMOA absorbs the cheap, iterative
+self-review cost up front so AMIA only ever spends tokens on PRs that have
+already cleared the bar. **An unverified PR reaching AMIA is a gate failure, not
+an AMIA problem.**
 
 ### 1.2 The Precise Flow Diagram
 
@@ -116,6 +131,40 @@ Without verification loops, agents rush to create PRs with bugs.
 |   ORCHESTRATOR: "Issues remain. Fix them and we restart verification."   |
 +---------------------------------------------------------------------------+
 ```
+
+### 1.3 A status report is NOT a green-light request (closing the backdoor)
+
+**The pre-PR green-light is NEVER granted off a bare status report.** An
+implementer saying "I'm done", "task complete", "code finished", or "all working"
+is a *status update* — it is NOT, by itself, a passed gate, and it does NOT
+entitle the agent to a PR.
+
+There is exactly ONE path to the green-light, and it has no shortcut:
+
+```
+status report ("I'm done")  ──►  is NOT a green-light
+                                  │
+                                  ▼
+        the done-criteria gate MUST be cleared first:
+          1. Post-Task Interview answered with EVIDENCE
+             (every requirement implemented + cited, tests written AND passing,
+              lint clean, docs updated, self-review done)
+          2. 4 verification loops completed with issues found-and-fixed
+                                  │
+                                  ▼
+        ONLY THEN  ──►  "APPROVED. You may create the PR."
+```
+
+**Why this backdoor must stay closed:** if a status update could be treated as a
+green-light, an implementer could skip the loops and post-task verification
+entirely just by *asserting* completion — defeating the whole filter and dumping
+unverified PRs on AMIA (see §1.1). Self-assessed "done" is the single most common
+source of premature PRs.
+
+**AMOA's required response to a bare status report:** treat it as PR-request #N
+and reply with the verification-loop message (§3.2) — NOT with approval. Demand
+evidence, not assertions: "say-so" is not proof. Only the EVIDENCE for the
+done-criteria, confirmed across the loops, clears the gate.
 
 ---
 
@@ -268,11 +317,19 @@ Maintain a table tracking PR requests for each task:
 
 ### 6.1 What is NEVER Allowed
 
+- NEVER grant the green-light off a bare status report ("I'm done") — a status
+  update is not a passed gate (see §1.3). Treat it as a PR request and run the loop.
 - NEVER approve PR before the agent has made 5 PR requests
 - NEVER skip loops for "simple" changes
 - NEVER proactively send all verification messages (wait for PR requests)
 - NEVER approve if issues remain unfixed
+- NEVER approve on the agent's say-so — require EVIDENCE for the done-criteria
+  (requirements cited, tests passing, lint clean), not assertions
 - NEVER combine loops or do 2 at once
+- NEVER let an unverified PR reach AMIA — the green-light filter exists to protect
+  INTEGRATOR tokens (see §1.1); a premature PR is a gate failure, not an AMIA problem
+- NEVER mark the task `done`/`completed` from this gate — AMOA owns only the
+  pre-PR green-light; AMIA validates the merged PR and owns the `completed` flip
 
 ### 6.2 What is ALWAYS Required
 

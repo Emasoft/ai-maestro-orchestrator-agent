@@ -13,6 +13,8 @@
 - [ ] Send pre-task interview questions using the `agent-messaging` skill
 - [ ] Evaluate implementer's understanding summary
 - [ ] Check for concerns (requirements, design, capability, dependencies)
+- [ ] Verify files/domains to be touched (single-writer ownership check) — NO PROCEED if any surface overlaps another task/agent's owned surface; resolve via domain claim or delegation first
+- [ ] Confirm anticipated NPT/EHT derived tasks — author any untracked NPT (set this task `blocked-by:` it) / EHT (gates `complete`)
 - [ ] Escalate design concerns to Architect (AMAA) if needed
 - [ ] Escalate immutable requirement concerns to Manager (AMAMA) if needed
 - [ ] Resolve blockers before proceeding
@@ -43,11 +45,13 @@
 <!-- TOC: Pre-Task Interview Questions | Pre-Task Interview: {TASK_ID} | Post-Task Interview Questions -->
 4. Evaluate implementer's understanding summary
 5. Check for concerns about requirements, design, capability, or dependencies
-6. If design concerns exist, escalate to Architect (AMAA) ([escalation-messages.md](./escalation-messages.md))
-7. If immutable requirement concerns exist, escalate to Manager (AMAMA) → User
-8. If blockers are identified, resolve before proceeding
-9. Send PROCEED message only after satisfactory answers
-10. Log interview results in handoff document
+6. Verify the files/domains the implementer will touch — single-writer ownership check; if any surface overlaps another task/agent's owned surface, do NOT PROCEED until ownership is resolved (domain claim or delegate to the owner)
+7. Confirm the anticipated NPT/EHT derived tasks; author any untracked NPT (mark this task `blocked-by:` it) and EHT (gates this task's transition to `complete`)
+8. If design concerns exist, escalate to Architect (AMAA) ([escalation-messages.md](./escalation-messages.md))
+9. If immutable requirement concerns exist, escalate to Manager (AMAMA) → User
+10. If blockers are identified, resolve before proceeding
+11. Send PROCEED message only after satisfactory answers
+12. Log interview results in handoff document
 
 ## Post-Task Interview Steps
 

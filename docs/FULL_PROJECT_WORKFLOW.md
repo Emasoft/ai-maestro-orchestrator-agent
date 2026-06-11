@@ -1,9 +1,22 @@
 # Full Project Workflow: From Requirements to Delivery
 
-**Version**: 1.6.0
-**Last Updated**: 2026-03-08
+**Version**: 2.0.0
+**Last Updated**: 2026-06-11
 
 This document describes the complete workflow for how the AI Maestro agent system handles a project from initial requirements to delivery. All agents must understand this workflow to coordinate effectively.
+
+> **R6 v3 routing (authoritative — see `docs/ROLE_BOUNDARIES.md` and the persona
+> `agents/ai-maestro-orchestrator-agent-main-agent.md`):** AMCOS guards the team
+> boundary. The MANAGER (AMAMA) reaches team-internal agents **only via AMCOS** —
+> there is **no** AMAMA→AMOA or AMAMA→AMIA direct handoff. Inside the team, AMOA
+> talks **directly** to AMAA, AMIA, and AMPA. This document was migrated to R6 v3
+> in v2.0.0; any older text implying a direct manager→orchestrator handoff is
+> superseded.
+
+> **Column ownership (authoritative):** AMOA owns the **pre-PR green-light** only
+> (clearing an implementer to open a PR). AMIA validates the **merged** PR against
+> the task requirements and owns the flip to `done`/`completed`. **Nobody
+> self-marks a task completed** — AMOA never moves its own team's task to `done`.
 
 ---
 
@@ -24,40 +37,45 @@ AMCOS (Chief of Staff)                                        │
   │ 4. Creates/assigns agents                                │
   │ 5. Notifies AMAMA: team ready                             │
   ▼                                                          │
-AMAMA ─────────────────────────────────────────────────────►  │
+AMAMA ─── requirements to AMAA via AMCOS (team gateway) ────►  │
   │                                                          │
-  │ 6. Sends requirements to AMAA                             │
+  │ 6. AMAMA → AMCOS → AMAA  (MANAGER never messages AMAA     │
+  │    directly; AMCOS relays requirements into the team)     │
   ▼                                                          │
 AMAA (Architect)                                              │
   │                                                          │
   │ 7. Creates design document                               │
-  │ 8. Sends design to AMAMA                                  │
+  │ 8. Sends design back via AMCOS → AMAMA                    │
   ▼                                                          │
 AMAMA ◄──── USER APPROVAL ─────────────────────────────────►  │
   │                                                          │
-  │ 9. Sends approved design to AMOA                          │
+  │ 9. Sends approved design to AMCOS (team gateway)          │
+  ▼                                                          │
+AMCOS (Chief of Staff) ── relays approved design into team ── │
+  │                                                          │
+  │ 9b. AMCOS → AMOA (within-team DIRECT edge)                │
   ▼                                                          │
 AMOA (Orchestrator)                                           │
   │                                                          │
   │ 10. Splits design into tasks                             │
   │ 11. Creates task-requirements-documents                  │
   │ 12. Adds tasks to kanban                                 │
-  │ 13. Assigns tasks to agents                              │
+  │ 13. Assigns tasks to agents (AMOA → AMPA DIRECT)          │
   ▼                                                          │
-IMPLEMENTER AGENTS ◄───────────────────────────────────────► │
+IMPLEMENTER AGENTS (AMPA) ◄────────────────────────────────► │
   │                                                          │
   │ 14. Work on tasks                                        │
-  │ 15. Submit PRs                                           │
+  │ 15. AMOA gives pre-PR green-light → agent submits PR      │
   ▼                                                          │
 AMIA (Integrator)                                             │
   │                                                          │
-  │ 16. Reviews PRs                                          │
-  │ 17. Merges or rejects                                    │
+  │ 16. Reviews + validates the merged PR vs. requirements    │
+  │ 17. Merges or rejects; AMIA flips `done`/`completed`      │
   ▼                                                          │
-AMOA ◄─────────────────────────────────────────────────────►  │
+AMOA ◄──── AMIA reports merge/validation result (DIRECT) ───►  │
   │                                                          │
-  │ 18. Reports to AMCOS (Chief-of-Staff)                                      │
-  │ 19. Assigns next tasks                                   │
+  │ 18. Reports up via AMCOS → AMAMA (route through AMCOS)     │
+  │ 19. Assigns next tasks (AMOA → AMPA DIRECT)               │
   └──────────────────────────────────────────────────────────┘
 ```
 
@@ -69,29 +87,101 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 
 ### Canonical Columns
 
-| # | Column | Code Format | Label | Description |
-|---|--------|-------------|-------|-------------|
-| 1 | Backlog | `backlog` | `status:backlog` | Entry point for all new issues |
-| 2 | Todo | `todo` | `status:todo` | Ready to start, prioritized |
-| 3 | In Progress | `in-progress` | `status:in-progress` | Active work by assigned agent |
-| 4 | AI Review | `ai-review` | `status:ai-review` | Integrator (AMIA) reviews the PR |
-| 5 | Human Review | `human-review` | `status:human-review` | User reviews (big tasks only) |
-| 6 | Merge/Release | `merge-release` | `status:merge-release` | Approved and ready to merge |
-| 7 | Done | `done` | `status:done` | Completed and merged |
-| 8 | Blocked | `blocked` | `status:blocked` | Blocked at any stage |
+| # | Column | Code Format | Label | Description | Flip owner |
+|---|--------|-------------|-------|-------------|------------|
+| 1 | Backlog | `backlog` | `status:backlog` | Entry point for all new issues | AMOA |
+| 2 | Todo | `todo` | `status:todo` | Ready to start, prioritized | AMOA |
+| 3 | In Progress | `in-progress` | `status:in-progress` | Active work by assigned agent | AMOA |
+| 4 | AI Review | `ai-review` | `status:ai-review` | Integrator (AMIA) reviews the PR | AMIA |
+| 5 | Human Review | `human-review` | `status:human-review` | User reviews (big tasks only) | AMIA (sets) / USER decides |
+| 6 | Merge/Release | `merge-release` | `status:merge-release` | Approved and ready to merge | AMIA |
+| 7 | Done | `done` | `status:done` | Completed and merged | **AMIA** (validates merged PR; AMOA never self-marks) |
+| 8 | Blocked | `blocked` | `status:blocked` | Blocked at any stage | column owner at time of block |
 
 ### Task Routing
 
 - **Small tasks**: In Progress → AI Review → Merge/Release → Done
 - **Big tasks**: In Progress → AI Review → Human Review → Merge/Release → Done
-- **Human Review** is requested via AMAMA (Assistant Manager asks the user to test/review)
+- **Human Review** is requested up the chain via AMCOS → AMAMA (AMAMA asks the
+  USER to test/review). No team-internal agent messages AMAMA directly (R6 v3).
 - **Blocked** can be set from any column; task returns to its previous column when unblocked
+- **Flip ownership**: AMOA owns Backlog → Todo → In Progress (the pre-PR
+  green-light is the last AMOA-owned step); AMIA owns AI Review → Human Review →
+  Merge/Release → Done. AMOA never flips a task to Done.
 
 ### Code Format Rules
 
 - **Always use dashes**: `in-progress`, `ai-review`, `merge-release` (NOT underscores)
 - **Labels use `status:` prefix**: `status:in-progress`, `status:ai-review`
 - **Display names use title case**: "In Progress", "AI Review", "Merge/Release"
+
+---
+
+## Board Reconciliation: TRDD pipeline (authoritative) vs. GitHub board (projection)
+
+There are two views of a task's state, and they are **not peers**:
+
+1. **The TRDD `column:` pipeline is the AUTHORITATIVE lifecycle.** Each task is a
+   TRDD file in `design/tasks/` whose `column:` field is the single source of
+   truth for where the task is. The full pipeline is the v2 column set
+   (`backburner`, `todo`, `design`, `dispatch`, `dev`, `testing`, `ai_review`,
+   `human_review`, `complete`, `publish`, `published`, `deploy`, `live`,
+   `live_auditing`, plus the exceptions `blocked`, `failed`, `superseded`). See
+   `~/.claude/rules/trdd-design-tasks.md` for the definitive state machine.
+2. **The 8-column GitHub Projects board is a VISUAL PROJECTION of that pipeline.**
+   It exists for humans to see progress at a glance. It carries fewer columns, so
+   several TRDD columns project onto one board column.
+
+**Lossless rule.** The projection must never lose the authoritative state. The
+board column **plus the `trdd-column:` custom field** (set to the exact TRDD
+`column:` value) together reproduce the TRDD column exactly, so board → TRDD is
+**lossless and bidirectional**. The board column alone is a lossy summary; the
+`trdd-column:` field is what makes the round-trip exact. Never collapse two TRDD
+columns onto one board column **without** also writing the precise value into
+`trdd-column:`.
+
+### Lossless column mapping (TRDD `column:` ↔ board)
+
+| TRDD `column:` (authoritative) | Board column (projection) | `trdd-column:` field (exact, lossless) |
+|---|---|---|
+| `backburner` | Backlog | `backburner` |
+| `todo` | Todo | `todo` |
+| `design` | Todo | `design` |
+| `dispatch` | Todo | `dispatch` |
+| `dev` | In Progress | `dev` |
+| `testing` | In Progress | `testing` |
+| `ai_review` | AI Review | `ai_review` |
+| `human_review` | Human Review | `human_review` |
+| `complete` | Merge/Release | `complete` |
+| `publish` | Merge/Release | `publish` |
+| `deploy` | Merge/Release | `deploy` |
+| `published` | Done | `published` |
+| `live` | Done | `live` |
+| `live_auditing` | Done | `live_auditing` |
+| `blocked` | Blocked | `blocked` (`pre-block-column:` records where to restore) |
+| `failed` | Blocked | `failed` |
+| `superseded` | Done | `superseded` |
+
+> Reverse direction (board → TRDD) is unambiguous: read `trdd-column:`. Two tasks
+> in the same board column (e.g. both in "Todo") are distinguished by their
+> `trdd-column:` (`design` vs `dispatch`). The board column is derived from
+> `trdd-column:` by the table above — never set independently.
+
+### Sync rules and tie-break
+
+- **TRDD is written first; the board is updated to match.** Whoever owns a TRDD
+  transition (per "Detailed Procedure Steps" and the *Flip owner* column above)
+  edits the TRDD `column:` first, then projects it onto the board (board column +
+  `trdd-column:` field) via `scripts/amoa_kanban_manager.py` / the sync script.
+- **Tie-break: the TRDD wins.** If the board and the TRDD ever disagree, the TRDD
+  `column:` is authoritative. Reconcile by re-deriving the board column from the
+  TRDD's `column:` using the mapping table — never by editing the TRDD to match a
+  stale board.
+- **Ownership is preserved across the projection.** The board's *Flip owner*
+  must match who owns the corresponding TRDD transition: AMOA owns up to the
+  pre-PR green-light (`dev`/`testing`); AMIA owns `ai_review` → `complete` →
+  `published`/`live` (the Done projection). AMOA never moves a task into the Done
+  projection on its own.
 
 ---
 
@@ -154,17 +244,18 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 
 ### Phase 2: Design and Planning
 
-#### Step 6: Requirements to Architect
-**Actor**: AMAMA (Manager)
+#### Step 6: Requirements to Architect (via AMCOS)
+**Actor**: AMAMA (Manager) → AMCOS → AMAA
 **Action**:
-- Send the requirements to the Architect agent (AMAA)
-- Expand the requirements with more details
-- Include the list of team member names in the requirements
-- Assign to the Architect the task of developing the design document
+- Expand the requirements with more details, including the team member names
+- Hand the requirements to **AMCOS** (the team gateway); AMCOS relays them to the
+  Architect (AMAA) and assigns the design-document task — the MANAGER does **not**
+  message AMAA directly (R6 v3)
 
 **Communication**:
 - GitHub: Create issue with requirements, assign label for AMAA
-- AI Maestro: Message to AMAA with full requirements and team roster
+- AI Maestro: AMAMA → AMCOS (team-boundary edge); then AMCOS → AMAA (within-team
+  DIRECT edge) with full requirements and team roster. No AMAMA→AMAA direct message.
 
 #### Step 7: Design Document Creation
 **Actor**: AMAA (Architect)
@@ -181,26 +272,31 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 - GitHub: Update issue with progress
 - AI Maestro: Progress updates to AMAMA
 
-#### Step 8: Design Submission
-**Actor**: AMAA (Architect)
+#### Step 8: Design Submission (via AMCOS)
+**Actor**: AMAA (Architect) → AMCOS → AMAMA
 **Action**:
-- Send the completed design document back to the Manager
+- Send the completed design document back toward the Manager **via AMCOS** — the
+  Architect does not message AMAMA directly (R6 v3); AMCOS relays it up
 
 **Communication**:
 - GitHub: Attach design document to issue, mark ready for review
-- AI Maestro: Notification to AMAMA that design is ready
+- AI Maestro: AMAA → AMCOS (within-team DIRECT edge); AMCOS → AMAMA (team-boundary
+  edge) that design is ready
 
 #### Step 9: Design Approval
 **Actor**: AMAMA (Manager) + USER
 **Action**:
 - Manager examines the design document
 - Manager asks for approval from the User
-- If User approves: design is sent to the Orchestrator
-- If User rejects: design goes back to Architect with feedback
+- If User approves: the approved design is handed to **AMCOS** (the team
+  gateway), which relays it to the Orchestrator — the MANAGER does **not**
+  message AMOA directly (R6 v3)
+- If User rejects: design goes back to Architect with feedback (via AMCOS)
 
 **Communication**:
 - GitHub: Issue comments with design and approval status
-- AI Maestro: Message to AMOA with approved design
+- AI Maestro: AMAMA → AMCOS (team-boundary edge) with the approved design; then
+  AMCOS → AMOA (within-team DIRECT edge). No AMAMA→AMOA direct message.
 
 ---
 
@@ -305,17 +401,74 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 **Communication**:
 - GitHub: Update project item status
 
-#### Step 19: Task Completion
-**Actor**: IMPLEMENTER AGENTS → AMOA
-**Action**:
-- When an implementer agent finishes a task, notify the Orchestrator
-- Orchestrator discusses and asks questions to ensure truly completed
-- If OK: Orchestrator gives approval to do the pull-request
-- Implementer creates PR
+#### Step 18.5: In-Dev Issue Dialog (MEMBER ⇄ AMOA) — the canonical in-development loop
+
+> **CANONICAL DEFINITION (single source of truth).** This is the authoritative
+> description of the second of the three dialog loops (the in-development loop).
+> Every other document that touches it — the interview-protocol skill's
+> `exception-handling.md` and `escalation-messages.md`, the `BLOCKER_REPORT_TEMPLATE`,
+> the developer-communication blocker references — MUST link here rather than
+> restate it. Do not fork a parallel copy.
+
+**Actor**: IMPLEMENTER AGENTS (AMPA) ⇄ AMOA (Orchestrator); AMOA pulls in AMAA
+(design) or AMIA (CI/merge) as the issue type requires.
+
+**When it fires**: continuously, from the moment the agent starts coding (after
+the pre-task handshake's PROCEED) until the pre-PR green-light (Step 19). The
+moment an implementer hits ANY issue — ambiguity, blocker, a discovered design
+flaw, a missing tool, a conflicting requirement — it raises it to AMOA
+**immediately**, before writing any workaround.
+
+**The iron rule**: an implementer **NEVER silently improvises around a design
+flaw**. A design flaw is the Architect's to fix, not the implementer's to paper
+over. Silent improvisation is the failure mode this loop exists to prevent: it
+ships code that diverges from the approved design, and nobody notices until
+review (or production).
+
+**Routing (R6 v3 — all within-team DIRECT edges):**
+
+| Issue type the implementer raises | AMOA's action | Who resolves it |
+|---|---|---|
+| **Design flaw / architectural incompatibility** | AMOA sends a **design-change-request** to AMAA (AMOA → AMAA, DIRECT) | AMAA revises the design or authors new TRDDs; AMOA re-interviews the implementer with the new design (see Steps 15–16) |
+| **Ambiguous/contradictory MUTABLE requirement** | AMOA decides pragmatically and records the rationale in the task notes | AMOA (in-team authority) |
+| **Ambiguous IMMUTABLE (user-specified) requirement** | AMOA escalates via AMCOS → AMAMA → USER | USER (relayed back down the chain) |
+| **CI / merge / pipeline blocker** | AMOA pulls in AMIA (AMOA → AMIA, DIRECT) | AMIA |
+| **Capability gap (missing tool/skill/access)** | AMOA escalates to AMCOS | AMCOS provides access / specialized agent / scope adjustment |
+| **Environment / toolchain blocker** | Implementer files a Blocker Report; AMOA triages | AMOA + the relevant owner |
+
+**Artifacts:**
+- **Design-Change-Request** — created by AMOA when an implementer surfaces a
+  design problem (see *Document References*); flows AMOA → AMAA, DIRECT.
+- **Blocker Report** — the implementer-authored escalation document; the template
+  lives in `skills/amoa-remote-agent-coordinator/templates/handoff/BLOCKER_REPORT_TEMPLATE.md`.
+
+**Termination**: the loop ends only when the issue is resolved (design revised,
+requirement clarified, blocker cleared) — then the implementer resumes, and the
+cycle eventually reaches the pre-PR green-light (Step 19). An unresolved issue
+**never** advances to a PR.
 
 **Communication**:
-- AI Maestro: Completion notification from agent to AMOA
-- AI Maestro: Approval to PR from AMOA to agent
+- AI Maestro: implementer raises the issue to AMOA (AMPA → AMOA, DIRECT)
+- AI Maestro: AMOA → AMAA design-change-request, or AMOA → AMIA CI escalation, or
+  AMOA → AMCOS → AMAMA → USER for immutable-requirement questions
+- AI Maestro: resolution relayed back to the implementer (AMOA → AMPA, DIRECT)
+
+---
+
+#### Step 19: Pre-PR Green-Light (NOT task completion)
+**Actor**: IMPLEMENTER AGENTS (AMPA) → AMOA
+**Action**:
+- When an implementer agent finishes the code for a task, notify the Orchestrator
+- Orchestrator discusses and asks questions to ensure the work is ready
+- If OK: Orchestrator gives the **pre-PR green-light** — approval to open the
+  pull request. **This is the ONLY completion-adjacent authority AMOA holds; it
+  does NOT mark the task `completed`.** The task is *not* done yet — it is cleared
+  to enter review.
+- Implementer creates the PR
+
+**Communication**:
+- AI Maestro: "code ready" notification from agent to AMOA
+- AI Maestro: pre-PR green-light from AMOA to agent (AMOA → AMPA, DIRECT)
 - GitHub: PR created
 
 ---
@@ -332,18 +485,22 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 - AI Maestro: PR review request to AMIA
 - GitHub: PR ready for review
 
-#### Step 21: PR Evaluation
+#### Step 21: PR Evaluation and Column Flips
 **Actor**: AMIA (Integrator)
 **Action**:
+- Move the task into `ai-review` (board) / `ai_review` (TRDD) when review starts
 - Examine the PR of each task
-- Verify compliance with design requirements
+- Verify compliance with the task requirements / design
 - Run tests and linting
-- If everything OK: merge to main
-- If not OK: refuse PR, report issues to Orchestrator
+- For big tasks: set `human-review` and route the USER decision via AMAMA (through
+  AMCOS) before merge
+- If everything OK: merge to main, then **AMIA owns the flips** through
+  `merge-release` to `done` (TRDD `complete` → `published`/`live`) — see Step 23
+- If not OK: refuse PR, report issues to Orchestrator (AMIA → AMOA, DIRECT)
 
 **Communication**:
-- GitHub: PR review comments, approval/rejection
-- AI Maestro: Report to AMOA with pass/fail details
+- GitHub: PR review comments, approval/rejection, column moves
+- AI Maestro: Report to AMOA with pass/fail details (DIRECT edge)
 
 #### Step 22: Handling Failed PRs
 **Actor**: AMOA (Orchestrator) → IMPLEMENTER AGENTS
@@ -364,20 +521,33 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 
 ### Phase 6: Completion and Continuation
 
-#### Step 23: Successful PR Handling
-**Actor**: AMOA (Orchestrator)
-**Action**:
-- When Integrator reports successful PR merge, move task to `ai-review` column
-  - If AI review passes for small tasks: move to `merge-release`, then `done`
-  - If AI review passes for big tasks: move to `human-review` first, then `merge-release`, then `done`
-  - Report to Manager (AMAMA) for approval
-  - If Manager approves: assign new task to the agent that finished
-  - Keep implementer agents always working, never idle
+#### Step 23: Successful PR Handling — INTEGRATOR owns `completed`
+**Actors**: AMIA (Integrator) owns the completion flip; AMOA (Orchestrator)
+re-fills the freed implementer.
+
+**AMIA's part (owns the column flips to `done`/`completed`):**
+- After merging, AMIA validates the **merged** PR satisfies the task
+  requirements, then advances the columns it owns:
+  - Small tasks: `ai-review` → `merge-release` → `done` (TRDD `ai_review` →
+    `complete` → `published`/`live`)
+  - Big tasks: `ai-review` → `human-review` (USER decides, via AMAMA through
+    AMCOS) → `merge-release` → `done`
+- **AMIA flips the task to `done`/`completed` — AMOA never self-marks its own
+  team's task completed.** AMIA edits the TRDD `column:` first, then projects it
+  onto the board (board column + `trdd-column:` field).
+- AMIA reports the validated completion up the chain via AMCOS → AMAMA (AMIA does
+  not message AMAMA directly).
+
+**AMOA's part (keep implementers busy):**
+- On AMIA's "task completed" report (AMIA → AMOA, DIRECT), AMOA assigns the freed
+  implementer its next task (AMOA → AMPA, DIRECT) so agents never sit idle.
+- Any MANAGER sign-off AMOA needs is requested via AMCOS → AMAMA, and the decision
+  is relayed back down through AMCOS.
 
 **Communication**:
-- GitHub: Update project item status through kanban columns
-- AI Maestro: Completion report to AMAMA
-- AI Maestro: New task assignment to agent
+- GitHub: AMIA moves project item status through the kanban columns to Done
+- AI Maestro: AMIA → AMOA (DIRECT) completion report; AMIA → AMCOS → AMAMA for the
+  governance-layer report; AMOA → AMPA (DIRECT) next-task assignment
 
 #### Step 24: Iteration
 **Action**:
@@ -388,21 +558,31 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 
 ---
 
-## Communication Matrix
+## Communication Matrix (R6 v3)
 
-| From | To | Channel | Purpose |
-|------|-----|---------|---------|
-| AMAMA | AMCOS | AI Maestro | Requirements, team requests |
-| AMCOS | AMAMA | AI Maestro | Team proposals, status updates |
-| AMAMA | AMAA | GitHub + AI Maestro | Requirements, design requests |
-| AMAA | AMAMA | GitHub + AI Maestro | Design documents |
-| AMAMA | AMOA | GitHub + AI Maestro | Approved designs |
-| AMOA | Agents | GitHub + AI Maestro | Task assignments |
-| Agents | AMOA | AI Maestro | Status updates, questions |
-| AMOA | AMAA | AI Maestro | Design change requests |
-| AMOA | AMIA | AI Maestro | PR review requests |
-| AMIA | AMOA | AI Maestro | PR review results |
-| AMOA | AMAMA | AI Maestro | Completion reports |
+Every edge below is either a **direct** `Y` edge or explicitly **via AMCOS**.
+AMCOS is the team gateway; the MANAGER (AMAMA) never messages a team-internal
+agent (AMOA/AMAA/AMIA/AMPA) directly.
+
+| From | To | Edge | Channel | Purpose |
+|------|-----|------|---------|---------|
+| AMAMA | AMCOS | direct | AI Maestro | Requirements, approved designs, team requests |
+| AMCOS | AMAMA | direct | AI Maestro | Team proposals, status/completion roll-ups |
+| AMCOS | AMAA | direct | GitHub + AI Maestro | Relays requirements/design requests into team |
+| AMAA | AMCOS | direct | GitHub + AI Maestro | Design documents back toward MANAGER |
+| AMCOS | AMOA | direct | GitHub + AI Maestro | Relays the approved design to the Orchestrator |
+| AMOA | AMPA (Agents) | direct | GitHub + AI Maestro | Task assignments, pre-PR green-light |
+| AMPA (Agents) | AMOA | direct | AI Maestro | "code ready", status updates, questions |
+| AMOA | AMAA | direct | AI Maestro | Design change requests (within team) |
+| AMAA | AMOA | direct | AI Maestro | Updated designs (within team) |
+| AMOA | AMIA | direct | AI Maestro | PR review requests |
+| AMIA | AMOA | direct | AI Maestro | PR review results, "task completed" reports |
+| AMOA | AMAMA | **via AMCOS** | AI Maestro | Any MANAGER sign-off request (route through AMCOS) |
+| AMIA | AMAMA | **via AMCOS** | AI Maestro | Completion roll-up to governance (route through AMCOS) |
+| any team role | MAINTAINER / AUTONOMOUS | **via AMCOS → AMAMA** | AI Maestro | Cross-layer governance requests (AMAMA is the sole bridge) |
+
+**Forbidden direct edges (purged in v2.0.0):** AMAMA→AMOA, AMAMA→AMIA,
+AMOA→AMAMA, AMIA→AMAMA, AMOA↔peer-AMOA. All of these route through AMCOS.
 
 ---
 
@@ -410,12 +590,12 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 
 | Role | Creates | Manages | Cannot Do |
 |------|---------|---------|-----------|
-| **AMAMA** | Projects | Approvals, user communication | Task assignment |
-| **AMCOS** | Agents, teams | Agent lifecycle | Task assignment, projects |
+| **AMAMA** | Projects | Approvals, user communication | Task assignment; message team-internal agents except via AMCOS |
+| **AMCOS** | Agents, teams | Agent lifecycle, team gateway | Task assignment, projects |
 | **AMAA** | Designs | Architecture | Task assignment |
-| **AMOA** | Tasks, plans | Kanban, agent coordination | Agents, projects |
-| **AMIA** | Nothing | PR reviews, merges | Task assignment |
-| **Agents** | Code, PRs | Their assigned tasks | Everything else |
+| **AMOA** | Tasks, plans | Kanban projection, agent coordination, **pre-PR green-light** | Agents, projects; flip a task to `done`/`completed`; self-approve; message AMAMA except via AMCOS |
+| **AMIA** | Nothing | PR reviews, merges, **validates merged PR + owns `done`/`completed` flip** | Task assignment |
+| **Agents (AMPA)** | Code, PRs | Their assigned tasks | Everything else |
 
 ---
 
@@ -430,18 +610,20 @@ All projects use an **8-column kanban system** on GitHub Projects. Every agent m
 | 13 | Create task issues, add to project | AMOA |
 | 13 | Set "Assigned Agent" field | AMOA |
 | 18 | Move to "In Progress" column | AMOA |
-| 19 | Create PR | Agent |
-| 21 | Review and merge/reject PR | AMIA |
-| 23 | Move to "Done" column | AMOA |
+| 19 | Create PR (after AMOA pre-PR green-light) | Agent |
+| 21 | Move to "AI Review"; review and merge/reject PR | AMIA |
+| 23 | Validate merged PR; move to "Done" column | **AMIA** |
 
 ---
 
 ## Document References
 
-- **Requirements Document**: Created by AMAMA, sent to AMAA
-- **Design Document**: Created by AMAA, approved by AMAMA/User
+- **Requirements Document**: Created by AMAMA, relayed to AMAA via AMCOS
+- **Design Document**: Created by AMAA, relayed back via AMCOS, approved by AMAMA/User
 - **Task-Requirements-Document**: Created by AMOA for each task
-- **Design-Change-Request**: Created by AMOA when agents suggest improvements
+- **Design-Change-Request**: Created by AMOA when agents suggest improvements or
+  surface a design flaw — the in-development loop's design-escalation artifact
+  (see *Step 18.5: In-Dev Issue Dialog*, the canonical definition)
 - **PR Review Report**: Created by AMIA for each PR
 
 ---
@@ -479,4 +661,16 @@ The following skills belong to the AMIA plugin and integrate with AMOA workflows
 
 ---
 
-**This workflow must be followed by all agents. Deviations require Manager approval.**
+**This workflow must be followed by all agents. Deviations require Manager
+approval (requested up the chain via AMCOS → AMAMA — never a direct
+team-internal → MANAGER message; R6 v3).**
+
+---
+
+**Changelog (2.0.0, 2026-06-11)**: Migrated to R6 v3 — removed every direct
+AMAMA↔AMOA and AMAMA↔AMIA handoff (the MANAGER reaches team-internal agents only
+via AMCOS); added the Board Reconciliation section (TRDD `column:` pipeline is
+authoritative, the 8-column GitHub board is its lossless projection via the
+`trdd-column:` field, TRDD wins on tie-break); reassigned the `done`/`completed`
+flip from AMOA to AMIA (AMOA owns only the pre-PR green-light; nobody self-marks
+completed).
