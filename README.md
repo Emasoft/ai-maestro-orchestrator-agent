@@ -133,18 +133,22 @@ After modifying plugin files, reload without restarting:
 
 ## Validation
 
-Run the CPV (Claude Plugins Validation) suite:
+Run the CPV (Claude Plugins Validation) suite. Validation is delegated
+entirely to CPV — this plugin ships no local validators:
 
 ```bash
 cd ai-maestro-orchestrator-agent
-uv run --with pyyaml --with mypy --with types-PyYAML python scripts/validate_plugin.py . --verbose --strict
+uvx --from git+https://github.com/Emasoft/claude-plugins-validation --with pyyaml \
+    cpv-remote-validate plugin . --strict --verbose
 ```
 
-The pre-push hook automatically syncs validators and runs validation before each push.
+`scripts/publish.py` re-runs this exact `--strict` gate (plus lint and the
+test suite) immediately before every push. The pre-push hook only enforces
+that pushes go through `publish.py` (a process-ancestry check); it runs no
+validation of its own.
 
 ## Development
 
-- **Sync validators**: `uv run python scripts/sync_cpv_validators.py`
 - **Kanban management**: `uv run python scripts/amoa_kanban_manager.py <command>`
 - **GitHub project columns**: `uv run python scripts/gh-project-add-columns.py`
 

@@ -450,9 +450,8 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/pre-push-hook.py` | Pre-push validation (manifest, hooks, lint, Unicode compliance) |
+| `scripts/publish.py` | Strict delivery pipeline — lint + tests + `cpv-remote-validate --strict`, then bump/commit/push/release. Installs the `.githooks/pre-push` process-ancestry gate. Validation is delegated entirely to CPV (no local validators). |
 | `scripts/amoa_kanban_manager.py` | Kanban column management |
-| `scripts/validate_plugin.py` | Plugin structure validation |
 | `scripts/amoa_file_tracker.py` | File change tracking |
 | `scripts/amoa_download.py` | Plugin download utility |
 | `scripts/amoa_check_verification_status.py` | Verification status checking |
