@@ -1,31 +1,27 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-    ## [1.7.0] - 2026-06-10
+    ## [1.8.0] - 2026-06-13
 
 ### Bug Fixes
 
-- Replace broken references/ link with universal-skill prose pointer    
-- Restructure amoa-prrd-trdd-kanban to CPV 7-section format (<5000)    
-- Stage uv.lock in the release commit (closes #10)    
-- Hook timeouts are seconds, not milliseconds    
-- Devitalize execution-shaped patterns flagged by CPV strict scan    
-- Clear all CPV strict MINOR+NIT findings — gate now exits 0    
-
-### Documentation
-
-- Add approval-tiers + proposal lifecycle + baseline governance section (closes #11)    
+- Sync embedded reference TOCs after audit heading additions    
 
 ### Features
 
-- Add ORCH's PRRD/TRDD/Kanban layer (amoa-prrd-trdd-kanban)    
-- Add Approval discipline section to amoa-prrd-trdd-kanban    
-- Bootstrap PRRD with G1 GitHub self-id golden rule    
-- Adopt the markdown memory system (closes #12)    
+- R6 v3 comm-graph + dialog loops — close audit M4/M5/M6/M7/M11    
+- PRRD project-id + 7 SILVER rules, ai-maestro-plugin dep, skill cleanups — close M1/M2/M3/M9/M10/M13    
 
 ### Miscellaneous
 
-- Update uv.lock (stale from v1.6.12 release — see issue #10)    
-- Remove legacy git-hooks/pre-push (dangling validate_plugin.py ref)    
+- Gitignore reports/ and reports_dev/ (per agent-reports rule)    
+
+### Refactor
+
+- Delegate validation entirely to CPV; remove local validators    
+
+### Tests
+
+- Hook/command/sync tests (+tz crash fix); memory->LOCAL + 3-pillars init scaffolding    
 
 
