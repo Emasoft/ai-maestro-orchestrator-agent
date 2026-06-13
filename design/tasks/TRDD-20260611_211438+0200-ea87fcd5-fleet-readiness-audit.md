@@ -1,9 +1,9 @@
 ---
 trdd-id: ea87fcd5-755b-414d-8934-c859329de53a
 title: Fleet-readiness audit — migrate ORCHESTRATOR to 3-pillars + memory, close 13 governance gaps
-column: complete
+column: published
 created: 2026-06-11T21:14:38+0200
-updated: 2026-06-12T01:05:00+0200
+updated: 2026-06-12T01:30:00+0200
 current-owner: orchestrator
 assignee: orchestrator
 priority: 1
@@ -28,7 +28,9 @@ review-requirements: [human-review]
 impacts: [config-schema, ci-pipeline]
 attempts: 0
 last-test-result: pass
-implementation-commits: [ef9c564, 5353881]
+implementation-commits: [ef9c564, 5353881, b4ff34f, 3a7691b, 43bdb66]
+published-version: 1.8.0
+published-at: 2026-06-12T01:30:00+0200
 external-refs: ["github.com/Emasoft/ai-maestro-orchestrator-agent/issues/13"]
 ---
 
@@ -48,7 +50,7 @@ governance work order on `ai-maestro-orchestrator-agent#13`. USER authorized exe
   - Commits: `ef9c564` (governance+dialog), `5353881` (PRRD+manifest+skills), + the tests/bugfix/structure commit (this set).
 - MANAGER (on #13) confirmed: kanban framing RATIFIED, unpinned `[ai-maestro-plugin]` dep OK, will verify the release.
 
-**NEXT ACTION:** Phase 5 — re-run `publish.py --patch --dry-run` on the now-clean tree to validate the full changeset through CPV strict (the pre-commit run only tripped the clean-tree precondition). Then **STOP — publish is USER-gated** (direct user instruction "ask before each publish", which overrides the MANAGER's "proceed" note). On USER approval: `publish.py`, then reply on #13 with the per-verdict resolution table + published version.
+**STATUS: DONE — published v1.8.0** (USER approved the minor bump). Full gate passed end-to-end (CPV strict 0/0/0/0, 108 tests, consistency OK); release commit `43bdb66`; release https://github.com/Emasoft/ai-maestro-orchestrator-agent/releases/tag/v1.8.0. Per-verdict resolution table posted on #13 (comment 4698153886) for MANAGER verification. No further action — monitoring #13 for the MANAGER's ack/close.
 
 **Load-bearing facts / canonical models (the SPEC):**
 - **R6 v3 comm graph:** COS guards the **team boundary** only. Within-team `ORCH ↔ ARCH/MEMBER/INT` are **DIRECT** edges. MANAGER reaches team-internal agents **only via COS**. The persona (`agents/ai-maestro-orchestrator-agent-main-agent.md`) holds the authoritative R6 v3 text (M6 = ✓ there) — doc edits MUST match it; the docs are the stale copies.
