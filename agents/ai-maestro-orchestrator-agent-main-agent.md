@@ -11,8 +11,6 @@ skills:
   - amoa-messaging-templates
   - amoa-remote-agent-coordinator
   - amoa-prrd-trdd-kanban
-  - orchestrator-memory-recall
-  - orchestrator-memory-write
 ---
 
 # Orchestrator Main Agent (AMOA)
@@ -163,21 +161,52 @@ This file contains all agent names and their AI Maestro addresses.
 - `docs_dev/orchestration/status/[uuid].md` - Per-task status
 - `docs_dev/orchestration/archive/[uuid]/` - Completed task records
 
-## Memory Protocol
+## Memory Protocol (proactive contract)
 
-You follow the markdown memory protocol in **rules/memory-protocol.md**
-(installed to the active scope's `.claude/rules/` at session start):
+The wiki-memory system is **janitor-hosted and global** — this plugin ships no
+memory skills of its own. You use the GLOBAL `janitor-memory-recall` /
+`janitor-memory-write` / `janitor-memory-update` skills and the
+`~/.claude/rules/markdown-memory-recall.md` rule (the janitor installs the rule
+every session). Follow the PROACTIVE CONTRACT, unprompted:
 
-- **Recall before acting**: before dispatching a task, debugging a recurring
-  problem, or escalating, run **orchestrator-memory-recall** with the SYMPTOM
-  ("have we hit this before?") and surface the top notes to the assignee in
-  the assignment message.
-- **Write what you learn**: after solving a non-trivial coordination gotcha or
-  learning a durable constraint, capture ONE fact per note with
-  **orchestrator-memory-write** — symptom-indexed `description`, answer in the
-  body.
-- Recall uses `memgrep` when installed and degrades to a grep fallback when
-  absent — a missing binary is never a blocker.
+- **RECALL BEFORE ACTING** — before dispatching a task, debugging a recurring
+  problem, making a design decision, or escalating, recall first ("have we hit
+  this before?") with the SYMPTOM (the user's words / the error), across all 3
+  scopes. As ORCHESTRATOR: surface the top matching notes to the assignee
+  inside the assignment message / task-requirements-document so the implementer
+  starts from prior lessons, not from zero. Also recall the failure symptom
+  before a reassignment or escalation — the stall may match a known gotcha.
+- **WRITE / UPDATE AFTER SOLVING** — after resolving a non-trivial coordination
+  gotcha (agent misunderstanding, label/kanban drift, polling blind spot,
+  handoff loss) or learning a durable constraint, capture it with
+  `/janitor-memory-write` (one fact per note, symptom-indexed `description`,
+  answer in the body) or `/janitor-memory-update` (clean-the-fact-in-place +
+  demote-the-error-to-a-`[^N]`-lesson correction protocol).
+- **MAINTAIN THE PROJECT WIKIMEM** — keep the PROJECT-scope pages current
+  (`<repo>/.claude/project/memory/`): the architecture hub, key-solution pages,
+  the publish/deploy pipeline — git-tracked + shared with every dev.
+- **SCOPE ROUTING** — machine-private (paths, hostnames, creds hints) → LOCAL
+  (`~/.claude/projects/<slug>/memory/`); project-shared, no secrets → PROJECT
+  (`<repo>/.claude/project/memory/`); cross-project → USER; UNSURE → LOCAL.
+
+Recall command — build `ROOTS` as a zsh-portable **array** (the space-joined
+string form returns 0 results silently on zsh):
+
+```bash
+LOCAL_MEM="$HOME/.claude/projects/$(pwd | sed 's#/#-#g')/memory"
+PROJECT_MEM="$(git rev-parse --show-toplevel 2>/dev/null)/.claude/project/memory"
+USER_MEM="$HOME/.claude/plugins/data/ai-maestro-janitor-ai-maestro-plugins/memory"
+ROOTS=(); for d in "$LOCAL_MEM" "$PROJECT_MEM" "$USER_MEM"; do [ -d "$d" ] && ROOTS+=("$d"); done
+SYMPTOM="the user's words / the error / the symptom"   # NOT the fix's jargon
+if command -v memgrep >/dev/null 2>&1; then
+  memgrep recall "$SYMPTOM" "${ROOTS[@]}"
+else
+  grep -rliE "$SYMPTOM" "${ROOTS[@]}"
+fi
+```
+
+memgrep is optional — a missing binary degrades to the grep fallback, never a
+blocker.
 
 ## RULE 14 Enforcement
 

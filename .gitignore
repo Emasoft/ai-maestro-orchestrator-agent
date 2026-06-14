@@ -40,7 +40,13 @@ env/
 node_modules/
 
 # Claude Code
-.claude/
+.claude/**
+# The PROJECT memory scope lives in-repo under .claude/ and MUST be tracked +
+# pushed (the shared, cross-dev wiki memory). Re-include it via these exceptions
+# (each parent dir re-included first, then the whole tree — order matters).
+!.claude/project/
+!.claude/project/memory/
+!.claude/project/memory/**
 
 # Test artifacts
 coverage/
