@@ -1,6 +1,6 @@
 # AGENT_OPERATIONS.md - AMOA Orchestrator
 
-> **Note**: This document is a local reference copy. Agent registration and capabilities should be verified against the AI Maestro agent registry API (`/api/sessions`) at runtime.
+> **Note**: This document is a local reference copy. Agent registration and capabilities should be verified at runtime via the AI Maestro CLI script layer (e.g. `amp-team-members` / `amp-inbox`) — never a raw HTTP API endpoint. Per the AI Maestro Plugin Abstraction Principle, every plugin element couples to the script layer, not to `/api/...` endpoints.
 
 **Single Source of Truth for AI Maestro Orchestrator Agent (AMOA) Operations**
 
