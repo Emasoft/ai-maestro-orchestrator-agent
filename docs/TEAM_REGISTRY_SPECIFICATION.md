@@ -1,6 +1,6 @@
 # Team Registry Specification
 
-> **Note**: This document is a local reference copy. The authoritative source for team configuration is the AI Maestro teams CLI script layer (`aimaestro-teams.sh`) — never a raw HTTP API endpoint. Role cardinality and membership rules listed here should be verified via the governance CLI (`aimaestro-governance.sh`) before enforcement. Per the AI Maestro Plugin Abstraction Principle, every plugin element couples to the script layer, not to `/api/...` endpoints.
+> **Note**: This document is a local reference copy. The authoritative source for team configuration is the AI Maestro teams CLI (`aimaestro-teams.sh list` / `aimaestro-teams.sh show <id>`) — never a raw HTTP API endpoint. Role cardinality and membership listed here should be verified against `aimaestro-teams.sh show <id>` before enforcement; governance actions use `aimaestro-governance.sh` (`requests` / `request <id>` / `approve <id>`). Per the AI Maestro Plugin Abstraction Principle (governance R22), every plugin element couples to the frozen CLI script layer, never the raw server API.
 
 **Version**: 1.6.0
 **Last Updated**: 2026-03-08

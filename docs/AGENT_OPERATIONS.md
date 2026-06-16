@@ -1,6 +1,6 @@
 # AGENT_OPERATIONS.md - AMOA Orchestrator
 
-> **Note**: This document is a local reference copy. Agent registration and capabilities should be verified at runtime via the AI Maestro CLI script layer (e.g. `amp-team-members` / `amp-inbox`) — never a raw HTTP API endpoint. Per the AI Maestro Plugin Abstraction Principle, every plugin element couples to the script layer, not to `/api/...` endpoints.
+> **Note**: This document is a local reference copy. Agent registration and capabilities should be verified at runtime via the AI Maestro agents/sessions CLI (`aimaestro-agent.sh list` / `aimaestro-agent.sh show <id>`) — never a raw HTTP API endpoint. Per the AI Maestro Plugin Abstraction Principle (governance R22), every plugin element couples to the frozen CLI script layer, never the raw server API.
 
 **Single Source of Truth for AI Maestro Orchestrator Agent (AMOA) Operations**
 
