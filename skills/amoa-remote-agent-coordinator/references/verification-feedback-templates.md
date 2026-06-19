@@ -437,7 +437,7 @@ Verification loop N complete (agent submitted report)
 │   │   │   │           │   │
 │   │   │   │           │   └─ NO → Provide specific step-by-step guidance
 │   │   │   │           │       ├─ Agent retries with guidance
-│   │   │   │           │       └─ If still stuck after guidance → Escalate to user
+│   │   │   │           │       └─ If still stuck after guidance → Escalate to the MAESTRO
 │   │   │   │           │
 │   │   │   │           └─ Is the issue a dependency on another module?
 │   │   │   │               ├─ YES → Notify AMCOS, pause verification

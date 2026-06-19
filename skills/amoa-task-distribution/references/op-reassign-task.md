@@ -136,7 +136,7 @@ Include all partial progress in the reassignment message.
 
 | Error | Cause | Resolution |
 |-------|-------|------------|
-| New agent also unavailable | No agents available | Escalate to user |
+| New agent also unavailable | No agents available | Escalate to the MAESTRO |
 | Partial progress lost | Agent did not document | Log warning, start fresh |
 
 ## Related Operations

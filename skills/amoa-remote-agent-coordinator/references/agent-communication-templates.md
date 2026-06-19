@@ -152,7 +152,7 @@ Please provide your current status:
 6. **Do you need anything from me?**
    - Documentation needed
    - Clarification required
-   - Decision needed from orchestrator/user
+   - Decision needed from orchestrator/MAESTRO
    - Resources or access required
 
 ---
@@ -409,6 +409,6 @@ Agent reports issue (bug found / design question / requirement ambiguity)
 │   │   └─ No (architectural decision) → Escalate to AMCOS for AMAA review
 │   │       → Pause affected subtask → Continue other subtasks if possible
 │   └─ Requirement ambiguity → Is it an immutable requirement?
-│       ├─ Yes → Escalate to AMCOS → AMCOS routes to AMAMA → Wait for user decision
+│       ├─ Yes → Escalate to AMCOS → AMCOS routes to AMAMA → Wait for MAESTRO decision
 │       └─ No → Make pragmatic decision → Document decision rationale → Agent continues
 ```

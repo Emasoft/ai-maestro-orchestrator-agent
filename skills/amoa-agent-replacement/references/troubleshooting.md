@@ -460,8 +460,8 @@ If multiple systems fail during replacement:
 
 1. **Document current state** manually
 2. **Preserve all handoff materials** locally
-3. **Alert user** via all available channels
-4. **Wait** for user guidance
+3. **Alert the MAESTRO** via all available channels (through the AMCOS→AMAMA chain)
+4. **Wait** for the MAESTRO's guidance
 
 ### Data Loss Recovery
 

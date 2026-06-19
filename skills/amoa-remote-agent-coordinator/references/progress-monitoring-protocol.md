@@ -141,7 +141,7 @@ If no update received after expected checkpoint:
 2. **After 5 minutes** - Send follow-up with increased urgency
 3. **After 10 minutes** - Send "Are you stuck? I can help" message
 4. **After 15 minutes** - Mark agent as potentially offline, prepare reassignment
-5. **After 20 minutes** - Reassign task if critical, log for user review
+5. **After 20 minutes** - Reassign task if critical, log for MAESTRO review
 
 ---
 
@@ -243,7 +243,7 @@ If no update received after expected checkpoint:
 1. Send completion verification checklist with specific criteria
 2. Quote the exact criteria that are not met
 3. Do NOT approve PR until all criteria verified
-4. If agent disputes criteria, escalate to user for clarification
+4. If agent disputes criteria, escalate to the MAESTRO for clarification
 5. Document discrepancy in GitHub Issue
 
 ### Problem: Proactive Checks Interrupt Agent's Flow
@@ -262,7 +262,7 @@ If no update received after expected checkpoint:
 
 **Solution**:
 1. Triage blockers by impact - unblock critical path first
-2. Escalate common blockers to user immediately
+2. Escalate common blockers to the MAESTRO immediately
 3. Group similar blockers for batch resolution
 4. Consider if blocker pattern indicates systemic issue
 5. Reassign non-critical tasks to reduce active workload
@@ -275,7 +275,7 @@ If no update received after expected checkpoint:
 1. Request detailed explanation of why solution didn't work
 2. Try alternative approaches (2-3 options)
 3. If technical blocker, consider reassigning to agent with different expertise
-4. If external dependency, escalate to user for external action
+4. If external dependency, escalate to the MAESTRO for external action
 5. Document all attempted solutions in GitHub Issue for future reference
 
 ---

@@ -11,9 +11,9 @@
 
 ## Iron Rule for Blockers
 
-**IRON RULE FOR BLOCKERS**: The user must ALWAYS be informed of blockers immediately. There is NO scenario where a blocker should be "monitored quietly" for hours or days before telling the user. The user may have the solution ready in minutes — but only if they know about the problem.
+**IRON RULE FOR BLOCKERS**: The MAESTRO must ALWAYS be informed of blockers immediately. There is NO scenario where a blocker should be "monitored quietly" for hours or days before telling the MAESTRO. The MAESTRO may have the solution ready in minutes — but only if they know about the problem.
 
-When an agent reports `[BLOCKED]`, AMOA must verify the blocker is real (agent cannot solve it themselves), then IMMEDIATELY escalate to AMAMA for user notification. There is NO waiting period for user notification — escalation happens as soon as the blocker is confirmed.
+When an agent reports `[BLOCKED]`, AMOA must verify the blocker is real (agent cannot solve it themselves), then IMMEDIATELY escalate to AMAMA for MAESTRO notification. There is NO waiting period for MAESTRO notification — escalation happens as soon as the blocker is confirmed.
 
 ## Comprehensive Blocker Definition
 
@@ -39,7 +39,7 @@ When agent reports `[BLOCKED]`:
 5. **Comment** on the blocked task issue with blocker details
 6. **Create a separate GitHub issue** for the blocker itself (labeled `type:blocker`, referencing the blocked task). This makes the blocking problem visible to all agents and team members on the issue tracker.
 7. **Escalate** to AMAMA IMMEDIATELY via AI Maestro blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number.
-8. **Continue** monitoring for self-resolution while waiting for user response
+8. **Continue** monitoring for self-resolution while waiting for the MAESTRO's response
 9. **Check** if other unblocked tasks can be assigned to the waiting agent
 
 ## Update Labels and Create Blocker Issue

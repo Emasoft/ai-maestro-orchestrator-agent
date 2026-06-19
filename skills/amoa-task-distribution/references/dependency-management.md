@@ -27,12 +27,12 @@ When Task A completes:
 
 ## Circular Dependency Detection
 
-If detected, STOP and report to user:
+If detected, STOP and report to the MAESTRO:
 
 ```
 CIRCULAR DEPENDENCY:
 Task A -> depends on -> Task B
 Task B -> depends on -> Task A
 
-Cannot proceed. User decision required.
+Cannot proceed. MAESTRO decision required.
 ```

@@ -305,7 +305,7 @@ If verification fails:
    /reassign-module {module_id} --to {new_agent_id}
    ```
 
-3. **Notify user** of assignment change
+3. **Notify the MAESTRO** of assignment change
 
 4. **Start fresh** with new agent (full protocol again)
 

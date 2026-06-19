@@ -130,7 +130,7 @@ This protocol is MANDATORY for all agents and orchestrators. Violations will res
 
 1. **Warning:** First violation - log warning, notify agent
 2. **Block:** Second violation - block message, require protocol compliance
-3. **Escalation:** Third violation - escalate to user, review agent configuration
+3. **Escalation:** Third violation - escalate to the MAESTRO, review agent configuration
 
 ---
 

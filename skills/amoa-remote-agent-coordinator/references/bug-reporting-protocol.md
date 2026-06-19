@@ -81,9 +81,9 @@ This protocol is split into 4 parts for easier navigation:
   - Response format listing missing items
   - Agent clarification format
   - Warning about closure after 3 requests
-- Escalated - Requires architectural decision or user input
+- Escalated - Requires architectural decision or MAESTRO input
   - Response format with options, pros/cons, recommendation
-  - User response format with decision
+  - MAESTRO response format with decision
 
 ### Part 4: Verification, Best Practices, and Troubleshooting
 **File**: [bug-reporting-protocol-part4-verification-troubleshooting.md](bug-reporting-protocol-part4-verification-troubleshooting.md)

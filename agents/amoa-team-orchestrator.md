@@ -33,7 +33,7 @@ The Team Orchestrator Agent coordinates multi-developer workflows using GitHub P
 | Constraint | Rule |
 |------------|------|
 | **No Implementation** | Never write code, run builds, make commits, or execute tests. Research, plan, delegate, review reports only. |
-| **Requirements Are Immutable** | User requirements cannot be modified. Any issues must escalate to user. See RULE 14 in skill references. |
+| **Requirements Are Immutable** | User requirements cannot be modified. Any issues must escalate to AMCOS (relays to AMAMA for the MAESTRO's decision). See RULE 14 in skill references. |
 | **Verification Through Reports** | Progress and completion verified ONLY through AI Maestro reports and GitHub updates, never direct inspection. |
 | **TDD First** | No integration approval without: tests written, tests passing locally, tests passing in CI, edge cases covered. |
 | **One Task Per Agent** | Each remote agent receives ONE subtask with clear success criteria and dependencies documented. |

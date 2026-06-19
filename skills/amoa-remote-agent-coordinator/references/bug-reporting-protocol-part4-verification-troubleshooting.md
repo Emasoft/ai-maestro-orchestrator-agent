@@ -46,7 +46,7 @@ Bug reports ALWAYS require acknowledgment. If no ack received:
 
 1. Retry once (see Escalation Handling)
 2. If still no ack, agent must block development for critical/high severity
-3. Agent notifies user via session output
+3. Agent notifies the MAESTRO via session output
 
 ### Acknowledgment Format
 
@@ -192,7 +192,7 @@ All message types include:
 **Solution**:
 1. Verify priority field is set to `urgent`
 2. Send follow-up reminder with escalation warning
-3. If orchestrator unresponsive, escalate directly to user
+3. If orchestrator unresponsive, escalate directly to AMCOS (relays to AMAMA for the MAESTRO's decision)
 4. Block all related development until acknowledged
 5. Document escalation in GitHub Issue comments
 
@@ -238,7 +238,7 @@ All message types include:
 2. Consider actual impact on users/development
 3. If security related, default to higher severity
 4. Document rationale for final severity decision
-5. If still disputed, escalate to user for final call
+5. If still disputed, escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) for final call
 
 ### Problem: Bug Reports Lack Sufficient Detail
 

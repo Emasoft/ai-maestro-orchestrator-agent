@@ -136,5 +136,5 @@ Before declaring ANY task complete:
 | All criteria met, verified | Mark COMPLETE |
 | 1+ criteria unmet but fixable | Continue work, do NOT mark complete |
 | Blocked by external dependency | Mark BLOCKED, document reason |
-| Requires user decision | Mark WAITING, notify user |
+| Requires the MAESTRO's decision | Mark WAITING, notify the MAESTRO |
 | Subagent failed | Retry or escalate, do NOT mark complete |

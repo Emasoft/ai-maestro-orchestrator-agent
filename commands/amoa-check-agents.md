@@ -68,7 +68,7 @@ Based on agent responses:
 | Something unclear | Provide clarification immediately |
 | Unforeseen difficulty | Evaluate: adapt approach or reassign |
 | Needs documentation | Create/provide detailed docs |
-| Needs decision | Make decision or escalate to user |
+| Needs decision | Make decision or escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) |
 | Higher complexity | Adjust approach, potentially split task |
 | Blocked | Unblock immediately (highest priority) |
 

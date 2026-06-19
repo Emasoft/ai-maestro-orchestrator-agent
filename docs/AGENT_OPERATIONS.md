@@ -107,12 +107,14 @@ AMCOS (Chief of Staff) spawns AMOA instances using the `ai-maestro-agents-manage
 
 **Verify**: confirm the agent session was created and is responsive.
 
-### Pre-Spawn Setup
-Before spawning, AMCOS must:
-1. Copy the plugin to `~/agents/$SESSION_NAME/.claude/plugins/ai-maestro-orchestrator-agent/`
-2. Register the session name in AI Maestro
-3. Create initial task description
-4. Set up working directories
+### Pre-Spawn Setup (server-provisioned)
+The COS does NOT manually copy plugin directories or register sessions — those are the **server's** job. The COS, holding a MANAGER team-creation mandate (R30) and authenticated by its **AID** (R28.1), requests the spawn through the core `ai-maestro-plugin` skills (never the plain `claude` CLI — R23/R27.2). The server then:
+1. Verifies **AID identity → TITLE privilege → the mandate token** in the COS portfolio (R28.2/R28.3); refuses if any check fails
+2. Runs the **CPV security scanner** on the orchestrator plugin and installs it only if it passes (R27.3); provisions it into the new session
+3. Registers the session name in AI Maestro
+4. Provisions the initial task description and working directories
+
+The COS supplies only the spawn request (session name, task, plugin id); it never asserts identity/title/scope and never writes the plugin tree itself. The server NEVER trusts a client-supplied id/title/scope (R23/R27/R28).
 
 ---
 
@@ -133,7 +135,7 @@ Each plugin defines a **role boundary**. AMOA's job is to **orchestrate**, not t
 - Make architectural decisions (AMAA's job)
 - Integrate and review code (AMIA's job)
 - Coordinate multiple AMOA instances (AMCOS's job)
-- Manage user communication (AMAMA's job)
+- Be the MAESTRO's interlocutor / route normal users via their ASSISTANT (AMAMA's job, R37/R38/R39)
 
 ### Cross-Role Communication
 All cross-role communication happens via **AI Maestro messages**, not skill sharing.
@@ -296,7 +298,7 @@ Check your inbox using the `agent-messaging` skill:
 | Review code for merge | AMIA | Code review is integrator's role |
 | Make architectural decisions | AMAA | Architecture is architect's role |
 | Coordinate multiple orchestrators | AMCOS | Chief of Staff coordinates orchestrators |
-| Communicate with end users | AMAMA | Assistant Manager handles user comms |
+| Interlocutor for the MAESTRO; route normal users via their ASSISTANT (R37/R38/R39) | AMAMA | MANAGER obeys the MAESTRO; normal users work through their own ASSISTANT, not AMOA |
 
 ### Workflow Pattern
 
@@ -485,7 +487,7 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 - **AMAA (Architect Agent)** - Architecture design, planning, and decision records. Plugin: `ai-maestro-architect-agent`
 - **AMIA (Integrator Agent)** - Code review, quality gates, PR management. Plugin: `ai-maestro-integrator-agent`
 - **AMCOS (Chief of Staff)** - Agent lifecycle management, coordination, and team registry. Plugin: `ai-maestro-chief-of-staff`
-- **AMAMA (Assistant Manager)** - User communication and role routing. Plugin: `ai-maestro-assistant-manager-agent`
+- **AMAMA (Assistant Manager)** - MAESTRO interlocutor + routing for normal users via their ASSISTANT (R37/R38/R39). Plugin: `ai-maestro-assistant-manager-agent`
 
 ### External References
 - [AI Maestro API Documentation](https://github.com/Emasoft/ai-maestro/blob/main/docs/API.md)

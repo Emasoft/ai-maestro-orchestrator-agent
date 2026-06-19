@@ -33,7 +33,7 @@ operation: handle-blocker-report
 
 ## Purpose
 
-Process a blocker report from an agent, create tracking issue, update task status, and escalate to user immediately.
+Process a blocker report from an agent, create tracking issue, update task status, and escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) immediately.
 
 ## When to Use
 
@@ -43,7 +43,7 @@ Process a blocker report from an agent, create tracking issue, update task statu
 
 ## IRON RULE
 
-The user must ALWAYS be informed of blockers immediately. There is NO scenario where a blocker should be "monitored quietly" for hours or days before telling the user. The user may have the solution ready in minutes - but only if they know about the problem.
+The MAESTRO must ALWAYS be informed of blockers immediately. There is NO scenario where a blocker should be "monitored quietly" for hours or days before telling the MAESTRO. The MAESTRO may have the solution ready in minutes - but only if they know about the problem.
 
 ## Inputs
 
@@ -176,7 +176,7 @@ gh issue comment $TASK_ID --body "Blocker tracked in #$BLOCKER_ISSUE"
 ### Step 6: Escalate to AMAMA Immediately
 
 ```bash
-# CRITICAL: Immediate user notification - no waiting period
+# CRITICAL: Immediate MAESTRO notification - no waiting period
 # Send blocker escalation using the agent-messaging skill:
 # - Recipient: amama-main
 # - Subject: "[BLOCKER] Task #$TASK_ID blocked - User action required"

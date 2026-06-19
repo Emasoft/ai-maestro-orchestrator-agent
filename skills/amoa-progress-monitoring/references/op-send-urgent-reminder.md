@@ -157,7 +157,7 @@ If you are blocked, experiencing issues, or unable to continue, please report th
 |------|---------------------|--------|
 | 1 | +15 min (no ACK) | First reminder (normal priority) |
 | 2 | +30 min (no response) | Urgent reminder (urgent priority) |
-| 3 | +60 min (still no response) | Notify user, consider reassignment |
+| 3 | +60 min (still no response) | Notify the MAESTRO, consider reassignment |
 
 ## Success Criteria
 

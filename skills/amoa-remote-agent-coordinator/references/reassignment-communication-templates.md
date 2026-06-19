@@ -396,9 +396,9 @@ AMCOS reports original agent recovered
 │       ├─ Replacement agent is performing well with no blockers
 │       │   └─ DECISION: keep_replacement (momentum outweighs context switch cost)
 │       └─ UNCLEAR which agent is better positioned
-│           └─ ESCALATE to user for decision
-│              PROVIDE both agents' status summaries to user
-│              WAIT for user decision before proceeding
+│           └─ ESCALATE to the MAESTRO for decision
+│              PROVIDE both agents' status summaries to the MAESTRO
+│              WAIT for the MAESTRO's decision before proceeding
 ├─ Original agent recovered but with reduced capacity
 │   └─ DECISION: keep_replacement
 │      ASSIGN original agent to a different, lower-priority task
@@ -557,7 +557,7 @@ Agent needs reassignment
 | Old agent work summary delivery | 15 minutes past deadline | Proceed with partial or reconstructed context |
 | New agent ACK of reassignment assignment | 10 minutes | Retry once with urgent priority, then try another agent |
 | Graceful stop confirmation from removed agent | 10 minutes | Log non-response, proceed without confirmation |
-| AMCOS recovery decision response | 30 minutes | Escalate to user if AMCOS does not respond |
+| AMCOS recovery decision response | 30 minutes | Escalate to the MAESTRO if AMCOS does not respond |
 
 ---
 

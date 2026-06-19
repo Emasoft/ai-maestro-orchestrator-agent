@@ -34,13 +34,13 @@ operation: escalate-to-user
 
 ## Purpose
 
-Escalate decisions to the user when they exceed orchestrator authority (architecture, security, requirement changes).
+Escalate decisions to the MAESTRO when they exceed orchestrator authority (architecture, security, requirement changes).
 
 ## When to Use
 
 - Architecture decisions not covered by methodology
 - Security vulnerabilities discovered
-- Dependency conflicts requiring user choice
+- Dependency conflicts requiring MAESTRO choice
 - Test failures suggesting specification issues
 - Requirement clarifications needed
 - Breaking changes proposed

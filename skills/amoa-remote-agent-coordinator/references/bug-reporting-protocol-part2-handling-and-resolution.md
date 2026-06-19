@@ -59,12 +59,12 @@ If orchestrator doesn't acknowledge:
 3. **Max attempts exceeded**:
    - Agent logs non-responsive orchestrator
    - Agent blocks development if bug severity is critical/high
-   - Agent notifies user via session output
+   - Agent notifies the MAESTRO via session output
 
 If bug cannot be reproduced:
 
 1. **Max reproduction attempts exceeded**:
-   - Orchestrator escalates to user
+   - Orchestrator escalates to AMCOS (relays to AMAMA for the MAESTRO's decision)
    - Orchestrator considers reassigning task or closing as cannot-reproduce
    - Orchestrator updates GitHub issue with reproduction status
 
@@ -76,7 +76,7 @@ Attempt 1: Agent sends bug-report (severity: high, attempt: 1)
 Attempt 2: Agent retries bug-report (retry: true, attempt: 2)
            → No ack received
            → Log "Orchestrator unresponsive", block development
-           → Max ack attempts (2) exceeded → Escalate to user
+           → Max ack attempts (2) exceeded → Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
 ```
 
 ## Error States
@@ -200,7 +200,7 @@ Agent provides clarification:
 
 ### Escalated
 
-Bug requires architectural decision or user input:
+Bug requires architectural decision or MAESTRO input:
 
 ```json
 {
@@ -229,7 +229,7 @@ Bug requires architectural decision or user input:
 }
 ```
 
-User/orchestrator responds:
+MAESTRO/orchestrator responds:
 
 ```json
 {
@@ -257,7 +257,7 @@ Bug reports ALWAYS require acknowledgment. If no ack received:
 
 1. Retry once (see Escalation Handling)
 2. If still no ack, agent must block development for critical/high severity
-3. Agent notifies user via session output
+3. Agent notifies the MAESTRO via session output
 
 ### Acknowledgment Format
 
@@ -393,10 +393,10 @@ All message types include:
 **Symptoms**: Bug requiring architectural decision stuck in escalated state.
 
 **Solution**:
-1. Send reminder to user with clear decision options
+1. Send reminder to the MAESTRO with clear decision options
 2. Include recommendation and reasoning for preferred option
-3. Set expectation: escalated bugs need user input before agent can proceed
-4. If user unresponsive, agent should block on critical bugs
+3. Set expectation: escalated bugs need MAESTRO input before agent can proceed
+4. If the MAESTRO is unresponsive, agent should block on critical bugs
 5. Consider if simpler non-architectural fix is possible
 
 ### Problem: Duplicate Detection Fails

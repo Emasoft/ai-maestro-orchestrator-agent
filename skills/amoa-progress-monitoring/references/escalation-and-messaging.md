@@ -17,7 +17,7 @@ Escalation follows a strict **order**, not time-based triggers:
 |------|---------------|--------|----------|
 | 1 | No ACK | Send first reminder | Normal |
 | 2 | Still No ACK after Step 1 | Send urgent reminder | High |
-| 3 | Unresponsive after Step 2 | Notify user, consider reassignment | Urgent |
+| 3 | Unresponsive after Step 2 | Notify the MAESTRO, consider reassignment | Urgent |
 
 ## First Reminder
 
@@ -68,8 +68,8 @@ When state = Unresponsive (no response to first reminder):
 
 When still unresponsive after urgent reminder:
 
-1. Check if user is available → Present options (wait, reassign, abort)
-2. If user unavailable → Auto-reassign to available agent
+1. Check if the MAESTRO is available → Present options (wait, reassign, abort)
+2. If the MAESTRO is unavailable → Auto-reassign to available agent
 3. Notify original agent of reassignment
 4. Transfer all context to new agent
 

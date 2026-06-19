@@ -44,7 +44,7 @@ Move a task to the Blocked column when an agent reports the task cannot proceed,
 | Not a process issue | Is this a team process? | Explain process |
 | Truly blocking | Can work continue on other parts? | Suggest parallel work |
 
-**Only move to Blocked if ALL checks pass (true blocker requiring user/architect intervention).**
+**Only move to Blocked if ALL checks pass (true blocker requiring MAESTRO/architect intervention).**
 
 ## Input
 
@@ -120,7 +120,7 @@ gh issue create --title "BLOCKER: $BLOCKER_REASON" --label "type:blocker" \
 }
 ```
 
-**CRITICAL:** Do NOT wait or "monitor for 24h first". Escalate IMMEDIATELY - user may have solution ready.
+**CRITICAL:** Do NOT wait or "monitor for 24h first". Escalate IMMEDIATELY - the MAESTRO may have a solution ready.
 
 ## Checklist
 
@@ -139,7 +139,7 @@ gh issue create --title "BLOCKER: $BLOCKER_REASON" --label "type:blocker" \
 | Error | Cause | Resolution |
 |-------|-------|------------|
 | Cannot create blocker issue | Permission denied | Check write access to repo |
-| AMAMA unreachable | AI Maestro down | Log and retry, notify user directly |
+| AMAMA unreachable | AI Maestro down | Log and retry, notify the MAESTRO directly |
 
 ## Related Operations
 

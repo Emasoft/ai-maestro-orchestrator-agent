@@ -139,7 +139,7 @@ Agent provides clarification:
 
 ### Escalated
 
-Bug requires architectural decision or user input:
+Bug requires architectural decision or MAESTRO input:
 
 ```json
 {
@@ -168,7 +168,7 @@ Bug requires architectural decision or user input:
 }
 ```
 
-User/orchestrator responds:
+MAESTRO/orchestrator responds:
 
 ```json
 {

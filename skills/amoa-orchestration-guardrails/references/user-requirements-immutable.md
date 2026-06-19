@@ -64,7 +64,7 @@ User requirements cannot be changed, reduced, substituted, or interpreted differ
 - Record requirements verbatim
 - Treat requirements as constraints, not suggestions
 - Halt when requirements conflict
-- Escalate all ambiguities to the user
+- Escalate all ambiguities to AMCOS (relays to AMAMA for the MAESTRO's decision)
 
 ### 1.2 Why This Rule Exists
 
@@ -109,7 +109,7 @@ Source: User conversation
 
 1. Verify plan matches requirements exactly
 2. Flag any deviations BEFORE implementation begins
-3. Escalate issues to user immediately
+3. Escalate issues to AMCOS (relays to AMAMA for the MAESTRO's decision) immediately
 4. Do not proceed with plan that deviates from requirements
 
 **Verification checklist:**
@@ -122,7 +122,7 @@ Source: User conversation
 
 1. Monitor remote agents for requirement compliance
 2. Halt on detected violations
-3. Report violations immediately to user
+3. Report violations immediately to the MAESTRO (via the AMCOS→AMAMA chain)
 4. Do not approve work that violates requirements
 
 **Monitoring checklist:**
@@ -205,8 +205,8 @@ User Requirement -> Feasibility Check -> Issue Found?
 
 1. **Identify the issue** - Document exactly what the problem is
 2. **Generate options** - Create 2-3 alternative approaches
-3. **Present to user** - Explain the issue and options clearly
-4. **WAIT for decision** - Do NOT proceed without user input
+3. **Present to the MAESTRO** (via the AMCOS→AMAMA chain) - Explain the issue and options clearly
+4. **WAIT for decision** - Do NOT proceed without the MAESTRO's input
 5. **Record decision** - Document user's choice with timestamp
 6. **Update requirements** - If user approves change, update USER_REQUIREMENTS.md with approval record
 7. **Proceed** - Continue with user's chosen approach
@@ -250,8 +250,8 @@ User Requirement -> Feasibility Check -> Issue Found?
 ### Requirements Conflict With Each Other
 
 1. Document the conflict clearly
-2. Present both requirements to user
-3. Ask user to clarify priority or modify one requirement
+2. Present both requirements to the MAESTRO (via the AMCOS→AMAMA chain)
+3. Ask the MAESTRO to clarify priority or modify one requirement
 4. Record user's resolution decision
 5. Update USER_REQUIREMENTS.md with resolution
 

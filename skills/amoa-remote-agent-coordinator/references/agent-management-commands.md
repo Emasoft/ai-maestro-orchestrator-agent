@@ -201,7 +201,7 @@ Poll all active agents for progress with mandatory questions.
 | Something unclear | Provide clarification immediately |
 | Unforeseen difficulty | Evaluate: adapt approach or reassign |
 | Needs documentation | Create/provide detailed docs |
-| Needs decision | Make decision or escalate to user |
+| Needs decision | Make decision or escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) |
 | Blocked | Unblock immediately (highest priority) |
 
 **See also**:
@@ -213,7 +213,7 @@ Poll all active agents for progress with mandatory questions.
 ## Typical Workflow
 
 ```
-1. User provides agent information
+1. The MAESTRO provides agent information
    ↓
 2. /register-agent ai implementer-1 --session helper-agent-generic
    ↓

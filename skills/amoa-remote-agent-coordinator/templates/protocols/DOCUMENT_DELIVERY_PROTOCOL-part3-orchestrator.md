@@ -111,7 +111,7 @@ def escalate_missing_ack(task_id, recipient):
         }
     )
 
-    # Notify user/orchestrator
+    # Notify the MAESTRO/orchestrator
     notify_orchestrator(f"Agent {recipient} did not ACK document delivery for {task_id}")
 ```
 

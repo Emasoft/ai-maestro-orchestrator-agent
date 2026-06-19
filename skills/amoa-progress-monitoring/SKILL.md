@@ -28,7 +28,7 @@ States: Acknowledged, No ACK, Active, No Progress, Stale, Unresponsive, Blocked,
 
 1. Query `status:in-progress` issues; determine each agent's state via timestamps
 2. No ACK/No Progress/Stale → send reminder or status request
-3. Unresponsive → escalate; Blocked → create `type:blocker` issue, notify user
+3. Unresponsive → escalate; Blocked → create `type:blocker` issue, notify the MAESTRO
 4. Complete → verify PR, tests, review, docs; update labels
 <!-- TOC: IronRule|BlockerDef|Protocol|Labels|Resolution|Lifecycle -->
 

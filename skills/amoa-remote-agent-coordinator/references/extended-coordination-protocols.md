@@ -35,7 +35,7 @@ description: Multi-agent coordination protocols for decisions, updates, reassign
 - AMCOS Mid-Task Requirement Update to AMOA + relay to agent
 - Module Modification Notification + agent ACK
 - Priority Change Notification + agent ACK
-- AMAMA user decision relay after immutable requirement escalation
+- AMAMA MAESTRO decision relay after immutable requirement escalation
 - Decision tree: Minor (relay) / Major (pause, re-verify) / Breaking (stop, escalate)
 
 ---
@@ -58,7 +58,7 @@ description: Multi-agent coordination protocols for decisions, updates, reassign
 - Agent Blocker Report to AMOA (structured JSON: type, description, impact, workaround)
 - AMOA Triage Response (unblock/escalate/workaround)
 - AMOA Blocker Resolution Notification
-- Decision tree: Technical (fix/reroute) / External (escalate) / Requirement (escalate to user)
+- Decision tree: Technical (fix/reroute) / External (escalate) / Requirement (escalate to AMCOS, which relays to AMAMA for the MAESTRO's decision)
 
 ---
 

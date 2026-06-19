@@ -115,8 +115,8 @@ Before sending any task delegation, verify:
 If remote agent reports a RULE 14 violation:
 1. Immediately halt the task
 2. Generate Requirement Issue Report
-3. Present to user
-4. Resume only after user decision
+3. Present to the MAESTRO
+4. Resume only after MAESTRO decision
 
 ### 4.2 Requirement Issue Report Format
 
@@ -146,8 +146,8 @@ Awaiting user decision.
 
 ### 4.3 User Decision Workflow
 
-1. Present Requirement Issue Report to user
-2. Wait for user decision (A, B, or C)
+1. Present Requirement Issue Report to the MAESTRO
+2. Wait for the MAESTRO's decision (A, B, or C)
 3. Document decision with timestamp
 4. Update task instructions if B selected
 5. Notify agent of outcome

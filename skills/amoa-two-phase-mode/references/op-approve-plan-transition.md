@@ -20,14 +20,14 @@ parent-skill: amoa-two-phase-mode
 Trigger this operation when:
 - Plan Phase is complete with all requirements documented
 - All modules are defined with acceptance criteria
-- User has reviewed and approved the plan
+- The MAESTRO has reviewed and approved the plan
 
 ## Prerequisites
 
 - Plan Phase state file exists at `design/state/plan-phase.md`
 - USER_REQUIREMENTS.md is complete
 - All modules have acceptance criteria defined
-- User has confirmed plan approval
+- The MAESTRO has confirmed plan approval
 
 ## Procedure
 
@@ -45,7 +45,7 @@ Verify all Plan Phase exit criteria are met:
 | All modules have acceptance criteria | Each module has criteria | [ ] |
 | All modules have priority | priority field set | [ ] |
 | Dependencies identified | dependencies array set | [ ] |
-| User approved | Explicit user confirmation | [ ] |
+| MAESTRO approved | Explicit MAESTRO confirmation | [ ] |
 
 ### Step 2: Run Validation Command
 
@@ -112,7 +112,7 @@ orchestration_id: "orch-YYYYMMDD-HHMMSS"
 
 ### Step 6: Output Transition Summary
 
-Provide summary to user:
+Provide summary to the MAESTRO:
 
 ```markdown
 ## Plan Phase Complete
@@ -141,7 +141,7 @@ Copy this checklist and track your progress:
 - [ ] Verify all modules have acceptance criteria
 - [ ] Verify all modules have priorities set
 - [ ] Verify dependencies are documented
-- [ ] Obtain explicit user approval
+- [ ] Obtain explicit MAESTRO approval
 - [ ] Run `/approve-plan` command
 - [ ] Verify validation passes
 - [ ] Confirm GitHub Issues created
@@ -222,7 +222,7 @@ Please complete these items before running /approve-plan again.
 | Validation failed | Missing required elements | Complete missing items, re-run |
 | GitHub issue creation failed | gh CLI not authenticated | Run `gh auth login` |
 | State file not found | Plan phase not started | Run `/start-planning` first |
-| User not approved | Missing explicit confirmation | Request user approval |
+| MAESTRO not approved | Missing explicit confirmation | Request MAESTRO approval |
 
 ## Related Operations
 

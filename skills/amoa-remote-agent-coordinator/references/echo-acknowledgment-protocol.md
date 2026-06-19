@@ -261,7 +261,7 @@ After sending ANY Task Delegation:
 
 4. **If still no ACK after second request (2 more minutes):**
    - Mark agent as `unresponsive`
-   - Reassign task OR escalate to user
+   - Reassign task OR escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
    - Log incident
 
 ### ACK Format (Simplified)
@@ -363,7 +363,7 @@ This protocol integrates with:
 2. Check if agent is processing other tasks (may be at capacity)
 3. Send explicit ACK reminder with shorter timeout
 4. If no response after 3 attempts, mark agent as unresponsive and reassign task
-5. Document incident for user review
+5. Document incident for MAESTRO review
 
 ### Problem: Agent ACKs But With Wrong Understanding
 
@@ -395,7 +395,7 @@ This protocol integrates with:
 2. If prior task is blocked, help unblock it first
 3. If prior task is complete but agent didn't start new task, send explicit "begin now" message
 4. Set a reminder to check again in 15 minutes
-5. If pattern repeats, escalate queue management issues to user
+5. If pattern repeats, escalate queue management issues to AMCOS (relays to AMAMA for the MAESTRO's decision)
 
 ### Problem: Multiple Agents ACK Same Task
 

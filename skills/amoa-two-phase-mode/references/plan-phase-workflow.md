@@ -88,9 +88,9 @@ The orchestrator must:
 1. Clarify any ambiguous aspects of the goal
 2. Identify constraints (technical, timeline, budget)
 3. Document assumptions
-4. Confirm scope with user
+4. Confirm scope with the MAESTRO
 
-**Important:** The goal is LOCKED once entered. Changes require explicit user approval via `/modify-requirement`.
+**Important:** The goal is LOCKED once entered. Changes require explicit MAESTRO approval via `/modify-requirement`.
 
 ### 2.2 Creating USER_REQUIREMENTS.md
 
@@ -216,7 +216,7 @@ Before running `/approve-plan`, verify:
   - [ ] Clear acceptance criteria
   - [ ] Priority assigned
   - [ ] Dependencies identified
-- [ ] User has reviewed and approved requirements
+- [ ] The MAESTRO has reviewed and approved requirements
 
 ### 4.2 Using /approve-plan to transition
 

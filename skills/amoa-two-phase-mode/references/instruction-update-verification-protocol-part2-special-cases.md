@@ -107,7 +107,7 @@ For **user requirement changes** (core requirements modified by user decision):
 - Treat as NEW task assignment
 - Run FULL Instruction Verification Protocol (8 steps)
 - Clear previous verification status
-- Document that user authorized the change
+- Document that the MAESTRO authorized the change
 
 **Template for user requirement changes:**
 ```markdown
@@ -305,7 +305,7 @@ python3 amoa_update_verification.py history implementer-1
 1. Evaluate the blocker objectively
 2. If blocker is valid:
    - Modify requirements if possible
-   - Escalate to user if core requirement
+   - Escalate to the MAESTRO if core requirement
    - Consider reassigning if agent lacks capability
 3. If blocker is incorrect:
    - Provide counter-evidence

@@ -144,7 +144,7 @@ Expected response time: 5 minutes
 | Something unclear | Provide clarification immediately |
 | Unforeseen difficulty | Evaluate: adapt approach or reassign |
 | Needs documentation | Create/provide detailed docs |
-| Needs decision | Make decision or escalate to user |
+| Needs decision | Make decision or escalate to the MAESTRO |
 | Higher complexity | Adjust expectations, potentially split task |
 | Blocked | Unblock immediately (highest priority) |
 | "No blockers" | Acknowledge, schedule next poll |
@@ -227,32 +227,32 @@ assignment through the standard verification protocol.
 
 ---
 
-#### Choice 3: Core Requirement Conflict (Escalate to User)
+#### Choice 3: Core Requirement Conflict (Escalate to the MAESTRO)
 
 **When to use:** Issue caused by:
-- Unforeseen circumstances not predicted/planned by USER
-- Requirements WRITTEN DIRECTLY BY USER (marked as unchangeable CORE REQUIREMENTS)
+- Unforeseen circumstances not predicted/planned by the MAESTRO
+- Requirements WRITTEN DIRECTLY BY THE MAESTRO (marked as unchangeable CORE REQUIREMENTS)
 - Core requirements found impossible to implement for any reason
 
 **Action:**
 1. STOP the implementer immediately
 2. Document the issue clearly
-3. Escalate to USER explicitly
-4. Wait for USER's decision
-5. Record USER's answer in state file (MANDATORY)
-6. Only USER can decide to stay course or change core requirements
+3. Escalate to the MAESTRO explicitly
+4. Wait for the MAESTRO's decision
+5. Record the MAESTRO's answer in state file (MANDATORY)
+6. Only the MAESTRO can decide to stay course or change core requirements
 
 **Example to implementer:**
 ```
 STOP WORK IMMEDIATELY.
 
-You've encountered an issue with a CORE REQUIREMENT set by the user.
-I cannot modify core requirements without user approval.
+You've encountered an issue with a CORE REQUIREMENT set by the MAESTRO.
+I cannot modify core requirements without MAESTRO approval.
 
-I am escalating this to the user now. Please standby.
+I am escalating this to the MAESTRO now. Please standby.
 ```
 
-**Example to user:**
+**Example to the MAESTRO:**
 ```
 ESCALATION: Core Requirement Conflict
 
@@ -272,7 +272,7 @@ C) Other (please specify)
 YOUR DECISION IS REQUIRED. Please respond with A, B, or C.
 ```
 
-**Recording user decision (MANDATORY):**
+**Recording MAESTRO decision (MANDATORY):**
 ```yaml
 user_decisions:
   - timestamp: "2026-01-08T17:30:00+00:00"

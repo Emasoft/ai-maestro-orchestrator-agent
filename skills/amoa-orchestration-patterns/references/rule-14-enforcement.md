@@ -29,8 +29,8 @@ A requirement deviation occurs when:
 **Action on deviation detected:**
 1. STOP the current task
 2. Document the deviation in a Requirement Issue Report
-3. Escalate to AMCOS (or directly to the user if AMCOS is unavailable)
-4. BLOCK progress on the affected requirement until user decides
+3. Escalate to AMCOS (or directly to the MAESTRO if AMCOS is unavailable)
+4. BLOCK progress on the affected requirement until the MAESTRO decides
 
 ## 1.3 When Technical Constraints Conflict
 
@@ -38,7 +38,7 @@ If a technical constraint makes a requirement infeasible:
 1. Document the constraint clearly (what, why, evidence)
 2. Propose alternatives that satisfy the requirement intent
 3. Send escalation to AMCOS with `priority: "urgent"`
-4. Wait for user decision — do NOT proceed with a workaround
+4. Wait for the MAESTRO's decision — do NOT proceed with a workaround
 
 **Forbidden actions:**
 - Silently dropping a requirement
@@ -63,5 +63,5 @@ Every workflow output MUST include requirement compliance status:
 | Requirement clear and feasible | Implement as specified |
 | Requirement ambiguous | Escalate for clarification, BLOCK until resolved |
 | Requirement infeasible | Document constraint, propose alternatives, escalate |
-| Requirement conflicts with another | Escalate both, let user prioritize |
+| Requirement conflicts with another | Escalate both, let the MAESTRO prioritize |
 | Implementation deviates | Stop, document, escalate |

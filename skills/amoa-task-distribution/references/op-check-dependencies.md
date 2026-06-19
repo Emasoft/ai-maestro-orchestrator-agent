@@ -81,16 +81,16 @@ CIRCULAR DEPENDENCY:
 Task A -> depends on -> Task B
 Task B -> depends on -> Task A
 
-Cannot proceed. User decision required.
+Cannot proceed. MAESTRO decision required.
 ```
 
-**Action:** Stop processing and escalate to user immediately.
+**Action:** Stop processing and escalate to the MAESTRO immediately.
 
 ## Error Handling
 
 | Error | Cause | Resolution |
 |-------|-------|------------|
-| Circular dependency | Tasks block each other | Escalate to user for resolution |
+| Circular dependency | Tasks block each other | Escalate to the MAESTRO for resolution |
 | Missing blockedBy | No dependency field in body | Treat as no dependencies |
 | Blocker issue not found | Invalid issue reference | Log warning, continue checking others |
 

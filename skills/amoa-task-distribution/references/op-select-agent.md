@@ -117,8 +117,8 @@ Use the `ai-maestro-agents-management` skill to query agent availability:
 
 | Error | Cause | Resolution |
 |-------|-------|------------|
-| No available agents | All agents at capacity/offline | Wait for capacity or escalate to user |
-| No skill match | No agent has required skills | Escalate to user for training/reassignment |
+| No available agents | All agents at capacity/offline | Wait for capacity or escalate to the MAESTRO |
+| No skill match | No agent has required skills | Escalate to the MAESTRO for training/reassignment |
 
 ## Related Operations
 

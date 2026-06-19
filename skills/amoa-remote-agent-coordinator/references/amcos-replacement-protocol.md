@@ -311,10 +311,10 @@ User requirements remain **absolutely immutable** through agent replacement. The
 If the replacement agent also fails (crashes, exhausts context, etc.):
 
 1. **STOP** - Do not attempt automatic re-replacement
-2. **ALERT** user immediately via notification
+2. **ALERT** the MAESTRO immediately via notification
 3. **PRESERVE** all handoff documents and state files
 4. **DOCUMENT** both failures in incident report
-5. **WAIT** for user guidance before proceeding
+5. **WAIT** for the MAESTRO's guidance before proceeding
 
 **Why**: Two consecutive failures indicate a deeper issue (task too complex, requirements unclear, systemic problem). Automatic retry would likely fail again.
 
@@ -325,7 +325,7 @@ If the replacement agent reports missing critical information:
 1. **STOP** work immediately
 2. **Document** missing information in handoff addendum
 3. **Attempt recovery** from GitHub comments, commit messages, CI logs
-4. **If recovery impossible**: Escalate to user
+4. **If recovery impossible**: Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
 5. **Do NOT** instruct replacement agent to "figure it out" or "start fresh"
 
 ### If Original Task Requirements Unclear
@@ -390,7 +390,7 @@ Before sending handoff to replacement agent, verify:
 ### DO NOT Include
 
 - **Assumptions**: If failed agent "probably meant to do X"
-- **Workarounds**: Alternative approaches not approved by user
+- **Workarounds**: Alternative approaches not approved by the MAESTRO
 - **Speculation**: Guesses about what should happen next
 - **Incomplete thoughts**: Half-written ideas or notes
 

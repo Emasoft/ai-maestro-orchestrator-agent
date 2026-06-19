@@ -188,7 +188,7 @@ AI Maestro error: Connection refused.
 
 3. **Retry assignment**:
    - Wait a moment and try again
-   - If persistent, ask user to restart the session
+   - If persistent, ask the MAESTRO to restart the session
 
 ---
 
@@ -235,7 +235,7 @@ Agent response: "I'm blocked because..."
    - Provide missing information
    - Make decisions
 3. **If you cannot unblock**:
-   - Escalate to user
+   - Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
    - Consider reassignment
 
 ### 8.3.3 Progress Stalled
@@ -274,9 +274,9 @@ Error: Cannot connect to AI Maestro messaging system
 
 1. **Check if service is running**: Use the `agent-messaging` skill to perform a health check on the AI Maestro service.
 
-2. **Restart AI Maestro** (ask user):
+2. **Restart AI Maestro** (ask the MAESTRO):
    ```bash
-   # User should run this in the AI Maestro terminal
+   # The MAESTRO should run this in the AI Maestro terminal
    npm start  # or appropriate command
    ```
 
@@ -434,4 +434,4 @@ Most issues fall into categories:
 When in doubt:
 1. Check `/orchestration-status` for current state
 2. Verify services are running
-3. Escalate to user if unable to resolve
+3. Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) if unable to resolve

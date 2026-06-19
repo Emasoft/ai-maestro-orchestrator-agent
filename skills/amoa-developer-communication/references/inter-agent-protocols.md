@@ -55,7 +55,7 @@ AMOA (team orchestrator)
 WORKER AGENTS (implementers, testers, sub-agents)
 ```
 
-**Note**: This shows AMOA's internal team structure. In the overall system, AMOA receives work from AMCOS (Chief of Staff), not directly from the human user. AMAMA is the only agent that communicates directly with the human user.
+**Note**: This shows AMOA's internal team structure. In the overall system, AMOA receives work from AMCOS (Chief of Staff), not directly from the human user. AMAMA is the MANAGER and the **MAESTRO's** interlocutor; normal (non-MAESTRO) users communicate via their own **ASSISTANT** agent (R38/R39), and AMOA's USER edge remains **reply-only**.
 
 **Rule**: Worker agents NEVER communicate directly with each other. All communication flows through AMOA.
 

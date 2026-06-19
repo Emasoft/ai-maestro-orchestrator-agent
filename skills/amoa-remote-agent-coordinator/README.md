@@ -29,7 +29,7 @@ Enables AMOA (AI Maestro Orchestrator Agent) to delegate coding tasks to remote 
 | 4-Verification Loops | Agent requests PR permission |
 | Progress Monitoring | Tracking agent progress |
 | Error Handling | Agent reports being blocked |
-| Escalation | Issue requires user decision |
+| Escalation | Issue requires MAESTRO decision |
 
 ## Entry Point
 

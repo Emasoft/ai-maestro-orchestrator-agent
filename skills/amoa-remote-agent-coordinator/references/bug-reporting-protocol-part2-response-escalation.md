@@ -117,12 +117,12 @@ If orchestrator doesn't acknowledge:
 3. **Max attempts exceeded**:
    - Agent logs non-responsive orchestrator
    - Agent blocks development if bug severity is critical/high
-   - Agent notifies user via session output
+   - Agent notifies the MAESTRO via session output
 
 If bug cannot be reproduced:
 
 1. **Max reproduction attempts exceeded**:
-   - Orchestrator escalates to user
+   - Orchestrator escalates to AMCOS (relays to AMAMA for the MAESTRO's decision)
    - Orchestrator considers reassigning task or closing as cannot-reproduce
    - Orchestrator updates GitHub issue with reproduction status
 
@@ -134,5 +134,5 @@ Attempt 1: Agent sends bug-report (severity: high, attempt: 1)
 Attempt 2: Agent retries bug-report (retry: true, attempt: 2)
            -> No ack received
            -> Log "Orchestrator unresponsive", block development
-           -> Max ack attempts (2) exceeded -> Escalate to user
+           -> Max ack attempts (2) exceeded -> Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
 ```

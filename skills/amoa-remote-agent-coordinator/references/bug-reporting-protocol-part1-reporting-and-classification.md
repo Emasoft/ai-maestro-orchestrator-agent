@@ -400,7 +400,7 @@ gh issue close 89 --comment "Verified fixed in commit abc123def. Tests pass."
 2. Check if orchestrator session is online
 3. Retry with `retry: true, attempt: 2` field after reasonable wait
 4. If still no ack after 2 attempts, block development for critical/high severity
-5. Notify user via session output about unresponsive orchestrator
+5. Notify the MAESTRO via session output about unresponsive orchestrator
 
 ### Problem: Reproduction Steps Insufficient
 

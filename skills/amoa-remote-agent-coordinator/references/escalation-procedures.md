@@ -17,7 +17,7 @@
 
 ## Overview
 
-This document defines when and how the AMOA (AI Maestro Orchestrator Agent) escalates issues to the user or higher authority. Proper escalation ensures problems are addressed without exceeding orchestrator's decision-making scope.
+This document defines when and how the AMOA (AI Maestro Orchestrator Agent) escalates issues to the MAESTRO or higher authority. Proper escalation ensures problems are addressed without exceeding orchestrator's decision-making scope.
 
 ## Contents
 
@@ -326,7 +326,7 @@ Maintain `ESCALATION_QUEUE.md`:
 - Add dependencies without approval
 - Ignore escalation responses
 - Escalate the same issue repeatedly
-- Assume user saw the message
+- Assume the MAESTRO saw the message
 
 ## Metrics
 
@@ -379,18 +379,18 @@ Escalation sent, no response received
 
 ### User Response Processing Decision Tree
 
-When AMOA receives a user decision relayed through AMAMA or AMCOS, follow this decision tree:
+When AMOA receives a MAESTRO decision relayed through AMAMA or AMCOS, follow this decision tree:
 
 ```
-User decision received via AMCOS/AMAMA relay
+MAESTRO decision received via AMCOS/AMAMA relay
 ├─ Is the decision clear and actionable?
 │   ├─ Yes → Does it match one of the options AMOA presented?
 │   │         ├─ Yes → Execute the chosen option
 │   │         │         → Send confirmation to AMCOS: "Executing option X as directed"
 │   │         │         → Update affected agents with new direction
 │   │         │         → Resume paused tasks if applicable
-│   │         └─ No (user chose something different) → Is the alternative feasible?
-│   │             ├─ Yes → Adapt plan to user's choice → Execute
+│   │         └─ No (the MAESTRO chose something different) → Is the alternative feasible?
+│   │             ├─ Yes → Adapt plan to the MAESTRO's choice → Execute
 │   │             └─ No → Send back explanation of why it's not feasible
 │   │                     → Provide revised options → Wait for new decision
 │   └─ No (ambiguous or incomplete) → Send clarification request through AMCOS

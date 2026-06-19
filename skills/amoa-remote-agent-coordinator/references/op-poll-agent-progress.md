@@ -132,7 +132,7 @@ fi
 | 1 | No response to first poll | Wait 15 more minutes |
 | 2 | No response after 30 min total | Send high-priority reminder |
 | 3 | No response after 1 hour | Send urgent escalation |
-| 4 | No response after 2 hours | Notify user, consider reassignment |
+| 4 | No response after 2 hours | Notify the MAESTRO, consider reassignment |
 
 ## Success Criteria
 

@@ -71,7 +71,7 @@ If implementer identifies issues with USER requirements:
 }
 ```
 
-**CRITICAL**: NEVER modify an immutable user requirement without explicit user approval obtained through the Manager.
+**CRITICAL**: NEVER modify an immutable user requirement without explicit MAESTRO approval obtained through the Manager.
 
 ## PROCEED Message
 

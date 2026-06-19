@@ -230,7 +230,7 @@ Orchestrator tracks agent acknowledgments using event-driven pattern (no fixed t
    - Send **reminder notification** with `reminder: true` flag
    - Log reminder sent
 6. **If still no acknowledgment** after second reminder:
-   - For `critical`/`high` urgency: **Escalate to user** for manual intervention
+   - For `critical`/`high` urgency: **Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)** for manual intervention
    - For `medium`/`low` urgency: **Log warning**, continue with assumption agent will comply
 
 ### Reminder Notification Format
@@ -265,7 +265,7 @@ Orchestrator tracks agent acknowledgments using event-driven pattern (no fixed t
 | `cannot-apply-change` | Agent unable to comply | Agent escalates with reason |
 | `breaking-change-detected` | Change breaks current work | Agent pauses, requests guidance |
 | `incompatible-environment` | Local env can't support change | Agent reports environment details |
-| `no-acknowledgment-after-reminders` | No response after multiple reminders | Orchestrator escalates to user (critical/high) or logs warning (medium/low) |
+| `no-acknowledgment-after-reminders` | No response after multiple reminders | Orchestrator escalates to AMCOS (relays to AMAMA for the MAESTRO's decision) (critical/high) or logs warning (medium/low) |
 | `partial-application` | Some changes applied, some failed | Report partial status |
 
 ### Error Response Format
@@ -337,7 +337,7 @@ This protocol integrates with:
 2. Increase urgency level if appropriate
 3. For critical changes, send STOP command until acknowledgment received
 4. Check if agent received notification (delivery issues)
-5. Escalate to user if agent persistently ignores
+5. Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) if agent persistently ignores
 
 ### Problem: Breaking Change Causes Agent Failure
 

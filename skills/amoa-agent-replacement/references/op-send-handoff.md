@@ -81,7 +81,7 @@ Send the handoff notification using the `agent-messaging` skill:
 
 | Urgency Level | Timeout | Action if No ACK |
 |---------------|---------|------------------|
-| immediate | 15 minutes | Escalate to user |
+| immediate | 15 minutes | Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) |
 | high | 30 minutes | Retry notification |
 | normal | 60 minutes | Queue for retry |
 
@@ -130,7 +130,7 @@ Send a retry reminder using the `agent-messaging` skill:
 
 **Verify**: confirm message delivery.
 
-If still no response, escalate to user:
+If still no response, escalate to AMCOS (relays to AMAMA for the MAESTRO's decision):
 ```bash
 gh issue comment <ISSUE_NUM> --body "@USER: Replacement agent $REPLACEMENT_AGENT has not acknowledged handoff. Manual intervention may be needed."
 ```
@@ -151,7 +151,7 @@ gh issue comment <ISSUE_NUM> --body "@USER: Replacement agent $REPLACEMENT_AGENT
 | Upload failed | GitHub API error | Retry or use alternative method |
 | AI Maestro unreachable | Service down | Restart service or use backup |
 | Agent session not found | Session ended | Request new session from AMCOS |
-| ACK timeout | Agent unresponsive | Escalate to user |
+| ACK timeout | Agent unresponsive | Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) |
 
 ## Example
 

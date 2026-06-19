@@ -18,10 +18,10 @@
 
 If the replacement agent fails during handoff:
 
-1. **ALERT** user immediately
+1. **ALERT** the MAESTRO immediately (via the AMCOS→AMAMA chain)
 2. **PRESERVE** all handoff documents
 3. **DO NOT** attempt automatic re-replacement
-4. **WAIT** for user guidance
+4. **WAIT** for the MAESTRO's guidance
 
 ---
 

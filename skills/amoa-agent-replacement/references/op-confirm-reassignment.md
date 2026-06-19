@@ -169,7 +169,7 @@ gh issue comment $PRIMARY_ISSUE --body "**Replacement Complete**
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| No ACK received | Timeout expired | Escalate to user |
+| No ACK received | Timeout expired | Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) |
 | ACK with major questions | Agent needs more info | Provide clarification |
 | State update failed | File permission issue | Check file access |
 | AMCOS notification failed | AI Maestro issue | Retry notification |

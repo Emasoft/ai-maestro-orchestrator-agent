@@ -143,11 +143,11 @@ After analysis, provide concrete next steps:
 
 ### 3.3 Escalation When Needed
 
-If the error requires user decision:
+If the error requires MAESTRO decision:
 1. Acknowledge to agent that escalation is needed
-2. Create escalation message to user
+2. Create escalation message to the MAESTRO
 3. Keep agent informed of status
-4. Relay user decision back to agent
+4. Relay MAESTRO decision back to agent
 
 ---
 
@@ -170,7 +170,7 @@ If the error requires user decision:
 **Solution**:
 1. Review the proposed solution - may be incomplete
 2. Ask agent to provide more context about why solution fails
-3. Escalate to user if root cause unclear
+3. Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) if root cause unclear
 4. Consider reassigning to agent with different expertise
 
 ### Problem: Unclear Error Type

@@ -26,7 +26,7 @@
 
    | Phase | Purpose | Activities | Exit Condition |
    |-------|---------|------------|----------------|
-   | **Plan Phase** | Write requirements | Design specs, architecture, task breakdown | All requirements documented + user approval |
+   | **Plan Phase** | Write requirements | Design specs, architecture, task breakdown | All requirements documented + MAESTRO approval |
    | **Orchestration Phase** | Direct implementation | Coordinate remote agents module by module | All modules implemented + 4 verification loops |
 
 2. **Start Plan Phase**: Use `/start-planning` command to create state file and begin requirements documentation.

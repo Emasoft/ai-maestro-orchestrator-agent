@@ -29,7 +29,7 @@ The orchestrator is a **coordination specialist** responsible for:
 | **Strategic Planning** | Breaking goals into tasks | "Feature X needs: auth module, API endpoint, tests" |
 | **Task Assignment** | Matching tasks to agents | "Auth module → helper-agent-generic" |
 | **Progress Monitoring** | Tracking task completion | "Checking AI Maestro for status updates" |
-| **Escalation Handling** | Managing blocked work | "Agent blocked → reassign or escalate to user" |
+| **Escalation Handling** | Managing blocked work | "Agent blocked → reassign or escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)" |
 | **Quality Assurance** | Reviewing outcomes | "PR matches requirements? Approve or request fix" |
 | **Documentation** | Creating plans and reports | "Writing delegation docs, completion summaries" |
 

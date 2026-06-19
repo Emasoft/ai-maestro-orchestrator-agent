@@ -128,7 +128,7 @@ gh issue list --label "assign:impl-01" --json number,title,labels
 |-------|-------|----------|
 | Agent never ACKs | Agent offline, hibernated, or unaware | Send reminder, escalate to AMCOS if no response |
 | Agent stops responding mid-task | Agent crashed, hibernated, or blocked | Follow escalation order (sections 3.1-3.3) |
-| Blocker reported but not resolved | Dependency on external event | Coordinate with other agents or escalate to user |
+| Blocker reported but not resolved | Dependency on external event | Coordinate with other agents or escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) |
 | Completion reported but verification fails | Missing tests, failing CI, or incomplete requirements | Send REVISE message (see **amoa-implementer-interview-protocol**) |
 | Multiple agents updating same task | Concurrent work or reassignment conflict | Check `assign:*` label, coordinate via AI Maestro |
 | Stale state but agent actually hibernated | Normal hibernation, not a failure | Distinguish hibernation from unresponsiveness via AMCOS |

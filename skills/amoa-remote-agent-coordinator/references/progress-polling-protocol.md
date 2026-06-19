@@ -142,7 +142,7 @@ Please provide your current status:
 6. **Do you need anything from me?**
    - Documentation needed
    - Clarification required
-   - Decision needed from orchestrator/user
+   - Decision needed from orchestrator/MAESTRO
    - Resources or access required
 
 ---
@@ -223,7 +223,7 @@ Thanks!
 
 **Orchestrator actions**:
 1. If within orchestrator authority: make decision immediately
-2. If needs user input: escalate to user, inform agent of expected wait
+2. If needs MAESTRO input: escalate to the MAESTRO, inform agent of expected wait
 3. Provide interim guidance if possible
 
 ### Issue: Completely Blocked
@@ -237,7 +237,7 @@ Thanks!
    - Provide solution
    - Pair with agent to solve together
    - Reassign module
-   - Escalate to user
+   - Escalate to the MAESTRO
 4. Never leave an agent blocked for more than 15 minutes
 
 ---
@@ -325,7 +325,7 @@ For human developers:
 
 ## 2.8 Escalation Procedures
 
-### When to Escalate to User
+### When to Escalate to the MAESTRO
 
 1. Agent blocked for >30 minutes with no resolution in sight
 2. Scope creep requires product decision

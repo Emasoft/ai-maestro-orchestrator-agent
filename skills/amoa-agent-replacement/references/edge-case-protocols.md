@@ -185,7 +185,7 @@ Reply to this issue with status updates every 30 minutes.
    EOF
    ```
 
-3. **Notify user**:
+3. **Notify the MAESTRO** (via the AMCOS→AMAMA chain):
    ```
    WARNING: GitHub is temporarily unavailable.
    - Cached state from: [timestamp]
@@ -252,9 +252,9 @@ Send an urgent escalation using the `agent-messaging` skill:
 
 **Verify**: confirm message delivery.
 
-**Step 3: Escalate to User or Reassign (when still unresponsive after Step 2)**
-- If user online: Present options (wait, reassign, abort)
-- If user offline: Auto-reassign to available agent (see 3.3)
+**Step 3: Escalate to the MAESTRO or Reassign (when still unresponsive after Step 2)**
+- If the MAESTRO is online: Present options (wait, reassign, abort)
+- If the MAESTRO is offline: Auto-reassign to available agent (see 3.3)
 
 ### 3.3 Reassignment Protocol
 
@@ -298,7 +298,7 @@ When reassigning a timed-out task:
 1. Check other agents for availability
 2. If all agents at capacity:
    - Queue module with priority
-   - Notify user: "All agents at capacity. Module queued."
+   - Notify the MAESTRO: "All agents at capacity. Module queued."
    - Set reminder to check again in 15 minutes
 3. Consider spawning additional agent session
 
@@ -326,7 +326,7 @@ When reassigning a timed-out task:
    Module A (auth-service) -> depends on -> Module B (user-service)
    Module B (user-service) -> depends on -> Module A (auth-service)
    ```
-3. Request user guidance on resolution:
+3. Request MAESTRO guidance on resolution:
    - Break dependency by creating interface
    - Merge modules
    - Implement one with mock, update later
@@ -361,7 +361,7 @@ When reassigning a timed-out task:
    ```
 2. Send clarification request to agent
 3. Block status advancement until resolved
-4. If unresolved after 2 clarification attempts, escalate to user
+4. If unresolved after 2 clarification attempts, escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
 
 ### 5.3 Missing Checkpoints
 
@@ -451,8 +451,8 @@ If multiple edge cases compound (e.g., AI Maestro down + GitHub down + agent tim
 1. **Stop all active tasks**
 2. **Save complete state to local files**
 3. **Create recovery checkpoint**
-4. **Notify user immediately**
-5. **Wait for user guidance before resuming**
+4. **Notify the MAESTRO immediately**
+5. **Wait for the MAESTRO's guidance before resuming**
 
 Recovery checkpoint location: `.claude/recovery/checkpoint-{timestamp}.json`
 

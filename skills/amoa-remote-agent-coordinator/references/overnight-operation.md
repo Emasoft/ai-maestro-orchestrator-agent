@@ -44,9 +44,9 @@ Before initiating autonomous operation:
 
 ### Before Leaving
 
-1. **User Reviews Queue**
+1. **MAESTRO Reviews Queue**
    ```
-   USER: "Complete features GH-101, GH-102, GH-103 autonomously"
+   MAESTRO: "Complete features GH-101, GH-102, GH-103 autonomously"
    ```
 
 2. **Orchestrator Confirms Understanding**
@@ -62,9 +62,9 @@ Before initiating autonomous operation:
    Proceed with autonomous operation?"
    ```
 
-3. **User Approves**
+3. **MAESTRO Approves**
    ```
-   USER: "Approved. Escalate only for security issues."
+   MAESTRO: "Approved. Escalate only for security issues."
    ```
 
 4. **Orchestrator Begins**
@@ -140,7 +140,7 @@ WHILE tasks_remaining AND user_away:
        └── IF fail: send fix instructions
 
     3. ON escalation:
-       └── IF security: queue for user (urgent)
+       └── IF security: queue for the MAESTRO (urgent)
        └── IF architecture: make judgment, document
        └── IF blocked: reassign or defer
 
@@ -240,7 +240,7 @@ Generate comprehensive report:
 
 ## Escalation During Autonomous Operation
 
-### Immediate Escalation (Notify User)
+### Immediate Escalation (Notify the MAESTRO)
 
 Only for:
 - Security vulnerabilities discovered
@@ -266,7 +266,7 @@ Message format:
 }
 ```
 
-### Deferred Escalation (User Review)
+### Deferred Escalation (MAESTRO Review)
 
 For:
 - Architecture questions
@@ -299,28 +299,28 @@ Message format:
 1. Detect via missed heartbeat (3 consecutive failed pings)
 2. Mark agent as offline in roster
 3. Reassign pending tasks to backup agent
-4. Log for user review
+4. Log for MAESTRO review
 
 ### All Agents Offline
 
 1. Stop assigning new tasks
 2. Document current state
-3. Send alert to user
-4. Wait for user intervention
+3. Send alert to the MAESTRO
+4. Wait for the MAESTRO's intervention
 
 ### CI/CD Failure
 
 1. Retry once after next poll cycle
 2. If persistent after 3 retry attempts, mark PR as blocked
 3. Continue with other tasks
-4. Document for user review
+4. Document for MAESTRO review
 
 ### Merge Conflict
 
 1. Do NOT attempt automatic resolution
 2. Mark PR as blocked
 3. Document conflict details
-4. Queue for user resolution
+4. Queue for MAESTRO resolution
 
 ## Configuration
 

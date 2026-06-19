@@ -6,6 +6,8 @@
 
 > **R6 v3 in one line:** CHIEF-OF-STAFF (AMCOS) guards the **team boundary**. Within a team, ORCHESTRATOR ↔ ARCHITECT / MEMBER / INTEGRATOR are **DIRECT** edges. The MANAGER (AMAMA) reaches team-internal agents **only via AMCOS** — there is **no** AMAMA↔AMOA or AMAMA↔AMIA direct edge.
 
+> **The human-authority model (R36–R40):** the top human authority is the **MAESTRO** — exactly one per host; the MANAGER (AMAMA) obeys only the MAESTRO (or its single active **MAESTRO-DELEGATE**, R37). **Normal (non-MAESTRO) users never talk to AMOA or AMAMA directly** — every non-MAESTRO user works through an auto-assigned **ASSISTANT** agent (role plugin `ai-maestro-assistant-role-agent`, R38/R39) and may message only their own ASSISTANT, their team's COS, and the MANAGER. **AMOA (this role) is a team MEMBER/ORCHESTRATOR, NOT the MANAGER:** it escalates up the **AMCOS → AMAMA → MAESTRO** chain, and its `USER` communication edge is **reply-only** (it never initiates human contact). The R29/R30 team-and-agent lifecycle authority described below is the **MANAGER's** — stated here as facts AMOA must know, never as powers AMOA holds. Every agent (AMOA included) authenticates by **AID + portfolio token, never a sudo/governance password** (R28/R32) and **cannot change its own title/role/name/identity** (R26).
+
 ---
 
 ## Role Hierarchy (R6 v3 communication graph)
@@ -26,7 +28,7 @@ INTEGRATOR.
 ╔═══════════════════════ GOVERNANCE LAYER ═════════════════════════╗
 ║  ┌───────────────────────────────────────────────────────────┐  ║
 ║  │  AMAMA (Manager) [manager]                                 │  ║
-║  │    - User's sole interlocutor   - Creates projects         │  ║
+║  │    - MAESTRO's interlocutor     - Creates projects         │  ║
 ║  │    - Approves AMCOS requests    - Supervises operations    │  ║
 ║  │    - SOLE cross-layer bridge (team layer ↔ governance)     │  ║
 ║  └───────────────────────────────────────────────────────────┘  ║
@@ -67,15 +69,15 @@ INTEGRATOR.
 ## AMCOS (Chief of Staff) - Responsibilities
 
 ### AMCOS CAN:
-- ✅ Create agents (with AMAMA approval)
-- ✅ Terminate agents (with AMAMA approval)
-- ✅ Hibernate/wake agents (with AMAMA approval)
+- ✅ Create agents — under a MANAGER team-creation mandate (R30.1/R30.2), or with explicit MANAGER approval otherwise. The 5 basic team members are auto-created with the team (R29.1); extra MEMBER agents are added per the mandate (R30.2/R30.3)
+- ✅ Terminate agents (with MANAGER approval)
+- ✅ Hibernate/wake agents (with MANAGER approval)
 - ✅ Configure agents with skills and plugins
 - ✅ Assign agents to project teams
 - ✅ Handle handoff protocols between agents
 - ✅ Monitor agent health and availability
-- ✅ Replace failed agents (with AMAMA approval)
-- ✅ Report agent performance to AMAMA
+- ✅ Replace failed agents — under the team-creation mandate, or with MANAGER approval otherwise
+- ✅ Report agent performance to the MANAGER
 
 ### AMCOS CANNOT:
 - ❌ Create projects (AMAMA only)
@@ -83,7 +85,7 @@ INTEGRATOR.
 - ❌ Manage GitHub Project kanban (AMOA only)
 - ❌ Make architectural decisions (AMAA only)
 - ❌ Perform code review (AMIA only)
-- ❌ Communicate directly with user (AMAMA only)
+- ❌ Serve as the MAESTRO's interlocutor (the MANAGER's role); normal users reach the COS via their own ASSISTANT (R38/R39)
 
 ### AMCOS Scope:
 - **Team-scoped** [chief-of-staff]: One AMCOS per team, manages agents within that team
@@ -123,18 +125,20 @@ INTEGRATOR.
 ### AMAMA CAN:
 - ✅ Create projects
 - ✅ Approve/reject AMCOS requests (agent create/terminate/etc.)
-- ✅ Communicate with user
+- ✅ Communicate with the MAESTRO user (R37.1); receive messages from normal users and their ASSISTANTs (R38.2)
 - ✅ Set strategic direction
 - ✅ Override any agent decision
 - ✅ Grant autonomous operation directives
 
-### AMAMA CANNOT:
-- ❌ Create agents directly (delegates to AMCOS)
-- ❌ Assign tasks directly (delegates to AMOA)
+### AMAMA — lifecycle authority (R29) and division of labor:
+- ✅ Creates and deletes **Teams** on its own authority (R29.1) — which auto-creates the COS + the 5 basic team members
+- ✅ Creates and deletes **AUTONOMOUS** and **MAINTAINER** agents on its own authority (R29.3)
+- ↪️ **Prefers to delegate** team-internal agent creation to AMCOS (under a team-creation mandate, R30) rather than creating member agents itself — a division of labor, not a lack of authority
+- ↪️ **Prefers to delegate** task assignment to AMOA (the per-project kanban owner) rather than assigning tasks directly
 
 ### AMAMA Scope:
 - **Team-scoped** [manager]: Oversees all projects and agents within the team
-- **User-facing**: Only agent that talks to user
+- **MAESTRO-facing**: the MANAGER obeys only the MAESTRO (R37.1); normal users work through their own ASSISTANT agent (R39), reaching the COS / MANAGER — never AMOA directly
 - **Decision authority**: Final approval on all significant operations
 
 ---
@@ -238,7 +242,8 @@ AMOA: Sends handoff to agent-456
 | Responsibility | AMAMA | AMCOS | AMOA | AMIA | AMAA |
 |----------------|-------|------|-----|-----|-----|
 | Create projects | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Create agents | Approves | ✅ | Requests | ❌ | ❌ |
+| Create/delete teams + auto-COS + 5 base + AUTONOMOUS/MAINTAINER (R29) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Create extra MEMBER agents under a MANAGER mandate (R30) | Mandates | ✅ | Requests | ❌ | ❌ |
 | Configure agents | ❌ | ✅ | ❌ | ❌ | ❌ |
 | Assign agents to teams | ❌ | ✅ | ❌ | ❌ | ❌ |
 | Assign tasks | ❌ | ❌ | ✅ | ❌ | ❌ |
@@ -247,7 +252,8 @@ AMOA: Sends handoff to agent-456
 | Validate merged PR / flip `completed` | ❌ | ❌ | ❌ | ✅ | ❌ |
 | Code review / merge PRs | ❌ | ❌ | ❌ | ✅ | ❌ |
 | Architecture | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Talk to user | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Interlocutor for the MAESTRO (R37) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| (normal users reach COS/MANAGER via their own ASSISTANT, R38/R39) | — | — | — | — | — |
 
 > Note: AMOA owns the **pre-PR green-light** only. AMIA validates the merged
 > PR against the task requirements and owns the flip to `done`/`completed`.
@@ -299,9 +305,20 @@ All AI Maestro agents use the `domain-subdomain-name` format for session names:
 
 ---
 
-**Document Version**: 2.0.0
-**Last Updated**: 2026-06-11
+**Document Version**: 2.1.0
+**Last Updated**: 2026-06-19
 **Author**: AMOA Plugin Development
+**Changelog (2.1.0)**: Propagated governance R26–R40 (GOVERNANCE-RULES.md v4.0.2,
+ai-maestro#37 / orchestrator #15–#21). Corrected the MANAGER/COS lifecycle model
+(R29/R30: the MANAGER creates AND deletes teams + the auto-created COS + the 5 base
+members + AUTONOMOUS/MAINTAINER with NO user approval; the COS creates extra
+MEMBER-titled agents under a MANAGER mandate — reversing the old "AMAMA CANNOT create
+agents" / blanket "(with AMAMA approval)" text). Replaced the obsolete single-user
+model with the MAESTRO / MAESTRO-DELEGATE / ASSISTANT model (R36–R39). Added the
+governance facts that every agent authenticates by its AID plus a server-held
+portfolio token (never a privileged password) and cannot self-mutate its own
+identity (R26/R28/R32). AMOA remains a team MEMBER/ORCHESTRATOR (the lifecycle
+authority is the MANAGER's, stated as facts); the AMOA→USER edge stays reply-only.
 **Changelog (2.0.0)**: Migrated to R6 v3 communication graph — purged all
 AMAMA↔AMOA / AMAMA↔AMIA direct edges (the MANAGER reaches team-internal agents
 only via AMCOS); encoded AMCOS as the team-boundary gateway and AMAMA as the

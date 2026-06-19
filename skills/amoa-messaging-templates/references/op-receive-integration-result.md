@@ -46,9 +46,9 @@ Process integration/review results received from Integrator (AMIA) after a revie
 
    | Status | Action |
    |--------|--------|
-   | passed | Report to user, await merge decision |
+   | passed | Report to the MAESTRO, await merge decision |
    | failed | Delegate fixes to implementation subagent |
-   | blocked | Escalate to user with details |
+   | blocked | Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) with details |
 
 4. **Send acknowledgment** to AMIA:
 

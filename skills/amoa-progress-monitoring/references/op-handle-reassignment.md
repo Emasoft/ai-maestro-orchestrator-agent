@@ -38,7 +38,7 @@ Reassign a task from an unresponsive agent to an available agent, ensuring prope
 
 - Agent remains unresponsive after urgent reminder
 - Reassignment deadline has passed
-- User authorizes reassignment
+- The MAESTRO authorizes reassignment
 - Agent reports inability to continue
 
 ## Inputs
@@ -48,7 +48,7 @@ Reassign a task from an unresponsive agent to an available agent, ensuring prope
 | task_id | Issue number | Yes |
 | current_agent | Currently assigned agent | Yes |
 | new_agent | Available agent to reassign to | No (auto-select if not provided) |
-| user_authorized | Boolean from user decision | Yes (unless overnight mode) |
+| user_authorized | Boolean from MAESTRO decision | Yes (unless overnight mode) |
 
 ## Outputs
 
@@ -99,7 +99,7 @@ if [ -z "$NEW_AGENT" ]; then
 
   if [ -z "$AVAILABLE_AGENTS" ]; then
     echo "ERROR: No available agents for reassignment"
-    # Escalate to user
+    # Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
     exit 1
   fi
 
@@ -201,10 +201,10 @@ jq 'del(.[] | select(.task_id == "'"$TASK_ID"'"))' pending_reassignments.json > 
 ```
 Unresponsive after urgent reminder
         ↓
-Is user available?
+Is the MAESTRO available?
     ├── Yes → Present options (wait/reassign/abort)
     │         ↓
-    │    User chooses reassign
+    │    The MAESTRO chooses reassign
     │         ↓
     └── No (overnight mode) → Auto-reassign
                 ↓
@@ -223,7 +223,7 @@ Is user available?
 
 ## Success Criteria
 
-- [ ] User authorization verified (or overnight mode active)
+- [ ] The MAESTRO's authorization verified (or overnight mode active)
 - [ ] Available agent found
 - [ ] Context compiled and transferred
 - [ ] Current agent notified
@@ -235,9 +235,9 @@ Is user available?
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| No available agents | All agents busy | Queue task, notify user |
-| User denies reassignment | Prefers to wait | Set longer timeout, re-escalate later |
-| New agent also unresponsive | Multiple agent issues | Escalate to user, check agent system |
+| No available agents | All agents busy | Queue task, notify the MAESTRO |
+| The MAESTRO denies reassignment | Prefers to wait | Set longer timeout, re-escalate later |
+| New agent also unresponsive | Multiple agent issues | Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision), check agent system |
 | Context incomplete | Messages missing | Include note about missing context |
 
 ## Related Operations

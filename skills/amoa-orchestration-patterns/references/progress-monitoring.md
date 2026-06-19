@@ -111,7 +111,7 @@ When an agent reports being blocked, respond IMMEDIATELY with solutions. Do not 
 |--------------|------------------|
 | Missing dependency | Provide install command |
 | API not responding | Provide alternative endpoint or test command |
-| Permission denied | Escalate to user for access |
+| Permission denied | Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) for access |
 | Unclear specification | Provide clarification immediately |
 | Code conflict | Provide merge resolution guidance |
 
@@ -181,14 +181,14 @@ Do NOT stop until all conditions are verified.
 If an agent does not respond after 2 status requests:
 1. Wait 5 more minutes
 2. Send a third request with URGENT prefix
-3. If still no response, escalate to user
+3. If still no response, escalate to AMCOS (relays to AMAMA for the MAESTRO's decision)
 4. Consider agent may be stuck in blocking operation
 
 ### Agent Reports Same Blocker Repeatedly
 
 If an agent reports the same blocker more than twice:
 1. The provided solutions are not working
-2. Escalate to user for alternative approaches
+2. Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) for alternative approaches
 3. Consider reassigning task to different agent
 4. Document the blocker for future reference
 
@@ -198,7 +198,7 @@ If agent claims completion but cannot provide evidence:
 1. Do NOT approve PR or task closure
 2. Request specific evidence items
 3. If evidence not provided after 2 requests, mark task as incomplete
-4. Escalate to user for verification
+4. Escalate to AMCOS (relays to AMAMA for the MAESTRO's decision) for verification
 
 ---
 

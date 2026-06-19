@@ -207,7 +207,7 @@
    - Urgent timeout is 2 minutes
 
 4. **Consider multiple notification channels**:
-   - For critical issues, also notify user directly
+   - For critical issues, also notify the MAESTRO directly
 
 ---
 

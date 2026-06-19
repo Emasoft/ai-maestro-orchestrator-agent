@@ -311,7 +311,7 @@ When the agent requests PR permission for the 5th time (after completing all 4 v
 2. Send message using the `agent-messaging` skill reminding agent of PR notification requirement
 3. Include PR notification requirement text in message
 4. Agent must restart from loop 1
-5. If repeated, escalate to user about agent compliance
+5. If repeated, escalate to the MAESTRO about agent compliance
 
 ### Problem: Agent Claims "No Issues Found" But Issues Exist
 
@@ -351,7 +351,7 @@ When the agent requests PR permission for the 5th time (after completing all 4 v
 1. Evaluate if task scope is too large
 2. Consider breaking task into smaller PRs
 3. Review if acceptance criteria are clear
-4. Escalate to user if fundamentally misaligned
+4. Escalate to the MAESTRO if fundamentally misaligned
 
 ---
 
