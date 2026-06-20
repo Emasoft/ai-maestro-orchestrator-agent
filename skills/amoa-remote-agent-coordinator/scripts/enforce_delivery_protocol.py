@@ -10,6 +10,7 @@ This script validates and enforces the document delivery protocol:
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -19,7 +20,21 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
-ACK_TRACKING_FILE = Path.home() / ".ai-maestro-orchestrator" / "ack-tracking.json"
+# Per-agent state MUST live under the agent's own working directory, NEVER under
+# $HOME. A host-global path is invisible to AI Maestro's backup/restore and does
+# not travel when an agent is migrated between hosts, so after a restore/migration
+# the orchestrator would boot blind to its pending document-delivery ACKs and
+# re-track / re-time-out deliveries the prior instance already handled
+# (governance violation: ai-maestro#32). Resolve the agent dir via the fleet
+# remediation chain (matches maintainer v1.7.0 / chief-of-staff v2.20.3):
+# AIMAESTRO_AGENT_DIR -> CLAUDE_PROJECT_DIR -> CWD. Do NOT reintroduce Path.home()
+# / a $HOME path here — a host-global ACK ledger is itself a #32 finding.
+_AGENT_DIR = (
+    os.environ.get("AIMAESTRO_AGENT_DIR")
+    or os.environ.get("CLAUDE_PROJECT_DIR")
+    or os.getcwd()
+)
+ACK_TRACKING_FILE = Path(_AGENT_DIR) / ".aimaestro" / "state" / "ack-tracking.json"
 
 
 @dataclass
