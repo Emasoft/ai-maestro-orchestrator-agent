@@ -32,9 +32,10 @@ permissions:
 jobs:
   notify:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout plugin
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Extract plugin name and version
         id: plugin
@@ -42,12 +43,15 @@ jobs:
           set -euo pipefail
           NAME=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['name'])")
           VERSION=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
-          echo "name=$NAME" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "ref=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          {
+            echo "name=$NAME"
+            echo "version=$VERSION"
+            echo "ref=${GITHUB_SHA}"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Dispatch plugin-updated to marketplace
-        uses: peter-evans/repository-dispatch@v4
+        # Third-party action — SHA-pinned (per ~/.claude/rules/gh-actions.md).
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
         with:
           token: ${{ secrets.MARKETPLACE_PAT }}
           repository: ${{ env.MARKETPLACE_OWNER }}/${{ env.MARKETPLACE_REPO }}
