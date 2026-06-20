@@ -1,16 +1,18 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-    ## [1.9.0] - 2026-06-19
+    ## [1.9.1] - 2026-06-20
 
-### Documentation
+### Bug Fixes
 
-- Point AGENT_OPERATIONS + TEAM_REGISTRY notes at the CLI script layer, not raw /api/ endpoints    
-- Correct AGENT_OPERATIONS to verified aimaestro-agent.sh CLI; /api/-free both notes (R22)    
-- Propagate R26–R40 into persona/docs/skills + add governance scenarios (#15–#21)    
+- Move ACK ledger out of $HOME to the agent working dir (ai-maestro#32)    
 
 ### Miscellaneous
 
-- Confirm Claude Code 2.1.178 compatibility; untrack stray __pycache__ .pyc    
+- Clear safe advisory CPV warnings (exec bits, .python-version, README)    
+
+### Ci
+
+- Harden workflows toward CPV canon (least-privilege, timeouts, action pins)    
 
 
