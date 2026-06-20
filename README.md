@@ -1,6 +1,12 @@
 # AI Maestro Orchestrator Agent (amoa-)
 
-**Version**: 1.6.0
+**Version**: 1.9.0
+
+A Claude Code plugin that turns one Claude session into a multi-agent
+orchestrator: it breaks a plan into GitHub-Issue-backed modules, assigns them
+to sub-agents and remote agents over AI Maestro inter-agent messaging, tracks
+progress on a GitHub Projects V2 kanban board, and enforces a verification
+gate before the session is allowed to exit.
 
 ## Overview
 
@@ -86,7 +92,7 @@ The Orchestrator Agent handles **task distribution, agent coordination, and prog
 
 ## Project Structure
 
-```
+```text
 ai-maestro-orchestrator-agent/
 ├── .claude-plugin/      # Plugin manifest (plugin.json)
 ├── agents/              # Agent definitions (6 agents)
@@ -110,6 +116,24 @@ ai-maestro-orchestrator-agent/
 4. **Monitoring**: Poll agent progress, detect stalls, handle failures
 5. **Verification**: 4-loop verification ensures all tasks complete
 6. **Completion**: Stop hook enforces completion before session exit
+
+## Usage
+
+Drive the orchestrator from its slash commands once the plugin is installed
+(run `/help` to list the full `amoa-` command set). The common entry points:
+
+```bash
+/amoa-start-orchestration   # begin a new orchestration run from a plan
+/amoa-orchestration-status  # show the live module/kanban/agent state
+/amoa-cancel-orchestrator   # stop the active orchestrator loop
+```
+
+Underlying tooling is also runnable directly for scripting:
+
+```bash
+uv run python scripts/amoa_kanban_manager.py <command>   # kanban board ops
+uv run python scripts/amoa_orchestration_status.py        # status snapshot
+```
 
 ## Installation
 
