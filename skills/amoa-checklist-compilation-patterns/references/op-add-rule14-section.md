@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Add RULE 14 Compliance Section
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

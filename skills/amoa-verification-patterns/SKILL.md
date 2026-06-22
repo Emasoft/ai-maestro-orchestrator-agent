@@ -93,7 +93,7 @@ See [examples.md](./references/examples.md) for worked examples.
     - 2. Selecting Appropriate Base Images
     - 3. Applying Docker Best Practices
     - 4. Configuring Multi-Service Environments
-  - ...
+    - ...
 - [quick-reference.md](./references/quick-reference.md) -- Quick reference & checklist
   <!-- TOC: Pattern Selection Guide | Exit Codes | Output Format | Error Handling | Verification Checklist | Script Output Rules -->
   - Pattern Selection Guide

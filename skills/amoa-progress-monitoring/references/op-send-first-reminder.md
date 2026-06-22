@@ -6,7 +6,6 @@ operation: send-first-reminder
 
 # Operation: Send First Reminder
 
-
 ## Contents
 
 - [Purpose](#purpose)

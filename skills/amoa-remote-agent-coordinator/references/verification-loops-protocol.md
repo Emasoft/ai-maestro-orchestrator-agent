@@ -1,6 +1,5 @@
 # 4-Verification-Loops Protocol Before PR
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

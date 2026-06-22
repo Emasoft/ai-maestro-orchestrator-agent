@@ -1,6 +1,5 @@
 # Operation: Respond to Feature Request
 
-
 ## Contents
 
 - [Metadata](#metadata)

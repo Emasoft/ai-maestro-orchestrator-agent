@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Update Label
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

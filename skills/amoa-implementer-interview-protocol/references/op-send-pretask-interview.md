@@ -1,6 +1,5 @@
 # Operation: Send Pre-Task Interview Questions
 
-
 ## Contents
 
 - [Metadata](#metadata)

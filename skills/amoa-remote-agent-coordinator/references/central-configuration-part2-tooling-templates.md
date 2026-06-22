@@ -1,6 +1,5 @@
 # Central Configuration - Part 2: Tooling Templates
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

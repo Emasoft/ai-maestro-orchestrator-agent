@@ -1,6 +1,5 @@
 # Central Configuration - Part 3: Specification Templates
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

@@ -1,6 +1,5 @@
 # Progress Monitoring Protocol (Proactive Enforcement)
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

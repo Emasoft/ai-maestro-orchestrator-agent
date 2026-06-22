@@ -1,6 +1,5 @@
 # LSP Enforcement Checklist - Index
 
-
 ## Contents
 
 - [Parts Overview](#parts-overview)

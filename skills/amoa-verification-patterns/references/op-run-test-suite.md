@@ -1,6 +1,5 @@
 # Operation: Run Test Suite
 
-
 ## Contents
 
 - [Purpose](#purpose)
@@ -23,11 +22,11 @@
 - [Exit Criteria](#exit-criteria)
 - [Related Operations](#related-operations)
 
----
-procedure: proc-complete-task
-workflow-instruction: Step 19 - Task Completion
-operation-id: op-run-test-suite
----
+## Operation Metadata
+
+- procedure: proc-complete-task
+- workflow-instruction: Step 19 - Task Completion
+- operation-id: op-run-test-suite
 
 ## Purpose
 

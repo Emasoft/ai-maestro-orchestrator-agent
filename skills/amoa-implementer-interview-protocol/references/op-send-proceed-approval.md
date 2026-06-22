@@ -1,6 +1,5 @@
 # Operation: Send PROCEED Approval
 
-
 ## Contents
 
 - [Metadata](#metadata)

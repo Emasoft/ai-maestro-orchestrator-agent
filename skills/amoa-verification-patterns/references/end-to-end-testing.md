@@ -1,6 +1,5 @@
 # End-to-End Testing
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

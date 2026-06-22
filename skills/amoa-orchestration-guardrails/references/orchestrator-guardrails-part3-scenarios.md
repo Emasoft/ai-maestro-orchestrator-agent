@@ -1,6 +1,5 @@
 # Orchestrator Guardrails - Part 3: Common Scenarios
 
-
 ## Contents
 
 - [4.0 Common Scenarios](#40-common-scenarios)

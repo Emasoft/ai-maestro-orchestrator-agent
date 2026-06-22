@@ -1,6 +1,5 @@
 # Edge Case Protocols for Orchestrator Agent
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

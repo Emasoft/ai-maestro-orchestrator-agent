@@ -1,6 +1,5 @@
 # RULE 16: Orchestrator-Exclusive Communications (ABSOLUTE)
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

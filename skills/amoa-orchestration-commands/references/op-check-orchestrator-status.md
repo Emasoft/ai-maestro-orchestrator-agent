@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Check Orchestrator Loop Status
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

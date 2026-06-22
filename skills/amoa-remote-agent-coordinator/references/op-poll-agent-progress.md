@@ -6,7 +6,6 @@ operation: poll-agent-progress
 
 # Operation: Poll Agent Progress
 
-
 ## Contents
 
 - [Purpose](#purpose)

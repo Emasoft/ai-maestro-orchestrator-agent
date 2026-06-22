@@ -1,6 +1,5 @@
 # Operation: Send Progress Update
 
-
 ## Contents
 
 - [Metadata](#metadata)

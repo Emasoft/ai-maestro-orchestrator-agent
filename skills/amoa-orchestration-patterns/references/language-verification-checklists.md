@@ -1,6 +1,5 @@
 # Language-Specific Verification Checklists
 
-
 ## Contents
 
 - [Quick Navigation](#quick-navigation)

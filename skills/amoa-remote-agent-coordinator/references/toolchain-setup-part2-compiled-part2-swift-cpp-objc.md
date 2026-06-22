@@ -1,6 +1,5 @@
 # Toolchain Setup Part 2 - Part 2: Swift, C/C++, and Objective-C
 
-
 ## Contents
 
 - [Purpose](#purpose)

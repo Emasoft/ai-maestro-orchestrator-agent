@@ -1,6 +1,5 @@
 # Language-Specific Verification Checklists - Part 1: Core Languages
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

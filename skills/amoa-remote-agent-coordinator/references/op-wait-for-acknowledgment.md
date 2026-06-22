@@ -6,7 +6,6 @@ operation: wait-for-acknowledgment
 
 # Operation: Wait for Acknowledgment
 
-
 ## Contents
 
 - [Purpose](#purpose)

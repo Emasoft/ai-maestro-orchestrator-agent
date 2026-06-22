@@ -329,7 +329,7 @@ See section 9 for the complete verification checklist.
 |---------|-------|------------|
 | Working directory is not clean | Uncommitted changes exist | Instruct the implementer to commit or stash changes before bumping |
 | Version files are inconsistent | Some files were updated, others were not | Instruct the implementer to check all version file locations and update them all |
-| New version is not greater than current tag | Wrong bump type or version string | Verify the latest tag with `git tag -l 'v*' --sort=-version:refname | head -1` and choose a higher version |
+| New version is not greater than current tag | Wrong bump type or version string | Verify the latest tag with `git tag -l 'v*' --sort=-version:refname \| head -1` and choose a higher version |
 
 ### If Step 2 (Changelog Update) Fails
 
@@ -351,7 +351,7 @@ See section 9 for the complete verification checklist.
 
 | Problem | Cause | What to Do |
 |---------|-------|------------|
-| Pipeline did not trigger | Version was not greater than latest tag, or the push event was not detected | Check `git tag -l 'v*' --sort=-version:refname | head -1` and verify the version in project files is greater |
+| Pipeline did not trigger | Version was not greater than latest tag, or the push event was not detected | Check `git tag -l 'v*' --sort=-version:refname \| head -1` and verify the version in project files is greater |
 | Changelog validation failed | The pipeline could not find the version heading in CHANGELOG.md | Push a commit to main that adds the missing changelog entry, then the pipeline will retry |
 | Tag was created but release build failed | Build error, dependency issue, or infrastructure problem | Do NOT reuse the failed version number. Fix the issue, bump to a new patch version, and restart from Step 1 |
 | Tag push did not trigger release workflow | Using GITHUB_TOKEN instead of a PAT for tag push | Configure a Personal Access Token with `repo` scope and update the workflow secret |

@@ -1,6 +1,5 @@
 # Custom LSP Plugin Template
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

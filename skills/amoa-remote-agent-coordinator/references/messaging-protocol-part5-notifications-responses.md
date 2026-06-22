@@ -1,6 +1,5 @@
 # Messaging Protocol Part 5: Notifications and Response Expectations
 
-
 ## Contents
 
 - [5.1 Automatic Message Notification (Subconscious)](#51-automatic-message-notification-subconscious)

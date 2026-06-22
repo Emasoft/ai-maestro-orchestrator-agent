@@ -12,7 +12,7 @@ This document describes the complete workflow for how the AI Maestro agent syste
 > talks **directly** to AMAA, AMIA, and AMPA. This document was migrated to R6 v3
 > in v2.0.0; any older text implying a direct manager→orchestrator handoff is
 > superseded.
-
+>
 > **Column ownership (authoritative):** AMOA owns the **pre-PR green-light** only
 > (clearing an implementer to open a PR). AMIA validates the **merged** PR against
 > the task requirements and owns the flip to `done`/`completed`. **Nobody

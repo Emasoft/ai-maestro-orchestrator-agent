@@ -1,6 +1,5 @@
 # Messaging Protocol Part 2: Sending and Receiving Messages
 
-
 ## Contents
 
 - [2.1 Basic Send Syntax](#21-basic-send-syntax)

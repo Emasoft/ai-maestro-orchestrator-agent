@@ -14,11 +14,11 @@ module github.com/{{GITHUB_OWNER}}/{{PROJECT_NAME}}
 go 1.22
 
 require (
-	// Core dependencies
+ // Core dependencies
 )
 
 require (
-	// Indirect dependencies (managed by go mod tidy)
+ // Indirect dependencies (managed by go mod tidy)
 )
 ```
 

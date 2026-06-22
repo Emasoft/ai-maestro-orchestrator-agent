@@ -1,6 +1,5 @@
 # Checklist Compilation Workflow
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

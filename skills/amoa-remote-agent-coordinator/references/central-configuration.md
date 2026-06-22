@@ -1,6 +1,5 @@
 # Central Configuration Architecture
 
-
 ## Contents
 
 - [Document Structure](#document-structure)

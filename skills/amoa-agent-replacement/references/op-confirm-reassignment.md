@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Confirm Reassignment
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

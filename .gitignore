@@ -81,3 +81,6 @@ Cargo.lock
 # Never commit (per ~/.claude/rules/agent-reports-location.md).
 /reports/
 /reports_dev/
+
+# Added by CPV standardize
+.coverage

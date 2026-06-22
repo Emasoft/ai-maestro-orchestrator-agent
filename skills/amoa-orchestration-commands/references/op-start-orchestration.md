@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Start Orchestration Phase
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

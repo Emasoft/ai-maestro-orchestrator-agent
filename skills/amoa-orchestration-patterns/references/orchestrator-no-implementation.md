@@ -1,6 +1,5 @@
 # RULE 15: No Implementation by Orchestrator (ABSOLUTE)
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

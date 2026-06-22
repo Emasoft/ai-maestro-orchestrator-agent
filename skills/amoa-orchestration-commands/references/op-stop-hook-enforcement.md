@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Stop Hook Enforcement
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

@@ -1,6 +1,5 @@
 # LSP Enforcement Checklist - Part 2: Validation and General Troubleshooting
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

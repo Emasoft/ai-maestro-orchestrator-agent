@@ -1,6 +1,5 @@
 # Change Notification Protocol
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

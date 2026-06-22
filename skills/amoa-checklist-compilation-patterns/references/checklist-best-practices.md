@@ -1,6 +1,5 @@
 # Checklist Best Practices
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

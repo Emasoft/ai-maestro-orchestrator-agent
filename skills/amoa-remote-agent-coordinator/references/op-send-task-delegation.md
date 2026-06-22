@@ -6,7 +6,6 @@ operation: send-task-delegation
 
 # Operation: Send Task Delegation
 
-
 ## Contents
 
 - [Purpose](#purpose)

@@ -1,6 +1,5 @@
 # Agent Selection Guide
 
-
 ## Contents
 
 - [Overview](#overview)

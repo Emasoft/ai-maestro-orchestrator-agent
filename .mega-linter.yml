@@ -1,0 +1,54 @@
+# Mega-Linter configuration
+# https://megalinter.io/latest/configuration/
+
+# Only lint changed files (faster, less noise)
+APPLY_FIXES: none
+VALIDATE_ALL_CODEBASE: false
+
+# Enable these linter groups
+ENABLE_LINTERS:
+  - PYTHON_RUFF
+  - PYTHON_MYPY
+  - PYTHON_BANDIT
+  - BASH_SHELLCHECK
+  - BASH_SHFMT
+  - JSON_JSONLINT
+  - YAML_YAMLLINT
+  - MARKDOWN_MARKDOWNLINT
+  - SPELL_CSPELL
+  - COPYPASTE_JSCPD
+  - REPOSITORY_CHECKOV
+  - REPOSITORY_GITLEAKS
+  - REPOSITORY_TRIVY
+
+# Exclude paths — single-quoted YAML scalar so regex \. is read literally
+# (double-quoted YAML treats \. as an invalid escape and yamllint rejects it).
+# Test FIXTURES are excluded for EVERY language Mega-Linter runs: fixtures are
+# deliberately-malformed sample data used to exercise the plugin's own
+# validators/tests, so linting them would "fix" the very defects the tests rely
+# on. Covers tests/fixtures, test/fixtures, spec/fixtures, __fixtures__ (JS),
+# testdata (Go), and a bare fixtures/ dir.
+FILTER_REGEX_EXCLUDE: '(tests_dev/|docs_dev/|scripts_dev/|samples_dev/|examples_dev/|builds_dev/|downloads_dev/|libs_dev/|llm_externalizer_output/|\.claude/|\.tldr/|tests?/fixtures/|spec/fixtures/|__fixtures__/|testdata/|fixtures/)'
+
+# Python settings
+PYTHON_RUFF_ARGUMENTS: "--select=E,F,W,I --ignore=E501"
+PYTHON_MYPY_ARGUMENTS: "--ignore-missing-imports"
+
+# Copy-paste detection — allow up to 5% duplication (0% is too strict for plugins)
+COPYPASTE_JSCPD_ARGUMENTS: "--threshold 5"
+
+# Checkov — skip workflow-level permission checks (we set permissions per-job)
+REPOSITORY_CHECKOV_ARGUMENTS: "--skip-check CKV2_GHA_1"
+
+# Markdown settings — allow long lines in README (badges).
+# Single-quoted so the regex \. is read literally by yamllint.
+MARKDOWN_MARKDOWNLINT_FILTER_REGEX_EXCLUDE: 'CHANGELOG\.md'
+
+# Spell check — single-quoted so the regex \. is read literally by yamllint.
+SPELL_CSPELL_FILTER_REGEX_EXCLUDE: '(uv\.lock|\.json)'
+
+# Disable reporters that create PR comments (we handle that ourselves).
+# Issue #29 (v2.97.0): the deprecated DISABLE_REPORTERS list form fails
+# Mega-Linter v8+ JSON Schema validation — the v8+ schema uses one
+# boolean key per reporter. Keep the boolean form below.
+GITHUB_COMMENT_REPORTER: false

@@ -1,6 +1,5 @@
 # Agent Selection Guide - Part 4: Anti-Patterns & Best Practices
 
-
 ## Contents
 
 - [Use-Case Quick Reference for This Section](#use-case-quick-reference-for-this-section)

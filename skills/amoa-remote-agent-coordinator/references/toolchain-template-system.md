@@ -1,6 +1,5 @@
 # Toolchain Template System
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

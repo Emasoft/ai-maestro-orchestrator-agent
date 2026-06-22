@@ -1,6 +1,5 @@
 # Toolchain Setup Part 2 - Part 3: .NET and JVM Languages
 
-
 ## Contents
 
 - [Purpose](#purpose)

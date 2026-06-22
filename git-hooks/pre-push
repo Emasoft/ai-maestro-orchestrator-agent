@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Pre-push hook — delegates to publish.py --gate for all quality checks.
+# Follows the PSS (perfect-skill-suggester) pattern: one script, two modes.
+set -euo pipefail
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+if command -v uv &> /dev/null; then
+    uv run python scripts/publish.py --gate
+else
+    python3 scripts/publish.py --gate
+fi
+exit $?

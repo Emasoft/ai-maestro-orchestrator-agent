@@ -1,6 +1,5 @@
 # Operation: Write Constructive PR Comment
 
-
 ## Contents
 
 - [Metadata](#metadata)

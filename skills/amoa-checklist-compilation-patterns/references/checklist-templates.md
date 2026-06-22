@@ -1,6 +1,5 @@
 # Checklist Templates
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

@@ -5,7 +5,7 @@
 **CRITICAL: This document defines the strict boundaries between agent roles. Violating these boundaries breaks the system architecture.**
 
 > **R6 v3 in one line:** CHIEF-OF-STAFF (AMCOS) guards the **team boundary**. Within a team, ORCHESTRATOR ↔ ARCHITECT / MEMBER / INTEGRATOR are **DIRECT** edges. The MANAGER (AMAMA) reaches team-internal agents **only via AMCOS** — there is **no** AMAMA↔AMOA or AMAMA↔AMIA direct edge.
-
+>
 > **The human-authority model (R36–R40):** the top human authority is the **MAESTRO** — exactly one per host; the MANAGER (AMAMA) obeys only the MAESTRO (or its single active **MAESTRO-DELEGATE**, R37). **Normal (non-MAESTRO) users never talk to AMOA or AMAMA directly** — every non-MAESTRO user works through an auto-assigned **ASSISTANT** agent (role plugin `ai-maestro-assistant-role-agent`, R38/R39) and may message only their own ASSISTANT, their team's COS, and the MANAGER. **AMOA (this role) is a team MEMBER/ORCHESTRATOR, NOT the MANAGER:** it escalates up the **AMCOS → AMAMA → MAESTRO** chain, and its `USER` communication edge is **reply-only** (it never initiates human contact). The R29/R30 team-and-agent lifecycle authority described below is the **MANAGER's** — stated here as facts AMOA must know, never as powers AMOA holds. Every agent (AMOA included) authenticates by **AID + portfolio token, never a sudo/governance password** (R28/R32) and **cannot change its own title/role/name/identity** (R26).
 
 ---

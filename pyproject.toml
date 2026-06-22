@@ -10,5 +10,11 @@ requires-python = ">=3.10"
 Homepage = "https://github.com/Emasoft/ai-maestro-orchestrator-agent"
 Repository = "https://github.com/Emasoft/ai-maestro-orchestrator-agent"
 
-[dependency-groups]
-dev = ["pytest>=8.0", "pyyaml>=6.0"]
+# CIP-3 (CPV#142 / fleet #44): the canon ci.yml + release.yml run
+# `uv sync --extra dev`, which reads [project.optional-dependencies], NOT
+# [dependency-groups]. Without this table CI fails "Extra `dev` is not
+# defined". pytest + pyyaml are needed by the test suite (tests import yaml
+# and the AMOA scripts use pyyaml); ruff + mypy are run by release.yml's
+# lint + type-check steps.
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pyyaml>=6.0", "ruff", "mypy"]

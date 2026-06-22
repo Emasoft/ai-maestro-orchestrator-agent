@@ -1,0 +1,233 @@
+name: CI
+
+# Required-context contract (cpv-setup-branch-rules wires the branch ruleset
+# to the bare contexts Lint / Validate / Test — TRDD-bbff5bc5):
+#   * "Lint" and "Validate" are produced by jobs named exactly that.
+#   * "Test" is a MATRIX (ubuntu + macOS), so the matrix lanes report
+#     "Test matrix (<os>)", NOT a bare "Test". The aggregate gate job named
+#     exactly "Test" (needs: [test]) produces the required bare "Test" context
+#     and succeeds only if the matrix passed. Do NOT rename these without also
+#     updating setup_branch_rules.DEFAULT_PLUGIN_CHECK_CONTEXTS.
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  merge_group:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    # Hard cap so a hung action / network flake doesn't burn the 360-min
+    # default. Mega-Linter on a fresh repo is the slow step (~5-8 min);
+    # 20 min is generous headroom (issue #90).
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+
+      # Cheap-fail-first: workflow-syntax errors before mega-linter.
+      - name: Lint workflow YAML (actionlint)
+        uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca # v1.7.12
+
+      - name: Mega-Linter
+        uses: oxsecurity/megalinter@e08c2b05e3dbc40af4c23f41172ef1e068a7d651 # v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: false
+
+      - name: Upload Mega-Linter reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mega-linter-reports
+          path: |
+            megalinter-reports/
+            mega-linter.log
+
+  commitlint:
+    name: Commitlint
+    runs-on: ubuntu-latest
+    # Single git-history scan — 10 min is ample (issue #90).
+    timeout-minutes: 10
+    # PRs only — push events on main don't need conventional-commit
+    # enforcement (the commits are already merged).
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+      - name: Conventional-commits gate
+        uses: wagoid/commitlint-github-action@6cf16efdf4da5277c791d335142c03a0bdf1766e # v6.2.1
+
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    # Cold-install ceiling (issues #90 + #114). `uvx --from git+…` clones and
+    # builds CPV from source on a COLD runner — empirically 12-20 min. The UV
+    # cache below makes every run after the first fast (seconds), but the
+    # FIRST cold build per cache key must fit under this cap. 30 min is the
+    # documented cold ceiling with headroom; do NOT lower it below 25.
+    timeout-minutes: 30
+    steps:
+      # Plain checkout — scaffolded plugins ship NO submodules; asking the
+      # checkout action to recurse occasionally flakes with "could not read
+      # Username" auth errors against non-existent submodule URLs, taking
+      # the Validate job down with a misleading 'process git failed exit
+      # code 128'. Drop the recurse to remove the moot enumeration step.
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Install uv
+        # enable-cache: true keys an actions/cache on UV_CACHE_DIR so the
+        # cold `uvx --from git+…` build of CPV (12-20 min, issue #114) is
+        # paid ONCE per lockfile/runner; every later run restores the warm
+        # uv cache and resolves in seconds.
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      # Cross-run CPV scan-cache (optional, big win for fix loops).
+      # The cache key includes the hash of .cpv-self-hashes.json so any
+      # change to the validator's own source busts the cache automatically;
+      # the restore-keys fallback still hits a same-OS warm cache on the
+      # first run after a CPV bump so we don't pay the full cold-scan cost.
+      # actions/cache@v5.0.5 is the latest SHA at scaffold time —
+      # pinact-compatible (the `# v5.0.5` comment is kept in sync on `uv
+      # lock`). gh-actions.md §"Pin third-party actions to a full commit SHA".
+      - name: Restore CPV scan-cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.cache/cpv
+          key: cpv-scan-cache-${{ runner.os }}-${{ hashFiles('**/.cpv-self-hashes.json') }}
+          restore-keys: |
+            cpv-scan-cache-${{ runner.os }}-
+
+      - name: Run plugin validation (remote CPV, --strict)
+        # Fetches CPV from GitHub via uvx so downstream plugins do not need to
+        # vendor scripts/validate_plugin.py. Matches publish.py's local gate
+        # so CI and local gate agree. Issue #11: do NOT call local
+        # scripts/validate_plugin.py — it does not exist in scaffolded plugins.
+        # Root-cause #2: CPV is PINNED to @main so the cold
+        # uvx-from-git build is cached per tag and a stricter future CPV
+        # release cannot break this gate with no plugin change.
+        env:
+          # Root-cause #4: on a fresh-checkout runner the local self-hash
+          # manifest already matches the code, so CPV's GitHub-anchored
+          # integrity fetch (a live urlopen to raw.githubusercontent.com) adds
+          # no security but real latency/hang risk. Skip it.
+          PLUGIN_SKIP_GITHUB_INTEGRITY: "1"
+          # CIP-1 (CPV#142 / fleet #44): CLAUDE_PRIVATE_USERNAMES lists the
+          # PRIVATE local usernames CPV must redact. Setting it to the PUBLIC
+          # repo owner is inverted — CPV would then flag every owner GitHub URL
+          # and the owner's no-reply email as a CRITICAL "private path leaked"
+          # (≈43 CRITICAL in CI, 0 locally where whoami≠owner). A CI runner has
+          # no developer local-username to protect, so use the literal "runner"
+          # (the actual runner user); never the owner handle.
+          CLAUDE_PRIVATE_USERNAMES: "runner"
+        run: |
+          set +e
+          uvx --from git+https://github.com/Emasoft/claude-plugins-validation@main \
+              --with pyyaml \
+              cpv-remote-validate plugin . --strict
+          exit_code=$?
+          set -e
+          if [ $exit_code -eq 0 ]; then
+            echo "Validation passed"
+            exit 0
+          elif [ $exit_code -ge 5 ]; then
+            echo "Only WARNING-level findings (exit $exit_code) — advisory, not blocking"
+            exit 0
+          else
+            echo "::error::Validation failed (exit $exit_code: CRITICAL/MAJOR/MINOR/NIT)"
+            exit $exit_code
+          fi
+
+  test:
+    # NOTE: this is the test MATRIX. Its display name is "Test matrix" so the
+    # lanes report "Test matrix (ubuntu-latest)" / "Test matrix (macos-latest)"
+    # — NOT a bare "Test". The bare "Test" required context is produced by the
+    # `test-gate` aggregate job below (root-cause #3). The job ID stays `test`.
+    name: Test matrix
+    # macOS matrix added v2.86.0 (issue #22) — catches darwin-specific
+    # regressions that ubuntu-only runs miss (pathlib casing, mtime
+    # resolution, BSD `ps` vs procps-ng output). fail-fast: false so
+    # each OS reports its own failure.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    # Hard cap so a hung test / dependency install doesn't burn the 360-min
+    # default. The warm uv cache keeps installs fast; 25 min covers a cold
+    # cache plus a real test suite on both runners (issue #90).
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Run tests
+        # RC-WORKFLOW-PATH-BROKEN (fleet #44): this plugin's test files live
+        # under tests/unit/, so the canon guard's literal glob matched zero
+        # files at the tests/ root and CPV flagged it as a dangling glob. This
+        # plugin always ships tests, so run pytest directly — it discovers
+        # tests/unit/ recursively. No literal-glob guard (avoids the dangling-
+        # glob finding) and no command-substitution (avoids the skillaudit
+        # CMD_INJECTION false-positive on `$(...)`).
+        run: uv run pytest tests/ -v
+
+  test-gate:
+    # Aggregate gate that produces the bare "Test" required-status-check
+    # context (root-cause #3). The branch ruleset requires "Test"; the matrix
+    # above only reports "Test matrix (<os>)", so without this gate the
+    # required "Test" check NEVER reports and the PR is stuck "pending"
+    # forever / auto-merge never fires. This job succeeds iff every matrix lane
+    # succeeded (and none was cancelled).
+    name: Test
+    runs-on: ubuntu-latest
+    needs: [test]
+    # if: always() so the gate runs even when a matrix lane failed — it then
+    # FAILS (red "Test" check) instead of being skipped (which GitHub treats as
+    # neither success nor failure and would also leave the required check
+    # unsatisfied). The single status step is near-instant.
+    if: ${{ always() }}
+    # Trivial coordination job — 5 min is far more than enough (issue #90).
+    timeout-minutes: 5
+    steps:
+      - name: Require all test-matrix lanes to have passed
+        run: |
+          if [ "${{ needs.test.result }}" = "success" ]; then
+            echo "All test-matrix lanes passed."
+            exit 0
+          fi
+          echo "::error::Test matrix did not pass (result: ${{ needs.test.result }})"
+          exit 1

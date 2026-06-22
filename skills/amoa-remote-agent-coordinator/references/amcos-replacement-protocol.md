@@ -1,6 +1,5 @@
 # AMCOS Agent Replacement Protocol
 
-
 ## Contents
 
 - [Overview](#overview)

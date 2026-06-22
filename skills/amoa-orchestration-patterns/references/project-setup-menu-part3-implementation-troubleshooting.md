@@ -1,6 +1,5 @@
 # Project Setup Menu - Part 3: Implementation & Troubleshooting
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

@@ -10,7 +10,6 @@
 - [Quick Reference: Checklist Selection](#quick-reference-checklist-selection)
 - [Notes](#notes)
 
-
 ## Table of Contents (Use-Case Oriented)
 
 - **1.0 When you receive a new task from AMCOS/AMAMA** → [Checklist: Receiving New Task](#checklist-receiving-new-task)

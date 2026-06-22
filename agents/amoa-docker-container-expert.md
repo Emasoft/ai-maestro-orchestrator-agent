@@ -10,7 +10,7 @@ memory_requirements: medium
 ---
 
 > **AMP Communication Restriction:** This is a sub-agent. You MUST NOT send AMP messages (`amp-send`, `amp-reply`, `amp-inbox`). Only the main agent can communicate with other agents. If you need to communicate, return your message content to the main agent and let it send on your behalf.
-
+>
 > **Memory contract (proactive):** Use the GLOBAL `janitor-memory-recall` / `janitor-memory-write` / `janitor-memory-update` skills + the `~/.claude/rules/markdown-memory-recall.md` rule. RECALL BEFORE ACTING on a recurring problem (query by the SYMPTOM across LOCAL/PROJECT/USER; build `ROOTS` as a zsh array — `ROOTS=(); … ROOTS+=("$d"); memgrep recall "$SYMPTOM" "${ROOTS[@]}"`). When you learn a durable lesson, return it to the main agent to WRITE (sub-agents don't maintain the wikimem directly). Scope routing: private→LOCAL, project-shared→PROJECT, cross→USER, unsure→LOCAL.
 
 # Docker Container Expert Agent
@@ -40,9 +40,9 @@ Before proceeding, read:
 4. **Review**: Verify remote agent implementations for best practices and security
 
 > For detailed Docker assessment procedures, see amoa-verification-patterns skill and reference doc docker-troubleshooting.md.
-
+>
 > For Docker troubleshooting (disk space, networking, permissions, build performance), see amoa-verification-patterns skill and reference doc docker-troubleshooting.md.
-
+>
 > For sub-agent role boundaries with orchestrator, see amoa-orchestration-patterns skill and reference doc sub-agent-role-boundaries-template.md.
 
 ## Base Image Recommendations

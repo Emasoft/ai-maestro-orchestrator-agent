@@ -5,55 +5,194 @@ on:
     tags:
       - 'v*.*.*'
 
-# The GitHub release itself is created by scripts/publish.py using the
-# git-cliff release notes, BEFORE the tag is pushed. This workflow runs
-# AFTER the tag push as a post-hoc safety gate — it re-runs the strict
-# CPV plugin validator and fails the workflow if the tagged state does
-# not pass. A failed gate does NOT delete the already-created release;
-# you must roll back manually.
-#
-# Rationale: publish.py already runs every validator locally before it
-# pushes anything, so this gate is redundant on the happy path. Its
-# purpose is to catch regressions where someone bypasses publish.py and
-# pushes a tag directly — CI will flag the broken release.
-
-# Least-privilege: this post-hoc gate only reads the tagged tree.
+# Least-privilege baseline. The release job widens to the writes it needs
+# (contents: write to create the release + upload assets; id-token +
+# attestations: write for build-provenance attestation — issue #121).
 permissions:
   contents: read
 
 jobs:
-  validate-tag:
+  release:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Cold-install ceiling (issues #90 + #114). `uvx --from git+…` clones and
+    # builds CPV from source on a COLD runner — 12-20 min. The UV cache below
+    # makes every run after the first fast; the FIRST cold build must fit
+    # under this cap. 30 min is the documented cold ceiling; do NOT lower it
+    # below 25.
+    timeout-minutes: 30
+    permissions:
+      contents: write       # create the release + upload assets
+      id-token: write       # OIDC token for build-provenance attestation (#121)
+      attestations: write   # write the provenance attestation (#121)
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
+          persist-credentials: false
 
       - name: Install uv
-        # Third-party action — SHA-pinned (per ~/.claude/rules/gh-actions.md).
+        # enable-cache: true keys an actions/cache on UV_CACHE_DIR so the
+        # cold `uvx --from git+…` build of CPV (12-20 min, issue #114) is
+        # paid ONCE per lockfile/runner; later runs restore the warm cache.
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
 
-      - name: CPV strict validation gate (post-hoc safety net)
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Run full plugin validation (remote CPV, --strict)
+        # Fetches CPV from GitHub so downstream plugins do not need to vendor
+        # scripts/validate_plugin.py. Matches publish.py's local gate and the
+        # CI validate job. --strict blocks on CRITICAL/MAJOR/MINOR/NIT (exit
+        # codes 1-4); WARNING (exit 5+) is advisory only.
+        # Issue #11: removed local scripts/validate_plugin.py invocation.
+        # Root-cause #2: CPV is PINNED to @main (same ref the
+        # CI validate job and publish.py use) so the cold uvx-from-git build is
+        # cached per tag and a stricter future CPV release cannot break the
+        # release gate with no plugin change. Root-cause #5: this re-runs the
+        # gate publish.py already passed locally — pinning all three callsites
+        # to the SAME ref keeps that consistent; the gate itself stays intact
+        # (no security check is weakened).
+        env:
+          # Root-cause #4: skip the GitHub-anchored integrity fetch on a
+          # fresh-checkout runner (the local manifest already matches the code).
+          PLUGIN_SKIP_GITHUB_INTEGRITY: "1"
+          # CIP-1 (CPV#142 / fleet #44): CLAUDE_PRIVATE_USERNAMES lists the
+          # PRIVATE local usernames CPV must redact. Setting it to the PUBLIC
+          # repo owner is inverted — CPV would flag every owner GitHub URL and
+          # the owner's no-reply email as a CRITICAL "private path leaked"
+          # (≈43 CRITICAL in CI, 0 locally where whoami≠owner). A CI runner has
+          # no developer local-username to protect, so use the literal "runner".
+          CLAUDE_PRIVATE_USERNAMES: "runner"
         run: |
           set +e
-          uvx --from git+https://github.com/Emasoft/claude-plugins-validation \
-            --with pyyaml \
-            cpv-remote-validate plugin . --strict
-          EXIT_CODE=$?
+          uvx --from git+https://github.com/Emasoft/claude-plugins-validation@main               --with pyyaml               cpv-remote-validate plugin . --strict               > validation-report.txt 2>&1
+          exit_code=$?
           set -e
-          # Strict mode: ANY non-zero exit fails the gate. If the tag was
-          # pushed by publish.py, this should always pass because publish.py
-          # ran the same validator locally first. A failure here means
-          # someone bypassed publish.py — investigate immediately.
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "::error::CPV strict validation failed for pushed tag $GITHUB_REF_NAME (exit $EXIT_CODE)"
-            echo "::error::This tag was likely pushed without going through scripts/publish.py"
-            echo "::error::The GitHub release (if any) should be rolled back by the release owner"
-            exit $EXIT_CODE
+          cat validation-report.txt
+          if [ $exit_code -ge 1 ] && [ $exit_code -le 4 ]; then
+            echo "::error::Validation failed with exit code $exit_code (CRITICAL/MAJOR/MINOR/NIT found)"
+            exit $exit_code
           fi
+
+      - name: Run tests
+        run: |
+          if [ -d "tests" ]; then
+            uv run pytest tests/ -v
+          fi
+
+      - name: Lint Python scripts
+        run: uv run ruff check scripts/
+
+      - name: Type check
+        run: uv run mypy scripts/ --ignore-missing-imports
+
+      - name: Generate SBOM (SPDX)
+        # SLSA supply-chain control (issue #121): produce an SPDX SBOM of the
+        # repository contents so the published artifact carries a software
+        # bill of materials. Attached to the release below.
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          path: .
+          format: spdx-json
+          output-file: sbom.spdx.json
+          # The action can attach the SBOM to the release itself; we also
+          # upload it as an asset explicitly below for determinism.
+          upload-release-assets: false
+          upload-artifact: false
+
+      - name: Generate changelog
+        id: changelog
+        # v2.86.0 hardening (issue #22): extract ONLY the matching
+        # ``## [X.Y.Z] — YYYY-MM-DD`` block from CHANGELOG.md instead of
+        # uploading the entire file. The release body should be the
+        # release-specific notes, not the whole project history.
+        # Fallback chain:
+        #   1. CHANGELOG.md ## [version] section (curated, em-dash separator)
+        #   2. CHANGELOG.md ## [version] section (legacy hyphen separator)
+        #   3. Full CHANGELOG.md (when no section header matches)
+        #   4. Auto-generated git log (when no CHANGELOG.md at all)
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -e
+          # Strip leading 'v' so v1.2.3 matches ## [1.2.3] — ...
+          VERSION="${TAG#v}"
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            GITLOG=$(git log --pretty=format:"- %s (%h)" HEAD)
+          else
+            GITLOG=$(git log --pretty=format:"- %s (%h)" "$PREV_TAG..HEAD")
+          fi
+          if [ -f "CHANGELOG.md" ]; then
+            # Extract the section header through the next ## or EOF. Try
+            # em-dash (canonical) first, then legacy hyphen. awk prints
+            # the block bounded by the matching header and the NEXT
+            # `## ` at column 0 (or EOF).
+            SECTION=$(awk -v ver="$VERSION" '
+              $0 ~ "^## \\[" ver "\\] [—-] " {found=1; print; next}
+              found && /^## / {exit}
+              found {print}
+            ' CHANGELOG.md)
+            if [ -n "$SECTION" ]; then
+              printf '%s\n' "$SECTION" > changelog.txt
+              echo "::notice::Release body extracted from CHANGELOG.md section for $VERSION"
+            else
+              echo "::warning::No CHANGELOG.md section matched ## [$VERSION] — falling back to full CHANGELOG.md"
+              cp CHANGELOG.md changelog.txt
+            fi
+          else
+            echo "$GITLOG" > changelog.txt
+          fi
+          echo "changelog_file=changelog.txt" >> "$GITHUB_OUTPUT"
+
+      - name: Compute per-asset SHA256SUMS
+        # SLSA supply-chain control (issue #121): checksum every release
+        # asset so consumers can verify integrity. SHA256SUMS is itself
+        # uploaded as an asset alongside the files it covers.
+        run: |
+          set -e
+          : > SHA256SUMS
+          for f in validation-report.txt sbom.spdx.json; do
+            if [ -f "$f" ]; then
+              sha256sum "$f" >> SHA256SUMS
+            fi
+          done
+          echo "SHA256SUMS:"
+          cat SHA256SUMS
+
+      - name: Create or update GitHub Release (idempotent)
+        # Idempotent shell flow — replaces the `softprops/action-gh-release`
+        # action which 422s when publish.py's Gate-13 already created the
+        # release locally. Pattern: `gh release view` to detect existence,
+        # then `gh release edit` (with --notes-file fallback to existing body)
+        # OR `gh release create` (when not pre-existing). Both branches
+        # upload the validation-report, the SBOM, and SHA256SUMS (issue #121).
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -e
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — editing in place"
+            gh release edit "$TAG"               --notes-file changelog.txt               --verify-tag
+            gh release upload "$TAG" validation-report.txt sbom.spdx.json SHA256SUMS --clobber
+          else
+            echo "Release $TAG does not exist yet — creating"
+            gh release create "$TAG" validation-report.txt sbom.spdx.json SHA256SUMS               --title "$TAG"               --notes-file changelog.txt               --verify-tag
+          fi
+
+      - name: Attest build provenance
+        # SLSA build-provenance attestation (issue #121) over the release
+        # assets. Needs id-token: write + attestations: write (declared on
+        # the job). The attestation is recorded in the repo's attestations
+        # store and verifiable with `gh attestation verify`.
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        with:
+          subject-path: |
+            validation-report.txt
+            sbom.spdx.json

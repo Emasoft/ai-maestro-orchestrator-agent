@@ -1,6 +1,5 @@
 # Toolchain Setup Part 3 Section 2: Templates and Verification
 
-
 ## Contents
 
 - [Purpose](#purpose)
@@ -44,7 +43,7 @@ This section provides delegation templates with toolchain requirements and verif
 
 When delegating tasks, ALWAYS include toolchain setup. Example:
 
-```
+````
 Subject: [TASK] GH-42: Implement Feature X
 
 ## Toolchain Setup (RUN FIRST)
@@ -77,13 +76,13 @@ cargo build && cargo test && cargo clippy -- -D warnings
 - [ ] All verification commands pass
 - [ ] PR created with "Closes #42"
 - [ ] Tests verify actual behavior (not just exit codes)
-```
+````
 
 ---
 
 ## 2. Python Task Template
 
-```
+````
 Subject: [TASK] GH-XX: Python Feature
 
 ## Toolchain Setup (RUN FIRST)
@@ -108,13 +107,13 @@ uv run ruff check src/ tests/
 uv run mypy src/
 uv run pytest tests/ -v
 ```
-```
+````
 
 ---
 
 ## 3. JavaScript/TypeScript Task Template
 
-```
+````
 Subject: [TASK] GH-XX: JS/TS Feature
 
 ## Toolchain Setup (RUN FIRST)
@@ -134,7 +133,7 @@ bun install
 ```bash
 bun run tsc --noEmit && bun run eslint src/ && bun test
 ```
-```
+````
 
 ---
 

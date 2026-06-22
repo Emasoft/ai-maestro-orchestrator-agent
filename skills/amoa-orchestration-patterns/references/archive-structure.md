@@ -1,6 +1,5 @@
 # Archive Structure Specification
 
-
 ## Contents
 
 - [Overview](#overview)

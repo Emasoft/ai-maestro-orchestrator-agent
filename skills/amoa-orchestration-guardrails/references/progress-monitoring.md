@@ -1,6 +1,5 @@
 # Progress Monitoring (PROACTIVE ENFORCEMENT)
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

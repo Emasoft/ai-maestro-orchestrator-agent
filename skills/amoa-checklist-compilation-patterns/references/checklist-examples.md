@@ -1,6 +1,5 @@
 # Checklist Compilation Examples
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

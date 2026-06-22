@@ -1,6 +1,5 @@
 # Operation: Reassign Module to Different Agent
 
-
 ## Contents
 
 - [Metadata](#metadata)

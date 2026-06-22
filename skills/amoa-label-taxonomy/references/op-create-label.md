@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Create Label
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

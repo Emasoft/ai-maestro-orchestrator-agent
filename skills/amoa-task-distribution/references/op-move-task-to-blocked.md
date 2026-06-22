@@ -1,6 +1,5 @@
 # Operation: Move Task to Blocked Column
 
-
 ## Contents
 
 - [Metadata](#metadata)

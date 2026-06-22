@@ -1,6 +1,5 @@
 # Orchestrator Guardrails - Part 2: Decision Trees
 
-
 ## Contents
 
 - [3.0 Decision Trees](#30-decision-trees)

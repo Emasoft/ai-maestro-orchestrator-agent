@@ -1,6 +1,5 @@
 # Evidence-Based Verification
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

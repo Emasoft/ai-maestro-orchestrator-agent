@@ -1,6 +1,5 @@
 # Operation: Restore Task from Blocked Column
 
-
 ## Contents
 
 - [Metadata](#metadata)

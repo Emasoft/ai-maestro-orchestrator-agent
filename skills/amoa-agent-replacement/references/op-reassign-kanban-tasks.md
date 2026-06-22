@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Reassign Kanban Tasks
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

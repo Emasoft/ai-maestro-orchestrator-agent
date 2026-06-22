@@ -1,6 +1,5 @@
 # Design Document Protocol
 
-
 ## Contents
 
 - [1. Document UUID Format (GUUID)](#1-document-uuid-format-guuid)

@@ -1,6 +1,5 @@
 # Automation Scripts
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

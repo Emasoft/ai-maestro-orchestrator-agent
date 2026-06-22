@@ -10,7 +10,7 @@ Example: `[AMOA-001] Implement remote Docker agent deployment`
 
 ## Issue Body Template
 
-```markdown
+````markdown
 ## Task Overview
 
 **Task ID:** {{TASK_ID}}
@@ -84,6 +84,7 @@ system_dependencies:
 - [ ] Verify on {{PLATFORM}}
 - [ ] Check toolchain compatibility
 - [ ] Validate environment setup
+````
 
 ## Labels to Apply
 
@@ -121,7 +122,7 @@ Before creating this issue, verify:
 
 ### Example 1: Feature Implementation
 
-```markdown
+````markdown
 ## Task Overview
 
 **Task ID:** AMOA-042
@@ -200,11 +201,11 @@ Use paramiko or fabric for SSH operations. Store keys in `~/design/keys/` with 0
 - [ ] Verify on Debian 12
 - [ ] Check toolchain compatibility with different SSH versions
 - [ ] Validate environment setup script
-```
+````
 
 ### Example 2: Bug Fix
 
-```markdown
+````markdown
 ## Task Overview
 
 **Task ID:** AMOA-087
@@ -278,7 +279,7 @@ Check if `AMOA_PLATFORM_OVERRIDE` environment variable is set before detecting p
 - [ ] Verify on macOS with Docker Desktop
 - [ ] Verify in Linux Docker container
 - [ ] Check toolchain compatibility
-```
+````
 
 ## gh CLI Command Examples
 

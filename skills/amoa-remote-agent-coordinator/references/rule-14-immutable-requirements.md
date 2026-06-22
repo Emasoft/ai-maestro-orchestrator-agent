@@ -1,6 +1,5 @@
 # RULE 14: User Requirements Are Immutable
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

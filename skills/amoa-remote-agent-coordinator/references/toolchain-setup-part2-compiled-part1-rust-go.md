@@ -1,6 +1,5 @@
 # Toolchain Setup Part 2 - Part 1: Rust and Go
 
-
 ## Contents
 
 - [Purpose](#purpose)

@@ -1,6 +1,5 @@
 # Document Storage Protocol v2.0
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

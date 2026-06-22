@@ -1,6 +1,5 @@
 # Operation: Resolve Technical Disagreement
 
-
 ## Contents
 
 - [Metadata](#metadata)

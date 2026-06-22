@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Monitor Orchestration Status
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

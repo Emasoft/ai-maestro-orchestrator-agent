@@ -6,7 +6,6 @@ operation: handle-blocker-report
 
 # Operation: Handle Blocker Report
 
-
 ## Contents
 
 - [Purpose](#purpose)

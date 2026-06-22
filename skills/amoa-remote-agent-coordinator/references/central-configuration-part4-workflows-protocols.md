@@ -1,6 +1,5 @@
 # Central Configuration - Part 4: Workflows and Protocols
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

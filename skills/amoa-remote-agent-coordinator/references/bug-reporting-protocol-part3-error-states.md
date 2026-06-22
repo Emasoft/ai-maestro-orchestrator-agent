@@ -1,6 +1,5 @@
 # Bug Reporting Protocol - Part 3: Error States
 
-
 ## Contents
 
 - [Error States](#error-states)

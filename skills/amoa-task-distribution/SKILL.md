@@ -59,7 +59,6 @@ Assignment confirmation (label + ACK) and delegation log.
 **Input:** 3 ready tasks, 2 agents — **Output:** Critical task assigned, labels updated, ACK received. See [examples.md](references/examples.md)
 <!-- TOC: Query and Sort Ready Tasks | Check Agent Availability | Assign Task with Full Protocol | Handle Circular Dependency | Query the agent registry for `implementer-1` to get their current task count | Check the agent's last seen timestamp to determine if they are responsive -->
 
-
 ## Error Handling
 
 See [error-handling.md](references/error-handling.md)
@@ -68,4 +67,3 @@ See [error-handling.md](references/error-handling.md)
 ## Resources
 
 - [references/](references/) — procedures, examples, error handling, checklist
-

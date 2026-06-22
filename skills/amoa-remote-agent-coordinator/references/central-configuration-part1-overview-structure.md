@@ -1,6 +1,5 @@
 # Central Configuration - Part 1: Overview and Directory Structure
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

@@ -1,6 +1,5 @@
 # Operation: Remove Pending Module
 
-
 ## Contents
 
 - [Metadata](#metadata)

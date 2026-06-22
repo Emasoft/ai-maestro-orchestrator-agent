@@ -1,6 +1,5 @@
 # Operation: Sync Module with GitHub Issue
 
-
 ## Contents
 
 - [Metadata](#metadata)

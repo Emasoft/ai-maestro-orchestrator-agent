@@ -1,6 +1,5 @@
 # Operation: Escalate Design Concern to Architect
 
-
 ## Contents
 
 - [Metadata](#metadata)

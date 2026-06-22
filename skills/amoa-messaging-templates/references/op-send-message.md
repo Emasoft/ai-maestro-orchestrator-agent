@@ -9,11 +9,11 @@
 
 # Operation: Send AI Maestro Message
 
----
-procedure: proc-request-pr-review
-workflow-instruction: Step 20 - PR Review Request
-operation-id: op-send-message
----
+## Operation Metadata
+
+- procedure: proc-request-pr-review
+- workflow-instruction: Step 20 - PR Review Request
+- operation-id: op-send-message
 
 ## Purpose
 

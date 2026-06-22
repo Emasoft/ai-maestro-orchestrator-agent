@@ -1,6 +1,5 @@
 # Operation: Select Agent for Task
 
-
 ## Contents
 
 - [Metadata](#metadata)

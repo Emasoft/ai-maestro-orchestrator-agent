@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Generate Handoff Document
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

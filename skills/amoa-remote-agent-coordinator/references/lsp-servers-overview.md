@@ -1,6 +1,5 @@
 # LSP Server Integration for Remote Agents
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

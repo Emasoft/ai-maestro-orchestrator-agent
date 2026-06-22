@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Validate Label Cardinality
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

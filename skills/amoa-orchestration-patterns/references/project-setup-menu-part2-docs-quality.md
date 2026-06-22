@@ -1,6 +1,5 @@
 # Project Setup Menu - Part 2: Documentation & Quality Requirements
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

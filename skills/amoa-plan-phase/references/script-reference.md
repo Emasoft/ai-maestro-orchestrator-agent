@@ -1,6 +1,5 @@
 # Script Reference
 
-
 ## Contents
 
 - [Overview](#overview)

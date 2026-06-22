@@ -1,6 +1,5 @@
 # Inter-Agent Communication Protocols
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

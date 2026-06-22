@@ -1,6 +1,5 @@
 # AI Maestro Messaging Protocol
 
-
 ## Contents
 
 - [IMPORTANT: Official Skill Reference](#important-official-skill-reference)

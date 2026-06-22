@@ -1,6 +1,5 @@
 # Messaging Protocol Part 6: Timeouts and Protocol Integration
 
-
 ## Contents
 
 - [6.1 Response Timeouts by Priority Level](#61-response-timeouts-by-priority-level)

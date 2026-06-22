@@ -1,6 +1,5 @@
 # Agent Communication Formats
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

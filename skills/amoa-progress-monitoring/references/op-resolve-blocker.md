@@ -6,7 +6,6 @@ operation: resolve-blocker
 
 # Operation: Resolve Blocker
 
-
 ## Contents
 
 - [Purpose](#purpose)

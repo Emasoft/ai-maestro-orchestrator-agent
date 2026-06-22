@@ -1,6 +1,5 @@
 # Operation: Update GitHub Issue
 
-
 ## Contents
 
 - [Purpose](#purpose)
@@ -24,11 +23,11 @@
 - [Exit Criteria](#exit-criteria)
 - [Related Operations](#related-operations)
 
----
-procedure: proc-complete-task
-workflow-instruction: Step 19 - Task Completion
-operation-id: op-update-github-issue
----
+## Operation Metadata
+
+- procedure: proc-complete-task
+- workflow-instruction: Step 19 - Task Completion
+- operation-id: op-update-github-issue
 
 ## Purpose
 

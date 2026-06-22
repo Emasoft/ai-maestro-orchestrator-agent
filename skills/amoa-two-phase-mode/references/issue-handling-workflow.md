@@ -1,6 +1,5 @@
 # Issue Handling Workflow
 
-
 ## Contents
 
 - [Overview](#overview)

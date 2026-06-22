@@ -1,6 +1,5 @@
 # LSP Enforcement Checklist - Part 1: Setup and Core Remediation
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)
@@ -110,7 +109,7 @@ For each language in the project:
 - [ ] compile_commands.json exists (for project-aware analysis)
 - [ ] cpp-lsp plugin installed: `/plugin list | grep clangd`
 
-#### C#
+#### C\#
 - [ ] OmniSharp or csharp-ls installed: `which OmniSharp` or `dotnet tool list -g | grep csharp-ls`
 - [ ] .NET SDK 6.0+ installed: `dotnet --version`
 - [ ] csharp-lsp plugin installed: `/plugin list | grep omnisharp`

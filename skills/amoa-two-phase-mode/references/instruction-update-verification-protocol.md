@@ -1,6 +1,5 @@
 # Instruction Update Verification Protocol
 
-
 ## Contents
 
 - [Document Structure](#document-structure)

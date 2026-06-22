@@ -1,6 +1,5 @@
 # Toolchain Setup Part 1: Core Setup and Interpreted Languages
 
-
 ## Contents
 
 - [Purpose](#purpose)

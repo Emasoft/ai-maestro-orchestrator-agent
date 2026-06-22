@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Setup @claude Mention Workflow
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

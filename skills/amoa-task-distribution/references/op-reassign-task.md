@@ -1,6 +1,5 @@
 # Operation: Reassign Task to Different Agent
 
-
 ## Contents
 
 - [Metadata](#metadata)

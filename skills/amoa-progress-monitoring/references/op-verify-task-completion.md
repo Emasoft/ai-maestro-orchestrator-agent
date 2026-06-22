@@ -6,7 +6,6 @@ operation: verify-task-completion
 
 # Operation: Verify Task Completion
 
-
 ## Contents
 
 - [Purpose](#purpose)

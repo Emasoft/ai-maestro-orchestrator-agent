@@ -83,4 +83,3 @@ See `references/op-*.md` for walkthroughs.
     - Example 2: Acknowledging Good Work
   - Error Handling in Communication
   - Pre-Send Checklist
-

@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Configure API Key Secret
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

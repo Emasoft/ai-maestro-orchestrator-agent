@@ -99,7 +99,7 @@ active_assignments:
 
 ## 8. Script Support
 
-### 8.1 amoa_init_design_folders.py 
+### 8.1 amoa_init_design_folders.py
 Creates standardized folder structure:
 
 ```bash
@@ -124,7 +124,7 @@ python3 amoa_init_design_folders.py --platforms web ios android
 # design/archive/
 ```
 
-### 8.2 amoa_compile_handoff.py 
+### 8.2 amoa_compile_handoff.py
 Compiles template to handoff:
 
 ```bash

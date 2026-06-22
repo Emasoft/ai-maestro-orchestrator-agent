@@ -1,6 +1,5 @@
 # Exit Code Proof
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

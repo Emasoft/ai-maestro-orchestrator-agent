@@ -93,4 +93,3 @@ See [examples.md](./references/examples.md)
     - When PR is Created
     - Responsibility Transfer
   - Output Types
-

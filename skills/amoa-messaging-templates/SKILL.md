@@ -73,4 +73,3 @@ JSON messages, API confirmations with message_id, and markdown delegation log en
 ## Resources
 
 - **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-task-distribution**, **amoa-progress-monitoring**
-

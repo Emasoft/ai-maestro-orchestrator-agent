@@ -11,7 +11,7 @@
 
 # Reference Document Catalog
 
-### PR Comment Writing
+## PR Comment Writing
 **File**: [pr-comment-writing.md](pr-comment-writing.md)
 
 **Use when**: Writing code review comments on Pull Requests
@@ -35,7 +35,7 @@
 
 ---
 
-### Issue Communication
+## Issue Communication
 **File**: [issue-communication.md](issue-communication.md)
 
 **Use when**: Responding to bug reports, feature requests, or questions in issue trackers
@@ -65,7 +65,7 @@
 
 ---
 
-### Technical Explanation
+## Technical Explanation
 **File**: [technical-explanation.md](technical-explanation.md)
 
 **Use when**: Explaining architecture, design decisions, or non-obvious code to humans
@@ -94,7 +94,7 @@
 
 ---
 
-### Conflict Resolution
+## Conflict Resolution
 **File**: [conflict-resolution.md](conflict-resolution.md)
 
 **Use when**: Disagreeing with another developer's approach or resolving technical disputes
@@ -123,7 +123,7 @@
 
 ---
 
-### Status Updates
+## Status Updates
 **File**: [status-updates.md](status-updates.md)
 
 **Use when**: Reporting progress, communicating blockers, or providing completion updates
@@ -152,7 +152,7 @@
 
 ---
 
-### Templates for Humans
+## Templates for Humans
 **File**: [templates-for-humans.md](templates-for-humans.md)
 
 **Use when**: Writing PRs, commits, release notes, or migration guides for human readers

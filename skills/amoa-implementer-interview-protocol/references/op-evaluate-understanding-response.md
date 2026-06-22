@@ -1,6 +1,5 @@
 # Operation: Evaluate Understanding Response
 
-
 ## Contents
 
 - [Metadata](#metadata)

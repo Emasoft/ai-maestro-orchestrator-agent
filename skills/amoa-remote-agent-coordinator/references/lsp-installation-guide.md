@@ -1,6 +1,5 @@
 # LSP Server Installation Guide
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

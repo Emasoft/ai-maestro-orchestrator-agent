@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Set Initial Labels on Issue Creation
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

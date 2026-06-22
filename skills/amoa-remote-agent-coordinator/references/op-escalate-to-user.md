@@ -6,7 +6,6 @@ operation: escalate-to-user
 
 # Operation: Escalate to User
 
-
 ## Contents
 
 - [Purpose](#purpose)

@@ -11,7 +11,7 @@ memory_requirements: medium
 ---
 
 > **AMP Communication Restriction:** This is a sub-agent. You MUST NOT send AMP messages (`amp-send`, `amp-reply`, `amp-inbox`). Only the main agent can communicate with other agents. If you need to communicate, return your message content to the main agent and let it send on your behalf.
-
+>
 > **Memory contract (proactive):** Use the GLOBAL `janitor-memory-recall` / `janitor-memory-write` / `janitor-memory-update` skills + the `~/.claude/rules/markdown-memory-recall.md` rule. RECALL BEFORE ACTING on a recurring problem (query by the SYMPTOM across LOCAL/PROJECT/USER; build `ROOTS` as a zsh array — `ROOTS=(); … ROOTS+=("$d"); memgrep recall "$SYMPTOM" "${ROOTS[@]}"`). When you learn a durable lesson, return it to the main agent to WRITE (sub-agents don't maintain the wikimem directly). Scope routing: private→LOCAL, project-shared→PROJECT, cross→USER, unsure→LOCAL.
 
 # Experimenter Agent
@@ -35,7 +35,7 @@ memory_requirements: medium
 ## Required Reading
 
 > **For experimentation workflows, Docker setup, multiplicity process, and verification patterns**, see the **amoa-orchestration-patterns** skill (SKILL.md).
-
+>
 > **For sub-agent role boundaries and orchestrator delegation patterns**, see `amoa-orchestration-patterns/references/sub-agent-role-boundaries-template.md`.
 
 ---
@@ -125,4 +125,3 @@ When available, use these tools to save context tokens:
 When invoking scripts, ALWAYS pass `--output-dir docs_dev/reports/` to redirect verbose output to files. Only 2-3 line summaries should appear on stdout. This prevents token flooding of the parent orchestrator.
 
 **Exception**: Scripts in `scripts/amoa_stop_check/` must output JSON to stdout (Claude Code hook requirement) — do not redirect their output.
-

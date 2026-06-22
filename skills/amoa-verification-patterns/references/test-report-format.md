@@ -1,6 +1,5 @@
 # Test Report Format
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

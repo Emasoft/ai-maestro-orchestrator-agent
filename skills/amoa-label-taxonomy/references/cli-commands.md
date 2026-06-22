@@ -7,7 +7,6 @@
 - [Update Labels](#update-labels)
 - [Validate Label Cardinality](#validate-label-cardinality)
 
-
 ## Create Labels
 
 ### Assignment Labels

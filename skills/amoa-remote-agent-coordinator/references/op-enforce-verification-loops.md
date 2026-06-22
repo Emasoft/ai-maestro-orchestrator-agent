@@ -6,7 +6,6 @@ operation: enforce-verification-loops
 
 # Operation: Enforce 4-Verification Loops
 
-
 ## Contents
 
 - [Purpose](#purpose)

@@ -1,6 +1,5 @@
 # Toolchain Setup Reference Index
 
-
 ## Contents
 
 - [Purpose](#purpose)

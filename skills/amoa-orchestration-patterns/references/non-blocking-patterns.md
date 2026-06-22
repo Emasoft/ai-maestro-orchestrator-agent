@@ -1,6 +1,5 @@
 # Non-Blocking Orchestration Patterns
 
-
 ## Contents
 
 - [Overview](#overview)

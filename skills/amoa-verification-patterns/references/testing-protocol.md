@@ -1,6 +1,5 @@
 # Testing Protocol
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

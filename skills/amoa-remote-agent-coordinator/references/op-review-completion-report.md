@@ -6,7 +6,6 @@ operation: review-completion-report
 
 # Operation: Review Completion Report
 
-
 ## Contents
 
 - [Purpose](#purpose)

@@ -1,6 +1,5 @@
 # Project Setup Menu - Part 1: Team, Repository & Release Configuration
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

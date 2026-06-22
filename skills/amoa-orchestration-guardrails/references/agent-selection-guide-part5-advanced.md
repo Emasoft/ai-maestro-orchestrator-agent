@@ -1,6 +1,5 @@
 # Agent Selection Guide - Part 5: Advanced Topics & Troubleshooting
 
-
 ## Contents
 
 - [Use-Case Quick Reference for This Section](#use-case-quick-reference-for-this-section)

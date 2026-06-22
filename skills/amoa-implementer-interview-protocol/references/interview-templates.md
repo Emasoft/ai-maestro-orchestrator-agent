@@ -1,6 +1,5 @@
 # Interview Templates
 
-
 ## Contents
 
 - [Pre-Task Interview Questions](#pre-task-interview-questions)

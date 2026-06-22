@@ -1,6 +1,5 @@
 # Toolchain Setup Part 3: Mobile/Cross-Platform and Templates
 
-
 ## Contents
 
 - [Purpose](#purpose)

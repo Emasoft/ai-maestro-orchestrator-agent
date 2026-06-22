@@ -1,6 +1,5 @@
 # Language-Specific Verification Checklists - Part 3: Swift and Universal Resources
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

@@ -1,6 +1,5 @@
 # Orchestrator Guardrails - Part 4: Violation Detection and Examples
 
-
 ## Contents
 
 - [5.0 Violation Detection](#50-violation-detection)

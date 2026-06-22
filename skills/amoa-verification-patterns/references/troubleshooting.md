@@ -1,6 +1,5 @@
 # Troubleshooting
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

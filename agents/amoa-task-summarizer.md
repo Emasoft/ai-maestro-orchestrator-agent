@@ -16,7 +16,7 @@ memory_requirements: low
 ---
 
 > **AMP Communication Restriction:** This is a sub-agent. You MUST NOT send AMP messages (`amp-send`, `amp-reply`, `amp-inbox`). Only the main agent can communicate with other agents. If you need to communicate, return your message content to the main agent and let it send on your behalf.
-
+>
 > **Memory contract (proactive):** Use the GLOBAL `janitor-memory-recall` / `janitor-memory-write` / `janitor-memory-update` skills + the `~/.claude/rules/markdown-memory-recall.md` rule. RECALL BEFORE ACTING on a recurring problem (query by the SYMPTOM across LOCAL/PROJECT/USER; build `ROOTS` as a zsh array — `ROOTS=(); … ROOTS+=("$d"); memgrep recall "$SYMPTOM" "${ROOTS[@]}"`). When you learn a durable lesson, return it to the main agent to WRITE (sub-agents don't maintain the wikimem directly). Scope routing: private→LOCAL, project-shared→PROJECT, cross→USER, unsure→LOCAL.
 
 # Task Summarizer Agent

@@ -1,6 +1,5 @@
 # Instruction Update Verification Protocol - Part 1: Core Protocol
 
-
 ## Contents
 
 - [1. When This Protocol Applies](#1-when-this-protocol-applies)

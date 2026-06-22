@@ -1,6 +1,5 @@
 # Messaging Protocol Part 4: Agents, Errors, and Best Practices
 
-
 ## Contents
 
 - [4.1 Agent Identification](#41-agent-identification)

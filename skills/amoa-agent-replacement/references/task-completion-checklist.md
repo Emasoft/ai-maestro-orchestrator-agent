@@ -1,6 +1,5 @@
 # Task Completion Checklist (Orchestrator Agent)
 
-
 ## Contents
 
 - [Before Reporting Task Complete](#before-reporting-task-complete)

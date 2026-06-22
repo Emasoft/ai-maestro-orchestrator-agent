@@ -1,6 +1,5 @@
 # Cross-Platform Support
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

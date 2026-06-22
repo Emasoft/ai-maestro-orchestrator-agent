@@ -1,6 +1,5 @@
 # Project Setup Interactive Menu - Index
 
-
 ## Contents
 
 - [Overview](#overview)

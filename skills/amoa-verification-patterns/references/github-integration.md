@@ -1,6 +1,5 @@
 # Integration with GitHub Projects
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

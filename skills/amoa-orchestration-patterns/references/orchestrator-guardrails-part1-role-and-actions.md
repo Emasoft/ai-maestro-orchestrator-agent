@@ -1,6 +1,5 @@
 # Orchestrator Guardrails - Part 1: Role Definition and Action Classification
 
-
 ## Contents
 
 - [1.0 Role Definition](#10-role-definition)

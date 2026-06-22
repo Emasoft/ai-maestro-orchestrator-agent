@@ -1,6 +1,5 @@
 # Task Complexity Classifier
 
-
 ## Contents
 
 - [Task Complexity Assessment](#task-complexity-assessment)

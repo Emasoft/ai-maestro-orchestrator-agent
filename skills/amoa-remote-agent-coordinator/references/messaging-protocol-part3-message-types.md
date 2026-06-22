@@ -1,6 +1,5 @@
 # Messaging Protocol Part 3: Message Types by Category
 
-
 ## Contents
 
 - [3.1 Task Management Messages](#31-task-management-messages)

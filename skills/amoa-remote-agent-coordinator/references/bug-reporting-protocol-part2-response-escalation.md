@@ -1,6 +1,5 @@
 # Bug Reporting Protocol - Part 2: Response Flow and Escalation
 
-
 ## Contents
 
 - [Orchestrator Response Flow](#orchestrator-response-flow)

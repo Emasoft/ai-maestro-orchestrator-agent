@@ -1,6 +1,5 @@
 # Bug Reporting Protocol - Part 1: Schema and Severity Levels
 
-
 ## Contents
 
 - [Bug Message Schema](#bug-message-schema)

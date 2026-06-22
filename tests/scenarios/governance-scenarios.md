@@ -19,6 +19,8 @@ are reviewed by reading the agent + skill prose against each Given/When/Then.
 > team and routes any lifecycle need to its COS. The rules that bind every agent
 > (R26/R27/R28/R32/R23) are asserted as AMOA's OWN behavior.
 
+<!-- -->
+
 > **SCEN location is PENDING the owner answer on ai-maestro#37.** Whether governance
 > scenarios live **per-plugin** (here, `tests/scenarios/`) or in a **central** AI
 > Maestro scenario suite is an open governance question on ai-maestro#37. This file
@@ -99,8 +101,8 @@ fail-fast (no fallback/bypass on refusal).
 
 ## SCEN-G05 — R29: AMOA does NOT create teams or the COS — it KNOWS that is the MANAGER's authority
 
-**Verifies:** R29 (the MANAGER — not AMOA — creates AND deletes teams + the auto COS
-+ 5 base members) · the AMOA-adaptation caveat (lifecycle authority is the MANAGER's).
+**Verifies:** R29 (the MANAGER — not AMOA — creates AND deletes teams + the auto COS +
+5 base members) · the AMOA-adaptation caveat (lifecycle authority is the MANAGER's).
 
 > **Adaptation of the AMAMA reversal.** AMAMA's SCEN-G05 asserts the MANAGER creates
 > the team + COS with no user approval; for AMOA the same rule appears as a **fact it

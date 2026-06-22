@@ -6,7 +6,6 @@ operation: send-urgent-reminder
 
 # Operation: Send Urgent Reminder
 
-
 ## Contents
 
 - [Purpose](#purpose)

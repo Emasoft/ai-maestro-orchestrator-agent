@@ -17,7 +17,6 @@ agent: amoa-main
 
 Handle agent replacement triggered by AMCOS. When an agent fails or loses context, compile task context and generate handoff documents for the replacement.
 
-
 ## Prerequisites
 
 Python 3.8+, PyYAML, GitHub CLI (gh) authenticated, AI Maestro running, AMCOS operational.
@@ -84,4 +83,3 @@ See: [error-handling-reference.md](references/error-handling-reference.md) for e
 - [context-compilation-workflow.md](references/context-compilation-workflow.md) - Context gathering
   > 2.1 Information Sources · 2.2 State File Extraction · 2.3 GitHub Issue Collection ·
   > 2.4 Communication History Retrieval · 2.5 Git Branch Analysis
-

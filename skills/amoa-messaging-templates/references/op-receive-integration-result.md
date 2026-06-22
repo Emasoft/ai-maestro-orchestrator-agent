@@ -1,6 +1,5 @@
 # Operation: Receive Integration Result
 
-
 ## Contents
 
 - [Purpose](#purpose)
@@ -11,11 +10,11 @@
 - [Error Handling](#error-handling)
 - [Example Response Format](#example-response-format)
 
----
-procedure: proc-request-pr-review
-workflow-instruction: Step 20 - PR Review Request
-operation-id: op-receive-integration-result
----
+## Operation Metadata
+
+- procedure: proc-request-pr-review
+- workflow-instruction: Step 20 - PR Review Request
+- operation-id: op-receive-integration-result
 
 ## Purpose
 

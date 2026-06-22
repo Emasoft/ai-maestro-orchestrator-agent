@@ -1,6 +1,5 @@
 # Language-Specific Verification Checklists - Part 2: Extended Platforms
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

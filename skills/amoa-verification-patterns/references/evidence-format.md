@@ -1,6 +1,5 @@
 # Evidence Format Enforcement
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

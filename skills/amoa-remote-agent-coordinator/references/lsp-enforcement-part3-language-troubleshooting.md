@@ -1,6 +1,5 @@
 # LSP Enforcement Checklist - Part 3: Language-Specific Troubleshooting
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

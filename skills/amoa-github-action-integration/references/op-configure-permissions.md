@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Configure Repository Permissions
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

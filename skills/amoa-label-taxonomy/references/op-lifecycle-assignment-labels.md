@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Set Labels During Assignment
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

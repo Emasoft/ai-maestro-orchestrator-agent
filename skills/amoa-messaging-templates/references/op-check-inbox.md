@@ -10,11 +10,11 @@
 
 # Operation: Check AI Maestro Inbox
 
----
-procedure: proc-request-pr-review
-workflow-instruction: Step 20 - PR Review Request
-operation-id: op-check-inbox
----
+## Operation Metadata
+
+- procedure: proc-request-pr-review
+- workflow-instruction: Step 20 - PR Review Request
+- operation-id: op-check-inbox
 
 ## Purpose
 

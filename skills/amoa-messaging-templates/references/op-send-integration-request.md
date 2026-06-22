@@ -9,11 +9,11 @@
 
 # Operation: Send Integration Request
 
----
-procedure: proc-request-pr-review
-workflow-instruction: Step 20 - PR Review Request
-operation-id: op-send-integration-request
----
+## Operation Metadata
+
+- procedure: proc-request-pr-review
+- workflow-instruction: Step 20 - PR Review Request
+- operation-id: op-send-integration-request
 
 ## Purpose
 

@@ -19,7 +19,7 @@ Migration guides help users move between versions. Make them comprehensive and e
 Show exact transformations from old to new.
 
 **Template**:
-```markdown
+````markdown
 ## Migrating [Feature Name]
 
 ### Before (v1)
@@ -35,10 +35,10 @@ Show exact transformations from old to new.
 ### What Changed
 - [Change 1]
 - [Change 2]
-```
+````
 
 **Example**:
-```markdown
+````markdown
 ## Migrating Authentication
 
 ### Before (v1)
@@ -60,14 +60,14 @@ const client = new ApiClient();
 - API key no longer passed in code (security improvement)
 - Client reads from environment variable by default
 - Explicit key still supported: `new ApiClient({ apiKey: process.env.MY_KEY })`
-```
+````
 
 ### 6.5.2 Step-by-Step Instructions
 
 Break migration into numbered steps that can be followed exactly.
 
 **Template**:
-```markdown
+````markdown
 ## Migration Steps
 
 ### Prerequisites
@@ -91,10 +91,10 @@ Break migration into numbered steps that can be followed exactly.
 
 ### Final Verification
 [How to confirm complete migration]
-```
+````
 
 **Example**:
-```markdown
+````markdown
 ## Migration Steps
 
 ### Prerequisites
@@ -157,14 +157,14 @@ Expected output:
 ✓ Connection: successful
 Migration complete!
 ```
-```
+````
 
 ### 6.5.3 Common Issues and Solutions
 
 Anticipate problems and provide solutions.
 
 **Template**:
-```markdown
+````markdown
 ## Troubleshooting
 
 ### Issue: [Problem description]
@@ -181,10 +181,10 @@ Anticipate problems and provide solutions.
 ```[language]
 [Code if applicable]
 ```
-```
+````
 
 **Example**:
-```markdown
+````markdown
 ## Troubleshooting
 
 ### Issue: "API key not found" error after migration
@@ -251,7 +251,7 @@ const client = new ApiClient({
   retryDelay: 1000
 });
 ```
-```
+````
 
 ---
 
@@ -259,7 +259,7 @@ const client = new ApiClient({
 
 Copy this template into your project's `.github/PULL_REQUEST_TEMPLATE.md`:
 
-```markdown
+````markdown
 ## Summary
 
 [What does this PR do and why?]
@@ -305,7 +305,7 @@ Closes #[issue]
 ## Notes for Reviewers
 
 [Anything reviewers should pay special attention to?]
-```
+````
 
 ---
 

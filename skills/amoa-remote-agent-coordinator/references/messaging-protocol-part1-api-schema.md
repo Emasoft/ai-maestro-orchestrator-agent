@@ -1,6 +1,5 @@
 # Messaging Protocol Part 1: API and Schema Reference
 
-
 ## Contents
 
 - [1.1 API Base URL and Endpoints](#11-api-base-url-and-endpoints)

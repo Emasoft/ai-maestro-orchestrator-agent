@@ -6,7 +6,6 @@ operation: handle-reassignment
 
 # Operation: Handle Reassignment
 
-
 ## Contents
 
 - [Purpose](#purpose)

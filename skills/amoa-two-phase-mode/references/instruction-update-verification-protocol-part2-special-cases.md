@@ -1,6 +1,5 @@
 # Instruction Update Verification Protocol - Part 2: Special Cases and Troubleshooting
 
-
 ## Contents
 
 - [5. Special Cases](#5-special-cases)

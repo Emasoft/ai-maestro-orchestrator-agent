@@ -6,7 +6,6 @@ operation: prepare-task-delegation
 
 # Operation: Prepare Task Delegation
 
-
 ## Contents
 
 - [Purpose](#purpose)

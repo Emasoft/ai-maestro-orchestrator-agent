@@ -281,6 +281,74 @@ def detect_default_branch(git_root: Path) -> str:
     return "main" if result.returncode == 0 else "master"
 
 
+# ── Idempotency helpers (interrupted-publish recovery) ──────────────────────
+#
+# WHY (orchestrator#23 / CPV pipeline-migration.md §4): a publish can be
+# interrupted between the local commit+tag and the push (network drop, GitHub
+# 503, pre-push hook reject). The local repo is then one version AHEAD of
+# origin while the tag/commit already exist locally. A blind re-run of
+# `publish.py --patch` would read the LOCAL (already-bumped) version as the
+# baseline and DOUBLE-BUMP, silently skipping a version (this lost CPV's own
+# v2.64.0 and AMAMA had to skip to a higher patch). These helpers let a re-run
+# read the REMOTE version as the bump baseline and skip the bump/commit/tag
+# steps that already completed, so the push simply resumes. The push itself is
+# naturally idempotent (a no-op when origin already has the commit/tag).
+
+
+def _read_remote_version(git_root: Path, plugin_rel: str, default_branch: str) -> str | None:
+    """Read .claude-plugin/plugin.json's version from origin/<default_branch>.
+
+    Returns None when origin or the file is unreachable (first publish, or no
+    network) — the caller then falls back to the local version as baseline.
+    `plugin_rel` is the plugin.json path RELATIVE to the git root (handles
+    subfolder plugins).
+    """
+    # Refresh the remote ref so the baseline reflects the true published state,
+    # not a stale local tracking ref. Best-effort: a fetch failure (offline)
+    # must not abort the publish — we degrade to the local baseline.
+    subprocess.run(
+        ["git", "-C", str(git_root), "fetch", "--quiet", "origin", default_branch],
+        capture_output=True, text=True, timeout=60,
+    )
+    result = subprocess.run(
+        ["git", "-C", str(git_root), "show", f"origin/{default_branch}:{plugin_rel}"],
+        capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode != 0:
+        return None
+    try:
+        return json.loads(result.stdout).get("version")
+    except (json.JSONDecodeError, AttributeError):
+        return None
+
+
+def _git_porcelain_clean(git_root: Path) -> bool:
+    """True iff the working tree has no uncommitted changes."""
+    result = subprocess.run(
+        ["git", "-C", str(git_root), "status", "--porcelain"],
+        capture_output=True, text=True, timeout=30,
+    )
+    return result.returncode == 0 and not result.stdout.strip()
+
+
+def _head_commit_subject(git_root: Path) -> str:
+    """HEAD's commit subject line (empty string on error)."""
+    result = subprocess.run(
+        ["git", "-C", str(git_root), "log", "-1", "--pretty=%s"],
+        capture_output=True, text=True, timeout=30,
+    )
+    return result.stdout.strip() if result.returncode == 0 else ""
+
+
+def _local_tag_exists(git_root: Path, tag: str) -> bool:
+    """True iff `tag` already exists locally."""
+    result = subprocess.run(
+        ["git", "-C", str(git_root), "tag", "--list", tag],
+        capture_output=True, text=True, timeout=30,
+    )
+    return result.returncode == 0 and tag in result.stdout.split()
+
+
 # ── Language-agnostic project detection ─────────────────────────────────────
 #
 # Supports: python, nodejs (js/ts), rust, go, bash, claude-plugin.
@@ -1312,18 +1380,16 @@ Examples:
     print(f"\n{BLUE}=== Step 3: Language-native lint (mandatory) ==={NC}")
     language_lint_step(info)
 
-    # ── Step 4: CPV lint — applies when the repo is a claude-plugin ──
-    # cpv-remote-validate lint runs markdownlint/ruff/mypy/yamllint/toml
-    # across the whole tree. Any non-zero exit fails the pipeline. NO bypass.
-    if info.has_kind(ProjectKind.CLAUDE_PLUGIN):
-        print(f"\n{BLUE}=== Step 4: CPV lint (mandatory for claude plugins) ==={NC}")
-        run([
-            "uvx", "--from", "git+https://github.com/Emasoft/claude-plugins-validation",
-            "--with", "pyyaml", "cpv-remote-validate", "lint", str(plugin_root),
-        ], cwd=git_root)
-        print(f"{GREEN}ok CPV lint passed with zero errors{NC}")
-    else:
-        print(f"\n{YELLOW}=== Step 4: CPV lint — skipped (not a claude plugin){NC}")
+    # ── Step 4: CPV whole-repo lint — folded into Step 5 ──
+    # CHECK-23 / pipeline-migration.md §1+§2: the standalone `cpv-remote-validate
+    # lint` subcommand was RETIRED upstream (v2.71.0) and is GONE from the
+    # launcher in CPV 2.136.1 — calling it here failed the pipeline at Step 4
+    # with exit 2. Whole-repo lint (markdownlint/ruff/yamllint/toml, 15
+    # languages via cpv_lint_engine) now runs INSIDE Step 5's
+    # `cpv-remote-validate plugin … --strict`, so a separate lint call is both
+    # broken and redundant. Step kept as a documented no-op to preserve the
+    # gate numbering (Steps 5-14) and the --print-gates count.
+    print(f"\n{YELLOW}=== Step 4: CPV lint — folded into Step 5 (whole-repo lint runs inside `plugin --strict`){NC}")
 
     # ── Step 5: CPV strict plugin validation ──
     # Runs the full plugin validator in --strict mode. NO bypass. NO skip.
@@ -1356,21 +1422,61 @@ Examples:
     ensure_git_cliff_available()
     print(f"{GREEN}ok git-cliff is installed{NC}")
 
-    # ── Step 8: Compute new version ──
-    current = info.version
-    if not parse_semver(current):
-        print(f"{RED}x Current version '{current}' is not valid semver{NC}", file=sys.stderr)
+    # ── Step 8: Compute new version (idempotent — REMOTE is the baseline) ──
+    # WHY (orchestrator#23 / pipeline-migration.md §4): bump off the version
+    # published on origin/<default_branch>, NOT the local plugin.json. After an
+    # interrupted publish the local file is already bumped while origin is one
+    # behind; reading local as baseline would double-bump and skip a version.
+    local_version = info.version
+    if not parse_semver(local_version):
+        print(f"{RED}x Local version '{local_version}' is not valid semver{NC}", file=sys.stderr)
         return 1
 
-    new_version = bump_semver(current, bump_type)
+    plugin_rel = ".claude-plugin/plugin.json"
+    if is_subfolder:
+        plugin_rel = f"{plugin_root.relative_to(git_root).as_posix()}/.claude-plugin/plugin.json"
+    remote_version = _read_remote_version(git_root, plugin_rel, default_branch)
+    if remote_version and not parse_semver(remote_version):
+        remote_version = None
+
+    # Baseline = remote when available (the true published state); fall back to
+    # local only on first publish / offline (no origin version to read).
+    baseline = remote_version if remote_version else local_version
+    print(f"\n{BLUE}=== Step 8: Compute new version ==={NC}")
+    print(f"  Remote baseline (origin/{default_branch}): {remote_version or '(unreachable — using local)'}")
+    print(f"  Local plugin.json version:               {local_version}")
+
+    new_version = bump_semver(baseline, bump_type)
     if new_version is None:
-        print(f"{RED}x bump_semver failed for '{current}' ({bump_type}){NC}", file=sys.stderr)
+        print(f"{RED}x bump_semver failed for '{baseline}' ({bump_type}){NC}", file=sys.stderr)
+        return 1
+
+    # Interrupted-publish detection: if the local file is ALREADY at the target
+    # version, a prior run bumped it but never finished the push — resume rather
+    # than bump again. If local has drifted to some OTHER value (not remote, not
+    # the target), refuse: a human must reconcile (we won't guess).
+    resume_bump = False
+    if local_version == new_version:
+        resume_bump = True  # local already bumped by an interrupted run — skip Step 9
+    elif remote_version and local_version != remote_version:
+        print(
+            f"{RED}x Local version {local_version} matches neither the remote "
+            f"baseline {remote_version} nor the target {new_version}.{NC}\n"
+            f"  An earlier publish left the tree in an inconsistent state. "
+            f"Reconcile manually (reset to origin/{default_branch} or to the "
+            f"intended version) before re-running.",
+            file=sys.stderr,
+        )
         return 1
 
     # ── Step 9: Bump version in every applicable config file ──
-    print(f"\n{BLUE}=== Step 9: Bump version ({bump_type}: {current} -> {new_version}) ==={NC}")
+    print(f"\n{BLUE}=== Step 9: Bump version ({bump_type}: {baseline} -> {new_version}) ==={NC}")
     if args.dry_run:
         print(f"  [DRY-RUN] Would bump {info.name} to {new_version} across: {', '.join(k.value for k in info.all_kinds)}")
+    elif resume_bump:
+        # Local plugin.json is already at new_version from an interrupted run —
+        # bumping again is a no-op (or would re-touch CHANGELOG); skip it.
+        print(f"{YELLOW}  Local plugin.json is already at {new_version} — skipping bump (interrupted-publish resume){NC}")
     else:
         bump_results = language_bump_version(info, new_version)
         errors = 0
@@ -1440,8 +1546,16 @@ Examples:
             pass
     if staged:
         run(["git", "add", *staged], cwd=git_root)
-    run(["git", "commit", "-m", f"chore(release): v{new_version}"], cwd=git_root)
-    print(f"{GREEN}ok Committed v{new_version} (bump + CHANGELOG){NC}")
+    # Idempotent commit (orchestrator#23 / §4): if an interrupted run already
+    # made the `chore(release): v<new>` commit AND the tree is now clean
+    # (nothing staged differs), `git commit` would fail "nothing to commit".
+    # Detect that and skip — the existing commit is the one we want to push.
+    release_subject = f"chore(release): v{new_version}"
+    if _head_commit_subject(git_root) == release_subject and _git_porcelain_clean(git_root):
+        print(f"{YELLOW}  HEAD is already '{release_subject}' and tree is clean — skipping commit (resume){NC}")
+    else:
+        run(["git", "commit", "-m", release_subject], cwd=git_root)
+        print(f"{GREEN}ok Committed v{new_version} (bump + CHANGELOG){NC}")
 
     # ── Step 12: Create annotated tag with the release notes as body ──
     print(f"\n{BLUE}=== Step 12: Create annotated tag v{new_version} ==={NC}")
@@ -1450,17 +1564,39 @@ Examples:
         final_notes = notes_path.read_text(encoding="utf-8").strip()
     else:
         final_notes = f"Release v{new_version}"
-    run(["git", "tag", "-a", f"v{new_version}", "-m", final_notes], cwd=git_root)
-    print(f"{GREEN}ok Tagged v{new_version} (annotated, body = release notes){NC}")
+    # Idempotent tag (orchestrator#23 / §4): a re-run after an interrupted push
+    # already has the local tag; `git tag` would fail "tag already exists".
+    if _local_tag_exists(git_root, f"v{new_version}"):
+        print(f"{YELLOW}  Tag v{new_version} already exists locally — skipping tag step (resume){NC}")
+    else:
+        run(["git", "tag", "-a", f"v{new_version}", "-m", final_notes], cwd=git_root)
+        print(f"{GREEN}ok Tagged v{new_version} (annotated, body = release notes){NC}")
 
     # ── Step 13: Push commit + tag to origin ──
     # The pre-push hook verifies its caller via PROCESS ANCESTRY: it walks
     # the PID tree and looks for a `python.*scripts/publish.py` ancestor.
     # Because this process IS scripts/publish.py, the hook will find it and
     # allow the push. No env var needed — process trees can't be spoofed.
+    # The push ALWAYS runs (§4) — it is the idempotent step that completes an
+    # interrupted publish. `git push origin HEAD` is a no-op when origin is
+    # already up-to-date. The TAG push is run with check=False so a re-run where
+    # origin already carries the tag (the push DID land before the interruption,
+    # only a LATER step failed) is treated as success rather than aborting on
+    # the "already exists"/"up-to-date" rejection — anything else still fails.
     print(f"\n{BLUE}=== Step 13: Push commit + tag to origin/{default_branch} ==={NC}")
     run(["git", "push", "origin", "HEAD"], cwd=git_root)
-    run(["git", "push", "origin", f"v{new_version}"], cwd=git_root)
+    tag_push = run(["git", "push", "origin", f"v{new_version}"], cwd=git_root, check=False)
+    if tag_push.returncode != 0:
+        combined = (tag_push.stdout + tag_push.stderr).lower()
+        if "up-to-date" in combined or "already exists" in combined:
+            print(f"{YELLOW}  Tag v{new_version} already on origin — push is a no-op (resume){NC}")
+        else:
+            print(
+                f"{RED}x Pushing tag v{new_version} failed:{NC}\n"
+                f"  {tag_push.stdout.strip()}\n  {tag_push.stderr.strip()}",
+                file=sys.stderr,
+            )
+            return 1
     print(f"\n{GREEN}ok Published v{new_version} ({info.name}){NC}")
 
     # ── Step 14: Create GitHub release with release notes (MANDATORY) ──

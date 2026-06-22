@@ -1,6 +1,5 @@
 # MANDATORY: 4-Verification-Loops Before PR
 
-
 ## Contents
 
 - [Table of Contents](#table-of-contents)

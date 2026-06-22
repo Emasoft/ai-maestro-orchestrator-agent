@@ -85,4 +85,3 @@ Skill-authoring guidance (consulted when scaffolding skill/agent documents for t
   <!-- TOC: 1.0 Top-Level Structure | 2.0 References Directory | 3.0 Scripts Directory | 4.0 Templates Directory -->
 - [skill-format-comparison.md](./references/skill-format-comparison.md)
   <!-- TOC: Contents | Summary | Frontmatter Field Comparison | Open Agent Skills Specification | Claude Code Skills Specification | Compatibility | Recommendations | Validation Strategy | Best Practices | References -->
-

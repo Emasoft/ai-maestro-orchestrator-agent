@@ -6,7 +6,6 @@ operation: query-progress-dashboard
 
 # Operation: Query Progress Dashboard
 
-
 ## Contents
 
 - [Purpose](#purpose)

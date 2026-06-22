@@ -1,6 +1,5 @@
 # Toolchain Setup Part 2: Compiled Languages
 
-
 ## Contents
 
 - [Purpose](#purpose)

@@ -1,6 +1,5 @@
 # AMOA Sub-Agent Role Boundaries Template
 
-
 ## Contents
 
 - [YAML Frontmatter Structure](#yaml-frontmatter-structure)

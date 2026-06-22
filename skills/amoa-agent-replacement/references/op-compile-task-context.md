@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Compile Task Context
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

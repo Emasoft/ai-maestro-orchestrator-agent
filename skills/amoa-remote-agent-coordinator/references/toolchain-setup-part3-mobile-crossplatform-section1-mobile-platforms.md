@@ -1,6 +1,5 @@
 # Toolchain Setup Part 3 Section 1: Mobile Platforms
 
-
 ## Contents
 
 - [Purpose](#purpose)

@@ -1,6 +1,5 @@
 # Messaging Protocol Part 7: Troubleshooting
 
-
 ## Contents
 
 - [7.1 Messages Not Being Delivered](#71-messages-not-being-delivered)

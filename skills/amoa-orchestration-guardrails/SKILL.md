@@ -88,8 +88,8 @@ Rule violation detected: stop, reassess, delegate to worker agent.
     - Part 2: Decision Trees
     - Part 3: Common Scenarios
     - Part 4: Violation Detection and Examples
-  - Quick Reference Summary
-  - ...
+    - Quick Reference Summary
+    - ...
 - [non-blocking-patterns.md](./references/non-blocking-patterns.md)
   <!-- TOC: Overview | RULE 17: Orchestrator Must Remain Responsive (IRON RULE) | Async Task Delegation Patterns | 1 Background Bash Pattern | 2 Task Agent with Timeout | 3 Fire-and-Forget Pattern for Non-Critical Tasks | Polling Instead of Blocking | 1 Progress Polling Protocol | 2 Status Check Without Blocking | Automatic Escalation Triggers | 1 When Orchestrator Has Been Unresponsive | 2 Self-Check for Responsiveness | Parallel Agent Spawning | 1 Batch Spawning Pattern | 2 Maximum Concurrent Agents | Message Queue Processing | 1 AI Maestro Priority Queue | 2 Non-Blocking Message Check | Graceful Handoff Pattern | 1 Complete Handoff | 2 Instruction Document Template | Objective | Requirements | Success Criteria | Report Format | Timeout | Emergency Response Availability | 1 Always Available For | 2 Interrupt Protocol | Task Tracking for Async Operations | 1 Tracking Document Format | In Progress | Pending Check | 2 Task Completion Verification | Quick Reference Checklist | Anti-Patterns to Avoid | Summary -->
   - Overview

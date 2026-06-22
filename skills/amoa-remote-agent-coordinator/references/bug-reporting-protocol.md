@@ -1,6 +1,5 @@
 # Bug Reporting Protocol
 
-
 ## Contents
 
 - [Purpose](#purpose)

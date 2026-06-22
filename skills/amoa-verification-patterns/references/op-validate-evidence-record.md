@@ -1,6 +1,5 @@
 # Operation: Validate Evidence Record
 
-
 ## Contents
 
 - [Purpose](#purpose)
@@ -23,11 +22,11 @@
 - [Exit Criteria](#exit-criteria)
 - [Related Operations](#related-operations)
 
----
-procedure: proc-complete-task
-workflow-instruction: Step 19 - Task Completion
-operation-id: op-validate-evidence-record
----
+## Operation Metadata
+
+- procedure: proc-complete-task
+- workflow-instruction: Step 19 - Task Completion
+- operation-id: op-validate-evidence-record
 
 ## Purpose
 

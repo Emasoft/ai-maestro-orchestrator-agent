@@ -1,6 +1,5 @@
 # Operation: Respond to Bug Report
 
-
 ## Contents
 
 - [Metadata](#metadata)

@@ -7,7 +7,7 @@
 
 # Error Handling Troubleshooting
 
-### Issue: AI Maestro messages not being delivered
+## Issue: AI Maestro messages not being delivered
 
 **Cause**: API endpoint unreachable or agent identifier incorrect.
 
@@ -17,7 +17,7 @@
 3. Verify agent is registered in AI Maestro
 4. Check network connectivity
 
-### Issue: Agent responds but doesn't understand instructions
+## Issue: Agent responds but doesn't understand instructions
 
 **Cause**: Instruction Verification Protocol not executed.
 
@@ -27,7 +27,7 @@
 3. Correct any misunderstandings before authorizing work
 4. Provide clarification for all questions asked
 
-### Issue: Agent progress stalls without reporting blockers
+## Issue: Agent progress stalls without reporting blockers
 
 **Cause**: Proactive polling not configured or agent not responding.
 
@@ -37,7 +37,7 @@
 3. If no response after 2 polls, send escalation message using the `agent-messaging` skill
 4. Consider reassigning if agent unresponsive
 
-### Issue: Module assignment conflicts between agents
+## Issue: Module assignment conflicts between agents
 
 **Cause**: Same module assigned to multiple agents.
 
@@ -47,7 +47,7 @@
 3. Notify previous assignee to stop work
 4. Never assign same module to multiple agents simultaneously
 
-### Issue: Agent completes work but PR fails verification
+## Issue: Agent completes work but PR fails verification
 
 **Cause**: Acceptance criteria not met or 4-verification-loop not followed.
 

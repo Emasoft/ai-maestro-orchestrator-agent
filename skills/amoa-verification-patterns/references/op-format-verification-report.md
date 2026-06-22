@@ -1,6 +1,5 @@
 # Operation: Format Verification Report
 
-
 ## Contents
 
 - [Purpose](#purpose)
@@ -21,11 +20,11 @@
 - [Exit Criteria](#exit-criteria)
 - [Related Operations](#related-operations)
 
----
-procedure: proc-complete-task
-workflow-instruction: Step 19 - Task Completion
-operation-id: op-format-verification-report
----
+## Operation Metadata
+
+- procedure: proc-complete-task
+- workflow-instruction: Step 19 - Task Completion
+- operation-id: op-format-verification-report
 
 ## Purpose
 

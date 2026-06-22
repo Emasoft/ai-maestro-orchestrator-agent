@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Send Handoff to New Agent
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

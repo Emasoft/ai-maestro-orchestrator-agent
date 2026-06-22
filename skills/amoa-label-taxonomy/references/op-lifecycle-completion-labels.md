@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Set Labels on Task Completion
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

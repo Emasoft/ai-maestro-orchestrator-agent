@@ -21,7 +21,6 @@
 - [8. Tests Fail in Post-Task Interview](#8-tests-fail-in-post-task-interview)
 - [9. Implementer Creates PR Before Approval](#9-implementer-creates-pr-before-approval)
 
-
 ## 1. Implementer Disagrees with Requirements
 
 This is an instance of the **in-development issue dialog** — route it per the

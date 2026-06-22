@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Query Labels
 
-
 ## Contents
 
 - [When to Use](#when-to-use)

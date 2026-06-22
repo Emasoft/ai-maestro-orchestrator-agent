@@ -156,20 +156,20 @@ if [ ! -f "cmd/{{PROJECT_NAME}}/main.go" ]; then
 package main
 
 import (
-	"fmt"
-	"os"
+ "fmt"
+ "os"
 )
 
 func main() {
-	if err := run(); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
+ if err := run(); err != nil {
+  fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+  os.Exit(1)
+ }
 }
 
 func run() error {
-	fmt.Println("{{PROJECT_NAME}} starting...")
-	return nil
+ fmt.Println("{{PROJECT_NAME}} starting...")
+ return nil
 }
 EOF
 fi

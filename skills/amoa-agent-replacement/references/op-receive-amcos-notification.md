@@ -5,7 +5,6 @@ workflow-instruction: support
 
 # Operation: Receive AMCOS Notification
 
-
 ## Contents
 
 - [When to Use](#when-to-use)
@@ -152,4 +151,3 @@ fi
 - [ ] Pause new agent assignments
 - [ ] Log the replacement event
 - [ ] Proceed to context compilation
-

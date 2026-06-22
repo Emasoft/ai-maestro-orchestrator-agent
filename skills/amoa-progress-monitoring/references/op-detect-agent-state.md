@@ -6,7 +6,6 @@ operation: detect-agent-state
 
 # Operation: Detect Agent State
 
-
 ## Contents
 
 - [Purpose](#purpose)
