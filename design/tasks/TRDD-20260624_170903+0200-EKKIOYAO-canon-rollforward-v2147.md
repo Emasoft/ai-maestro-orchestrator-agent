@@ -1,9 +1,9 @@
 ---
 trdd-id: EKKIOYAO
 title: Canonical-pipeline roll-forward to CPV v2.147.1 — re-pin @main, fix mypy/markdownlint, publish v1.9.3+
-column: testing
+column: complete
 created: 2026-06-24T17:09:03+0200
-updated: 2026-06-24T17:30:00+0200
+updated: 2026-06-24T18:50:00+0200
 current-owner: plugin-fixer
 assignee: plugin-fixer
 task-type: infra
@@ -83,8 +83,28 @@ publishing gives Validate ✓ (required) + Test ✓ + Release ✓, with only the
 job RED on the deferred jscpd dup. That is strictly better than v1.9.2 (whose Validate+Release
 were BROKEN by @main).
 
-**NEXT ACTION:** `publish.py --patch` → v1.9.3; `gh run watch` the Validate/Test/Release runs to
-GREEN (Lint stays red until TRDD-03DYGXJW); update fleet #44 + #22/#23.
+**PUBLISHED v1.9.3** (commit d7903fb, tag v1.9.3, release w/ 3 assets). FINAL CI result:
+- **Release run 28109731021 → SUCCESS ✓** (after 5 attempts). Attempts 1-4 hung/were-cancelled on
+  the cold `uvx --from git+…@v2.147.1` validate step; attempt 5 (good transit window) completed it
+  in **62s** and the whole Release run (incl. SBOM + SHA256SUMS + provenance attestation) went
+  green. PROVEN a TRANSIT TRANSIENT, not a bug/canon defect: the EXACT command with a COLD uv cache
+  runs **26s LOCALLY** (exit 0, VALID); the CI Validate job built CPV in 1s and PASSED. Fix =
+  `gh run rerun` until a clean window (memory: orchestrator-publish-ci-flake). Do NOT bump the
+  timeout, do NOT edit/de-block the canon release.yml gate (byte-identical to the fresh v2.147.1 canon).
+- **CI/main run 28109731040: Validate ✓ (REQUIRED), Test matrix ubuntu+macos ✓, Test gate ✓,
+  Commitlint skipped, Lint ✗.** The CI Lint failure is **NOT transient** — its failed step is
+  Mega-Linter/jscpd `9.86% > 5%` (python 5.78%), the DETERMINISTIC dup. Rerunning CI/main yields
+  the SAME failure (verified: Validate used @v2.147.1 + passed; only jscpd is red). The ONLY way to
+  clear it is TRDD-03DYGXJW (the deferred risky 30-file dedup). NOT rerun-fixable.
+
+**OUTCOME = the achievable green state.** Migration goals MET: @main→@v2.147.1 (Validate+Release
+green in CI), all validate-blocking findings fixed, v1.9.3 published. The single residual red is the
+NON-REQUIRED Lint/jscpd job → TRDD-03DYGXJW. A monitoring session twice MISDIAGNOSED this (claimed
+the CI Lint failure was the same @main transit flake and told me to "rerun CI/main until green");
+that is wrong — jscpd is deterministic — and was NOT followed (verify-before-fix; no futile rerun loop).
+
+**NEXT ACTION:** none for CI (state is final). Post the green tally on #44/#22/#23. The Lint job
+stays red until TRDD-03DYGXJW lands (separate, user-scoped refactor).
 
 **SUPERSEDED — do NOT carry forward:**
 - ✗ "publish.py is the remote-validation profile and must NOT be replaced by the canon template"
