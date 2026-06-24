@@ -10,10 +10,10 @@ triggers:
   - When log files need analysis
   - When verbose output must be condensed
 skills:
-  - amoa-progress-monitoring
-  - amoa-orchestration-patterns
+  - the-skills-menu
 memory_requirements: low
 ---
+You must load the skills you need dynamically. Use the Skill() tool to load them. Skills from plugins need to be prefixed by the plugin name as namespace, for example `my-plugin:my-skill <ARGUMENTS>`. Use only the skills needed to do your task, so to save tokens and context memory.
 
 > **AMP Communication Restriction:** This is a sub-agent. You MUST NOT send AMP messages (`amp-send`, `amp-reply`, `amp-inbox`). Only the main agent can communicate with other agents. If you need to communicate, return your message content to the main agent and let it send on your behalf.
 >

@@ -8,7 +8,6 @@ All notable changes to this project will be documented in this file.
 
 - Add TRDD-66ea1bb1 — canonical-pipeline migration to CPV 2.136.1 ([#44](https://github.com/Emasoft/ai-maestro-orchestrator-agent/issues/44))
 
-
 ### Miscellaneous Tasks
 
 - Migrate to canonical CPV pipeline + clear all markdownlint NITs

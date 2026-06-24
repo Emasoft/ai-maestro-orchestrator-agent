@@ -146,7 +146,7 @@ jobs:
           CLAUDE_PRIVATE_USERNAMES: "runner"
         run: |
           set +e
-          uvx --from git+https://github.com/Emasoft/claude-plugins-validation@main \
+          uvx --from git+https://github.com/Emasoft/claude-plugins-validation@v2.147.1 \
               --with pyyaml \
               cpv-remote-validate plugin . --strict
           exit_code=$?

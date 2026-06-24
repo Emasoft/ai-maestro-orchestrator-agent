@@ -1,9 +1,9 @@
 ---
 trdd-id: EKKIOYAO
 title: Canonical-pipeline roll-forward to CPV v2.147.1 — re-pin @main, fix mypy/markdownlint, publish v1.9.3+
-column: dev
+column: testing
 created: 2026-06-24T17:09:03+0200
-updated: 2026-06-24T17:09:03+0200
+updated: 2026-06-24T17:30:00+0200
 current-owner: plugin-fixer
 assignee: plugin-fixer
 task-type: infra
@@ -57,11 +57,34 @@ leak). Instead validate steps set `PLUGIN_SKIP_GITHUB_INTEGRITY: "1"` + a `timeo
 `CLAUDE_PRIVATE_USERNAMES: runner` fix. This is correct per the prompt ("unless the v2.147.1
 canon supersedes them").
 
-**NEXT ACTION:** run `standardize_plugin.py --fix --force-templates` (v2.147.1) → adopt canon
-ci.yml/release.yml/notify-marketplace.yml/.mega-linter.yml/.jscpd.json/cliff.toml/pre-push/
-publish.py/cpv_network_resilience.py + re-pin @main→@v2.147.1; then fix the 18 mypy + 1
-markdownlint; verify --strict clean (modulo the jscpd dup deferred to TRDD-03DYGXJW); run the
-87-check matrix; publish; watch CI to green.
+**DONE so far (2026-06-24T17:30):** migration applied — adopted canon ci.yml(re-pin only,
+ahead-of-canon)/release.yml/.mega-linter.yml/.jscpd.json/cliff.toml/pre-push/publish.py/
+cpv_network_resilience.py + 6 agents migrated to the-skills-menu + the-skills-menu skill
+installed; CPV ref re-pinned @main→@v2.147.1 in ci.yml + release.yml.
+
+**FIXES applied (all blocking findings cleared from the CI-equivalent plugin-root run):**
+- mypy.ini typo `disable_error_codes`→`disable_error_code` (the invalid option made mypy ignore
+  the whole config). NOTE: the 17 mypy `no-any-return` seen locally were a CPV-cwd ARTIFACT —
+  CPV ran mypy from $CPV_ROOT and picked up CPV's own `warn_return_any=true`; from the plugin
+  root (= CI cwd) mypy is clean. The mypy.ini fix is still correct for local/MegaLinter parity.
+- the-skills-menu/SKILL.md broken ref `../the-skills-menu-create/SKILL.md` → plain skill-name ref.
+- CHANGELOG.md MD012 double-blank removed; dedup-TRDD MD004 `+ `-poison line reworded.
+- publish.py:86 ruff I001 import-block sort (canon template ships it unsorted — likely a CPV
+  template bug; the Validate job's CPV-bundled ruff DOES check isort, so this was a real CI blocker).
+
+**VERIFY RESULT — CPV strict from the PLUGIN ROOT (= CI checkout cwd, the authoritative run):**
+`CRITICAL=0 MAJOR=0 MINOR=0 NIT=0 WARNING=23 → VALID`. Tests: 91 pass. ruff: clean. ci-preflight:
+ONLY FAIL is jscpd (deferred to TRDD-03DYGXJW).
+
+**KEY CI-PARITY FINDING (decides the publish):** branch-protection required check is ONLY
+`validate`; the MegaLinter `lint` job (where jscpd lives) is NOT required. `release.yml` runs
+CPV-strict + pytest + `ruff check scripts/` + `mypy scripts/` (NO jscpd) → it goes GREEN. So
+publishing gives Validate ✓ (required) + Test ✓ + Release ✓, with only the non-required Lint
+job RED on the deferred jscpd dup. That is strictly better than v1.9.2 (whose Validate+Release
+were BROKEN by @main).
+
+**NEXT ACTION:** `publish.py --patch` → v1.9.3; `gh run watch` the Validate/Test/Release runs to
+GREEN (Lint stays red until TRDD-03DYGXJW); update fleet #44 + #22/#23.
 
 **SUPERSEDED — do NOT carry forward:**
 - ✗ "publish.py is the remote-validation profile and must NOT be replaced by the canon template"

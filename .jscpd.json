@@ -1,0 +1,29 @@
+{
+  "threshold": 5,
+  "minTokens": 50,
+  "gitignore": true,
+  "reporters": [
+    "console"
+  ],
+  "ignore": [
+    "**/tests_dev/**",
+    "**/docs_dev/**",
+    "**/scripts_dev/**",
+    "**/samples_dev/**",
+    "**/examples_dev/**",
+    "**/builds_dev/**",
+    "**/downloads_dev/**",
+    "**/libs_dev/**",
+    "**/llm_externalizer_output/**",
+    "**/.claude/**",
+    "**/.tldr/**",
+    "**/tests/fixtures/**",
+    "**/test/fixtures/**",
+    "**/spec/fixtures/**",
+    "**/__fixtures__/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/node_modules/**",
+    "**/.git/**"
+  ]
+}

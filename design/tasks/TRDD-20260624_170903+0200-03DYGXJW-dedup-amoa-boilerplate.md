@@ -42,10 +42,10 @@ instances counting both sides; TOTAL = 1913):**
 | other | 585 | 30% | Smaller scattered clones (argparse blocks, sha256 helpers, report_writer-adjacent). Re-measure after the big three. |
 
 **Lowest-risk path to GREEN:** removing ONLY the `parse_frontmatter` family (31%) drops 5.7%
-→ ~3.9%, comfortably under 5%. So the minimal viable fix is `shared/amoa_state.py` +
-rewiring the 29 `parse_frontmatter` importers, **test-verified per file** (run `pytest tests/`
-+ `mypy` + a smoke import of each touched script after each batch of ~5 files). The download
-pair + load_state can follow for margin but are not strictly required for the gate.
+→ ~3.9%, comfortably under 5%. So the minimal viable fix is `shared/amoa_state.py` plus
+rewiring the 29 `parse_frontmatter` importers, **test-verified per file** — after each batch
+of ~5 files run `pytest tests/`, `mypy`, and a smoke import of every touched script. The
+download pair and load_state can follow for margin but are not strictly required for the gate.
 
 **NEXT ACTION:** create `shared/amoa_state.py` exporting `EXEC_STATE_FILE` + a canonical
 `parse_frontmatter(file_path) -> tuple[dict[str, Any], str]`; rewire the 29 importers in

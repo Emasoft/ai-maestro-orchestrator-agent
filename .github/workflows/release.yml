@@ -50,7 +50,7 @@ jobs:
         # CI validate job. --strict blocks on CRITICAL/MAJOR/MINOR/NIT (exit
         # codes 1-4); WARNING (exit 5+) is advisory only.
         # Issue #11: removed local scripts/validate_plugin.py invocation.
-        # Root-cause #2: CPV is PINNED to @main (same ref the
+        # Root-cause #2: CPV is PINNED to @v2.147.1 (same ref the
         # CI validate job and publish.py use) so the cold uvx-from-git build is
         # cached per tag and a stricter future CPV release cannot break the
         # release gate with no plugin change. Root-cause #5: this re-runs the
@@ -60,17 +60,16 @@ jobs:
         env:
           # Root-cause #4: skip the GitHub-anchored integrity fetch on a
           # fresh-checkout runner (the local manifest already matches the code).
+          # Issue #140: this step deliberately does NOT pass the repo owner into
+          # CPV's private-usernames allowlist — that allowlist is the set of
+          # names to treat as PRIVATE, so seeding it with the PUBLIC owner makes
+          # CPV flag every github.com/<owner>/ URL + the owner no-reply email as
+          # a CRITICAL private-path leak, red-lighting --strict CI. In CI there
+          # is no developer local-username to protect; the public owner is public.
           PLUGIN_SKIP_GITHUB_INTEGRITY: "1"
-          # CIP-1 (CPV#142 / fleet #44): CLAUDE_PRIVATE_USERNAMES lists the
-          # PRIVATE local usernames CPV must redact. Setting it to the PUBLIC
-          # repo owner is inverted — CPV would flag every owner GitHub URL and
-          # the owner's no-reply email as a CRITICAL "private path leaked"
-          # (≈43 CRITICAL in CI, 0 locally where whoami≠owner). A CI runner has
-          # no developer local-username to protect, so use the literal "runner".
-          CLAUDE_PRIVATE_USERNAMES: "runner"
         run: |
           set +e
-          uvx --from git+https://github.com/Emasoft/claude-plugins-validation@main               --with pyyaml               cpv-remote-validate plugin . --strict               > validation-report.txt 2>&1
+          uvx --from git+https://github.com/Emasoft/claude-plugins-validation@v2.147.1               --with pyyaml               cpv-remote-validate plugin . --strict               > validation-report.txt 2>&1
           exit_code=$?
           set -e
           cat validation-report.txt
