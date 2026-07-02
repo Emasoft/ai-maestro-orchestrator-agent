@@ -32,9 +32,13 @@ Trigger this operation when:
 
 ### Step 1: Prepare Issue Content
 
-For each module, prepare the issue content:
+For each module, prepare the issue content. Per **PRRD G1.1** (every agent
+writing to GitHub self-identifies — see the main agent's "GitHub Authorship
+Self-Identification" section), lead the body with the self-id line:
 
 ```markdown
+_Posted by the Claude developing **ai-maestro-orchestrator-agent** (via the shared @Emasoft gh auth)._
+
 ## Module: [Module Name]
 
 ### Description
@@ -77,6 +81,8 @@ Apply consistent labels:
 gh issue create \
   --title "[Module] Core Authentication" \
   --body "$(cat <<'EOF'
+_Posted by the Claude developing **ai-maestro-orchestrator-agent** (via the shared @Emasoft gh auth)._
+
 ## Module: Core Authentication
 
 ### Description
@@ -154,6 +160,8 @@ Copy this checklist and track your progress:
 gh issue create \
   --title "[Module] Google OAuth2 Integration" \
   --body "$(cat <<'EOF'
+_Posted by the Claude developing **ai-maestro-orchestrator-agent** (via the shared @Emasoft gh auth)._
+
 ## Module: Google OAuth2 Integration
 
 ### Description
