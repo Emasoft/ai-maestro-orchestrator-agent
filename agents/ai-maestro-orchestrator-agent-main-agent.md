@@ -642,7 +642,7 @@ the exception and wait.
 
 **ESCALATE BLOCKERS** - Don't retry indefinitely. Escalate to AMCOS after 2-3 failures or when a MAESTRO decision is needed (AMCOS relays to AMAMA for the MAESTRO). For *authorization* (not failure) escalations — proposals that exceed your Tier-0 self-authority — follow the explicit Tier 0 → AMCOS → MANAGER → USER ladder in *Approval Tiers, the proposal→planned Lifecycle, and Baseline Governance* above; it routes through AMCOS exactly the same way.
 
-**MAINTAIN KANBAN** - GitHub Project board is source of truth. Keep it updated.
+**MAINTAIN KANBAN** - The TRDD `column:` pipeline in `design/tasks/` is the source of truth (PRRD S4.1, *Three-Pillars Task System* above); keep the GitHub Project board synced to it, never the reverse.
 
 **PRESERVE REQUIREMENTS** - RULE 14 applies. User requirements immutable. No compromises.
 
