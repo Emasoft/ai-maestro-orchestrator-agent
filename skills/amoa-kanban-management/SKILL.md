@@ -18,6 +18,14 @@ agent: amoa-main
 
 Manage GitHub Projects V2 kanban boards: create boards, columns, move items, sync status.
 
+**This is a UI mirror, not the pillar of record.** Per PRRD S4.1, the TRDD
+`column:` pipeline in `design/tasks/` (driven via the core `ama-trdd-*` /
+`ama-kanban-render` skills — see "Three-Pillars Task System" in the main
+agent persona) is the AUTHORITATIVE project lifecycle. This skill keeps the
+GitHub Projects V2 board in sync with that authoritative state; when the two
+disagree, the TRDD wins and the board is corrected to match it, never the
+reverse.
+
 ## Prerequisites
 
 `gh` CLI authenticated with `project` and `read:project` OAuth scopes. See [references/gh-auth-scopes.md](references/gh-auth-scopes.md)
