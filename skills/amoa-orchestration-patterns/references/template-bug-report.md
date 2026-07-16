@@ -137,125 +137,50 @@ This wraps pasted text in a code block with shell syntax highlighting automatica
 
 ## 3. Template Fields Explained
 
-### 3.1 Duplicate check checkbox
+Each field below is one entry of the `body` array. The YAML for every field is
+maintained once, in [section 6. Complete YAML Template (Ready to Copy)](#6-complete-yaml-template-ready-to-copy)
+— read that section for the exact `attributes`, `options`, `placeholder`, and
+`validations` values. This section explains what each field is for and why it is
+in the form.
 
-```yaml
-- type: checkboxes
-  id: duplicate-check
-  attributes:
-    label: "Pre-submission checklist"
-    options:
-      - label: "I have searched existing issues and confirmed this is not a duplicate"
-        required: true
-```
+| # | Field (`id`) | `type` | Required | Purpose |
+|---|--------------|--------|----------|---------|
+| 3.1 | `duplicate-check` | `checkboxes` | yes | Forces the reporter to confirm they searched for an existing issue first |
+| 3.2 | `area` | `dropdown` | yes | Classifies the bug by module so triage can route it |
+| 3.3 | `operating-system` | `dropdown` | yes | Captures the OS up front, the single most common follow-up question |
+| 3.4 | `version` | `input` | yes | Captures the version up front, the second most common follow-up question |
+| 3.5 | `what-happened` | `textarea` | yes | The bug description — what was observed instead of the expectation |
+| 3.6 | `steps-to-reproduce` | `textarea` | yes | Exact steps; without these a bug cannot be investigated |
+| 3.7 | `expected-behavior` | `textarea` | yes | The expectation, so the defect is unambiguous |
+| 3.8 | `logs` | `textarea` | no | Log output or screenshots; uses `render: shell` (see 2.3) so pasted text is auto-formatted as a code block. Optional because not every bug produces output |
+
+### 3.1 Duplicate check checkbox
 
 For orchestrator-filed bugs, this checkbox reminds the orchestrator to search existing issues before creating a new one. Duplicate bug reports waste triage time.
 
 ### 3.2 Area dropdown for module classification
 
-```yaml
-- type: dropdown
-  id: area
-  attributes:
-    label: "Area"
-    description: "Which part of the project is affected?"
-    options:
-      - Core library
-      - CLI interface
-      - API server
-      - Documentation
-      - Build system
-      - Tests
-      - Other
-  validations:
-    required: true
-```
+The `options` list shipped in section 6 is generic. Replace it with your project's real module names — see [section 7.2](#72-modifying-the-area-dropdown-for-your-project).
 
 ### 3.3 Operating system dropdown
 
-```yaml
-- type: dropdown
-  id: operating-system
-  attributes:
-    label: "Operating System"
-    options:
-      - macOS
-      - Windows 10
-      - Windows 11
-      - Ubuntu / Debian
-      - Fedora / RHEL
-      - Arch Linux
-      - Other Linux
-      - Not applicable
-  validations:
-    required: true
-```
+Includes `Not applicable` so reporters of platform-independent bugs are not forced into a wrong answer.
 
 ### 3.4 Version input field
 
-```yaml
-- type: input
-  id: version
-  attributes:
-    label: "Version"
-    description: "Run your-tool --version or check package.json / pyproject.toml"
-    placeholder: "e.g., 3.2.1"
-  validations:
-    required: true
-```
+The `description` tells the reporter exactly where to find the version, which is why this field is answerable rather than skipped.
 
 ### 3.5 "What happened?" description textarea
 
-```yaml
-- type: textarea
-  id: what-happened
-  attributes:
-    label: "What happened?"
-    description: "Describe the bug clearly."
-    placeholder: "When I run X, Y happens instead of Z..."
-  validations:
-    required: true
-```
-
 ### 3.6 Steps to reproduce textarea
 
-```yaml
-- type: textarea
-  id: steps-to-reproduce
-  attributes:
-    label: "Steps to reproduce"
-    description: "Provide exact steps so a maintainer can reproduce the issue."
-    placeholder: |
-      1. Install version X
-      2. Run command Y with arguments Z
-      3. Observe error message in terminal
-  validations:
-    required: true
-```
+The `placeholder` is a worked three-step example; it sets the expected level of detail.
 
 ### 3.7 Expected behavior textarea
 
-```yaml
-- type: textarea
-  id: expected-behavior
-  attributes:
-    label: "Expected behavior"
-    description: "What did you expect to happen instead?"
-  validations:
-    required: true
-```
-
 ### 3.8 Logs and screenshots textarea with code rendering
 
-```yaml
-- type: textarea
-  id: logs
-  attributes:
-    label: "Relevant log output or screenshots"
-    render: shell
-  validations:
-    required: false
-```
+This is the only optional field in the form.
 
 ---
 

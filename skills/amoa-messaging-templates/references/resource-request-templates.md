@@ -11,13 +11,13 @@
 
 Templates for agents requesting resources or capabilities from AMOA, and the formal JSON format for AMOA acknowledging AMCOS task assignments. Use the `agent-messaging` skill for all message operations.
 
+> **Note**: Use the agent-messaging skill to send every message below. Each JSON structure shown is the message *content*, not a raw API payload.
+
 ---
 
 ## 1. Agent Resource Request (Agent to AMOA)
 
 **When to use:** An agent (implementer, tester, or any sub-agent) needs a resource it does not currently have access to. A "resource" is any tool, file access permission, credential, or external service that the agent cannot obtain on its own. Examples include: access to a private repository, a database credential, a specific CLI tool not installed in the agent's environment, or access to an external API service.
-
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
 
 **Send template:**
 
@@ -59,8 +59,6 @@ Templates for agents requesting resources or capabilities from AMOA, and the for
 ## 2. AMOA Resource Response (AMOA to Agent)
 
 **When to use:** AMOA has evaluated an agent's resource request and is responding with the decision. AMOA evaluates the request based on three possible outcomes: granted, denied, or escalated.
-
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
 
 ### 2.1 Resource Granted
 
@@ -164,26 +162,20 @@ Templates for agents requesting resources or capabilities from AMOA, and the for
 
 **When to use:** An agent needs a capability that is outside its current plugin's skill set. A "capability" is a skill, workflow, or specialized knowledge that the agent's plugin does not include. Examples include: an implementer needing code review skills, a tester needing deployment capabilities, or any agent needing a domain-specific skill not loaded in its plugin.
 
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
+**Send template:** Same envelope as [1. Agent Resource Request (Agent to AMOA)](#1-agent-resource-request-agent-to-amoa) above — identical `from` (`<agent-session-name>`), `to` (`amoa-<project-name>`), `priority` (`high`), and `content.type` (`request`).
 
-**Send template:**
+Differences from section 1:
+
+- `subject`: `"Skill Request: <capability-needed>"`
+- `content.message`: `"Need capability: <capability-needed>. Current limitation: <what-I-cannot-do>. Suggested skill: <skill-name-if-known>."`
+- `content.data`: replaced entirely by the payload below
 
 ```json
 {
-  "from": "<agent-session-name>",
-  "to": "amoa-<project-name>",
-  "subject": "Skill Request: <capability-needed>",
-  "priority": "high",
-  "content": {
-    "type": "request",
-    "message": "Need capability: <capability-needed>. Current limitation: <what-I-cannot-do>. Suggested skill: <skill-name-if-known>.",
-    "data": {
-      "task_uuid": "<uuid-of-current-task>",
-      "capability_needed": "<description-of-what-the-agent-needs-to-do>",
-      "current_limitation": "<what-the-agent-cannot-do-with-its-current-skills>",
-      "suggested_skill": "<skill-name-or-null-if-unknown>"
-    }
-  }
+  "task_uuid": "<uuid-of-current-task>",
+  "capability_needed": "<description-of-what-the-agent-needs-to-do>",
+  "current_limitation": "<what-the-agent-cannot-do-with-its-current-skills>",
+  "suggested_skill": "<skill-name-or-null-if-unknown>"
 }
 ```
 
@@ -200,8 +192,6 @@ Templates for agents requesting resources or capabilities from AMOA, and the for
 ## 4. AMOA Skill Response (AMOA to Agent)
 
 **When to use:** AMOA has evaluated a skill/capability request and is responding with how to proceed. AMOA evaluates the request based on three possible outcomes: skill available, not available with workaround, or escalated to AMCOS.
-
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
 
 ### 4.1 Skill Available
 
@@ -302,8 +292,6 @@ Templates for agents requesting resources or capabilities from AMOA, and the for
 ## 5. AMOA Formal ACK of AMCOS Task Assignment (AMOA to AMCOS)
 
 **When to use:** AMOA receives a task assignment from AMCOS (as described in [ai-maestro-message-templates.md](ai-maestro-message-templates.md) section 1.1) and must send a formal JSON acknowledgment confirming receipt. This replaces the prose-style acknowledgment with a structured, machine-parseable format.
-
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
 
 **Send template:**
 

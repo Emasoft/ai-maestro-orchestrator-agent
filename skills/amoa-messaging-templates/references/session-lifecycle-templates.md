@@ -20,8 +20,6 @@ Complete reference for all session lifecycle message templates used between AMCO
 
 **When to use:** AMCOS sends this message to bring AMOA online at the start of a session or after a hibernation period. The wake message provides AMOA with everything it needs to resume operations: pending task context, session configuration, and a summary of unread messages accumulated while AMOA was offline.
 
-> **Note**: Use the agent-messaging skill to send messages.
-
 **JSON send template (AMCOS to AMOA):**
 
 ```json
@@ -86,8 +84,6 @@ Complete reference for all session lifecycle message templates used between AMCO
 
 **When to use:** AMOA sends this immediately after processing the wake directive from AMCOS. This acknowledgment confirms that AMOA has reviewed its pending tasks, checked its inbox, and is ready to begin orchestration.
 
-> **Note**: Use the agent-messaging skill to send messages.
-
 **JSON response template (AMOA to AMCOS):**
 
 ```json
@@ -149,27 +145,21 @@ AMOA receives Wake directive from AMCOS
 
 **When to use:** AMCOS sends this when AMOA should enter a suspended state. Reasons include: the system is idle and resources should be conserved, scheduled maintenance is occurring, or AMCOS is redistributing workloads. AMOA must save its current state before acknowledging.
 
-> **Note**: Use the agent-messaging skill to send messages.
+**JSON send template (AMCOS to AMOA):** Same envelope as [1. AMCOS Wake Message to AMOA](#1-amcos-wake-message-to-amoa) above — identical `from` (`amcos-main`), `to` (`amoa-<project-name>`), `priority` (`high`), and `content.type` (`request`).
 
-**JSON send template (AMCOS to AMOA):**
+Differences from section 1:
+
+- `subject`: `"Hibernate Directive: Suspend Operations"`
+- `content.message`: `"Hibernate immediately. Save current state, pause active agents, and acknowledge when ready."`
+- `content.data`: replaced entirely by the payload below
 
 ```json
 {
-  "from": "amcos-main",
-  "to": "amoa-<project-name>",
-  "subject": "Hibernate Directive: Suspend Operations",
-  "priority": "high",
-  "content": {
-    "type": "request",
-    "message": "Hibernate immediately. Save current state, pause active agents, and acknowledge when ready.",
-    "data": {
-      "directive": "hibernate",
-      "reason": "idle|resource-saving|maintenance",
-      "expected_duration": "<ISO8601-duration-or-unknown>",
-      "save_state": true,
-      "additional_instructions": "<optional-special-instructions-or-null>"
-    }
-  }
+  "directive": "hibernate",
+  "reason": "idle|resource-saving|maintenance",
+  "expected_duration": "<ISO8601-duration-or-unknown>",
+  "save_state": true,
+  "additional_instructions": "<optional-special-instructions-or-null>"
 }
 ```
 
@@ -188,54 +178,48 @@ AMOA receives Wake directive from AMCOS
 
 **When to use:** AMOA sends this after it has successfully paused all active agents, saved its state snapshot to a checkpoint file, and is ready to go offline. This acknowledgment includes a complete state snapshot so that AMCOS (or a future AMOA session) can restore operations.
 
-> **Note**: Use the agent-messaging skill to send messages.
+**JSON response template (AMOA to AMCOS):** Same envelope as [2. AMOA Wake Acknowledgment to AMCOS](#2-amoa-wake-acknowledgment-to-amcos) above — identical `from` (`amoa-<project-name>`), `to` (`amcos-main`), `priority` (`high`), and `content.type` (`response`).
 
-**JSON response template (AMOA to AMCOS):**
+Differences from section 2:
+
+- `subject`: `"ACK: Hibernate Directive - State Saved"`
+- `content.message`: `"Hibernate acknowledged. State saved to checkpoint. <N> agents paused. Ready to suspend."`
+- `content.data`: replaced entirely by the payload below
 
 ```json
 {
-  "from": "amoa-<project-name>",
-  "to": "amcos-main",
-  "subject": "ACK: Hibernate Directive - State Saved",
-  "priority": "high",
-  "content": {
-    "type": "response",
-    "message": "Hibernate acknowledged. State saved to checkpoint. <N> agents paused. Ready to suspend.",
-    "data": {
-      "directive_ack": "hibernate",
-      "state_snapshot": {
-        "current_task_states": [
-          {
-            "task_id": "<task-uuid>",
-            "title": "<task-title>",
-            "status": "in-progress|blocked|queued|paused",
-            "assigned_agent": "<agent-session-name-or-null>",
-            "progress_pct": 0,
-            "last_activity": "<ISO8601-timestamp>",
-            "notes": "<brief-context>"
-          }
-        ],
-        "agent_statuses": {
-          "<agent-session-name>": {
-            "status": "paused|offline|idle",
-            "last_task": "<task-uuid-or-null>",
-            "pause_acknowledged": true
-          }
-        },
-        "pending_items": [
-          {
-            "type": "message|approval|review",
-            "from": "<agent-or-entity>",
-            "summary": "<brief-description>",
-            "received_at": "<ISO8601-timestamp>"
-          }
-        ]
-      },
-      "checkpoint_file": "docs_dev/checkpoints/amoa-hibernate-<timestamp>.json",
-      "agents_paused_count": 0,
-      "all_agents_acknowledged_pause": true
-    }
-  }
+  "directive_ack": "hibernate",
+  "state_snapshot": {
+    "current_task_states": [
+      {
+        "task_id": "<task-uuid>",
+        "title": "<task-title>",
+        "status": "in-progress|blocked|queued|paused",
+        "assigned_agent": "<agent-session-name-or-null>",
+        "progress_pct": 0,
+        "last_activity": "<ISO8601-timestamp>",
+        "notes": "<brief-context>"
+      }
+    ],
+    "agent_statuses": {
+      "<agent-session-name>": {
+        "status": "paused|offline|idle",
+        "last_task": "<task-uuid-or-null>",
+        "pause_acknowledged": true
+      }
+    },
+    "pending_items": [
+      {
+        "type": "message|approval|review",
+        "from": "<agent-or-entity>",
+        "summary": "<brief-description>",
+        "received_at": "<ISO8601-timestamp>"
+      }
+    ]
+  },
+  "checkpoint_file": "docs_dev/checkpoints/amoa-hibernate-<timestamp>.json",
+  "agents_paused_count": 0,
+  "all_agents_acknowledged_pause": true
 }
 ```
 
@@ -277,26 +261,21 @@ AMOA receives Hibernate directive from AMCOS
 
 **When to use:** AMCOS sends this when AMOA's session is ending permanently. Reasons include: the project is complete, an unrecoverable error requires a fresh start, or the user has requested manual shutdown. Unlike hibernate, terminate does not expect the session to resume.
 
-> **Note**: Use the agent-messaging skill to send messages.
+**JSON send template (AMCOS to AMOA):** Same envelope as [1. AMCOS Wake Message to AMOA](#1-amcos-wake-message-to-amoa) above — identical `from` (`amcos-main`), `to` (`amoa-<project-name>`), and `content.type` (`request`).
 
-**JSON send template (AMCOS to AMOA):**
+Differences from section 1:
+
+- `priority`: `"urgent"` (section 1 uses `"high"`)
+- `subject`: `"Terminate Directive: End Session"`
+- `content.message`: `"Terminate session. Compile final report if required. Shut down all managed agents."`
+- `content.data`: replaced entirely by the payload below
 
 ```json
 {
-  "from": "amcos-main",
-  "to": "amoa-<project-name>",
-  "subject": "Terminate Directive: End Session",
-  "priority": "urgent",
-  "content": {
-    "type": "request",
-    "message": "Terminate session. Compile final report if required. Shut down all managed agents.",
-    "data": {
-      "directive": "terminate",
-      "reason": "project-complete|error|manual",
-      "final_report_required": true,
-      "additional_instructions": "<optional-special-instructions-or-null>"
-    }
-  }
+  "directive": "terminate",
+  "reason": "project-complete|error|manual",
+  "final_report_required": true,
+  "additional_instructions": "<optional-special-instructions-or-null>"
 }
 ```
 
@@ -314,75 +293,70 @@ AMOA receives Hibernate directive from AMCOS
 
 **When to use:** AMOA sends this as its last message before shutting down, but only when `final_report_required` was `true` in the terminate directive. This report provides a comprehensive summary of everything that happened during the session: completed work, remaining work, agent performance, and recommendations for the next session.
 
-> **Note**: Use the agent-messaging skill to send messages.
+**JSON response template (AMOA to AMCOS):** Same envelope as [2. AMOA Wake Acknowledgment to AMCOS](#2-amoa-wake-acknowledgment-to-amcos) above — identical `from` (`amoa-<project-name>`), `to` (`amcos-main`), and `content.type` (`response`).
 
-**JSON response template (AMOA to AMCOS):**
+Differences from section 2:
+
+- `priority`: `"urgent"` (section 2 uses `"high"`)
+- `subject`: `"Final Termination Report: <project-name>"`
+- `content.message`: `"Session terminated. Final report attached. <N> tasks completed, <M> tasks pending, <K> blockers remaining."`
+- `content.data`: replaced entirely by the payload below
 
 ```json
 {
-  "from": "amoa-<project-name>",
-  "to": "amcos-main",
-  "subject": "Final Termination Report: <project-name>",
-  "priority": "urgent",
-  "content": {
-    "type": "response",
-    "message": "Session terminated. Final report attached. <N> tasks completed, <M> tasks pending, <K> blockers remaining.",
-    "data": {
-      "directive_ack": "terminate",
-      "completed_tasks": [
-        {
-          "task_id": "<task-uuid>",
-          "title": "<task-title>",
-          "completed_at": "<ISO8601-timestamp>",
-          "outcome": "<brief-result-description>",
-          "deliverables": ["<file-path-or-url>"]
-        }
-      ],
-      "pending_tasks": [
-        {
-          "task_id": "<task-uuid>",
-          "title": "<task-title>",
-          "status": "in-progress|blocked|queued",
-          "assigned_agent": "<agent-session-name-or-null>",
-          "progress_pct": 0,
-          "blockers": ["<blocker-description>"],
-          "notes": "<context-for-next-session>"
-        }
-      ],
-      "agent_summaries": {
-        "<agent-session-name>": {
-          "tasks_completed": 0,
-          "tasks_failed": 0,
-          "avg_task_duration_minutes": 0,
-          "reliability_score": "high|medium|low",
-          "notes": "<performance-observations>"
-        }
-      },
-      "kanban_snapshot": {
-        "backlog": 0,
-        "in_progress": 0,
-        "review": 0,
-        "done": 0,
-        "snapshot_file": "docs_dev/checkpoints/amoa-kanban-final-<timestamp>.md"
-      },
-      "blockers_remaining": [
-        {
-          "blocker_id": "<blocker-uuid>",
-          "description": "<what-is-blocked-and-why>",
-          "affected_tasks": ["<task-uuid>"],
-          "escalated_to": "<agent-or-entity-or-null>",
-          "suggested_resolution": "<recommended-action>"
-        }
-      ],
-      "recommendations": {
-        "for_next_session": [
-          "<actionable-recommendation-1>",
-          "<actionable-recommendation-2>"
-        ],
-        "architecture_concerns": ["<concern-if-any>"],
-        "agent_roster_suggestions": "<suggestions-for-agent-team-composition>"
-      }
+  "directive_ack": "terminate",
+  "completed_tasks": [
+    {
+      "task_id": "<task-uuid>",
+      "title": "<task-title>",
+      "completed_at": "<ISO8601-timestamp>",
+      "outcome": "<brief-result-description>",
+      "deliverables": ["<file-path-or-url>"]
     }
+  ],
+  "pending_tasks": [
+    {
+      "task_id": "<task-uuid>",
+      "title": "<task-title>",
+      "status": "in-progress|blocked|queued",
+      "assigned_agent": "<agent-session-name-or-null>",
+      "progress_pct": 0,
+      "blockers": ["<blocker-description>"],
+      "notes": "<context-for-next-session>"
+    }
+  ],
+  "agent_summaries": {
+    "<agent-session-name>": {
+      "tasks_completed": 0,
+      "tasks_failed": 0,
+      "avg_task_duration_minutes": 0,
+      "reliability_score": "high|medium|low",
+      "notes": "<performance-observations>"
+    }
+  },
+  "kanban_snapshot": {
+    "backlog": 0,
+    "in_progress": 0,
+    "review": 0,
+    "done": 0,
+    "snapshot_file": "docs_dev/checkpoints/amoa-kanban-final-<timestamp>.md"
+  },
+  "blockers_remaining": [
+    {
+      "blocker_id": "<blocker-uuid>",
+      "description": "<what-is-blocked-and-why>",
+      "affected_tasks": ["<task-uuid>"],
+      "escalated_to": "<agent-or-entity-or-null>",
+      "suggested_resolution": "<recommended-action>"
+    }
+  ],
+  "recommendations": {
+    "for_next_session": [
+      "<actionable-recommendation-1>",
+      "<actionable-recommendation-2>"
+    ],
+    "architecture_concerns": ["<concern-if-any>"],
+    "agent_roster_suggestions": "<suggestions-for-agent-team-composition>"
   }
 }
 ```
@@ -428,8 +402,6 @@ AMOA receives Terminate directive from AMCOS
 ## 7. AMOA Periodic Status Report to AMCOS (30-minute intervals)
 
 **When to use:** AMOA sends this report at regular intervals (default: every 30 minutes as configured in `session_config.status_report_interval_minutes`) to keep AMCOS informed of ongoing operations. If nothing has changed since the last report, AMOA sends a lightweight heartbeat-only variant instead of a full report.
-
-> **Note**: Use the agent-messaging skill to send messages.
 
 ### 7a. Full Status Report (when changes occurred)
 
