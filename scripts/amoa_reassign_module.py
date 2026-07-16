@@ -5,8 +5,13 @@ AMOA Reassign Module Script
 Reassigns a module from one agent to another.
 Notifies both old and new agents.
 
+--reason is REQUIRED and is delivered verbatim to the agent losing the module:
+taking work from an agent is a refusal of its work, and a refusal is a design
+review, not a verdict (USER-ratified fleet principle, 2026-07-16).
+
 Usage:
-    python3 amoa_reassign_module.py auth-core --to implementer-2
+    python3 amoa_reassign_module.py auth-core --to implementer-2 \
+        --reason "Blocked 3 polls on the OAuth callback; impl-2 has the token-store context. Ping me if you were nearly through it."
 """
 
 import argparse
@@ -93,8 +98,40 @@ def main() -> int:
     parser.add_argument(
         "--to", required=True, dest="new_agent", help="ID of the new agent"
     )
+    # A reassignment is a REFUSAL of the current agent's work, and the
+    # USER-ratified "an approver is a guide, not a gate" principle (2026-07-16)
+    # forbids a reasonless no. This is required, not defaulted: a default reason
+    # would be a content-free string that satisfies the check and tells the
+    # agent nothing — the exact failure the principle exists to prevent.
+    parser.add_argument(
+        "--reason",
+        required=True,
+        help=(
+            "WHY the module is being taken from the current agent. Must carry "
+            "the precise defect, the bar for acceptance, and an invitation to "
+            "respond — see --help output on refusal."
+        ),
+    )
 
     args = parser.parse_args()
+
+    if not args.reason.strip():
+        print(
+            "ERROR: --reason must not be empty.\n"
+            "\n"
+            "Taking a module from an agent is a refusal of its work, and a\n"
+            "refusal is a design review, not a verdict. The reason you send it\n"
+            "must carry all four elements:\n"
+            "  1. The precise defect — which behavior/output/step, not 'not working out'.\n"
+            "  2. The bar — what would have kept the assignment.\n"
+            "  3. An explicit invitation to respond (it may be right about half your call).\n"
+            "  4. A push toward alternatives — refuse the implementation, never the need.\n"
+            "\n"
+            "An agent overridden without explanation stops proposing approaches,\n"
+            "and you never see what you lost.",
+            file=sys.stderr,
+        )
+        return 1
 
     # Check if in orchestration phase
     if not EXEC_STATE_FILE.exists():
@@ -141,18 +178,37 @@ def main() -> int:
     # Find old agent for notification
     old_type, old_agent_data = find_agent(data, old_agent)
 
-    # Notify old agent (AI agents only)
+    # Notify old agent (AI agents only). The reason travels IN the message: a
+    # --reason that only lands in a log is a decision the agent never received,
+    # which is the same as no reason at all. The reply invitation is part of the
+    # payload for the same rationale — the thread stays open for its
+    # counter-arguments.
     if old_type == "ai" and old_agent_data:
         session = old_agent_data.get("session_name")
         if isinstance(session, str):
             send_ai_maestro_message(
                 session,
                 f"[STOP] Module: {module.get('name', args.module_id)} - Reassigned",
-                "This module has been reassigned to another agent.\n"
-                "Please stop work immediately and report current progress.\n"
-                "Do NOT commit any incomplete changes.",
+                f"This module has been reassigned to another agent.\n"
+                f"\n"
+                f"WHY: {args.reason}\n"
+                f"\n"
+                f"Please stop work immediately and report current progress.\n"
+                f"Do NOT commit any incomplete changes.\n"
+                f"\n"
+                f"This is a design review, not a verdict on you. If you think\n"
+                f"the reason above is wrong or incomplete, reply and say so —\n"
+                f"the decision is reversible and you may be right.",
             )
-            print(f"Notified old agent: {old_agent}")
+            print(f"Notified old agent: {old_agent} (reason delivered)")
+        else:
+            # No session to message = the refusal cannot be delivered. Say so
+            # loudly rather than letting the reassignment look communicated.
+            print(
+                f"WARNING: agent '{old_agent}' has no session_name — the reason "
+                f"was NOT delivered. Tell it another way.",
+                file=sys.stderr,
+            )
 
     # Remove old assignment
     assignments = data.get("active_assignments", [])
