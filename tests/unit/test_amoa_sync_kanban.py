@@ -21,12 +21,19 @@ no `gh` auth and no network.
 import sys
 from pathlib import Path
 
+import pytest
+
 # The existing suite imports scripts by putting scripts/ on sys.path; mirror it.
 SCRIPTS_DIR = Path(__file__).resolve().parents[2] / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import amoa_sync_kanban as sk  # noqa: E402  (path injected above, on purpose)
+from amoa_kanban_vocab import (  # noqa: E402
+    KANBAN_COLUMNS,
+    LEGACY_STATUS_MIGRATION,
+    resolve_column,
+)
 
 
 # A realistic GitHub-Projects "fields" payload, shaped exactly like

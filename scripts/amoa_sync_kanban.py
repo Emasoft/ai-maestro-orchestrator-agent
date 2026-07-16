@@ -22,22 +22,15 @@ from typing import Any, cast
 
 import yaml
 
+from amoa_kanban_vocab import resolve_column
+
 # State file location
 EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
 
-# Status to column mapping
-STATUS_TO_COLUMN = {
-    "backlog": "Backlog",
-    "todo": "Todo",
-    "assigned": "In Progress",
-    "in-progress": "In Progress",
-    "ai-review": "AI Review",
-    "human-review": "Human Review",
-    "merge-release": "Merge/Release",
-    "blocked": "Blocked",
-    "done": "Done",
-    "complete": "Done",
-}
+# The status→column mapping is the shared 3-pillars vocabulary (issue #27):
+# resolve_column comes from amoa_kanban_vocab, the single source of truth. The
+# old local STATUS_TO_COLUMN (pre-2026-06-20 5-status vocab with a silent "Todo"
+# fallback) is removed so no consumer carries its own divergent map.
 
 # Priority field values
 PRIORITY_VALUES = {
@@ -350,6 +343,18 @@ def sync_module_to_project(
         "success": True,
     }
 
+    # Resolve the ratified kanban column ONCE for this module (issue #27). An
+    # unknown status is surfaced as a failed result rather than silently placed
+    # in a default column; the resolved value is reused by the update and create
+    # paths below.
+    try:
+        column = resolve_column(status)
+    except ValueError as exc:
+        result["action"] = "error"
+        result["success"] = False
+        result["error"] = str(exc)
+        return result
+
     # Find existing item
     existing_item = find_item_by_title(items, title)
 
@@ -364,7 +369,6 @@ def sync_module_to_project(
         # Update status
         status_field = fields.get("Status", {})
         if status_field:
-            column = STATUS_TO_COLUMN.get(status, "Todo")
             option_id = status_field.get("options", {}).get(column)
             if option_id:
                 update_project_item_field(
@@ -415,7 +419,6 @@ def sync_module_to_project(
             # Update fields
             status_field = fields.get("Status", {})
             if status_field:
-                column = STATUS_TO_COLUMN.get(status, "Todo")
                 option_id = status_field.get("options", {}).get(column)
                 if option_id:
                     update_project_item_field(
