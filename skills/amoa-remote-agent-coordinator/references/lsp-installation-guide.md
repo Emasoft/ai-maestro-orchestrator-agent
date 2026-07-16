@@ -172,8 +172,9 @@ npm install -g kotlin-language-server
 **macOS:**
 ```bash
 brew install llvm
-# Add /opt/homebrew/opt/llvm/bin to your PATH in ~/.zshrc or ~/.bash_profile
 ```
+
+Then make `/opt/homebrew/opt/llvm/bin` visible on your `PATH` via your shell startup file.
 
 **Linux (Ubuntu/Debian):**
 ```bash
