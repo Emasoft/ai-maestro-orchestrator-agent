@@ -99,61 +99,22 @@ Backlog ► Todo ► In Progress ► AI Review ─┬─► Merge/Release ► Do
 
 ### Quick Commands
 
-**Move from Backlog to Todo:**
+Every status transition uses the same `gh issue edit` pattern — only the
+label pair changes:
+
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:backlog" \
-  --add-label "status:todo"
+  --remove-label "status:{{OLD_STATUS}}" \
+  --add-label "status:{{NEW_STATUS}}"
 ```
 
-**Start work on issue (Todo to In Progress):**
-```bash
-gh issue edit {{ISSUE_NUMBER}} \
-  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:todo" \
-  --add-label "status:in-progress"
-```
-
-**Submit for AI Review:**
-```bash
-gh issue edit {{ISSUE_NUMBER}} \
-  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:in-progress" \
-  --add-label "status:ai-review"
-```
-
-**Escalate to Human Review (big tasks only):**
-```bash
-gh issue edit {{ISSUE_NUMBER}} \
-  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:human-review"
-```
-
-**Move to Merge/Release:**
-```bash
-gh issue edit {{ISSUE_NUMBER}} \
-  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:merge-release"
-```
-
-**Mark as done:**
-```bash
-gh issue edit {{ISSUE_NUMBER}} \
-  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:merge-release" \
-  --add-label "status:done"
-```
-
-**Mark as blocked:**
-```bash
-gh issue edit {{ISSUE_NUMBER}} \
-  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:in-progress" \
-  --add-label "status:blocked"
-```
+Apply the concrete per-transition label pairs from
+[KANBAN_SYNC_PROTOCOL-part2-transitions-and-commands.md](./KANBAN_SYNC_PROTOCOL-part2-transitions-and-commands.md)
+(Transition Commands section). Two transitions from the canonical 8-column
+system are not listed there — use the pattern above with these pairs:
+Backlog → Todo (`backlog` → `todo`) and Todo → In Progress (`todo` →
+`in-progress`).
 
 ---
 

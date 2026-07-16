@@ -39,26 +39,10 @@ Contents:
 ### Part 3: Workflow and Publishing
 **File:** [MONOREPO_WORKSPACE-part3-workflow-publishing.md](./MONOREPO_WORKSPACE-part3-workflow-publishing.md)
 
-Contents:
-- 3.1 Local Package Development Workflow
-  - 3.1.1 Create New Package
-  - 3.1.2 Configure Package
-  - 3.1.3 Add to Workspace
-  - 3.1.4 Verify Package Discovery
-  - 3.1.5 Install Dependencies
-  - 3.1.6 Build and Test
-- 3.2 Package Interdependency Management
-  - 3.2.1 Dependency Graph Example
-  - 3.2.2 Build Order Determination
-  - 3.2.3 Circular Dependency Prevention
-- 3.3 Package Publishing Strategy
-  - 3.3.1 Private Monorepo (Internal Only)
-  - 3.3.2 Public Monorepo (Selective Publishing)
-  - 3.3.3 Version Bumping
-- 3.4 Verification Checklist
-- 3.5 Error Recovery
-- 3.6 Best Practices
-- 3.7 Template Metadata
+Contents: local package development workflow (3.1), package interdependency
+management (3.2), publishing strategy (3.3), verification checklist (3.4),
+error recovery (3.5), best practices (3.6), and template metadata (3.7) —
+full section list in the part file's own Table of Contents.
 
 ---
 
@@ -105,23 +89,8 @@ Contents:
 
 ## Template Metadata
 
-```yaml
-template:
-  name: MONOREPO_WORKSPACE
-  version: 1.0.0
-  amoa_compatible: true
-  parent_template: MONOREPO_BASE
-  requires:
-    - monorepo workspace root
-    - package manager
-  generates:
-    - package directory
-    - manifest file
-    - configuration files
-    - CI triggers
-  compatible_with:
-    - pnpm-workspaces
-    - cargo-workspace
-    - nx
-    - turborepo
-```
+The canonical `template:` metadata block (name, version, parent template,
+requirements, generated artifacts, compatible workspace tools) lives in
+section 3.7 of
+[MONOREPO_WORKSPACE-part3-workflow-publishing.md](./MONOREPO_WORKSPACE-part3-workflow-publishing.md)
+— apply it from there.

@@ -46,11 +46,7 @@ system_dependencies:
 
 ### Toolchain Verification Checklist
 
-- [x] All required tools installed at correct versions
-- [x] Environment setup script ran successfully
-- [x] No missing dependencies reported
-- [x] Build completed without errors
-- [x] Tests ran in correct environment
+Identical to the feature example ([PR_TEMPLATE-part1-feature-example.md](PR_TEMPLATE-part1-feature-example.md)) — all five items checked, no differences.
 
 ## Test Results
 
@@ -104,21 +100,12 @@ Existing behavior unchanged if `ATLAS_PLATFORM_OVERRIDE` is not set.
 ## Review Checklist
 
 ### Code Quality
-- [x] Code follows project style guidelines
-- [x] No unnecessary code duplication
-- [x] Functions are focused and single-purpose
-- [x] Variable names are descriptive
-- [x] Complex logic is commented
-- [x] No debug code or commented-out blocks
-- [x] No hardcoded secrets or credentials
+
+Identical to the feature example ([PR_TEMPLATE-part1-feature-example.md](PR_TEMPLATE-part1-feature-example.md)) — all seven items checked, no differences.
 
 ### Testing
-- [x] All new code has tests
-- [x] All tests pass locally
-- [x] All tests pass in CI
-- [x] Edge cases covered (invalid override values)
-- [x] Error handling tested
-- [x] No flaky tests introduced
+
+Identical to the feature example, all six items checked, except: "Edge cases covered" is annotated `(invalid override values)`.
 
 ### Security
 - [x] No sensitive data exposed

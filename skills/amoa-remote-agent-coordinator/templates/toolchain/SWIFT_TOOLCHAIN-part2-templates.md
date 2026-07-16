@@ -71,15 +71,9 @@ let package = Package(
 
 ## GitHub Actions CI Template
 
+Only §1 of [COMMON_TOOLCHAIN_CORE.md](COMMON_TOOLCHAIN_CORE.md) carries over. Swift deliberately skips §2 — it ships no Windows runner and labels its job — so the whole scaffold is spelled out below:
+
 ```yaml
-name: CI
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
 env:
   SWIFT_VERSION: "5.9"
 
@@ -181,6 +175,8 @@ jobs:
 ---
 
 ## Library Requirements (MANDATORY)
+
+Foundation and the Swift standard library supply most rows; the rest resolve via SwiftPM:
 
 | Purpose | Library | Usage |
 |---------|---------|-------|

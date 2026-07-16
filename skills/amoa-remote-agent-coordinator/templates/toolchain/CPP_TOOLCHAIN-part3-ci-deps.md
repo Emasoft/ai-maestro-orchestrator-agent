@@ -6,22 +6,9 @@
 
 ## GitHub Actions CI Template
 
+Begin with [COMMON_TOOLCHAIN_CORE.md](COMMON_TOOLCHAIN_CORE.md) §1, then §2 under the job name `build`. C and C++ fan that matrix across compilers and prune the impossible combinations, so append a compiler axis and an `exclude:` list to it:
+
 ```yaml
-name: CI
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [gcc, clang, msvc]
         exclude:
           - os: windows-latest
@@ -116,6 +103,8 @@ jobs:
 ---
 
 ## Library Requirements (MANDATORY)
+
+Reach for these C/C++ libraries — most arrive through the package manager, not the standard library:
 
 | Purpose | Library | Usage |
 |---------|---------|-------|

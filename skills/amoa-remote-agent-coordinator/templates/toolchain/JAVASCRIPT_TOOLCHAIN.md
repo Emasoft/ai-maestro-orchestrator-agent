@@ -341,23 +341,9 @@ log_info "=========================================="
 
 ## GitHub Actions CI Template
 
+Shared scaffold first: take §1 and §2 of [COMMON_TOOLCHAIN_CORE.md](COMMON_TOOLCHAIN_CORE.md) unchanged, naming the job `test`. No extra matrix axis is needed here — the Bun steps attach straight to it.
+
 ```yaml
-name: CI
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -402,6 +388,8 @@ jobs:
 ---
 
 ## Library Requirements (MANDATORY)
+
+Prefer the runtime built-ins wherever one exists; add a dependency only where this table names one:
 
 | Purpose | Library | Usage |
 |---------|---------|-------|

@@ -267,28 +267,17 @@ nursery = "warn"
 
 ## GitHub Actions CI Template
 
+Take [COMMON_TOOLCHAIN_CORE.md](COMMON_TOOLCHAIN_CORE.md) §1, drop in the cargo environment shown next, then §2 under the job name `build`:
+
 ```yaml
-name: CI
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-Dwarnings"
+```
 
-jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        rust: [stable]
+Add `rust: [stable]` alongside the shared `os:` key in the §2 `matrix:`, then continue:
 
+```yaml
     steps:
       - uses: actions/checkout@v4
 
@@ -336,6 +325,8 @@ jobs:
 ---
 
 ## Library Requirements (MANDATORY)
+
+Each crate below belongs in `Cargo.toml`; pin versions through the workspace where one exists:
 
 | Purpose | Library | Usage |
 |---------|---------|-------|
