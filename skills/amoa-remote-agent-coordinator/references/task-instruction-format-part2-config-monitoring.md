@@ -20,7 +20,7 @@
 
 **Use reference-based approach** (NOT embedded config).
 
-Canonical copy of the `## Project Config` markdown block to embed in task instructions: maintained in [task-instruction-format-part2-operations.md](task-instruction-format-part2-operations.md) §When Reading Project Configuration — read that file.
+The `## Project Config` markdown block belonging in a task instruction is documented once in [task-instruction-format-part2-operations.md](task-instruction-format-part2-operations.md), under §When Reading Project Configuration.
 
 ---
 
