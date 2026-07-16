@@ -57,9 +57,9 @@ sections (progressive discovery, no prose copy).
 - **The python family was ALREADY SOLVED** on `fix/jscpd-dedup-31` (a15df64). It was cherry-picked,
   NOT reimplemented — a second extraction of the same boilerplate is the very thing this TRDD
   exists to prevent. It auto-merged cleanly. The 2026-06-24 note that this is "NOT fully
-  test-verifiable" was addressed by verifying beyond pytest: **24/24 importers import-smoke clean**
-  + CLI `--help` smoke. The documented path-math gotcha holds (skill-scoped scripts reach `shared/`
-  via `parent.parent.parent.parent`, top-level via `parent.parent`).
+  test-verifiable" was addressed by verifying beyond pytest: **24/24 importers import-smoke
+  clean** plus a CLI `--help` smoke. The documented path-math gotcha holds (skill-scoped scripts
+  reach `shared/` via `parent.parent.parent.parent`, top-level via `parent.parent`).
 - **jscpd's markdown tokenizer emits FALSE POSITIVES** — it matches fenced-block SHAPE, not text.
   Proof: it reports `MONOREPO_BASE.md [24:1-56:3]` cloning `[24:2-56:4]` (one ASCII directory tree
   matching ITSELF at a column offset) and `op-define [49:62]` cloning itself. Most of the 233
