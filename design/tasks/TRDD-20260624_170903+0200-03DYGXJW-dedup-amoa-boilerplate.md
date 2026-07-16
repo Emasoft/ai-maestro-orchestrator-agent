@@ -1,12 +1,12 @@
 ---
 trdd-id: 03DYGXJW
 title: Dedup amoa boilerplate (parse_frontmatter/EXEC_STATE_FILE/load_state) into shared module to clear jscpd >5%
-column: testing
+column: published
 created: 2026-06-24T17:09:03+0200
-updated: 2026-07-16T16:11:54+0200
-current-owner: plugin-fixer
+updated: 2026-07-16T16:55:00+0200
+current-owner: orchestrator-session
 feature-branch: refactor/jscpd-full-dedup-31
-implementation-commits: [2664cd9, 448de41, 25778f7, c9c2d6e, 3974ea0, 71a642c, d51fb05, f2172ef, 798ee96]
+implementation-commits: [2664cd9, 448de41, 25778f7, c9c2d6e, 3974ea0, 71a642c, d51fb05, f2172ef, 798ee96, 4f4b776, 5f6852a, aeff44f]
 task-type: refactor
 priority: 2
 relevant-rules: []
@@ -23,7 +23,27 @@ external-refs: ["github.com/Emasoft/ai-maestro-orchestrator-agent/issues/23"]
 
 ## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-07-16
 
-**DONE on `refactor/jscpd-full-dedup-31` (9 commits, 99 files, +876/−15070). All three gates green.**
+**PUBLISHED as v1.9.4 (USER-approved 2026-07-16).** Branch merged to `main` (ff to `5f6852a`),
+`publish.py --patch` exit 0 → bump commit `aeff44f`, tags `v1.9.4` +
+`ai-maestro-orchestrator-agent--v1.9.4` pushed atomically, GitHub release live, CI run
+29507586118 **success incl. the Lint jscpd gate this TRDD existed to clear**. TERMINAL — new
+work goes in a new TRDD.
+
+**POST-SWEEP INTEGRITY FIX (4f4b776) — the campaign's green was partly FALSE.** 9 stubs pointed
+at canonicals that did NOT contain the stubbed files' content: the sweep treated STRUCTURALLY
+SIMILAR split-part files (bug-reporting-protocol part1/2/3, task-instruction-format parts,
+log-formats, verification-loops-protocol, DOCKER_INTEGRATION-part3, op-generate-test-report) as
+duplicates because jscpd matched their heading SKELETONS. Proven loss: sections "Problem: Bug
+Evidence Files Not Found" and "Message Type: Assignment" existed in ZERO files repo-wide.
+Restored all 9 from base; jscpd settled at **2.22%** (not 1.31%), still < 5. `5f6852a` fixed the
+one resulting markdownlint MD004 NIT (hard-wrapped `+ ` prose line reads as a plus-bullet).
+**Lesson: a stub is valid ONLY if the stubbed file's ORIGINAL content is contained in the
+canonical — verify per-file; a falling dup %, green jscpd/CPV/pytest are all structurally blind
+to pointer-target content loss.** (Checker pattern: scratchpad verify_dedup.sh — for every
+big-shrinker stub, resolve the pointer target, confirm it exists, diff originals, confirm every
+original heading survives.)
+
+**Earlier sweep summary (still true):** 9 campaign commits, ~100 files. All below stands.
 
 **USER DECISION 2026-07-16 — FULL SWEEP, not minimal-to-green.** The 2026-06-24 plan below
 scoped this to python only, aiming at "lowest-risk path to GREEN". That is SUPERSEDED: the
@@ -83,11 +103,8 @@ sections (progressive discovery, no prose copy).
 - `uvx --from git+…claude-plugins-validation@v2.159.0 cpv-remote-validate plugin . --strict` → **exit 0**, `CRITICAL=0 MAJOR=0 MINOR=0 NIT=0 WARNING=23`
 - `uv run pytest -q` → **96 passed**
 
-**NEXT ACTION:** review/merge `refactor/jscpd-full-dedup-31`. It was NOT pushed, NOT tagged, and
-`publish.py` was NOT run end-to-end (per the task's stop conditions) — the CI Lint jscpd gate this
-TRDD exists to clear should be confirmed green on CI after merge. Note `fix/jscpd-dedup-31` carries
-a15df64, now duplicated here by cherry-pick: retire that branch or expect an equivalent-change
-merge.
+**NEXT ACTION:** none — published (see header). Residual: `fix/jscpd-dedup-31` carries a15df64,
+duplicated here by cherry-pick — retire that branch when convenient.
 
 ## ⏵ SUPERSEDED — do NOT carry forward (the 2026-06-24 plan)
 
@@ -150,3 +167,6 @@ confirm <5%; then re-run the full migration verify + publish a patch.
   `refactor/jscpd-full-dedup-31`: 10.65% → 1.31%, CPV --strict 0/0/0/0, pytest 96/96.
   Tier-0 (in-scope refactor, no baseline deviation, no release transition). NOT pushed, NOT tagged,
   publish.py NOT run — those remain for the merge/release decision.
+- 2026-07-16T16:55:00+0200 — USER approved the release (AskUserQuestion "Publish v1.9.4 now?" →
+  "Publish now"). Tier-3 release transition satisfied. `publish.py --patch` exit 0: v1.9.4 +
+  `ai-maestro-orchestrator-agent--v1.9.4` atomic push, release live, CI success (Lint gate green).
