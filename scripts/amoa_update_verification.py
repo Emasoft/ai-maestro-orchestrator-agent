@@ -83,6 +83,7 @@ from pathlib import Path
 
 # WHY: Import report_writer for token-efficient output redirection when called by orchestrator
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from amoa_state import load_json_state as _load_json_state
 from report_writer import (
     add_output_dir_argument,
     capture_and_report,
@@ -127,22 +128,10 @@ def load_state(project_root: Path) -> dict:
         A dictionary with the state data. Returns a new empty state
         if the file does not exist or is invalid.
     """
-    state_path = project_root / STATE_FILE_REL
-    if not state_path.exists():
-        return {"updates": {}}
-
-    try:
-        content = state_path.read_text(encoding="utf-8").strip()
-        if not content:
-            return {"updates": {}}
-        data = json.loads(content)
-        if not isinstance(data, dict):
-            return {"updates": {}}
-        if "updates" not in data:
-            data["updates"] = {}
-        return data
-    except (json.JSONDecodeError, OSError):
-        return {"updates": {}}
+    data = _load_json_state(project_root / STATE_FILE_REL, default={"updates": {}})
+    if "updates" not in data:
+        data["updates"] = {}
+    return data
 
 
 def save_state(project_root: Path, state: dict) -> bool:

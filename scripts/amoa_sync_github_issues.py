@@ -49,6 +49,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# WHY: reach shared/ for the deduplicated JSON state loader (TRDD-03DYGXJW)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from amoa_state import load_json_state as _load_json_state
+
 # State file location relative to the project root
 STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 
@@ -79,20 +83,7 @@ def load_state(project_root):
         A dictionary with the state data, or None if the file does not
         exist, is empty, or contains invalid JSON.
     """
-    state_path = Path(project_root) / STATE_FILE_PATH
-    if not state_path.exists():
-        return None
-
-    try:
-        content = state_path.read_text(encoding="utf-8").strip()
-        if not content:
-            return None
-        data = json.loads(content)
-        if not isinstance(data, dict):
-            return None
-        return data
-    except (json.JSONDecodeError, OSError):
-        return None
+    return _load_json_state(Path(project_root) / STATE_FILE_PATH)
 
 
 def get_modules(state):

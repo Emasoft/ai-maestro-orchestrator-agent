@@ -21,8 +21,9 @@ from typing import Any
 
 import yaml
 
-# State file location
-EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent / "shared"))
+from amoa_state import EXEC_STATE_FILE
+from amoa_state import parse_frontmatter as _shared_parse_frontmatter
 
 # Required labels
 REQUIRED_LABELS = {
@@ -58,26 +59,7 @@ STATUS_LABEL_MAP = {
 
 def parse_frontmatter(file_path: Path) -> tuple[dict[str, Any], str]:
     """Parse YAML frontmatter and return (data, body)."""
-    if not file_path.exists():
-        return {}, ""
-
-    content = file_path.read_text(encoding="utf-8")
-
-    if not content.startswith("---"):
-        return {}, content
-
-    end_index = content.find("---", 3)
-    if end_index == -1:
-        return {}, content
-
-    yaml_content = content[3:end_index].strip()
-    body = content[end_index + 3:].strip()
-
-    try:
-        data = yaml.safe_load(yaml_content) or {}
-        return data, body
-    except yaml.YAMLError:
-        return {}, content
+    return _shared_parse_frontmatter(file_path)
 
 
 def write_state_file(file_path: Path, data: dict[str, Any], body: str) -> bool:
