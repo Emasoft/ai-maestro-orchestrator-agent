@@ -13,6 +13,9 @@
   - [Step 4: Generate Minimal Summary](#step-4-generate-minimal-summary)
 - [Report Locations](#report-locations)
 - [Failure Detail Levels](#failure-detail-levels)
+  - [Level 1: Minimal (default)](#level-1-minimal-default)
+  - [Level 2: With Error](#level-2-with-error)
+  - [Level 3: With Traceback](#level-3-with-traceback)
 - [Error Report Format](#error-report-format)
 - [Partial Results Format](#partial-results-format)
 - [Exit Criteria](#exit-criteria)
@@ -43,21 +46,93 @@ Create standardized test reports in the format required by orchestrator for task
 
 ## Standard Report Structure
 
-Canonical copy: the standard report JSON structure is maintained in [test-report-format.md](test-report-format.md) (section "Standard Report Structure") — read that file; this pointer avoids a drifting duplicate.
+```json
+{
+  "report_version": "1.0",
+  "task_id": "GH-42",
+  "agent_id": "dev-agent-1",
+  "timestamp": "2025-01-15T10:30:00Z",
+  "summary": {
+    "total": 45,
+    "passed": 42,
+    "failed": 2,
+    "skipped": 1,
+    "duration_seconds": 12.5
+  },
+  "failures": [
+    {
+      "test": "test_auth.py::test_login_invalid_password",
+      "file": "tests/test_auth.py",
+      "line": 45,
+      "error": "AssertionError: Expected 401, got 200",
+      "traceback": "..."
+    }
+  ],
+  "coverage": {
+    "line_percent": 85.2,
+    "branch_percent": 72.1,
+    "uncovered_files": ["src/legacy.py"]
+  }
+}
+```
 
 ## Steps
 
 ### Step 1: Run Tests with JSON Output
 
-Canonical copy: the per-framework JSON-output commands (pytest, Jest, Go, Rust) are maintained in [test-report-format.md](test-report-format.md) (section "Language-Specific Converters") — read that file; this pointer avoids a drifting duplicate.
+**Python (pytest):**
+```bash
+pytest --json-report --json-report-file=test-report.json
+```
 
-Run the command for the project's framework and confirm the raw JSON report file was produced.
+**JavaScript (Jest):**
+```bash
+jest --json --outputFile=test-report.json
+```
+
+**Go:**
+```bash
+go test -json ./... > test-report.json
+```
+
+**Rust:**
+```bash
+cargo test -- --format json > test-report.json
+```
 
 ### Step 2: Convert to Standard Format
 
-Canonical copy: the pytest-to-standard-format converter is maintained in [test-report-format.md](test-report-format.md) (section "Language-Specific Converters") — read that file; this pointer avoids a drifting duplicate.
+**Python (pytest) converter:**
 
-delta: for this operation the converter must also populate the envelope fields `report_version`, `task_id` (from environment or config), `agent_id`, and `timestamp` (from the pytest report's `created` field); each failure entry must include `file` (the nodeid segment before `::`); and missing `call` data must fall back to the error string `"Unknown"`.
+```python
+import json
+
+def convert_pytest_report(pytest_json_path):
+    with open(pytest_json_path) as f:
+        data = json.load(f)
+
+    return {
+        "report_version": "1.0",
+        "task_id": get_task_id(),  # From environment or config
+        "agent_id": get_agent_id(),
+        "timestamp": data.get("created"),
+        "summary": {
+            "total": data["summary"]["total"],
+            "passed": data["summary"]["passed"],
+            "failed": data["summary"]["failed"],
+            "skipped": data["summary"]["skipped"],
+            "duration_seconds": data["duration"]
+        },
+        "failures": [
+            {
+                "test": t["nodeid"],
+                "file": t["nodeid"].split("::")[0],
+                "error": t["call"]["longrepr"] if "call" in t else "Unknown"
+            }
+            for t in data.get("tests", []) if t["outcome"] == "failed"
+        ]
+    }
+```
 
 ### Step 3: Write Standard Report
 
@@ -95,23 +170,79 @@ def generate_minimal_summary(report):
     return "\n".join(lines)
 ```
 
-Canonical copy: the expected minimal-summary output example is maintained in [test-report-format.md](test-report-format.md) (section "Minimal Report (For Orchestrator)") — read that file; this pointer avoids a drifting duplicate.
+**Output:**
+```
+[TESTS] 45 total: 42 passed, 2 failed, 1 skipped (12.5s)
+FAILED: test_auth.py:45, test_api.py:89
+COVERAGE: 85% lines, 72% branches
+```
 
 ## Report Locations
 
-Canonical copy: the framework-to-report-file locations table is maintained in [test-report-format.md](test-report-format.md) (section "Report Locations") — read that file; this pointer avoids a drifting duplicate.
+| Framework | Report File |
+|-----------|-------------|
+| pytest | `artifacts/tests/pytest-report.json` |
+| jest | `artifacts/tests/jest-report.json` |
+| go test | `artifacts/tests/go-report.json` |
+| cargo test | `artifacts/tests/cargo-report.json` |
 
 ## Failure Detail Levels
 
-Canonical copy: the three failure detail levels (minimal, with error, with traceback) are maintained in [test-report-format.md](test-report-format.md) (section "Failure Detail Levels") — read that file; this pointer avoids a drifting duplicate.
+### Level 1: Minimal (default)
+```
+FAILED: test_auth.py:45
+```
+
+### Level 2: With Error
+```
+FAILED: test_auth.py:45 - AssertionError: Expected 401, got 200
+```
+
+### Level 3: With Traceback
+Full traceback saved separately: `artifacts/tests/failures/test_auth_45.txt`
 
 ## Error Report Format
 
-Canonical copy: the error report JSON format (used when test execution fails entirely) is maintained in [test-report-format.md](test-report-format.md) (section "Error Report Format") — read that file; this pointer avoids a drifting duplicate.
+If test execution fails entirely:
+
+```json
+{
+  "report_version": "1.0",
+  "task_id": "GH-42",
+  "status": "error",
+  "error": {
+    "type": "test-framework-crash",
+    "message": "pytest ImportError: cannot import module 'auth'",
+    "traceback": "Traceback (most recent call last):\n  File...",
+    "partial_results": {
+      "tests_run_before_crash": 12,
+      "tests_passed": 10,
+      "tests_failed": 2
+    }
+  },
+  "next_steps": "Fix import error, rerun tests"
+}
+```
 
 ## Partial Results Format
 
-Canonical copy: the partial-results report JSON format is maintained in [test-report-format.md](test-report-format.md) (section "Partial Results Handling") — read that file; this pointer avoids a drifting duplicate.
+If only some tests could run:
+
+```json
+{
+  "report_version": "1.0",
+  "task_id": "GH-42",
+  "status": "partial",
+  "warning": "Only 45/60 tests executed due to hang prevention",
+  "results": {
+    "total": 45,
+    "passed": 40,
+    "failed": 5,
+    "skipped": 0,
+    "incomplete": 15
+  }
+}
+```
 
 ## Exit Criteria
 

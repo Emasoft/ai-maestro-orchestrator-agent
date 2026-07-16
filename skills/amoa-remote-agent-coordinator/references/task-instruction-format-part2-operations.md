@@ -180,11 +180,48 @@ If task not completed within timeout:
 
 ### Error States
 
-Canonical copy: maintained in [task-instruction-format-part3-errors-integration.md](task-instruction-format-part3-errors-integration.md) §3.1 Error States — read that file for the full error states table (trigger, agent action, orchestrator action per state).
+| State | Trigger | Agent Action | Orchestrator Action |
+|-------|---------|--------------|-------------------|
+| `blocked` | Cannot proceed | Send escalation message | Provide guidance or reassign |
+| `failed` | Implementation impossible | Send completion report (failed) | Reassess requirements |
+| `tests-failing` | Cannot make tests pass | Send escalation with test output | Review test expectations |
+| `spec-ambiguous` | Unclear requirements | Send escalation with questions | Clarify specification |
+| `dependency-blocked` | Waiting on external task | Send blocked notification | Update task dependencies |
+| `timeout` | Exceeded time limit | Send status + estimate | Extend or reassign |
+| `environment-issue` | Cannot set up environment | Report environment details | Provide alternative approach |
 
 ### Blocked Report Format
 
-Canonical copy: maintained in [task-instruction-format-part3-errors-integration.md](task-instruction-format-part3-errors-integration.md) §3.2 Blocked Report Format — read that file for the blocked-report JSON message format and blocker types.
+When task is blocked:
+
+> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+
+```json
+{
+  "to": "orchestrator-master",
+  "subject": "BLOCKED: GH-42 [TASK_NAME]",
+  "priority": "high",
+  "content": {
+    "type": "completion-report",
+    "task_id": "GH-42",
+    "status": "blocked",
+    "blocker": {
+      "type": "dependency",
+      "description": "Waiting for GH-41 to complete - provides auth module",
+      "blocking_task": "GH-41",
+      "attempted_solutions": [
+        "Tried stubbing auth module: insufficient for integration tests"
+      ],
+      "assistance_needed": "Expedite GH-41 or provide test auth service instance"
+    },
+    "partial_completion": {
+      "completed_checkpoints": ["Database setup", "API routes"],
+      "remaining_work": "Authentication integration",
+      "pr_url": "https://github.com/owner/repo/pull/42"
+    }
+  }
+}
+```
 
 ---
 
@@ -216,7 +253,76 @@ This format integrates with:
 
 ### Example Completed Instruction
 
-Canonical copy: maintained in [task-instruction-format-part3-errors-integration.md](task-instruction-format-part3-errors-integration.md) §3.6 Example Completed Task — read that file for the full filled-in task instruction example (password reset flow, GH-42).
+```markdown
+# Task: Implement Password Reset Flow
+
+## Metadata
+- **Issue**: GH-42
+- **Branch**: feature/password-reset
+- **Priority**: high
+- **Assigned To**: dev-agent-1
+- **Assigned By**: orchestrator-master
+- **Assigned At**: 2025-12-30T10:00:00Z
+- **Due By**: N/A
+
+---
+
+## Context
+
+### Problem Statement
+Users cannot reset their password if they forget it. This task implements
+the password reset flow via email verification.
+
+### Background
+The auth system already handles login/logout. This adds the "forgot password"
+functionality that sends a reset token via email.
+
+### Related Issues
+- GH-38: Email service setup (COMPLETE)
+- GH-41: User model updates (COMPLETE)
+
+---
+
+## Scope
+
+### DO - What to Implement
+1. Add `request_password_reset(email)` endpoint
+2. Add `reset_password(token, new_password)` endpoint
+3. Generate secure reset tokens with 1-hour expiry
+4. Send reset email using existing email service
+
+### DO NOT - Out of Scope
+1. Rate limiting (separate issue GH-45)
+2. Password strength validation (already exists)
+3. Email template redesign (separate issue)
+
+---
+
+## Project Configuration
+
+**Config Location**: `design/config/`
+**Config Version**: 2025-12-30T09:00:00Z
+
+### Required Config Files
+- `design/config/toolchain.md` - Python 3.12, uv, ruff, pytest
+- `design/config/standards.md` - Code standards, TDD, FAIL-FAST
+- `design/config/environment.md` - Git config, AI Maestro settings
+- `design/specs/architecture.md` - Auth system architecture
+- `design/specs/requirements.md` - Password reset requirements (GH-42)
+
+**IMPORTANT**: Read ALL config files before starting. Do NOT rely on this summary alone.
+
+### Critical Settings Summary
+(Minimal inline context - full details in config files)
+- **Python**: 3.12
+- **Package Manager**: uv
+- **Line Length**: 88
+- **Test Framework**: pytest
+
+---
+
+[... rest of template filled in ...]
+```
 
 ---
 

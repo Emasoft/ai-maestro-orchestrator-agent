@@ -305,18 +305,146 @@ Details: docs_dev/orchestration/reports/uuid-123.md
 
 All AI Maestro messages follow JSON format with required fields: `from`, `to`, `subject`, `priority`, `content`.
 
-**Canonical copy: maintained in [ai-maestro-message-templates.md](../../amoa-messaging-templates/references/ai-maestro-message-templates.md) — read that file.**
-It is the single source for every message template, and it covers each type this
-document used to restate:
+### Message Priority Levels
 
-| Message type | Canonical section |
-|--------------|-------------------|
-| Assignment (AMCOS/AMAMA to AMOA) and its ACK | 1.1 Acknowledging Task Assignment from AMCOS/AMAMA |
-| Delegation (AMOA to sub-agent) and the sub-agent ACK | 1.2 Delegating Task to Sub-Agent |
-| Status request and the sub-agent status update | 1.3 Requesting Status Update from Sub-Agent |
-| Completion report (AMOA to AMCOS) | 1.4 Reporting Task Completion to AMCOS |
-| Escalation (AMOA to AMCOS) | 1.5 Escalating Blocked Task to AMCOS |
-| Priority levels, required fields, session-name format, subject conventions | 1.7 Standard AI Maestro API Format and Conventions |
+| Priority | When to Use |
+|----------|-------------|
+| `normal` | Regular task assignments, status updates, completion reports |
+| `high` | Time-sensitive tasks, overdue notifications |
+| `urgent` | Escalations, critical blockers, system failures |
+
+### Message Type: Assignment
+
+**From AMCOS or AMAMA to AMOA:**
+
+> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+
+```json
+{
+  "from": "amcos-main",
+  "to": "amoa-[project-name]",
+  "subject": "Task Assignment: [Task Name]",
+  "priority": "normal|high|urgent",
+  "content": {
+    "type": "assignment",
+    "message": "Task description and requirements",
+    "task_uuid": "UUID",
+    "deadline": "ISO8601 timestamp",
+    "acceptance_criteria": [
+      "Criterion 1",
+      "Criterion 2"
+    ]
+  }
+}
+```
+
+**AMOA Response (ACK):**
+
+Send an acknowledgment using the `agent-messaging` skill:
+- **Recipient**: `amcos-main`
+- **Subject**: "ACK: Task Assignment [Task Name]"
+- **Content**: "Task received and logged. UUID: [task-uuid]. Expected completion: [timestamp]."
+- **Type**: `acknowledgment`, **Priority**: `normal`
+- **Data**: include `task_uuid`, `status: received`
+
+**Verify**: confirm message delivery.
+
+### Message Type: Delegation
+
+**AMOA to Sub-Agent:**
+
+Send a task assignment using the `agent-messaging` skill:
+- **Recipient**: the sub-agent session name
+- **Subject**: "Task Assignment: [Task Name]"
+- **Content**: "Detailed task description with all context needed"
+- **Type**: `assignment`, **Priority**: `normal`, `high`, or `urgent` as appropriate
+- **Data**: include `task_uuid`, `deadline`, `acceptance_criteria`, `deliverables`, `github_issue`
+
+**Verify**: confirm message delivery.
+
+**Sub-Agent Response (ACK):**
+
+> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+
+```json
+{
+  "from": "[sub-agent-name]",
+  "to": "amoa-[project-name]",
+  "subject": "ACK: Task Assignment [Task Name]",
+  "content": {
+    "type": "acknowledgment",
+    "message": "Task received and understood. Starting work.",
+    "task_uuid": "[task-uuid]",
+    "expected_completion": "[timestamp]"
+  }
+}
+```
+
+### Message Type: Status Request
+
+**AMOA to Sub-Agent:**
+
+Send a status request using the `agent-messaging` skill:
+- **Recipient**: the sub-agent session name
+- **Subject**: "Status Request: [Task Name]"
+- **Content**: "Please provide status update on task [task-uuid]. Expected completion was [timestamp]."
+- **Type**: `request`, **Priority**: `normal`
+- **Data**: include `task_uuid`
+
+**Verify**: confirm message delivery.
+
+**Sub-Agent Response:**
+
+> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+
+```json
+{
+  "from": "[sub-agent-name]",
+  "to": "amoa-[project-name]",
+  "subject": "Status Update: [Task Name]",
+  "content": {
+    "type": "status_update",
+    "message": "Current progress summary",
+    "task_uuid": "[task-uuid]",
+    "progress_percentage": 60,
+    "blockers": ["Optional list of blockers"],
+    "expected_completion": "[updated-timestamp]"
+  }
+}
+```
+
+### Message Type: Completion Report
+
+**AMOA to AMCOS:**
+
+Send a completion report using the `agent-messaging` skill:
+- **Recipient**: `amcos-main`
+- **Subject**: "Task Complete: [Task Name]"
+- **Content**: "[1-2 line summary]. Key finding: [one-line summary]. Details: docs_dev/orchestration/reports/[task-uuid].md"
+- **Type**: `completion`, **Priority**: `normal`
+- **Data**: include `task_uuid`, `completion_timestamp`, `all_criteria_met: true`
+
+**Verify**: confirm message delivery.
+
+### Message Type: Escalation
+
+**AMOA to AMCOS:**
+
+Send an escalation using the `agent-messaging` skill:
+- **Recipient**: `amcos-main`
+- **Subject**: "ESCALATION: [Issue Description]"
+- **Type**: `escalation`, **Priority**: `urgent`
+- **Content and Data**: include relevant escalation details such as `{
+      "type": "escalation",
+      "message": "Escalation reason and details",
+      "task_uuid": "[task-uuid]",
+      "failed_agent": "[agent-name]",
+      "failure_reason": "Specific reason for escalation",
+      "attempts": 3,
+      "request": "Agent replacement|Technical guidance|User decision"
+    }
+  }'
+```
 
 ---
 
