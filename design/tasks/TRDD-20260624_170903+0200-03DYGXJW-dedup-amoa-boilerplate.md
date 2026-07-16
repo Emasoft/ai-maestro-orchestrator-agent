@@ -1,10 +1,12 @@
 ---
 trdd-id: 03DYGXJW
 title: Dedup amoa boilerplate (parse_frontmatter/EXEC_STATE_FILE/load_state) into shared module to clear jscpd >5%
-column: backburner
+column: testing
 created: 2026-06-24T17:09:03+0200
-updated: 2026-06-24T17:09:03+0200
+updated: 2026-07-16T16:11:54+0200
 current-owner: plugin-fixer
+feature-branch: refactor/jscpd-full-dedup-31
+implementation-commits: [2664cd9, 448de41, 25778f7, c9c2d6e, 3974ea0, 71a642c, d51fb05, f2172ef, 798ee96]
 task-type: refactor
 priority: 2
 relevant-rules: []
@@ -19,7 +21,87 @@ external-refs: ["github.com/Emasoft/ai-maestro-orchestrator-agent/issues/23"]
 
 # Dedup amoa boilerplate to clear the jscpd >5% CI Lint gate
 
-## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-06-24
+## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-07-16
+
+**DONE on `refactor/jscpd-full-dedup-31` (9 commits, 99 files, +876/−15070). All three gates green.**
+
+**USER DECISION 2026-07-16 — FULL SWEEP, not minimal-to-green.** The 2026-06-24 plan below
+scoped this to python only, aiming at "lowest-risk path to GREEN". That is SUPERSEDED: the
+USER directed a full dedup of ALL clones. The gate had since risen to **10.67% / 434 clones**
+because the dominant duplication is **markdown/yaml across ~100 skill/command/agent files**,
+not python. Repo-wide measured result: **10.65% → 1.31%** (233 residual clones), threshold 5,
+**`.jscpd.json` untouched** (verified: 0-line diff vs base; no `.github/`, no mega-linter edit).
+
+**Design pattern chosen — physical shortening + pointer.** Claude Code .md prompt files have no
+include mechanism, so the ONLY real dedup is: keep ONE canonical copy, replace every duplicate
+with a short stub (H1 + `Canonical copy: … [link]`), matching the repo's existing
+"normative core + full-reference pointer" style. Variant semantics are preserved as an explicit
+`differences:` delta note rather than a second full copy. CPV requires a `## Contents` TOC on any
+reference linked from a list in SKILL.md, so stubs in that position list the CANONICAL file's
+sections (progressive discovery, no prose copy).
+
+**What landed:**
+| Cluster | Fix | Commit |
+|---|---|---|
+| 44 byte-identical reference twins across 5 skill pairs (~21k dup lines — the bulk) | stub → canonical in the topically-owning skill; `cmp`-verified identical before stubbing | 2664cd9 |
+| plan-phase-workflow (differed by 3 lines: user vs MAESTRO approver); task-instruction-format-part1-template (strict subset); 2 orphaned legacy bug-reporting splits | stubs carrying the delta / routing to the current 4-part suite | 448de41 |
+| python in-file self-clones (4 files) | same-file parametrized helpers; no new imports, no CLI change | 25778f7 |
+| test-report schema embedded in 2 op- files | test-report-format.md is sole owner | c9c2d6e |
+| 7 coordinator reference clusters | one owner per block + pointers | 3974ea0 |
+| 6 toolchain/template clusters | shared CI core extracted → `templates/toolchain/COMMON_TOOLCHAIN_CORE.md` | 71a642c |
+| 5 message/template clusters | canonical + delta notes | d51fb05 |
+| `parse_frontmatter`/`EXEC_STATE_FILE`/`load_state` × 24 scripts | **cherry-picked a15df64** from `fix/jscpd-dedup-31` → `shared/amoa_state.py` | f2172ef |
+| 5 self-introduced CPV NITs | stub TOCs restored + 1 pointer de-injectioned | 798ee96 |
+
+**Load-bearing facts / gotchas (carry forward):**
+- **The python family was ALREADY SOLVED** on `fix/jscpd-dedup-31` (a15df64). It was cherry-picked,
+  NOT reimplemented — a second extraction of the same boilerplate is the very thing this TRDD
+  exists to prevent. It auto-merged cleanly. The 2026-06-24 note that this is "NOT fully
+  test-verifiable" was addressed by verifying beyond pytest: **24/24 importers import-smoke clean**
+  + CLI `--help` smoke. The documented path-math gotcha holds (skill-scoped scripts reach `shared/`
+  via `parent.parent.parent.parent`, top-level via `parent.parent`).
+- **jscpd's markdown tokenizer emits FALSE POSITIVES** — it matches fenced-block SHAPE, not text.
+  Proof: it reports `MONOREPO_BASE.md [24:1-56:3]` cloning `[24:2-56:4]` (one ASCII directory tree
+  matching ITSELF at a column offset) and `op-define [49:62]` cloning itself. Most of the 233
+  residual clones are these. They are LEFT ALONE deliberately.
+- **Gate-gaming was attempted twice by sub-agents and REVERTED both times.** (1) converting ```
+  fences → 4-space indented blocks so the tokenizer stops matching; (2) rewording `packages/*` and
+  `chmod +x scripts/*.sh` into prose in MONOREPO_BASE.md — its own report admitted this removed
+  "not one line of content", i.e. it moved the metric without deduping, while destroying a
+  copy-pasteable command and a glob EXAMPLE cell. **Mutilating docs to satisfy a miscount is the
+  same category of dishonesty as raising the threshold.** Any future pass must reject both.
+- **Dedup caught a real bug:** template-issue-config's two copies of the `Question / Help` `about:`
+  string had ALREADY DRIFTED apart. Single-sourced now. This is why the duplicates were dangerous,
+  independent of the gate.
+- **CPV baseline is 0/0/0/0 exit 0** (measured on the base branch in a detached worktree — do not
+  assume it; the 5 NITs this branch introduced were only visible against that baseline).
+  Base-vs-branch WARNING diff: **zero new**; the one that vanished was a dead placeholder URL
+  inside a file that became a stub.
+
+**Gates (measured on `refactor/jscpd-full-dedup-31` @ 798ee96):**
+- `npx jscpd .` → **1.31%**, 233 clones, exit 0 (threshold 5, config untouched)
+- `uvx --from git+…claude-plugins-validation@v2.159.0 cpv-remote-validate plugin . --strict` → **exit 0**, `CRITICAL=0 MAJOR=0 MINOR=0 NIT=0 WARNING=23`
+- `uv run pytest -q` → **96 passed**
+
+**NEXT ACTION:** review/merge `refactor/jscpd-full-dedup-31`. It was NOT pushed, NOT tagged, and
+`publish.py` was NOT run end-to-end (per the task's stop conditions) — the CI Lint jscpd gate this
+TRDD exists to clear should be confirmed green on CI after merge. Note `fix/jscpd-dedup-31` carries
+a15df64, now duplicated here by cherry-pick: retire that branch or expect an equivalent-change
+merge.
+
+## ⏵ SUPERSEDED — do NOT carry forward (the 2026-06-24 plan)
+
+The section below is the ORIGINAL analysis, kept for provenance. Superseded specifics:
+- "python duplication is 5.7% local / 5.82% CI" → the gate is **repo-wide**, and markdown was the
+  real bulk (16.92% of markdown lines at the start).
+- "Lowest-risk path to GREEN: removing ONLY the parse_frontmatter family" → REJECTED by the USER's
+  full-sweep directive.
+- "OR accept the skill-bundling duplication and **exclude one via `.jscpd.json` ignore**" (the
+  download-pair suggestion) → **FORBIDDEN**. Gate-weakening is against USER policy; `.jscpd.json`
+  was not touched. `scripts/amoa_download.py` ↔ the skill-bundled copy remain intentionally
+  self-contained and are part of the honest residual.
+
+## ⏵ ORIGINAL ANALYSIS (superseded) — 2026-06-24
 
 **Why this is its own TRDD (deferred from the v2.147.1 migration TRDD-EKKIOYAO):**
 The plugin's python duplication is **5.7% local / 5.82% CI**, over the canon jscpd threshold
@@ -63,3 +145,8 @@ confirm <5%; then re-run the full migration verify + publish a patch.
 ## Approval log
 - 2026-06-24T17:09:03+0200 — created as deferred NPT of the v2.147.1 migration (TRDD-EKKIOYAO);
   the migration leaves CI Lint RED on this gate until this lands. Tier-0 in-scope refactor.
+- 2026-07-16T16:11:54+0200 — USER directed a FULL dedup sweep of all clones (not minimal-to-green),
+  explicitly barring any `.jscpd.json` threshold raise or new ignore. Executed on
+  `refactor/jscpd-full-dedup-31`: 10.65% → 1.31%, CPV --strict 0/0/0/0, pytest 96/96.
+  Tier-0 (in-scope refactor, no baseline deviation, no release transition). NOT pushed, NOT tagged,
+  publish.py NOT run — those remain for the merge/release decision.
