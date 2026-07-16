@@ -123,26 +123,16 @@ Use this template immediately after receiving and triaging a blocker report from
 
 ### Response Template
 
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
+`blocker-triage-response` — same envelope and sending mechanics as the [Send Template](#send-template) in section 1 above, with `from`/`to` reversed (AMOA sends to the agent). Envelope fields that differ: `subject` = `[TRIAGE] Task {task_id}: Blocker {resolution_type}`, `priority` = `high`, `content.type` = `"blocker-triage-response"`, `content.message` = `"Blocker triage response for task {task_id}. See data for details."`. The `content.data` payload:
 
 ```json
 {
-  "from": "{amoa_session_name}",
-  "to": "{agent_session_name}",
-  "subject": "[TRIAGE] Task {task_id}: Blocker {resolution_type}",
-  "priority": "high",
-  "content": {
-    "type": "blocker-triage-response",
-    "message": "Blocker triage response for task {task_id}. See data for details.",
-    "data": {
-      "task_id": "{task_id}",
-      "original_blocker_type": "{dependency|access|resource|requirement|external_service}",
-      "resolution_type": "{unblocked|workaround_provided|escalated|reassigned}",
-      "resolution_details": "Detailed explanation of what AMOA is doing to resolve the blocker",
-      "estimated_resolution_time": "When the agent can expect the blocker to be fully resolved (e.g., '30 minutes', '2 hours', 'next planning cycle')",
-      "interim_instructions": "Specific instructions for what the agent should do while waiting for the blocker to be resolved"
-    }
-  }
+  "task_id": "{task_id}",
+  "original_blocker_type": "{dependency|access|resource|requirement|external_service}",
+  "resolution_type": "{unblocked|workaround_provided|escalated|reassigned}",
+  "resolution_details": "Detailed explanation of what AMOA is doing to resolve the blocker",
+  "estimated_resolution_time": "When the agent can expect the blocker to be fully resolved (e.g., '30 minutes', '2 hours', 'next planning cycle')",
+  "interim_instructions": "Specific instructions for what the agent should do while waiting for the blocker to be resolved"
 }
 ```
 
@@ -196,29 +186,19 @@ Use this template after a previously reported blocker has been fully resolved. T
 
 ### Notification Template
 
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
+`blocker-resolution` — same envelope and sending mechanics as the [Send Template](#send-template) in section 1 above, sent AMOA-to-agent. Envelope fields that differ: `subject` = `[RESOLVED] Task {task_id}: Blocker resolved`, `priority` = `normal`, `content.type` = `"blocker-resolution"`, `content.message` = `"Blocker for task {task_id} has been resolved. See data for details."`. The resolution payload carried in `content.data`:
 
 ```json
 {
-  "from": "{amoa_session_name}",
-  "to": "{agent_session_name}",
-  "subject": "[RESOLVED] Task {task_id}: Blocker resolved",
-  "priority": "normal",
-  "content": {
-    "type": "blocker-resolution",
-    "message": "Blocker for task {task_id} has been resolved. See data for details.",
-    "data": {
-      "task_id": "{task_id}",
-      "original_blocker_id": "{reference to original blocker report subject or timestamp}",
-      "resolution_summary": "Description of how the blocker was resolved",
-      "resume_instructions": "Specific instructions for resuming work on the task, including what has changed since the blocker was reported",
-      "any_scope_changes": "Description of any changes to the task scope, acceptance criteria, or deadline resulting from the blocker resolution, or 'none' if no changes"
-    }
-  }
+  "task_id": "{task_id}",
+  "original_blocker_id": "{reference to original blocker report subject or timestamp}",
+  "resolution_summary": "Description of how the blocker was resolved",
+  "resume_instructions": "Specific instructions for resuming work on the task, including what has changed since the blocker was reported",
+  "any_scope_changes": "Description of any changes to the task scope, acceptance criteria, or deadline resulting from the blocker resolution, or 'none' if no changes"
 }
 ```
 
-**Variables to fill**:
+**Notification variables to fill**:
 
 | Variable | Description | Example |
 |----------|-------------|---------|

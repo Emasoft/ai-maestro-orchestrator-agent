@@ -21,8 +21,9 @@ from typing import Any
 
 import yaml
 
-# State file location
-EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent / "shared"))
+from amoa_state import EXEC_STATE_FILE
+from amoa_state import parse_frontmatter as _shared_parse_frontmatter
 
 # Required labels
 REQUIRED_LABELS = {
@@ -41,29 +42,24 @@ REQUIRED_LABELS = {
     "status:done": {"color": "0E8A16", "description": "Completed"},
 }
 
+# Module status -> GitHub status label. Shared by every sync path so the
+# mapping cannot drift between create, recreate, and update.
+STATUS_LABEL_MAP = {
+    "backlog": "status:backlog",
+    "todo": "status:todo",
+    "in-progress": "status:in-progress",
+    "in_progress": "status:in-progress",
+    "ai-review": "status:ai-review",
+    "human-review": "status:human-review",
+    "merge-release": "status:merge-release",
+    "blocked": "status:blocked",
+    "done": "status:done",
+}
+
 
 def parse_frontmatter(file_path: Path) -> tuple[dict[str, Any], str]:
     """Parse YAML frontmatter and return (data, body)."""
-    if not file_path.exists():
-        return {}, ""
-
-    content = file_path.read_text(encoding="utf-8")
-
-    if not content.startswith("---"):
-        return {}, content
-
-    end_index = content.find("---", 3)
-    if end_index == -1:
-        return {}, content
-
-    yaml_content = content[3:end_index].strip()
-    body = content[end_index + 3:].strip()
-
-    try:
-        data = yaml.safe_load(yaml_content) or {}
-        return data, body
-    except yaml.YAMLError:
-        return {}, content
+    return _shared_parse_frontmatter(file_path)
 
 
 def write_state_file(file_path: Path, data: dict[str, Any], body: str) -> bool:
@@ -186,6 +182,42 @@ Implementation of the {module.get('name', module.get('id'))} module.
 """
 
 
+def _create_module_issue(
+    module: dict[str, Any],
+    plan_id: str,
+    result: dict[str, Any],
+    success_template: str,
+    failure_message: str,
+) -> None:
+    """Create the module's GitHub Issue and record the outcome in ``result``.
+
+    Shared by the create and recreate paths of sync_module; the two callers
+    differ only in the wording of the outcome messages.
+
+    Args:
+        module: The module entry (mutated: github_issue is set on success).
+        plan_id: The plan identifier for the issue body.
+        result: The sync result dict (mutated: issue/success/message).
+        success_template: Message template with a {new_issue} placeholder.
+        failure_message: Message recorded when issue creation fails.
+    """
+    title = f"[Module] {module.get('name', module.get('id'))}"
+    body = generate_issue_body(module, plan_id)
+    labels = ["module", f"priority:{module.get('priority', 'medium')}"]
+
+    status = module.get("status", "todo")
+    labels.append(STATUS_LABEL_MAP.get(status, "status:todo"))
+
+    new_issue = gh_issue_create(title, body, labels)
+    if new_issue:
+        module["github_issue"] = new_issue
+        result["issue"] = new_issue
+        result["success"] = True
+        result["message"] = success_template.format(new_issue=new_issue)
+    else:
+        result["message"] = failure_message
+
+
 def sync_module(module: dict[str, Any], plan_id: str, update_state: bool = True) -> dict[str, Any]:
     """Sync a single module with GitHub Issue."""
     result = {
@@ -207,32 +239,10 @@ def sync_module(module: dict[str, Any], plan_id: str, update_state: bool = True)
             result["message"] = "Issue no longer exists, recreating"
 
             # Create new issue
-            title = f"[Module] {module.get('name', module.get('id'))}"
-            body = generate_issue_body(module, plan_id)
-            labels = ["module", f"priority:{module.get('priority', 'medium')}"]
-
-            status = module.get("status", "todo")
-            status_map = {
-                "backlog": "status:backlog",
-                "todo": "status:todo",
-                "in-progress": "status:in-progress",
-                "in_progress": "status:in-progress",
-                "ai-review": "status:ai-review",
-                "human-review": "status:human-review",
-                "merge-release": "status:merge-release",
-                "blocked": "status:blocked",
-                "done": "status:done",
-            }
-            labels.append(status_map.get(status, "status:todo"))
-
-            new_issue = gh_issue_create(title, body, labels)
-            if new_issue:
-                module["github_issue"] = new_issue
-                result["issue"] = new_issue
-                result["success"] = True
-                result["message"] = f"Recreated issue as {new_issue}"
-            else:
-                result["message"] = "Failed to recreate issue"
+            _create_module_issue(
+                module, plan_id, result,
+                "Recreated issue as {new_issue}", "Failed to recreate issue",
+            )
         else:
             # Update existing issue
             result["action"] = "update"
@@ -257,18 +267,7 @@ def sync_module(module: dict[str, Any], plan_id: str, update_state: bool = True)
 
             # Status label
             status = module.get("status", "todo")
-            status_map = {
-                "backlog": "status:backlog",
-                "todo": "status:todo",
-                "in-progress": "status:in-progress",
-                "in_progress": "status:in-progress",
-                "ai-review": "status:ai-review",
-                "human-review": "status:human-review",
-                "merge-release": "status:merge-release",
-                "blocked": "status:blocked",
-                "done": "status:done",
-            }
-            expected_status = status_map.get(status, "status:todo")
+            expected_status = STATUS_LABEL_MAP.get(status, "status:todo")
             for label in current_labels:
                 if label.startswith("status:") and label != expected_status:
                     remove_labels.append(label)
@@ -294,32 +293,10 @@ def sync_module(module: dict[str, Any], plan_id: str, update_state: bool = True)
         # No issue, create one
         result["action"] = "create"
 
-        title = f"[Module] {module.get('name', module.get('id'))}"
-        body = generate_issue_body(module, plan_id)
-        labels = ["module", f"priority:{module.get('priority', 'medium')}"]
-
-        status = module.get("status", "todo")
-        status_map = {
-            "backlog": "status:backlog",
-            "todo": "status:todo",
-            "in-progress": "status:in-progress",
-            "in_progress": "status:in-progress",
-            "ai-review": "status:ai-review",
-            "human-review": "status:human-review",
-            "merge-release": "status:merge-release",
-            "blocked": "status:blocked",
-            "done": "status:done",
-        }
-        labels.append(status_map.get(status, "status:todo"))
-
-        new_issue = gh_issue_create(title, body, labels)
-        if new_issue:
-            module["github_issue"] = new_issue
-            result["issue"] = new_issue
-            result["success"] = True
-            result["message"] = f"Created {new_issue}"
-        else:
-            result["message"] = "Failed to create issue"
+        _create_module_issue(
+            module, plan_id, result,
+            "Created {new_issue}", "Failed to create issue",
+        )
 
     return result
 

@@ -60,11 +60,10 @@ By disabling blank issues, every report must go through a structured form. This 
 
 ### 2.2 The blank_issues_enabled setting
 
-```yaml
-blank_issues_enabled: false
-```
-
-When set to `false`, the "Open a blank issue" link is removed from the template chooser. Users must select one of the defined templates or follow a contact link.
+The top-level `blank_issues_enabled` key controls this. Set it to `false` (as the
+canonical config in [section 4](#4-complete-configuration-ready-to-copy) does) and
+the "Open a blank issue" link is removed from the template chooser. Users must then
+select one of the defined templates or follow a contact link.
 
 ---
 
@@ -74,12 +73,10 @@ When set to `false`, the "Open a blank issue" link is removed from the template 
 
 Feature requests often require discussion and community input before becoming actionable issues. Redirecting them to GitHub Discussions keeps the issue tracker focused on bugs and concrete work items.
 
-```yaml
-contact_links:
-  - name: "[FEATURE] Feature Request"
-    url: https://github.com/YOUR_ORG/YOUR_REPO/discussions/categories/feature-requests
-    about: "Suggest a new feature or enhancement. Feature requests are discussed in GitHub Discussions before becoming issues."
-```
+This is the first entry of the `contact_links` array — see the
+`"[FEATURE] Feature Request"` entry in the canonical config in
+[section 4](#4-complete-configuration-ready-to-copy). It points at the
+`discussions/categories/feature-requests` category.
 
 Replace `YOUR_ORG/YOUR_REPO` with your actual repository path.
 
@@ -91,11 +88,9 @@ To enable GitHub Discussions:
 
 ### 3.2 Redirecting questions to a community forum or chat
 
-```yaml
-  - name: "Question / Help"
-    url: https://github.com/YOUR_ORG/YOUR_REPO/discussions/categories/q-a
-    about: "Ask a question or get help. Use GitHub Discussions Q&A for questions instead of filing an issue."
-```
+The second `contact_links` entry — the `"Question / Help"` entry in the canonical
+config in [section 4](#4-complete-configuration-ready-to-copy) — points at the
+`discussions/categories/q-a` category.
 
 Alternative platforms:
 
@@ -107,11 +102,12 @@ Alternative platforms:
 
 ### 3.3 Adding custom external links
 
-```yaml
-  - name: "Security Vulnerability"
-    url: https://github.com/YOUR_ORG/YOUR_REPO/security/advisories/new
-    about: "Report a security vulnerability privately. Do NOT file a public issue for security bugs."
-```
+Any further entry follows the same three-key shape (`name`, `url`, `about`). The
+canonical config in [section 4](#4-complete-configuration-ready-to-copy) ships one:
+the `"Security Vulnerability"` entry, which routes reporters to
+`security/advisories/new` for private disclosure instead of a public issue. Add your
+own entries alongside it — see [section 7.1](#71-adding-project-specific-contact-links)
+for more examples.
 
 ---
 

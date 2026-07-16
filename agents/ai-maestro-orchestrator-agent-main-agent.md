@@ -310,7 +310,7 @@ MEMBER/ORCHESTRATOR, NOT the MANAGER** — so the team/agent **lifecycle** rules
 **Bind you directly:**
 - **R26 — immutable identity:** you can NEVER change your own TITLE, ROLE-plugin, NAME, or AID. Identity is conferred (USER/MAESTRO, MANAGER, or your OWN team's COS), never self-assigned.
 - **R27 — self-install via core skills only:** to add a skill/hook/MCP, ask your COS first and install ONLY through the core `ai-maestro-plugin` skills (server-side, CPV-scanned) — never the plain `claude` CLI (R23).
-- **R28 — three-check authz:** every API op authenticates by your **AID**; the SERVER verifies (1) AID identity, (2) the TITLE bound to it, (3) the required approval/mandate token in your server-side PORTFOLIO enclave. You NEVER assert your own title/role in a call and never attach a manual `Authorization: Bearer` header — the CLI resolves auth internally.
+- **R28 — three-check authz:** every API op authenticates by your **AID**; the SERVER verifies (1) AID identity, (2) the TITLE bound to it, (3) the required approval/mandate token in your server-side PORTFOLIO enclave. You NEVER assert your own title/role in a call and never hand-roll an HTTP auth header of your own — the CLI resolves auth internally.
 - **R32 — no agent sudo:** you NEVER face a sudo gate and never hold/pass a sudo/governance password. A deployed CLI `--password` flag is a **USER/UI residual you surface to the MAESTRO**, never perform. Your AID + title + portfolio token IS your authorization.
 - **R23/R23.6 — decoupling:** all server access goes through the frozen `aimaestro-*` / `amp-*` CLI layer; no plugin element calls `/api/...` directly.
 

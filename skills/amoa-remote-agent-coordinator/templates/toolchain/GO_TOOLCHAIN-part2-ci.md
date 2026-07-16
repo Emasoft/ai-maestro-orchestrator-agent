@@ -26,24 +26,9 @@ require (
 
 ## GitHub Actions CI Template
 
+Common core: apply [COMMON_TOOLCHAIN_CORE.md](COMMON_TOOLCHAIN_CORE.md) §1, then §2 naming the job `test`. Go widens that scaffold's matrix with a second axis — `go-version: ["1.22", "1.23"]` — then continues with the steps here.
+
 ```yaml
-name: CI
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["1.22", "1.23"]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -125,6 +110,8 @@ jobs:
 ---
 
 ## Library Requirements (MANDATORY)
+
+Go's standard library covers nearly all of this; only the CLI entry below is third-party:
 
 | Purpose | Library | Usage |
 |---------|---------|-------|

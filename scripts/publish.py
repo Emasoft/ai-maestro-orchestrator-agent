@@ -21,6 +21,12 @@ Pipeline stages (all fail-fast — any non-zero exit aborts):
       the canonical CPV validator from GitHub so this plugin never vendors
       a local copy and never drifts from upstream rules)
    4. Run tests (pytest)
+  4b. CI-parity preflight (uvx cpv-remote-validate ci-preflight . — the
+      jscpd / actionlint / mypy / uv-sync-dev / Mega-Linter / static-CIP gates
+      that CI's Lint job runs but `validate_plugin --strict` does NOT). Runs
+      BEFORE the bump/commit/tag/push, so a pipeline defect can never leave a
+      half-published state. A MISSING local tool degrades to a WARNING and never
+      blocks the publish.
    5. Marketplace-registration check (Layout A: notify workflow + PAT secret +
       remote marketplace.json registration + remote receiver workflow;
       Layout B: must run from marketplace root + nested plugin must be listed)
@@ -290,6 +296,23 @@ def get_current_version(plugin_root: Path) -> str | None:
         data = json.loads(pj.read_text(encoding="utf-8"))
         ver = data.get("version")
         return str(ver) if ver is not None else None
+    except (json.JSONDecodeError, OSError):
+        return None
+
+def get_plugin_name(plugin_root: Path) -> str | None:
+    """Read the plugin's name from .claude-plugin/plugin.json.
+
+    Needed for the `{name}--v{version}` dependency-resolution tag: Claude Code
+    filters a dependency's tags by that exact name prefix, so the name has to
+    come from the manifest, not from the repo/directory name (they can differ).
+    """
+    pj = plugin_root / ".claude-plugin" / "plugin.json"
+    if not pj.is_file():
+        return None
+    try:
+        data = json.loads(pj.read_text(encoding="utf-8"))
+        name = data.get("name")
+        return str(name) if name else None
     except (json.JSONDecodeError, OSError):
         return None
 
@@ -612,7 +635,7 @@ def install_branch_rules(root: Path) -> int:
             [
                 "uvx",
                 "--from",
-                "git+https://github.com/Emasoft/claude-plugins-validation@v2.147.1",
+                "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
                 "--with",
                 "pyyaml",
                 "cpv-setup-branch-rules",
@@ -880,7 +903,7 @@ def run_gate(root: Path) -> int:
         return 1
     ve = subprocess.run(
         ["uvx", "--from",
-         "git+https://github.com/Emasoft/claude-plugins-validation@v2.147.1",
+         "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
          "--with", "pyyaml",
          "cpv-remote-validate", "plugin", ".", "--strict"],
         cwd=str(root), timeout=600).returncode
@@ -1112,7 +1135,7 @@ def stage_validate(root: Path) -> None:
 
     Cornerstone rule: a plugin cannot be pushed unless validation passes
     with 0 issues (WARNING allowed). The validator is ALWAYS fetched from
-    GitHub (git+https://github.com/Emasoft/claude-plugins-validation@v2.147.1) via
+    GitHub (git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0) via
     uvx so a local tampered copy cannot weaken the rules. No exceptions.
 
     Order: runs AFTER lint + tests so behavioral regressions fail fast
@@ -1127,11 +1150,52 @@ def stage_validate(root: Path) -> None:
     # on CRITICAL(1), MAJOR(2), MINOR(3), NIT(4); WARNING(5+) passes.
     run([
         "uvx", "--from",
-        "git+https://github.com/Emasoft/claude-plugins-validation@v2.147.1",
+        "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
         "--with", "pyyaml",
         "cpv-remote-validate", "plugin", ".", "--strict",
     ], cwd=root)
     cprint(f"  {GREEN}Validation passed (0 blocking issues).{NC}")
+
+
+def stage_ci_preflight(root: Path) -> None:
+    """Step 4b: CI-parity preflight via REMOTE CPV. MANDATORY — no skip.
+
+    WHY THIS STAGE EXISTS. `validate_plugin --strict` (stage 4) does NOT run the
+    gates this plugin's own GitHub-CI Lint job runs: jscpd copy-paste, actionlint,
+    mypy, the `uv sync --extra dev` resolve, the enabled Mega-Linter sub-linters,
+    and CPV's static CI-parity defect detectors. Without this stage a publish
+    passes every LOCAL gate, bumps the version, commits, TAGS, PUSHES, and cuts a
+    GitHub release — and only THEN goes red on GitHub, with the broken pipeline
+    already shipped to everyone who installs the plugin.
+
+    PLACEMENT IS LOAD-BEARING: this runs BEFORE stage_bump / stage_commit_and_push
+    / stage_gh_release, so a parity failure aborts with the working tree untouched
+    instead of leaving a half-published release behind.
+
+    A MISSING TOOL NEVER BLOCKS THE PUBLISH. `ci-preflight` exits non-zero ONLY
+    when a gate actually FAILED; every tool-absent case (no npx, no actionlint,
+    no checkov, ...) degrades to a non-blocking WARNING and still exits 0. So a
+    lean machine publishes exactly as before — it just gets less LOCAL coverage,
+    which CI still enforces. Do not "harden" this into a hard tool requirement.
+    """
+    cprint(f"\n{BOLD}[4b/11] CI-parity preflight (remote CPV)...{NC}")
+    if not shutil.which("uvx"):
+        cprint(f"  {RED}BLOCKED: uvx not found on PATH.{NC}")
+        cprint(f"  {RED}Install via: brew install uv  or  pip install uv{NC}")
+        sys.exit(1)
+    rc = subprocess.run([
+        "uvx", "--from",
+        "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
+        "--with", "pyyaml",
+        "cpv-remote-validate", "ci-preflight", ".",
+    ], cwd=str(root)).returncode
+    if rc != 0:
+        cprint(f"  {RED}BLOCKED: CI-parity preflight FAILED.{NC}")
+        cprint(f"  {RED}The gates listed above would fail GitHub CI — and without this{NC}")
+        cprint(f"  {RED}stage they would only have failed AFTER the tag and release were{NC}")
+        cprint(f"  {RED}pushed. Fix the causes, then re-run publish.py.{NC}")
+        sys.exit(1)
+    cprint(f"  {GREEN}CI-parity preflight passed.{NC}")
 
 
 # ── Marketplace-registration helpers (mirror of CPV's own publish.py Gate 6) ─
@@ -1658,6 +1722,20 @@ def stage_commit_and_push(root: Path, new_ver: str, dry_run: bool) -> None:
     tree_clean = _git_porcelain_clean(root)
     tag_exists = _local_tag_exists(root, tag)
 
+    # The DEPENDENCY-RESOLUTION tag (TRDD-JT3U4ZVM, issue #28). A plugin that
+    # declares `"dependencies": [{"name": "<this-plugin>", "version": "^1.9.0"}]`
+    # is resolved by Claude Code listing THIS repo's tags, filtering to those
+    # starting with `<plugin-name>--v`, and taking the highest one satisfying
+    # the range (https://code.claude.com/docs/en/plugin-dependencies.md,
+    # since CC 2.1.110). The plain `v{version}` tag does NOT match that filter,
+    # so without this tag every constrained dependent fails to install with
+    # "no git tag satisfying <range>" — while the repo is full of tags. That
+    # is a silent, total outage for downstream plugins, so the tag is created
+    # and pushed in the same atomic transaction as the release itself.
+    plugin_name = get_plugin_name(root)
+    dep_tag = f"{plugin_name}--v{new_ver}" if plugin_name else None
+    dep_tag_exists = _local_tag_exists(root, dep_tag) if dep_tag else False
+
     if dry_run:
         if head_subject == expected_subject and tree_clean:
             cprint(f"  Would skip commit (HEAD already '{expected_subject}', tree clean)")
@@ -1667,7 +1745,12 @@ def stage_commit_and_push(root: Path, new_ver: str, dry_run: bool) -> None:
             cprint(f"  Would skip tag (already exists locally): {tag}")
         else:
             cprint(f"  Would tag: {tag}")
-        cprint(f"  Would push (atomic): origin HEAD {tag}")
+        if dep_tag and dep_tag_exists:
+            cprint(f"  Would skip dependency-resolution tag (already exists locally): {dep_tag}")
+        elif dep_tag:
+            cprint(f"  Would tag (dependency resolution): {dep_tag}")
+        push_refs = " ".join(r for r in (tag, dep_tag) if r)
+        cprint(f"  Would push (atomic): origin HEAD {push_refs}")
         return
 
     if head_subject == expected_subject and tree_clean:
@@ -1682,22 +1765,42 @@ def stage_commit_and_push(root: Path, new_ver: str, dry_run: bool) -> None:
     else:
         run(["git", "tag", "-a", tag, "-m", f"Release {tag}"], cwd=root)
 
+    # The dependency-resolution tag is created with git directly — NOT via
+    # `claude plugin tag <tag>`: the CLI's positional argument is a PATH, not
+    # a tag name (`claude plugin tag [options] [path]` derives the tag from
+    # the manifest itself), so passing a tag name silently does nothing.
+    # git gives the same result with no dependency on the CLI being present,
+    # and a hard failure if the tag cannot be derived: a release published
+    # without it would be unresolvable for every constrained dependent.
+    if not dep_tag:
+        cprint(f"  {RED}✗ Cannot derive the dependency-resolution tag: "
+               f"no `name` in .claude-plugin/plugin.json.{NC}")
+        raise SystemExit(1)
+    if dep_tag_exists:
+        cprint(f"  {YELLOW}Tag {dep_tag} already exists locally — skipping.{NC}")
+    else:
+        run(["git", "tag", "-a", dep_tag, "-m", f"Release {dep_tag}"], cwd=root)
+
     # gh-auth precheck — fail fast with actionable error if gh missing/unauthed.
     owner, repo = _resolve_owner_repo(root)
     _ensure_gh_auth(owner, repo)
-    # Atomic push: commit + tag land together or not at all. Eliminates the
+    # Atomic push: commit + tags land together or not at all. Eliminates the
     # half-published-state failure mode where `git push origin HEAD --tags`
     # could push the commit, fail on the tag (rejected/network), and leave
     # the remote with an unreleased commit + no tag. `--atomic` is a single
     # transaction in the wire protocol; the server rolls back if any ref
     # update fails. git_with_retry still wraps the call so transient
     # network hiccups (4xx-class permanent errors fall through immediately).
-    cprint(f"  {BLUE}$ git push --atomic origin HEAD {tag}{NC}")
+    # Both tags ride in the SAME atomic transaction as the commit. A release
+    # that landed with only `v{version}` would be published-but-unresolvable
+    # for every plugin that depends on it — exactly the half-published state
+    # this --atomic push exists to prevent.
+    cprint(f"  {BLUE}$ git push --atomic origin HEAD {tag} {dep_tag}{NC}")
     git_with_retry(
-        ["git", "push", "--atomic", "origin", "HEAD", tag],
+        ["git", "push", "--atomic", "origin", "HEAD", tag, dep_tag],
         cwd=str(root), capture_output=False,
     )
-    cprint(f"  {GREEN}Pushed {tag} atomically.{NC}")
+    cprint(f"  {GREEN}Pushed {tag} + {dep_tag} atomically.{NC}")
 
 def stage_gh_release(root: Path, new_ver: str, dry_run: bool) -> None:
     """Step 11: Create GitHub release via gh CLI.
@@ -1836,16 +1939,22 @@ def main() -> int:
 
     # Gate 0: reject bypass attempts BEFORE running any other stage.
     # Pipeline order (per the cornerstone rule "every push is a bump"):
-    #   lint+typecheck → tests → validate → marketplace-reg → consistency →
-    #   bump → badge → changelog → commit → push → github release
+    #   lint+typecheck → tests → validate → ci-preflight → marketplace-reg →
+    #   consistency → bump → badge → changelog → commit → push → github release
     # Lint runs before tests (cheap fails first). Tests run before validate
     # so behavioral regressions fail the test suite before the structural
     # validator inspects the manifest.
+    #
+    # EVERY check above runs BEFORE stage_bump. That ordering is the whole point
+    # of stage_ci_preflight: a CI-parity defect aborts the publish with the tree
+    # untouched, instead of being discovered on GitHub after the tag was pushed
+    # and the release was cut.
     stage_bypass_guard()
     stage_check_clean(root)
     stage_lint(root)
     stage_tests(root)  # MANDATORY — no skip flag, no exceptions
     stage_validate(root)
+    stage_ci_preflight(root)  # MANDATORY — the gates validate_plugin omits
     stage_marketplace_registration(root)  # Gate 6 parity with CPV's own publish.py
     stage_consistency(root)
     stage_bump(root, new_ver, args.dry_run)

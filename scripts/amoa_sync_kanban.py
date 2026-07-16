@@ -24,8 +24,10 @@ import yaml
 
 from amoa_kanban_vocab import resolve_column
 
-# State file location
-EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
+# WHY: shared state helpers deduped into shared/amoa_state.py (TRDD-03DYGXJW jscpd gate)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from amoa_state import EXEC_STATE_FILE
+from amoa_state import parse_frontmatter as _shared_parse_frontmatter
 
 # The status→column mapping is the shared 3-pillars vocabulary (issue #27):
 # resolve_column comes from amoa_kanban_vocab, the single source of truth. The
@@ -43,26 +45,7 @@ PRIORITY_VALUES = {
 
 def parse_frontmatter(file_path: Path) -> tuple[dict[str, Any], str]:
     """Parse YAML frontmatter and return (data, body)."""
-    if not file_path.exists():
-        return {}, ""
-
-    content = file_path.read_text(encoding="utf-8")
-
-    if not content.startswith("---"):
-        return {}, content
-
-    end_index = content.find("---", 3)
-    if end_index == -1:
-        return {}, content
-
-    yaml_content = content[3:end_index].strip()
-    body = content[end_index + 3 :].strip()
-
-    try:
-        data = yaml.safe_load(yaml_content) or {}
-        return data, body
-    except yaml.YAMLError:
-        return {}, content
+    return _shared_parse_frontmatter(file_path)
 
 
 def write_state_file(file_path: Path, data: dict[str, Any], body: str) -> bool:

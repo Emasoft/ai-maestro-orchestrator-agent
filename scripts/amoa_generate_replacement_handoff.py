@@ -39,8 +39,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-# State file location (matches codebase convention)
-EXEC_STATE_FILE = Path(".claude/orchestrator-exec-phase.local.md")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from amoa_state import EXEC_STATE_FILE
 
 # Default handoff output directory
 HANDOFF_DIR = Path("docs_dev/handoffs")

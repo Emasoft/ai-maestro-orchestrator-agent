@@ -45,10 +45,13 @@ PENDING_STATUSES = frozenset({
     "Blocked",
 })
 
-# GraphQL query for user-owned projects
-USER_QUERY = """
+# Shared GraphQL query body: user- and organization-owned project queries are
+# identical except for the owning entity field. __ENTITY__ is substituted below.
+# WHY: .replace() is used (not .format/f-string) because the GraphQL braces
+# would otherwise need escaping.
+_PROJECT_ITEMS_QUERY_TEMPLATE = """
 query($owner: String!, $number: Int!) {
-  user(login: $owner) {
+  __ENTITY__(login: $owner) {
     projectV2(number: $number) {
       items(first: 100) {
         nodes {
@@ -90,50 +93,11 @@ query($owner: String!, $number: Int!) {
 }
 """
 
+# GraphQL query for user-owned projects
+USER_QUERY = _PROJECT_ITEMS_QUERY_TEMPLATE.replace("__ENTITY__", "user")
+
 # GraphQL query for organization-owned projects
-ORG_QUERY = """
-query($owner: String!, $number: Int!) {
-  organization(login: $owner) {
-    projectV2(number: $number) {
-      items(first: 100) {
-        nodes {
-          id
-          content {
-            ... on Issue {
-              title
-              number
-              assignees(first: 1) {
-                nodes {
-                  login
-                }
-              }
-            }
-            ... on DraftIssue {
-              title
-            }
-            ... on PullRequest {
-              title
-              number
-            }
-          }
-          fieldValues(first: 10) {
-            nodes {
-              ... on ProjectV2ItemFieldSingleSelectValue {
-                name
-                field {
-                  ... on ProjectV2SingleSelectField {
-                    name
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-"""
+ORG_QUERY = _PROJECT_ITEMS_QUERY_TEMPLATE.replace("__ENTITY__", "organization")
 
 
 def output_json(

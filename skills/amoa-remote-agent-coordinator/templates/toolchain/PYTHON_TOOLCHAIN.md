@@ -301,24 +301,9 @@ See the full template in the setup script above (Step 5).
 
 ## GitHub Actions CI Template
 
+Start from [COMMON_TOOLCHAIN_CORE.md](COMMON_TOOLCHAIN_CORE.md): §1 verbatim, then §2 with `test` as the job name. Pin an interpreter axis into that matrix — `python-version: ["3.12"]` — before the uv-driven steps recorded here.
+
 ```yaml
-name: CI
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.12"]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -375,6 +360,8 @@ jobs:
 ---
 
 ## Library Requirements (MANDATORY)
+
+Stdlib is the default choice below; anything marked otherwise is a declared project dependency:
 
 | Purpose | Library | Usage |
 |---------|---------|-------|

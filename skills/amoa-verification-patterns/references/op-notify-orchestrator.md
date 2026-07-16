@@ -87,33 +87,9 @@ Or send directly using the `agent-messaging` skill:
 
 ### Step 3: Wait for Acknowledgment
 
-Orchestrator responds with next action:
+Orchestrator responds with next action (`status: approved` → proceed to the named `next_action`; `status: rejected` → perform the listed `required_actions` and rerun).
 
-**On Pass:**
-```json
-{
-  "type": "test-report-ack",
-  "task_id": "GH-42",
-  "status": "approved",
-  "message": "All tests passed. Proceed to PR creation.",
-  "next_action": "create-pr"
-}
-```
-
-**On Fail:**
-```json
-{
-  "type": "test-report-ack",
-  "task_id": "GH-42",
-  "status": "rejected",
-  "message": "Fix 2 failing tests before proceeding",
-  "required_actions": [
-    "Fix test_auth.py:45 - assertion failed",
-    "Fix test_api.py:89 - timeout exceeded"
-  ],
-  "next_action": "fix-and-rerun"
-}
-```
+Canonical copy: the `test-report-ack` response JSON examples (all-pass, tests-fail, coverage-too-low) are maintained in [test-report-format.md](test-report-format.md) (section "Orchestrator Response to Test Reports") — read that file; this pointer avoids a drifting duplicate.
 
 ## Notification Content
 
@@ -132,13 +108,7 @@ Notification must include:
 
 ## Minimal Summary Format
 
-For orchestrator consumption:
-
-```
-[TESTS] 45 total: 42 passed, 2 failed, 1 skipped (12.5s)
-FAILED: test_auth.py:45, test_api.py:89
-COVERAGE: 85% lines, 72% branches
-```
+Canonical copy: the minimal summary format for orchestrator consumption is maintained in [test-report-format.md](test-report-format.md) (section "Minimal Report (For Orchestrator)") — read that file; this pointer avoids a drifting duplicate.
 
 ## Progress Updates
 

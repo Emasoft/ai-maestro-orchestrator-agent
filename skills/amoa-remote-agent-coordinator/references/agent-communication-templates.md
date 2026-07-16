@@ -122,47 +122,7 @@ Do NOT begin implementation until your understanding is verified.
 
 Use for regular progress checks (every 10-15 minutes).
 
-```markdown
-Subject: [POLL] Module: {module_name} - Progress Check #{poll_number}
-
-## Status Request
-
-Please provide your current status:
-
-1. **Current progress**: What percentage complete? What specific items are done?
-2. **Next steps**: What are you working on right now?
-
-## MANDATORY Questions (Answer ALL)
-
-3. **Are there any issues or problems?**
-   - Technical issues (code not working, tests failing)
-   - Environmental problems (dependencies, configuration)
-   - Dependency issues (waiting on other modules)
-
-4. **Is anything unclear?**
-   - Requirements ambiguity
-   - Acceptance criteria questions
-   - Expected behavior uncertainty
-
-5. **Any unforeseen difficulties?**
-   - Complexity higher than expected
-   - Missing information discovered
-   - Approach not working as planned
-
-6. **Do you need anything from me?**
-   - Documentation needed
-   - Clarification required
-   - Decision needed from orchestrator/MAESTRO
-   - Resources or access required
-
----
-
-If all is clear with no blockers, reply:
-"Progress: {X}%. No blockers. Proceeding as planned."
-
-Expected response time: 5 minutes
-Task UUID: {task_uuid}
-```
+Canonical copy of the poll message template: maintained in [progress-polling-protocol.md](progress-polling-protocol.md) §2.4 Poll Message Template — read that file.
 
 **Variables to fill**:
 - `{module_name}`: Module name
