@@ -114,6 +114,36 @@ def write_exec_state(tmp_path, state_data):
     return state_file
 
 
+def _run_handoff_with_output(tmp_path, output_name):
+    """Run the standard single-module handoff scenario with --output.
+
+    Shared setup for the output-file tests: writes the same one-module
+    state fixture, then runs the script for impl-1 -> impl-2 targeting
+    tmp_path/output_name.
+
+    Args:
+        tmp_path: The temporary directory to run in.
+        output_name: Filename for the handoff document.
+
+    Returns:
+        Tuple of (exit_code, output_file Path).
+    """
+    output_file = tmp_path / output_name
+    write_exec_state(tmp_path, {
+        "modules_status": [
+            {"id": "auth-core", "status": "in-progress", "assigned_to": "impl-1"},
+        ],
+        "active_assignments": [
+            {"agent": "impl-1", "module": "auth-core", "task_uuid": "task-abc", "status": "in_progress"},
+        ],
+    })
+    code, stdout, stderr = run_script(
+        ["--failed-agent", "impl-1", "--new-agent", "impl-2", "--output", str(output_file)],
+        tmp_path,
+    )
+    return code, output_file
+
+
 class TestRequiredArguments:
     """Test that required arguments are enforced."""
 
@@ -163,19 +193,7 @@ class TestHandoffGeneration:
 
     def test_output_file_created(self, tmp_path):
         """When --output is given, the handoff file is created at that path."""
-        output_file = tmp_path / "my-handoff.md"
-        write_exec_state(tmp_path, {
-            "modules_status": [
-                {"id": "auth-core", "status": "in-progress", "assigned_to": "impl-1"},
-            ],
-            "active_assignments": [
-                {"agent": "impl-1", "module": "auth-core", "task_uuid": "task-abc", "status": "in_progress"},
-            ],
-        })
-        code, stdout, stderr = run_script(
-            ["--failed-agent", "impl-1", "--new-agent", "impl-2", "--output", str(output_file)],
-            tmp_path,
-        )
+        code, output_file = _run_handoff_with_output(tmp_path, "my-handoff.md")
         assert code == 0
         assert output_file.exists()
         content = output_file.read_text(encoding="utf-8")
@@ -184,38 +202,14 @@ class TestHandoffGeneration:
 
     def test_handoff_contains_metadata_section(self, tmp_path):
         """Handoff document must contain a Metadata section."""
-        output_file = tmp_path / "handoff.md"
-        write_exec_state(tmp_path, {
-            "modules_status": [
-                {"id": "auth-core", "status": "in-progress", "assigned_to": "impl-1"},
-            ],
-            "active_assignments": [
-                {"agent": "impl-1", "module": "auth-core", "task_uuid": "task-abc", "status": "in_progress"},
-            ],
-        })
-        code, stdout, stderr = run_script(
-            ["--failed-agent", "impl-1", "--new-agent", "impl-2", "--output", str(output_file)],
-            tmp_path,
-        )
+        code, output_file = _run_handoff_with_output(tmp_path, "handoff.md")
         assert code == 0
         content = output_file.read_text(encoding="utf-8")
         assert "Metadata" in content or "metadata" in content.lower()
 
     def test_handoff_contains_task_assignments(self, tmp_path):
         """Handoff document must list the failed agent's task assignments."""
-        output_file = tmp_path / "handoff.md"
-        write_exec_state(tmp_path, {
-            "modules_status": [
-                {"id": "auth-core", "status": "in-progress", "assigned_to": "impl-1"},
-            ],
-            "active_assignments": [
-                {"agent": "impl-1", "module": "auth-core", "task_uuid": "task-abc", "status": "in_progress"},
-            ],
-        })
-        code, stdout, stderr = run_script(
-            ["--failed-agent", "impl-1", "--new-agent", "impl-2", "--output", str(output_file)],
-            tmp_path,
-        )
+        code, output_file = _run_handoff_with_output(tmp_path, "handoff.md")
         assert code == 0
         content = output_file.read_text(encoding="utf-8")
         assert "auth-core" in content

@@ -229,6 +229,79 @@ def transition_stage(
 # --- Subcommand handlers ---
 
 
+def _load_update_for_agent(
+    project_root: Path, update_id: str, agent: str
+) -> tuple[dict, dict] | None:
+    """Load state and look up an update, validating the agent when provided.
+
+    Shared by every subcommand that operates on an existing update. Prints
+    an error to stderr and returns None when the update is missing or the
+    agent does not match; otherwise returns (state, update).
+
+    Args:
+        project_root: Absolute path to the project root directory.
+        update_id: The update identifier string.
+        agent: Agent identifier to validate against; empty string skips
+            the validation (used by subcommands without an --agent flag).
+
+    Returns:
+        Tuple of (state, update), or None on error.
+    """
+    state = load_state(project_root)
+    update = get_update(state, update_id)
+
+    if update is None:
+        print("ERROR: Update ID '{}' not found".format(update_id), file=sys.stderr)
+        return None
+
+    if agent and update.get("agent") != agent:
+        print(
+            "ERROR: Agent mismatch: update is for '{}', got '{}'".format(
+                update.get("agent"), agent
+            ),
+            file=sys.stderr,
+        )
+        return None
+
+    return state, update
+
+
+def _transition_and_save(
+    project_root: Path,
+    state: dict,
+    update: dict,
+    update_id: str,
+    target_stage: str,
+    notes: str,
+) -> int:
+    """Apply a stage transition, persist the state, and print the outcome.
+
+    Shared tail of every stage-transition subcommand.
+
+    Args:
+        project_root: Absolute path to the project root directory.
+        state: The full state dictionary (persisted on success).
+        update: The update entry being transitioned.
+        update_id: The update identifier (for the success message).
+        target_stage: The stage to transition to.
+        notes: Notes for the transition log entry.
+
+    Returns:
+        0 on success, 1 on error.
+    """
+    success, msg = transition_stage(update, target_stage, notes)
+
+    if not success:
+        print("ERROR: {}".format(msg), file=sys.stderr)
+        return 1
+
+    if not save_state(project_root, state):
+        return 1
+
+    print("{} -- {} (agent: {})".format(update_id, msg, update.get("agent")))
+    return 0
+
+
 def cmd_send(project_root: Path, args) -> int:
     """Handle the 'send' subcommand: create a new update verification entry."""
     state = load_state(project_root)
@@ -268,53 +341,23 @@ def cmd_send(project_root: Path, args) -> int:
 
 def cmd_record_receipt(project_root: Path, args) -> int:
     """Handle the 'record-receipt' subcommand."""
-    state = load_state(project_root)
-    update = get_update(state, args.update_id)
-
-    if update is None:
-        print("ERROR: Update ID '{}' not found".format(args.update_id), file=sys.stderr)
+    loaded = _load_update_for_agent(project_root, args.update_id, args.agent)
+    if loaded is None:
         return 1
-
-    if args.agent and update.get("agent") != args.agent:
-        print(
-            "ERROR: Agent mismatch: update is for '{}', got '{}'".format(
-                update.get("agent"), args.agent
-            ),
-            file=sys.stderr,
-        )
-        return 1
+    state, update = loaded
 
     notes = args.notes if args.notes else "Agent acknowledged receipt"
-    success, msg = transition_stage(update, "awaiting_feasibility", notes)
-
-    if not success:
-        print("ERROR: {}".format(msg), file=sys.stderr)
-        return 1
-
-    if not save_state(project_root, state):
-        return 1
-
-    print("{} -- {} (agent: {})".format(args.update_id, msg, update.get("agent")))
-    return 0
+    return _transition_and_save(
+        project_root, state, update, args.update_id, "awaiting_feasibility", notes
+    )
 
 
 def cmd_record_feasibility(project_root: Path, args) -> int:
     """Handle the 'record-feasibility' subcommand."""
-    state = load_state(project_root)
-    update = get_update(state, args.update_id)
-
-    if update is None:
-        print("ERROR: Update ID '{}' not found".format(args.update_id), file=sys.stderr)
+    loaded = _load_update_for_agent(project_root, args.update_id, args.agent)
+    if loaded is None:
         return 1
-
-    if args.agent and update.get("agent") != args.agent:
-        print(
-            "ERROR: Agent mismatch: update is for '{}', got '{}'".format(
-                update.get("agent"), args.agent
-            ),
-            file=sys.stderr,
-        )
-        return 1
+    state, update = loaded
 
     notes = args.notes if args.notes else "Feasibility assessed"
 
@@ -323,91 +366,44 @@ def cmd_record_feasibility(project_root: Path, args) -> int:
     else:
         target_stage = "ready_to_resume"
 
-    success, msg = transition_stage(update, target_stage, notes)
-
-    if not success:
-        print("ERROR: {}".format(msg), file=sys.stderr)
-        return 1
-
-    if not save_state(project_root, state):
-        return 1
-
-    print("{} -- {} (agent: {})".format(args.update_id, msg, update.get("agent")))
-    return 0
+    return _transition_and_save(
+        project_root, state, update, args.update_id, target_stage, notes
+    )
 
 
 def cmd_resolve_concerns(project_root: Path, args) -> int:
     """Handle the 'resolve-concerns' subcommand."""
-    state = load_state(project_root)
-    update = get_update(state, args.update_id)
-
-    if update is None:
-        print("ERROR: Update ID '{}' not found".format(args.update_id), file=sys.stderr)
+    loaded = _load_update_for_agent(project_root, args.update_id, args.agent)
+    if loaded is None:
         return 1
-
-    if args.agent and update.get("agent") != args.agent:
-        print(
-            "ERROR: Agent mismatch: update is for '{}', got '{}'".format(
-                update.get("agent"), args.agent
-            ),
-            file=sys.stderr,
-        )
-        return 1
+    state, update = loaded
 
     notes = args.notes if args.notes else "Concerns resolved"
-    success, msg = transition_stage(update, "ready_to_resume", notes)
-
-    if not success:
-        print("ERROR: {}".format(msg), file=sys.stderr)
-        return 1
-
-    if not save_state(project_root, state):
-        return 1
-
-    print("{} -- {} (agent: {})".format(args.update_id, msg, update.get("agent")))
-    return 0
+    return _transition_and_save(
+        project_root, state, update, args.update_id, "ready_to_resume", notes
+    )
 
 
 def cmd_authorize_resume(project_root: Path, args) -> int:
     """Handle the 'authorize-resume' subcommand."""
-    state = load_state(project_root)
-    update = get_update(state, args.update_id)
-
-    if update is None:
-        print("ERROR: Update ID '{}' not found".format(args.update_id), file=sys.stderr)
+    loaded = _load_update_for_agent(project_root, args.update_id, args.agent)
+    if loaded is None:
         return 1
-
-    if args.agent and update.get("agent") != args.agent:
-        print(
-            "ERROR: Agent mismatch: update is for '{}', got '{}'".format(
-                update.get("agent"), args.agent
-            ),
-            file=sys.stderr,
-        )
-        return 1
+    state, update = loaded
 
     notes = args.notes if args.notes else "Agent authorized to resume with updated instructions"
-    success, msg = transition_stage(update, "resumed", notes)
-
-    if not success:
-        print("ERROR: {}".format(msg), file=sys.stderr)
-        return 1
-
-    if not save_state(project_root, state):
-        return 1
-
-    print("{} -- {} (agent: {})".format(args.update_id, msg, update.get("agent")))
-    return 0
+    return _transition_and_save(
+        project_root, state, update, args.update_id, "resumed", notes
+    )
 
 
 def cmd_history(project_root: Path, args) -> int:
     """Handle the 'history' subcommand: show transition history for an update."""
-    state = load_state(project_root)
-    update = get_update(state, args.update_id)
-
-    if update is None:
-        print("ERROR: Update ID '{}' not found".format(args.update_id), file=sys.stderr)
+    # WHY: empty agent skips the mismatch check -- 'history' has no --agent flag
+    loaded = _load_update_for_agent(project_root, args.update_id, "")
+    if loaded is None:
         return 1
+    _state, update = loaded
 
     print("Update Verification History: {}".format(args.update_id))
     print("=" * 60)
