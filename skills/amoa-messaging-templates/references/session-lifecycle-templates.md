@@ -39,7 +39,7 @@ Complete reference for all session lifecycle message templates used between AMCO
             "task_id": "<task-uuid>",
             "title": "<task-title>",
             "priority": "high|normal|low",
-            "status": "in-progress|blocked|queued",
+            "status": "dev|blocked|todo",
             "assigned_agent": "<agent-session-name-or-null>",
             "last_update": "<ISO8601-timestamp>"
           }
@@ -194,7 +194,7 @@ Differences from section 2:
       {
         "task_id": "<task-uuid>",
         "title": "<task-title>",
-        "status": "in-progress|blocked|queued|paused",
+        "status": "dev|blocked|todo|backburner",
         "assigned_agent": "<agent-session-name-or-null>",
         "progress_pct": 0,
         "last_activity": "<ISO8601-timestamp>",
@@ -318,7 +318,7 @@ Differences from section 2:
     {
       "task_id": "<task-uuid>",
       "title": "<task-title>",
-      "status": "in-progress|blocked|queued",
+      "status": "dev|blocked|todo",
       "assigned_agent": "<agent-session-name-or-null>",
       "progress_pct": 0,
       "blockers": ["<blocker-description>"],
@@ -335,10 +335,14 @@ Differences from section 2:
     }
   },
   "kanban_snapshot": {
-    "backlog": 0,
-    "in_progress": 0,
-    "review": 0,
-    "done": 0,
+    "backburner": 0,
+    "todo": 0,
+    "dev": 0,
+    "testing": 0,
+    "ai_review": 0,
+    "human_review": 0,
+    "complete": 0,
+    "blocked": 0,
     "snapshot_file": "docs_dev/checkpoints/amoa-kanban-final-<timestamp>.md"
   },
   "blockers_remaining": [

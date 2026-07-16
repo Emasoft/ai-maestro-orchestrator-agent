@@ -24,9 +24,12 @@ from pathlib import Path
 import pytest
 
 # The existing suite imports scripts by putting scripts/ on sys.path; mirror it.
-SCRIPTS_DIR = Path(__file__).resolve().parents[2] / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+# shared/ carries the kanban vocabulary (importable from both scripts/ and the
+# skill-bundled scripts, which sit at a different depth).
+_ROOT = Path(__file__).resolve().parents[2]
+for _d in (_ROOT / "scripts", _ROOT / "shared"):
+    if str(_d) not in sys.path:
+        sys.path.insert(0, str(_d))
 
 import amoa_sync_kanban as sk  # noqa: E402  (path injected above, on purpose)
 from amoa_kanban_vocab import (  # noqa: E402
@@ -40,20 +43,17 @@ from amoa_kanban_vocab import (  # noqa: E402
 # get_project_fields() returns: every board column / priority is a single-select
 # option with a real option id. dry_run never touches these, but supplying a
 # realistic structure keeps the test honest about the production shape.
+#
+# The Status options are the 17 RATIFIED columns (issue #27) — a board configured
+# for the 3-pillars vocabulary, not the pre-2026-06-20 5-status board. Deriving
+# them from KANBAN_COLUMNS rather than hardcoding a list is deliberate: if the
+# ratified vocabulary ever changes, this fixture cannot silently describe a board
+# that no longer exists.
 def _realistic_fields() -> dict:
     return {
         "Status": {
             "id": "FIELD_status",
-            "options": {
-                "Backlog": "opt_backlog",
-                "Todo": "opt_todo",
-                "In Progress": "opt_inprogress",
-                "AI Review": "opt_aireview",
-                "Human Review": "opt_humanreview",
-                "Merge/Release": "opt_merge",
-                "Blocked": "opt_blocked",
-                "Done": "opt_done",
-            },
+            "options": {col: f"opt_{col}" for col in KANBAN_COLUMNS},
         },
         "Priority": {
             "id": "FIELD_priority",
@@ -88,13 +88,13 @@ def test_happy_path_sync_updates_existing_item():
     module = {
         "id": "auth-core",
         "name": "Core Authentication",
-        "status": "in-progress",
+        "status": "dev",
         "priority": "high",
         "dependencies": ["token-store"],
         "description": "JWT issuance + refresh.",
     }
     title = "[auth-core] Core Authentication"
-    items = [_board_item(title, current_status_column="In Progress")]
+    items = [_board_item(title, current_status_column="dev")]
 
     result = sk.sync_module_to_project(
         module=module,
@@ -110,7 +110,7 @@ def test_happy_path_sync_updates_existing_item():
     assert result["action"] == "update"
     assert result["item_id"] == "ITEM_1"
     assert result["title"] == title
-    assert result["status"] == "in-progress"
+    assert result["status"] == "dev"
     assert result["priority"] == "high"
     assert result["success"] is True
     assert result["dry_run"] is True
@@ -118,17 +118,17 @@ def test_happy_path_sync_updates_existing_item():
 
 def test_trdd_column_wins_when_board_differs():
     """TRDD status wins: target column is derived from the module, not the board's stale value."""
-    # The board item currently sits in "Blocked", but the TRDD/module says the
-    # work is now in "ai-review". The sync's target column must come from the
+    # The board item currently sits in "blocked", but the TRDD/module says the
+    # work is now in "ai_review". The sync's target column must come from the
     # module's status (TRDD), proving TRDD-wins on a tie-break/disagreement.
     module = {
         "id": "auth-core",
         "name": "Core Authentication",
-        "status": "ai-review",  # TRDD column
+        "status": "ai_review",  # TRDD column
         "priority": "medium",
     }
     title = "[auth-core] Core Authentication"
-    board_column = "Blocked"  # stale board column, deliberately != TRDD
+    board_column = "blocked"  # stale board column, deliberately != TRDD
     items = [_board_item(title, current_status_column=board_column)]
 
     result = sk.sync_module_to_project(
@@ -143,64 +143,68 @@ def test_trdd_column_wins_when_board_differs():
     # The action targets the SAME board item (found by title)...
     assert result["action"] == "update"
     assert result["item_id"] == "ITEM_1"
-    # ...and the status the sync will write is the TRDD's, mapped to the board.
-    trdd_target_column = sk.STATUS_TO_COLUMN[module["status"]]
-    assert trdd_target_column == "AI Review"
+    # ...and the status the sync will write is the TRDD's, resolved through the
+    # single-source-of-truth vocabulary (issue #27 — the script no longer owns a
+    # local status→column map).
+    trdd_target_column = resolve_column(module["status"])
+    assert trdd_target_column == "ai_review"
     # Hard proof of "TRDD wins": the TRDD-derived target differs from what the
     # board currently shows -- so applying the sync overwrites the board value.
     assert trdd_target_column != board_column
     # The result still reports the TRDD status, never the board's stale column.
-    assert result["status"] == "ai-review"
+    assert result["status"] == "ai_review"
 
 
 def test_trdd_column_to_board_column_roundtrip_is_lossless():
-    """Every TRDD column maps to a real board column, and 1:1 entries round-trip losslessly."""
+    """Every ratified column round-trips through resolve_column onto a real board option."""
     fields = _realistic_fields()
     valid_board_columns = set(fields["Status"]["options"].keys())
 
-    # 1) Forward map is total: every TRDD column resolves to an EXISTING board
-    #    column option (no TRDD state can map to a column the board lacks).
-    for trdd_col, board_col in sk.STATUS_TO_COLUMN.items():
-        assert board_col in valid_board_columns, (
-            f"TRDD column {trdd_col!r} maps to {board_col!r}, "
-            f"which is not a real board column"
+    # 1) The vocabulary IS the board vocabulary: resolve_column is the identity
+    #    on every ratified column, and each one exists as a board option. This is
+    #    the lossless round-trip the old many→1 map could not offer (issue #27).
+    for col in KANBAN_COLUMNS:
+        assert resolve_column(col) == col
+        assert col in valid_board_columns, (
+            f"ratified column {col!r} has no option on a 3-pillars board"
         )
 
-    # 2) The map is deterministic/stable (same input -> same output, twice).
-    for trdd_col in sk.STATUS_TO_COLUMN:
-        assert sk.STATUS_TO_COLUMN[trdd_col] == sk.STATUS_TO_COLUMN[trdd_col]
+    # 2) Legacy statuses are MIGRATED, not dropped: every legacy value resolves
+    #    to a ratified column that the board can actually show.
+    for legacy, expected in LEGACY_STATUS_MIGRATION.items():
+        assert resolve_column(legacy) == expected
+        assert expected in valid_board_columns
 
-    # 3) Losslessness for the UNAMBIGUOUS (1:1) TRDD columns: build the inverse
-    #    map and confirm board->TRDD->board returns the original board column
-    #    for every column that has exactly one TRDD source.
-    board_to_trdd_sources: dict[str, list[str]] = {}
-    for trdd_col, board_col in sk.STATUS_TO_COLUMN.items():
-        board_to_trdd_sources.setdefault(board_col, []).append(trdd_col)
+    # 3) Deterministic: same input -> same output, twice.
+    for status in (*KANBAN_COLUMNS, *LEGACY_STATUS_MIGRATION):
+        assert resolve_column(status) == resolve_column(status)
 
-    one_to_one = {
-        board_col: srcs[0]
-        for board_col, srcs in board_to_trdd_sources.items()
-        if len(srcs) == 1
-    }
-    for board_col, trdd_col in one_to_one.items():
-        # round-trip: board column -> its unique TRDD source -> back to board
-        assert sk.STATUS_TO_COLUMN[trdd_col] == board_col
-
-    # 4) Document the deliberately MANY->1 merges (a known, intentional non-
-    #    injective collapse, NOT a loss bug): assigned+in-progress -> In Progress,
-    #    done+complete -> Done. These are aliases on purpose.
-    assert set(board_to_trdd_sources["In Progress"]) == {"assigned", "in-progress"}
-    assert set(board_to_trdd_sources["Done"]) == {"done", "complete"}
+    # 4) Document the deliberately MANY->1 legacy merges (an intentional
+    #    non-injective collapse of the OLD vocab, not a loss bug): the pre-2026-
+    #    06-20 statuses that meant the same lifecycle state now share a column.
+    #    Losslessness holds where it matters -- among the ratified columns (1).
+    collapsed: dict[str, set[str]] = {}
+    for legacy, col in LEGACY_STATUS_MIGRATION.items():
+        collapsed.setdefault(col, set()).add(legacy)
+    assert collapsed["dev"] == {"in-progress", "in_progress"}
+    assert collapsed["ai_review"] == {"review", "ai-review"}
+    # `verified` joins the done-spellings: it came from a THIRD legacy vocabulary
+    # (amoa_sync_github_issues.py) where "verified or complete" WAS the finished
+    # set -- see amoa_check_orchestration_phase.py's phase gate.
+    assert collapsed["complete"] == {"done", "completed", "verified"}
 
 
-def test_unknown_column_falls_back_to_todo_and_does_not_crash():
-    """Unknown/invalid TRDD status falls back to 'Todo' and the sync stays well-formed."""
-    # Pure-mapping fallback: an unknown TRDD state defaults to "Todo".
-    assert sk.STATUS_TO_COLUMN.get("not-a-real-state", "Todo") == "Todo"
-    # Priority fallback mirrors it.
-    assert sk.PRIORITY_VALUES.get("urgent-ish", "Medium") == "Medium"
+def test_unknown_status_is_surfaced_as_an_error_never_a_default_column():
+    """Unknown TRDD status yields a failed result naming it -- never a silent default column."""
+    # The vocabulary refuses to guess: resolve_column raises rather than bucket
+    # an unrecognized status somewhere plausible (issue #27, suggested fix 2).
+    with pytest.raises(ValueError, match="unknown kanban status"):
+        resolve_column("not-a-real-state")
 
-    # And the orchestration path tolerates the unknown status without raising:
+    # The orchestration path converts that refusal into a well-formed FAILED
+    # result -- it must not raise out of the sync, and must not fall through to a
+    # write. Before the fix this module would have been silently placed in
+    # "Todo", so a typo'd status looked like real triage.
     module = {
         "id": "weird-mod",
         "name": "Weird Module",
@@ -208,7 +212,7 @@ def test_unknown_column_falls_back_to_todo_and_does_not_crash():
         "priority": "also-unknown",
     }
     title = "[weird-mod] Weird Module"
-    items = [_board_item(title, current_status_column="Todo")]
+    items = [_board_item(title, current_status_column="todo")]
 
     result = sk.sync_module_to_project(
         module=module,
@@ -218,11 +222,16 @@ def test_unknown_column_falls_back_to_todo_and_does_not_crash():
         dry_run=True,
         create_missing=False,
     )
-    # Found by title -> update; the unknown status is preserved in the report,
-    # and (per the mapping) would be written as the safe "Todo" default.
-    assert result["action"] == "update"
+    assert result["action"] == "error"
+    assert result["success"] is False
+    # The offending value is named, so an operator can fix the state file.
+    assert "totally-unknown-column" in result["error"]
+    # The raw status is still reported verbatim (never rewritten to a guess).
     assert result["status"] == "totally-unknown-column"
-    assert sk.STATUS_TO_COLUMN.get(module["status"], "Todo") == "Todo"
+
+    # Priority KEEPS its documented default -- an unknown priority is cosmetic,
+    # not a placement error, so it stays a fallback rather than a hard failure.
+    assert sk.PRIORITY_VALUES.get("urgent-ish", "Medium") == "Medium"
 
 
 def test_empty_board_reports_missing_then_create():
@@ -249,7 +258,8 @@ def test_empty_board_reports_missing_then_create():
     assert missing["success"] is True
 
     # Empty board WITH create_missing -> "create" (dry_run short-circuits before
-    # any gh call, so this is fully offline/deterministic).
+    # any gh call, so this is fully offline/deterministic). "todo" is a ratified
+    # column, so resolve_column passes it through and the create path proceeds.
     creating = sk.sync_module_to_project(
         module=module,
         project_id="PVT_test",

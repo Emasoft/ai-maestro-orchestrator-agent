@@ -22,10 +22,9 @@ from typing import Any, cast
 
 import yaml
 
-from amoa_kanban_vocab import resolve_column
-
 # WHY: shared state helpers deduped into shared/amoa_state.py (TRDD-03DYGXJW jscpd gate)
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from amoa_kanban_vocab import resolve_column
 from amoa_state import EXEC_STATE_FILE
 from amoa_state import parse_frontmatter as _shared_parse_frontmatter
 

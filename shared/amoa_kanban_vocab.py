@@ -62,9 +62,18 @@ _COLUMN_SET: frozenset[str] = frozenset(KANBAN_COLUMNS)
 #   - merge-release → publish: the old generic "Merge/Release" column maps to
 #     the tool-release lane `publish` (services use `deploy`); AMOA-orchestrated
 #     work is overwhelmingly publish-lane.
+#   - planning → design: the module-issue sync's own vocabulary (a THIRD map,
+#     `planning/assigned/in-progress/review/verified/complete`, found in
+#     amoa_sync_github_issues.py) called the design stage "planning".
+#   - verified → complete: in that same vocabulary `verified` is a DONE state,
+#     not a pre-completion one — amoa_check_orchestration_phase.py treats
+#     "verified or complete" as the finished set, and amoa_verify_instructions.py
+#     sets it once verification passes. Collapsing the two done-spellings mirrors
+#     done/completed → complete.
 LEGACY_STATUS_MIGRATION: dict[str, str] = {
     "backlog": "backburner",
     "pending": "todo",
+    "planning": "design",
     "assigned": "dispatch",
     "in-progress": "dev",
     "in_progress": "dev",
@@ -72,8 +81,54 @@ LEGACY_STATUS_MIGRATION: dict[str, str] = {
     "ai-review": "ai_review",
     "human-review": "human_review",
     "merge-release": "publish",
+    "verified": "complete",
     "done": "complete",
     "completed": "complete",
+}
+
+
+# GitHub label presentation for each ratified column, keyed by the FULL label
+# name so a consumer can look up `status:dev` directly. It lives here, next to
+# the vocabulary it describes, because two independent sync scripts need it —
+# and a second copy is exactly how the vocabularies split in the first place.
+STATUS_LABEL_COLORS: dict[str, str] = {
+    "status:backburner": "D4C5F9",
+    "status:todo": "EDEDED",
+    "status:design": "C5DEF5",
+    "status:dispatch": "BFD4F2",
+    "status:dev": "5319E7",
+    "status:testing": "FEF2C0",
+    "status:ai_review": "BFDADC",
+    "status:human_review": "D4C5F9",
+    "status:complete": "0E8A16",
+    "status:publish": "C2E0C6",
+    "status:published": "0E8A16",
+    "status:deploy": "C2E0C6",
+    "status:live": "006B75",
+    "status:live_auditing": "FBCA04",
+    "status:blocked": "B60205",
+    "status:failed": "B60205",
+    "status:superseded": "CCCCCC",
+}
+
+STATUS_LABEL_DESCRIPTIONS: dict[str, str] = {
+    "status:backburner": "Deferred; not scheduled",
+    "status:todo": "Ready to start",
+    "status:design": "Being designed",
+    "status:dispatch": "Assigned, not yet started",
+    "status:dev": "Implementation in progress",
+    "status:testing": "Under test",
+    "status:ai_review": "Awaiting AI review",
+    "status:human_review": "Awaiting human review",
+    "status:complete": "Work finished",
+    "status:publish": "Ready to publish",
+    "status:published": "Published",
+    "status:deploy": "Ready to deploy",
+    "status:live": "Live in production",
+    "status:live_auditing": "Live; under audit",
+    "status:blocked": "Blocked by dependency",
+    "status:failed": "Failed; retryable",
+    "status:superseded": "Replaced by another task",
 }
 
 

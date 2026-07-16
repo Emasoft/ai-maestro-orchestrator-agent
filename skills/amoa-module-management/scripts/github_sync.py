@@ -22,38 +22,34 @@ from typing import Any
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent / "shared"))
+from amoa_kanban_vocab import (
+    KANBAN_COLUMNS,
+    STATUS_LABEL_COLORS,
+    STATUS_LABEL_DESCRIPTIONS,
+    resolve_column,
+)
 from amoa_state import EXEC_STATE_FILE
 from amoa_state import parse_frontmatter as _shared_parse_frontmatter
 
-# Required labels
-REQUIRED_LABELS = {
+# One `status:<column>` label per ratified column, styled from the shared
+# vocabulary (issue #27). This script used to hand-list 8 labels of the
+# pre-2026-06-20 vocabulary plus its own status→label map, so a module in a
+# column the list did not know (e.g. `dev`) was silently labelled `status:todo`.
+# Deriving the labels FROM the vocabulary makes that drift impossible: add a
+# column, get its label.
+REQUIRED_LABELS: dict[str, dict[str, str]] = {
     "module": {"color": "0052CC", "description": "AMOA orchestration module"},
     "priority:critical": {"color": "B60205", "description": "Critical priority"},
     "priority:high": {"color": "D93F0B", "description": "High priority"},
     "priority:medium": {"color": "FBCA04", "description": "Medium priority"},
     "priority:low": {"color": "0E8A16", "description": "Low priority"},
-    "status:backlog": {"color": "D4C5F9", "description": "In backlog"},
-    "status:todo": {"color": "EDEDED", "description": "Not yet started"},
-    "status:in-progress": {"color": "5319E7", "description": "Work in progress"},
-    "status:ai-review": {"color": "BFDADC", "description": "Awaiting AI review"},
-    "status:human-review": {"color": "D4C5F9", "description": "Awaiting human review"},
-    "status:merge-release": {"color": "C2E0C6", "description": "Ready to merge/release"},
-    "status:blocked": {"color": "B60205", "description": "Blocked by dependency"},
-    "status:done": {"color": "0E8A16", "description": "Completed"},
-}
-
-# Module status -> GitHub status label. Shared by every sync path so the
-# mapping cannot drift between create, recreate, and update.
-STATUS_LABEL_MAP = {
-    "backlog": "status:backlog",
-    "todo": "status:todo",
-    "in-progress": "status:in-progress",
-    "in_progress": "status:in-progress",
-    "ai-review": "status:ai-review",
-    "human-review": "status:human-review",
-    "merge-release": "status:merge-release",
-    "blocked": "status:blocked",
-    "done": "status:done",
+    **{
+        f"status:{column}": {
+            "color": STATUS_LABEL_COLORS[f"status:{column}"],
+            "description": STATUS_LABEL_DESCRIPTIONS[f"status:{column}"],
+        }
+        for column in KANBAN_COLUMNS
+    },
 }
 
 
@@ -205,8 +201,17 @@ def _create_module_issue(
     body = generate_issue_body(module, plan_id)
     labels = ["module", f"priority:{module.get('priority', 'medium')}"]
 
+    # Resolve to a ratified column: a legacy status migrates, an unknown one
+    # aborts the create. Previously an unknown status was labelled `status:todo`,
+    # which put untriaged work in the ready-to-start lane where check-ready-tasks
+    # would hand it to an agent (issue #27).
     status = module.get("status", "todo")
-    labels.append(STATUS_LABEL_MAP.get(status, "status:todo"))
+    try:
+        column = resolve_column(status)
+    except ValueError as exc:
+        result["message"] = f"cannot create issue for {module.get('id')}: {exc}"
+        return
+    labels.append(f"status:{column}")
 
     new_issue = gh_issue_create(title, body, labels)
     if new_issue:
@@ -265,9 +270,14 @@ def sync_module(module: dict[str, Any], plan_id: str, update_state: bool = True)
             if expected_priority not in current_labels:
                 add_labels.append(expected_priority)
 
-            # Status label
+            # Status label — same resolve-or-refuse contract as the create path;
+            # a stale legacy label on the issue is replaced by the resolved one.
             status = module.get("status", "todo")
-            expected_status = STATUS_LABEL_MAP.get(status, "status:todo")
+            try:
+                expected_status = f"status:{resolve_column(status)}"
+            except ValueError as exc:
+                result["message"] = f"cannot update issue #{issue_num}: {exc}"
+                return result
             for label in current_labels:
                 if label.startswith("status:") and label != expected_status:
                     remove_labels.append(label)

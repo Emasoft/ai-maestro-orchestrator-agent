@@ -24,11 +24,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, cast
 
+# The ratified kanban vocabulary lives in shared/ so BOTH the top-level scripts
+# and the skill-bundled ones (different path depths) import the same module.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+
 # AI Maestro sync integration (same-directory import, resolved at runtime)
-from amoa_aimaestro_sync import (  # type: ignore[import-not-found]
+from amoa_aimaestro_sync import (  # noqa: E402  (path injected above, on purpose)
     bulk_sync,
     notify_sync_result,
     sync_task,
+)
+from amoa_kanban_vocab import (  # noqa: E402  (path injected above, on purpose)
+    KANBAN_COLUMNS,
+    LEGACY_STATUS_MIGRATION,
+    resolve_column,
 )
 
 # GitHub configuration
@@ -40,17 +49,21 @@ GITHUB_REPO = os.environ.get("GITHUB_REPO", "")
 PROJECT_ID = os.environ.get("GITHUB_PROJECT_ID", "")
 TEAM_ID = os.environ.get("AIMAESTRO_TEAM_ID", "")
 
-# Kanban columns
-KANBAN_COLUMNS = {
-    "backlog": "Backlog",
-    "todo": "Todo",
-    "in-progress": "In Progress",
-    "ai-review": "AI Review",
-    "human-review": "Human Review",
-    "merge-release": "Merge/Release",
-    "done": "Done",
-    "blocked": "Blocked",
-}
+# The kanban columns come from amoa_kanban_vocab (the ratified 17, issue #27).
+# This script used to define its own 8-entry status→display-name map; that map
+# was the pre-2026-06-20 vocabulary and disagreed with the TRDD `column:` states
+# and the ai-maestro server TaskStatus, so a task moved here landed in a column
+# the other surfaces did not recognize.
+#
+# Status LABELS remain `status:<column>` — the label vocabulary is now the
+# ratified column set. Legacy label names stay in the REMOVAL set below so a
+# stale `status:in-progress` is stripped when the task moves to `status:dev`;
+# without that, an issue would carry two status labels and the board would read
+# whichever it hit first.
+STATUS_LABEL_VOCAB: tuple[str, ...] = (
+    *KANBAN_COLUMNS,
+    *LEGACY_STATUS_MIGRATION,
+)
 
 
 
@@ -319,11 +332,23 @@ def assign_task_to_agent(issue_number: int, agent_name: str) -> bool:
             data = json.loads(out)
             title = data.get("title", f"Issue #{issue_number}")
             labels = data.get("labels", [])
-            status = "backlog"
+            # An issue with no status label has not been triaged onto the board
+            # yet -> `backburner` (the ratified entry column; the old default was
+            # the pre-2026-06-20 "backlog", which the server no longer accepts).
+            status = "backburner"
             for lbl in labels:
                 if lbl.get("name", "").startswith("status:"):
                     status = lbl["name"].removeprefix("status:")
-            sync_task(team_id=TEAM_ID, issue_number=issue_number, issue_title=title, status=status, agent_id=agent_name)
+            # A live issue may still carry a legacy `status:in-progress` label, so
+            # resolve before syncing. An unrecognized label is a data error worth
+            # surfacing, but it must not abort the assignment that already
+            # succeeded above -> report and skip the sync.
+            try:
+                column = resolve_column(status)
+            except ValueError as exc:
+                print(f"WARNING: issue #{issue_number} not synced: {exc}", file=sys.stderr)
+            else:
+                sync_task(team_id=TEAM_ID, issue_number=issue_number, issue_title=title, status=column, agent_id=agent_name)
 
     return True
 
@@ -331,15 +356,17 @@ def assign_task_to_agent(issue_number: int, agent_name: str) -> bool:
 def update_task_status(issue_number: int, status: str) -> bool:
     """Update task status by changing labels."""
 
-    if status not in KANBAN_COLUMNS:
-        print(
-            f"Invalid status: {status}. Valid: {list(KANBAN_COLUMNS.keys())}",
-            file=sys.stderr,
-        )
+    # Resolve to a ratified column: a legacy value migrates, an unknown value is
+    # rejected here rather than written to the board as a bogus `status:` label
+    # nobody consumes (issue #27 — no silent default column).
+    try:
+        column = resolve_column(status)
+    except ValueError as exc:
+        print(f"Invalid status: {exc}", file=sys.stderr)
         return False
 
-    # Remove old status labels and add new one
-    status_labels = [f"status:{s}" for s in KANBAN_COLUMNS.keys()]
+    # Remove old status labels (ratified AND legacy) and add the resolved one.
+    status_labels = [f"status:{s}" for s in STATUS_LABEL_VOCAB]
 
     # Get current labels
     args = [
@@ -382,7 +409,7 @@ def update_task_status(issue_number: int, status: str) -> bool:
         "--repo",
         f"{GITHUB_OWNER}/{GITHUB_REPO}",
         "--add-label",
-        f"status:{status}",
+        f"status:{column}",
     ]
 
     returncode, _, stderr = run_gh_command(args)
@@ -396,7 +423,10 @@ def update_task_status(issue_number: int, status: str) -> bool:
         view_args = ["issue", "view", str(issue_number), "--repo", f"{GITHUB_OWNER}/{GITHUB_REPO}", "--json", "title"]
         rc, out, _ = run_gh_command(view_args)
         title = json.loads(out).get("title", f"Issue #{issue_number}") if rc == 0 else f"Issue #{issue_number}"
-        sync_task(team_id=TEAM_ID, issue_number=issue_number, issue_title=title, status=status)
+        # Ship the RESOLVED column: the server's TaskStatus is the same ratified
+        # vocabulary, so sending the caller's raw legacy value would re-introduce
+        # the split this fix removes.
+        sync_task(team_id=TEAM_ID, issue_number=issue_number, issue_title=title, status=column)
 
     return True
 
@@ -551,19 +581,37 @@ def get_ready_tasks(registry: dict[str, Any]) -> list[dict[str, Any]]:
         if not assigned_agent:
             continue
 
-        # Check if blocked
-        is_blocked = "blocked" in labels or "status:blocked" in labels
-
-        # Check if already in progress
-        in_progress = "status:in-progress" in labels or "status:ai-review" in labels
-
-        if is_blocked or in_progress:
+        # A task is ready iff its column is `todo` (or it carries no status label
+        # yet — untriaged but assigned). Every other column means deferred
+        # (`backburner`), already underway (`dev`/`testing`/…), blocked, or done.
+        #
+        # This replaces a hardcoded `status:in-progress`/`status:ai-review`
+        # exclusion list that (a) named pre-2026-06-20 columns which no longer
+        # exist, and (b) was already redundant with the `is_todo` test below it —
+        # so the whole check reduces to "is the resolved column `todo`". Legacy
+        # labels still on live issues resolve through the shared vocabulary
+        # (issue #27).
+        if "blocked" in labels:  # the bare, non-status label some issues carry
             continue
 
-        # Check if in to-do
-        is_todo = "status:todo" in labels or not any(
-            label.startswith("status:") for label in labels
-        )
+        status_labels = [
+            lbl.removeprefix("status:") for lbl in labels if lbl.startswith("status:")
+        ]
+        if status_labels:
+            try:
+                columns = {resolve_column(s) for s in status_labels}
+            except ValueError as exc:
+                # An unrecognized status label means the issue's placement is
+                # unknown; dispatching it could double-assign work already in
+                # flight, so skip it loudly rather than guess it is ready.
+                print(
+                    f"WARNING: issue #{issue.get('number')} skipped: {exc}",
+                    file=sys.stderr,
+                )
+                continue
+            is_todo = columns == {"todo"}
+        else:
+            is_todo = True
 
         if is_todo:
             # Verify agent exists in registry
@@ -739,8 +787,11 @@ def main() -> int:
     # Update status
     status_parser = subparsers.add_parser("update-status", help="Update task status")
     status_parser.add_argument("--issue", type=int, required=True, help="Issue number")
+    # Legacy values stay accepted (update_task_status migrates them) so existing
+    # callers and scripts do not break on the vocabulary change; the resolved
+    # ratified column is what gets written.
     status_parser.add_argument(
-        "--status", required=True, choices=list(KANBAN_COLUMNS.keys())
+        "--status", required=True, choices=list(STATUS_LABEL_VOCAB)
     )
 
     # Set dependency
@@ -856,10 +907,16 @@ def main() -> int:
 
         elif args.command == "update-status":
             if update_task_status(args.issue, args.status):
-                print(f"Updated #{args.issue} status to {args.status}")
-                # When moving to "done", close the issue safely
-                # (guards against Done-column auto-close)
-                if args.status == "done":
+                # Report the RESOLVED column, not the raw arg: telling the user
+                # "status to done" while the label says `status:complete` is how
+                # a vocabulary split gets papered over. resolve_column cannot
+                # raise here — update_task_status already accepted the value.
+                column = resolve_column(args.status)
+                print(f"Updated #{args.issue} status to {column}")
+                # Terminal column -> close the issue safely (guards against the
+                # board's own Done-column auto-close). `done`/`completed` are the
+                # legacy spellings that migrate to `complete`.
+                if column == "complete":
                     close_issue_safely(args.issue)
                 return 0
             return 1

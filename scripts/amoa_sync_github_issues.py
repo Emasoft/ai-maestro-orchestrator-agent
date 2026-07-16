@@ -51,23 +51,29 @@ from pathlib import Path
 
 # WHY: reach shared/ for the deduplicated JSON state loader (TRDD-03DYGXJW)
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from amoa_kanban_vocab import (
+    KANBAN_COLUMNS,
+    LEGACY_STATUS_MIGRATION,
+    STATUS_LABEL_COLORS,
+    resolve_column,
+)
 from amoa_state import load_json_state as _load_json_state
 
 # State file location relative to the project root
 STATE_FILE_PATH = ".ai-maestro/orchestration-state.json"
 
-# Module status to GitHub label mapping
-STATUS_LABEL_MAP = {
-    "planning": "status:planning",
-    "assigned": "status:assigned",
-    "in-progress": "status:in-progress",
-    "review": "status:review",
-    "verified": "status:verified",
-    "complete": "status:complete",
-}
-
-# All status labels (used to remove stale labels when updating)
-ALL_STATUS_LABELS = list(STATUS_LABEL_MAP.values())
+# Status labels are `status:<ratified column>` (issue #27). This script used to
+# carry a THIRD status vocabulary — planning/assigned/in-progress/review/
+# verified/complete — that agreed with neither the kanban sync's 8-column map nor
+# the TRDD `column:` states, so the same module could be labelled `status:review`
+# here and `status:ai-review` there while the server knew about neither.
+# amoa_kanban_vocab now owns every one of those spellings as a legacy migration.
+ALL_STATUS_LABELS = [
+    # ratified labels (the ones we write) + every legacy label we may need to
+    # REMOVE from an issue that predates this change.
+    *(f"status:{column}" for column in KANBAN_COLUMNS),
+    *(f"status:{legacy}" for legacy in LEGACY_STATUS_MIGRATION),
+]
 
 # Default label applied to all module issues
 MODULE_LABEL = "module"
@@ -225,20 +231,11 @@ def ensure_label_exists(label_name, project_root, repo=None):
     Returns:
         True if the label exists or was created, False on failure.
     """
-    # Determine color based on label name
-    color = "0052CC"  # Default blue
-    if "planning" in label_name:
-        color = "BFD4F2"
-    elif "assigned" in label_name:
-        color = "D4C5F9"
-    elif "in-progress" in label_name:
-        color = "FBCA04"
-    elif "review" in label_name:
-        color = "F9D0C4"
-    elif "verified" in label_name:
-        color = "0E8A16"
-    elif "complete" in label_name:
-        color = "006B75"
+    # Color by ratified column (issue #27). The old substring ladder tested for
+    # `planning`/`assigned`/`verified` — spellings this script no longer writes —
+    # and its `"review" in label_name` arm matched BOTH ai_review and
+    # human_review, so the two shared a color by accident rather than by choice.
+    color = STATUS_LABEL_COLORS.get(label_name, "0052CC")  # default blue
 
     args = ["label", "create", label_name, "--color", color, "--force"]
     if repo:
@@ -308,11 +305,17 @@ def create_issue_for_module(module, project_root, repo=None, dry_run=False):
 
     title = "[Module] {}".format(module_id)
 
-    # Determine labels
+    # Determine labels. An unknown status is a data error in the state file:
+    # previously `.get(status)` returned None and the issue was created with NO
+    # status label at all, which reads on the board as "untriaged" — a silent
+    # downgrade. Surface it instead (issue #27).
     labels = [MODULE_LABEL]
-    status_label = STATUS_LABEL_MAP.get(status)
-    if status_label:
-        labels.append(status_label)
+    try:
+        labels.append(f"status:{resolve_column(status)}")
+    except ValueError as exc:
+        result["success"] = False
+        result["error"] = str(exc)
+        return result
 
     # Ensure labels exist
     for label in labels:
@@ -366,9 +369,10 @@ def update_issue_labels(issue_number, new_status, project_root, repo=None, dry_r
         "success": False,
     }
 
-    new_label = STATUS_LABEL_MAP.get(new_status)
-    if not new_label:
-        result["error"] = "Unknown status: {}".format(new_status)
+    try:
+        new_label = "status:{}".format(resolve_column(new_status))
+    except ValueError as exc:
+        result["error"] = str(exc)
         return result
 
     # Get current labels

@@ -11,9 +11,11 @@ from pathlib import Path
 
 import pytest
 
-SCRIPTS_DIR = Path(__file__).resolve().parents[2] / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
+# The vocabulary lives in shared/ (not scripts/) so the skill-bundled sync
+# scripts, which sit at a different path depth, import the same module.
+SHARED_DIR = Path(__file__).resolve().parents[2] / "shared"
+if str(SHARED_DIR) not in sys.path:
+    sys.path.insert(0, str(SHARED_DIR))
 
 from amoa_kanban_vocab import (  # noqa: E402
     KANBAN_COLUMNS,

@@ -18,22 +18,25 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
-# Column mapping: AMOA 8-column → AI Maestro status key
-AMOA_TO_AIMAESTRO_STATUS = {
-    "backlog": "backlog",
-    "todo": "todo",
-    "in-progress": "in-progress",
-    "ai-review": "ai-review",
-    "human-review": "human-review",
-    "merge-release": "merge-release",
-    "done": "done",
-    "blocked": "blocked",
-}
+# The ratified kanban vocabulary lives in shared/ so BOTH the top-level scripts
+# and the skill-bundled ones (different path depths) import the same module.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "shared"))
+from amoa_kanban_vocab import resolve_column  # type: ignore[import-not-found]
 
-# Reverse mapping: AI Maestro → AMOA
-AIMAESTRO_TO_AMOA_STATUS = {v: k for k, v in AMOA_TO_AIMAESTRO_STATUS.items()}
+# There is NO AMOA↔AI-Maestro status translation, by design (issue #27): the
+# AMOA kanban column and the AI Maestro server's TaskStatus are the SAME
+# ratified 17-value vocabulary (amoa_kanban_vocab.KANBAN_COLUMNS 1:1 with the
+# server's types/task.ts default, redeployed 2026-06-20 / ai-maestro#43).
+#
+# This module used to carry AMOA_TO_AIMAESTRO_STATUS — an 8-entry IDENTITY map
+# of the pre-2026-06-20 vocabulary, plus a `.get(column, column)` pass-through.
+# It translated nothing while implying the two sides could diverge, and its
+# pass-through silently forwarded any unknown string to the server as a status.
+# Deleting it leaves one direction of trust: resolve_column migrates a legacy
+# value and rejects an unknown one before anything is sent.
 
 # Priority mapping
 PRIORITY_MAP = {
@@ -91,16 +94,6 @@ def _run_gh_command(args: list[str]) -> tuple[int, str, str]:
         return 1, "", str(e)
 
 
-def kanban_column_to_aimaestro_status(column: str) -> str:
-    """Convert AMOA kanban column to AI Maestro status key."""
-    return AMOA_TO_AIMAESTRO_STATUS.get(column, column)
-
-
-def aimaestro_status_to_kanban_column(status: str) -> str:
-    """Convert AI Maestro status key to AMOA kanban column."""
-    return AIMAESTRO_TO_AMOA_STATUS.get(status, status)
-
-
 def priority_to_number(priority: str) -> int:
     """Convert priority string to numeric value."""
     return PRIORITY_MAP.get(priority.lower(), 3)
@@ -119,10 +112,21 @@ def sync_task(
     """Sync a single task to AI Maestro's task API.
 
     Creates or updates the task in AI Maestro to match the GitHub state.
+
+    `status` (and `previous_status`) may be a ratified column or a known legacy
+    value; both are resolved to the ratified vocabulary before the upsert. An
+    unknown status returns False rather than pushing a status the server's
+    TaskStatus does not define (issue #27).
     """
+    try:
+        column = resolve_column(status)
+    except ValueError as exc:
+        print(f"ERROR: cannot sync issue #{issue_number}: {exc}", file=sys.stderr)
+        return False
+
     task_data = {
         "subject": issue_title,
-        "status": kanban_column_to_aimaestro_status(status),
+        "status": column,
         "externalRef": f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/issues/{issue_number}",
         "priority": priority_to_number(priority),
     }
@@ -131,9 +135,18 @@ def sync_task(
         task_data["assigneeAgentId"] = agent_id
     if labels:
         task_data["labels"] = labels
-    if previous_status and status == "blocked":
-        task_data["previousStatus"] = kanban_column_to_aimaestro_status(previous_status)
-    if status == "done":
+    if previous_status and column == "blocked":
+        # previousStatus is what `blocked` restores to, so it must be a ratified
+        # column too; a bad one loses the restore target -> refuse the sync.
+        try:
+            task_data["previousStatus"] = resolve_column(previous_status)
+        except ValueError as exc:
+            print(
+                f"ERROR: cannot sync issue #{issue_number} previous status: {exc}",
+                file=sys.stderr,
+            )
+            return False
+    if column == "complete":
         task_data["completedAt"] = datetime.now(timezone.utc).isoformat()
 
     # Use aimaestro-task.sh to upsert the task
@@ -192,12 +205,18 @@ def get_github_issues() -> list[dict[str, Any]]:
 
 
 def extract_status_from_labels(labels: list[dict[str, str]]) -> str:
-    """Extract AMOA kanban status from issue labels."""
+    """Extract the AMOA kanban status from issue labels.
+
+    Returns the RAW label value (a live issue may still carry a legacy
+    `status:in-progress`); the caller resolves it through resolve_column. An
+    issue with no status label is untriaged -> `backburner`, the ratified entry
+    column (the old default was `backlog`, which no longer exists).
+    """
     for label in labels:
         name = label.get("name", "")
         if name.startswith("status:"):
             return name.removeprefix("status:")
-    return "backlog"
+    return "backburner"
 
 
 def extract_agent_from_labels(labels: list[dict[str, str]]) -> str | None:
