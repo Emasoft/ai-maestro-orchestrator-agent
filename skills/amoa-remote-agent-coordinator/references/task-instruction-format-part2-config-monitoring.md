@@ -18,41 +18,9 @@
 
 **CRITICAL**: Every task instruction MUST reference central configuration files so remote agents use the correct tools and settings.
 
-**Use reference-based approach** (NOT embedded config):
+**Use reference-based approach** (NOT embedded config).
 
-```markdown
-## Project Config
-
-**Configuration Location**: `design/config/`
-**Config Version**: 2025-12-31T03:48:23Z
-
-### Required Reading Before Starting Task
-
-Agents MUST read these config files before beginning work:
-
-1. **Toolchain**: `design/config/toolchain.md`
-   - Python version, package manager, virtual environment
-   - Quality tools (linter, formatter, type checker, test runner)
-   - Commands for setup, quality checks, tests
-
-2. **Standards**: `design/config/standards.md`
-   - Naming conventions, documentation requirements
-   - Type hints, error handling, testing requirements
-   - File organization, import order
-
-3. **Environment**: `design/config/environment.md`
-   - Required environment variables (Git, AI Maestro, project-specific)
-   - Environment file location and loading
-   - CI/CD environment configuration
-
-4. **Architecture**: `design/specs/architecture.md`
-   - System overview and components
-   - Data flow and deployment architecture
-
-5. **Requirements**: `design/specs/requirements.md`
-   - Feature specifications relevant to this task
-   - Acceptance criteria
-```
+Canonical copy of the `## Project Config` markdown block to embed in task instructions: maintained in [task-instruction-format-part2-operations.md](task-instruction-format-part2-operations.md) §When Reading Project Configuration — read that file.
 
 ---
 
@@ -196,14 +164,7 @@ Agents MUST:
 
 ## 2.7 Progress Update Requirements
 
-Agents MUST send progress updates at regular intervals:
-
-| Task Priority | Update Frequency | Timeout |
-|--------------|-----------------|---------|
-| `urgent` | Every 2 hours | 6 hours |
-| `high` | Every 4 hours | 24 hours |
-| `normal` | Every 8 hours | 72 hours |
-| `low` | Daily | 7 days |
+Canonical copy of the update-frequency-by-priority table: maintained in [task-instruction-format-part2-operations.md](task-instruction-format-part2-operations.md) §When Monitoring Task Progress — read that file.
 
 ### Progress Update Format
 
@@ -278,16 +239,7 @@ ETA: 2 hours
 
 ### Timeout Flow
 
-If task not completed within timeout:
-
-1. Orchestrator sends timeout warning
-2. Agent has 2 hours to either:
-   - Complete task, OR
-   - Send completion estimate with justification
-3. IF no response:
-   - Mark task as stalled
-   - Reassign to different agent
-   - Original agent must provide handoff notes
+Canonical copy of the timeout flow steps: maintained in [task-instruction-format-part2-operations.md](task-instruction-format-part2-operations.md) §When Monitoring Task Progress (Timeout Flow) — read that file.
 
 ---
 

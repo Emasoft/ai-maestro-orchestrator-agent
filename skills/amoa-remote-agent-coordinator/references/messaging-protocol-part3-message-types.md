@@ -75,13 +75,11 @@ Use when requesting fixes to submitted work.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"fix-request"` |
-| `task_id` | YES | Original task reference |
-| `pr_url` | YES | URL to the PR needing fixes |
-| `issues` | YES | Array of specific issues found |
-| `fix_instructions` | YES | Clear instructions for fixing |
+`fix-request` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the original task reference). Fields that differ:
+
+- `pr_url` (required) — URL to the PR needing fixes
+- `issues` (required) — array of specific issues found
+- `fix_instructions` (required) — clear instructions for fixing
 
 ---
 
@@ -100,14 +98,12 @@ Sent by agent when task is complete.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"completion-report"` |
-| `task_id` | YES | Task being reported on |
-| `status` | YES | `"success"`, `"blocked"`, or `"failed"` |
-| `pr_url` | Conditional | Required if status is success |
-| `test_results` | YES | Summary of test execution |
-| `notes` | NO | Additional context or issues encountered |
+`completion-report` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the task being reported on). Fields that differ:
+
+- `status` (required) — `"success"`, `"blocked"`, or `"failed"`
+- `pr_url` (conditional) — required if status is success
+- `test_results` (required) — summary of test execution
+- `notes` (optional) — additional context or issues encountered
 
 ---
 
@@ -125,11 +121,9 @@ Use to request current status of a task.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"status-request"` |
-| `task_id` | YES | Task to get status for |
-| `last_update` | NO | Last known update timestamp |
+`status-request` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the task to get status for). Fields that differ:
+
+- `last_update` (optional) — last known update timestamp
 
 ---
 
@@ -152,14 +146,12 @@ Sent by agent to report ongoing progress.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"progress-update"` |
-| `task_id` | YES | Task being reported on |
-| `progress_percent` | YES | Estimated completion (0-100) |
-| `current_activity` | YES | What agent is currently doing |
-| `blockers` | YES | Array of blocking issues (empty if none) |
-| `remaining_steps` | YES | List of remaining work |
+`progress-update` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the task being reported on). Fields that differ:
+
+- `progress_percent` (required) — estimated completion (0-100)
+- `current_activity` (required) — what agent is currently doing
+- `blockers` (required) — array of blocking issues (empty if none)
+- `remaining_steps` (required) — list of remaining work
 
 ---
 
@@ -178,12 +170,10 @@ Use to approve completed work.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"approval"` |
-| `task_id` | YES | Task being approved |
-| `pr_url` | YES | URL of approved PR |
-| `message` | NO | Additional feedback |
+`approval` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the task being approved). Fields that differ:
+
+- `pr_url` (required) — URL of approved PR
+- `message` (optional) — additional feedback
 
 ---
 
@@ -205,13 +195,11 @@ Use to reject work that needs changes.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"rejection"` |
-| `task_id` | YES | Task being rejected |
-| `pr_url` | YES | URL of rejected PR |
-| `reason` | YES | Clear explanation of rejection |
-| `required_fixes` | YES | List of changes needed |
+`rejection` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the task being rejected). Fields that differ:
+
+- `pr_url` (required) — URL of rejected PR
+- `reason` (required) — clear explanation of rejection
+- `required_fixes` (required) — list of changes needed
 
 ---
 
@@ -236,15 +224,13 @@ Use when agent encounters a decision requiring input.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"escalation"` |
-| `task_id` | YES | Related task |
-| `escalation_type` | YES | `"architecture"`, `"security"`, `"dependency"`, or `"unclear-spec"` |
-| `description` | YES | Detailed description of the issue |
-| `options` | YES | Array of possible resolutions |
-| `recommendation` | NO | Agent's recommended option |
-| `awaiting_response` | YES | Set to `true` |
+`escalation` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the related task). Fields that differ:
+
+- `escalation_type` (required) — `"architecture"`, `"security"`, `"dependency"`, or `"unclear-spec"`
+- `description` (required) — detailed description of the issue
+- `options` (required) — array of possible resolutions
+- `recommendation` (optional) — agent's recommended option
+- `awaiting_response` (required) — set to `true`
 
 ---
 
@@ -261,12 +247,10 @@ Use to respond to an escalation.
 }
 ```
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `type` | YES | Must be `"escalation-response"` |
-| `task_id` | YES | Related task |
-| `decision` | YES | Chosen option (matches option letter) |
-| `additional_instructions` | NO | Extra guidance for implementation |
+`escalation-response` — same structure as [Task Assignment](#task-assignment) above (`type` and `task_id` required; here `task_id` is the related task). Fields that differ:
+
+- `decision` (required) — chosen option (matches option letter)
+- `additional_instructions` (optional) — extra guidance for implementation
 
 ---
 

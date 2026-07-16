@@ -62,55 +62,7 @@ This protocol ensures code quality by forcing the agent to self-review their imp
 
 ### 2.1 Understanding the 5 PR Requests Cycle
 
-```
-+-------------------------------------------------------------------------+
-| TASK ASSIGNMENT: Orchestrator tells agent:                              |
-| "You MUST notify me BEFORE making any PR request for final verification"|
-+-------------------------------------------------------------------------+
-                                    |
-                                    v
-+-------------------------------------------------------------------------+
-| AGENT WORKS ON TASK                                                      |
-+-------------------------------------------------------------------------+
-                                    |
-                                    v
-+-------------------------------------------------------------------------+
-| AGENT: "I'm done. Can I make a PR?"  (1st request)                      |
-| ORCHESTRATOR: "Check your changes for errors" <- VERIFICATION LOOP 1    |
-+-------------------------------------------------------------------------+
-                                    |
-                                    v
-+-------------------------------------------------------------------------+
-| AGENT checks, reports results                                            |
-| AGENT: "Can I make a PR now?"  (2nd request)                            |
-| ORCHESTRATOR: "Check your changes for errors" <- VERIFICATION LOOP 2    |
-+-------------------------------------------------------------------------+
-                                    |
-                                    v
-+-------------------------------------------------------------------------+
-| AGENT checks, reports results                                            |
-| AGENT: "Can I make a PR now?"  (3rd request)                            |
-| ORCHESTRATOR: "Check your changes for errors" <- VERIFICATION LOOP 3    |
-+-------------------------------------------------------------------------+
-                                    |
-                                    v
-+-------------------------------------------------------------------------+
-| AGENT checks, reports results                                            |
-| AGENT: "Can I make a PR now?"  (4th request)                            |
-| ORCHESTRATOR: "Check your changes for errors" <- VERIFICATION LOOP 4    |
-+-------------------------------------------------------------------------+
-                                    |
-                                    v
-+-------------------------------------------------------------------------+
-| AGENT checks, reports results                                            |
-| AGENT: "Can I make a PR now?"  (5th request)                            |
-|                                                                          |
-| IF no issues discovered or left to fix in ALL 4 loops:                  |
-|   ORCHESTRATOR: "APPROVED. You may create the PR."                      |
-| ELSE:                                                                    |
-|   ORCHESTRATOR: "Issues remain. Fix them and we restart verification."  |
-+-------------------------------------------------------------------------+
-```
+Canonical copy of the full flow diagram: maintained at [skills/amoa-orchestration-guardrails/references/verification-loops.md](../../amoa-orchestration-guardrails/references/verification-loops.md) §1.2 The Precise Flow Diagram — read that file. In short: the agent's 1st through 4th PR requests are each answered with "Check your changes for errors" (verification loops 1-4); on the 5th request the orchestrator approves the PR only if no issues were discovered or left to fix in ALL 4 loops, otherwise the verification restarts.
 
 ---
 
@@ -269,13 +221,7 @@ When the agent requests PR permission for the 5th time (after completing all 4 v
 
 ## 4.0 Summary: The 5 PR Requests
 
-| PR Request # | Orchestrator Response |
-|--------------|----------------------|
-| 1st | "Check your changes for errors" (Loop 1) |
-| 2nd | "Check your changes for errors" (Loop 2) |
-| 3rd | "Check your changes for errors" (Loop 3) |
-| 4th | "Check your changes for errors" (Loop 4) |
-| 5th | "APPROVED" (if no issues) OR "NOT APPROVED - restart" (if issues remain) |
+Canonical copy of the per-request summary table: maintained at [skills/amoa-orchestration-guardrails/references/verification-loops.md](../../amoa-orchestration-guardrails/references/verification-loops.md) §5.2 Summary Table — read that file.
 
 ---
 

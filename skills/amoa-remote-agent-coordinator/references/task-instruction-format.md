@@ -22,56 +22,19 @@ This document is the **index** for task instruction format documentation. Each s
 
 ## Overview
 
-This document provides the complete template for task instructions sent to remote developer agents. Following this format ensures tasks are executed EXACTLY as planned with NO deviations.
-
-**CRITICAL PRINCIPLE**: Remote agents DO NOT have access to the ai-maestro-orchestrator-agent skill. They do not know any protocols, formats, or expectations unless the orchestrator EXPLICITLY TEACHES them in each message. Every task delegation MUST include:
-1. Complete instructions on HOW to respond
-2. Template references the agent can download
-3. Exact format for ACK, progress updates, and completion reports
+Canonical copy: maintained in [task-instruction-format-part1-core-template.md](task-instruction-format-part1-core-template.md) §Overview — read that file for the CRITICAL PRINCIPLE (remote agents know NO protocols unless the orchestrator explicitly teaches them in each message).
 
 ---
 
 ## Agent Response Templates
 
-Link these templates in EVERY task delegation so agents know exactly how to respond:
-
-| Template | Path | When Agent Uses It |
-|----------|------|-------------------|
-| ACK Response | `templates/ack-response.md` | Immediately after receiving task |
-| Progress Update | `templates/status-update.md` | At each checkpoint during work |
-| Completion Report | `templates/completion-report.md` | When task is done or failed |
-| Task Checklist | `templates/task-checklist.md` | Throughout task execution |
-| GitHub Projects | `templates/github-projects-guide.md` | When updating issue status |
+Canonical copy: maintained in [task-instruction-format-part1-core-template.md](task-instruction-format-part1-core-template.md) §Agent Response Templates — read that file for the table of templates to link in EVERY task delegation.
 
 ---
 
 ## Mandatory ACK Block
 
-**EVERY task delegation MUST start with this block:**
-
-```
-================================================================================
-ACKNOWLEDGMENT REQUIRED (MANDATORY)
-================================================================================
-
-Before starting work, you MUST reply with an acknowledgment in this exact format:
-
-[ACK] {task_id} - {status}
-Understanding: {1-line summary of what you will do}
-
-Status options:
-- RECEIVED - Task received, will begin work immediately
-- CLARIFICATION_NEEDED - Need more info (list your questions)
-- REJECTED - Cannot accept task (explain why)
-- QUEUED - Have prior tasks, will start after them
-
-Example:
-[ACK] GH-42-password-reset - RECEIVED
-Understanding: Will implement password reset flow with email tokens
-
-DO NOT begin work until you have sent this acknowledgment.
-================================================================================
-```
+Canonical copy: maintained in [task-instruction-format-part1-core-template.md](task-instruction-format-part1-core-template.md) §Mandatory ACK Block — read that file for the acknowledgment block that EVERY task delegation MUST start with.
 
 ---
 
