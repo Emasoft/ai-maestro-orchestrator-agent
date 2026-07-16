@@ -132,6 +132,18 @@ STATUS_LABEL_DESCRIPTIONS: dict[str, str] = {
 }
 
 
+# INVARIANT — resolve_column is MIGRATION / MIRROR ONLY (MANAGER ruling, orch#27,
+# 2026-07-16). Every current caller writes a GitHub `status:` label, a GitHub
+# Project single-select field, or the AI-Maestro server TaskStatus — all mirrors
+# of a decision made elsewhere. NONE writes a live TRDD `design/tasks/*.md`
+# `column:` field. This distinction is load-bearing because some columns are
+# GOVERNED transitions: `human_review → complete` is a MANAGER-approval gate
+# (aimaestro-manager-approval-defaults Z). The `verified → complete` migration
+# below is correct for mirroring history (a module the orchestration flow already
+# marked `verified` — a done-state — gets a `status:complete` LABEL), but if
+# resolve_column is ever wired into a path that ORIGINATES a TRDD `column:` write,
+# a legacy value would land a card on a MANAGER-gated column with no MANAGER
+# stamp. If you add such a path: GATE THE PATH, not this map.
 def resolve_column(status: str) -> str:
     """Resolve a module/task status to its ratified kanban column.
 
