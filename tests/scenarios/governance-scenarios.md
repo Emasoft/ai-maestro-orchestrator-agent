@@ -283,11 +283,12 @@ boundary (Three-Pillars Task System section).
 ## SCEN-G15 — R25: a Tier-1 proposal→planned round-trip is approved by COS, not by AMOA itself
 
 **Verifies:** R25 · the two-folder proposal lifecycle (`design/proposals/` →
-`design/tasks/`) · `approval-tier:` self-classification.
+`design/tasks/`) · `min-approval-requirement:` self-classification.
 
 - **Given** AMOA authors a proposal that reaches beyond its own slice but stays
-  inside the team (Tier 1) — e.g. reprioritizing another MEMBER's queue — and
-  sets `approval-tier: 1` in its frontmatter at creation time.
+  inside the team — e.g. reprioritizing another MEMBER's queue — and sets
+  `min-approval-requirement: chief-of-staff` in its frontmatter at creation
+  time.
 - **When** the proposal is filed in `design/proposals/`.
 - **Then** AMOA routes it to AMCOS and waits; AMOA does **not** `git mv` the
   file to `design/tasks/` or set `column: planned` itself. AMCOS reviews and,
@@ -295,10 +296,10 @@ boundary (Three-Pillars Task System section).
   proposal → planned`, the file moved to `design/tasks/`, the decision recorded
   in the TRDD's `## Approval log`. Only after that does AMOA proceed on the
   now-authorized TRDD.
-- **PASS:** AMOA never self-promotes past Tier 0; the `proposal → planned`
-  transition and the `git mv` are performed by AMCOS via `ama-proposal-
-  approvals`, not by AMOA; the frontmatter carried a self-classified
-  `approval-tier: 1` from creation.
+- **PASS:** AMOA never self-promotes above its own floor; the `proposal →
+  planned` transition and the `git mv` are performed by AMCOS via
+  `ama-proposal-approvals`, not by AMOA; the frontmatter carried a
+  self-classified `min-approval-requirement: chief-of-staff` from creation.
 
 ---
 
