@@ -3,6 +3,7 @@
 - [PROCEDURE 2: Add or Modify Columns](#procedure-2-add-or-modify-columns)
 - [PROCEDURE 3: Move Items Between Columns](#procedure-3-move-items-between-columns)
 - [PROCEDURE 4: Sync Kanban Status](#procedure-4-sync-kanban-status)
+- [PROCEDURE 5: Attach the Child Breakdown Under the Architect's Epic](#procedure-5-attach-the-child-breakdown-under-the-architects-epic)
 
 ---
 
@@ -52,3 +53,34 @@ python3 scripts/gh-project-add-columns.py --project <number> --field "Status" --
 1. Run the sync script: `amoa_sync_kanban.py`
 2. Verify label status matches board column
 3. Resolve any conflicts (board takes precedence for manual moves)
+
+### PROCEDURE 5: Attach the Child Breakdown Under the Architect's Epic
+
+**When to use:** When breaking a received design-handoff into AI-Maestro implementation
+tasks. The architect (architect#7) creates one `epic` task on the AI-Maestro kanban and
+carries its id in the design-handoff message as the optional top-level `aimaestro_task_id`
+key inside `content` (both `design_complete` and `handoff` shapes). Reading it lets AMOA
+hang its child tasks under that epic, completing design-doc → epic → child → GitHub-issue
+traceability. This is the read-side of orch#26.
+
+**Steps:**
+1. Read the epic id from the received handoff `content` with the shared helper — it returns
+   `None` for older handoffs / when AI-Maestro is not in use, so absence is normal:
+   ```python
+   from amoa_design_handoff import extract_aimaestro_task_id  # shared/ on sys.path
+   epic = extract_aimaestro_task_id(message_content)   # str | None
+   ```
+2. For each first-level child task in the breakdown, create it under the epic when present
+   (frozen verb; never a raw `/api/*` call — R23):
+   ```bash
+   amp-kanban-create-task "<child subject>" \
+     ${EPIC:+--parent "$EPIC"} \
+     --task-type <feature|bugfix|refactor|infra|docs> --status backburner
+   ```
+3. When `epic` is `None` (or `$EPIC` unset), create the children unparented — behave exactly
+   as before AI-Maestro linkage existed. NO regression on a handoff without the key.
+
+**Note (deployment-time):** confirming the children actually read back under the epic
+(`parentTask` round-trips) needs a live AI-Maestro server + an AMCOS-spawned agent binding —
+tracked as the deferred check on TRDD-6B3K7S69, parallel to the architect's TRDD-364ccafc
+Phase 0.

@@ -242,6 +242,7 @@ This document provides the complete AI Maestro message templates for all common 
   "priority": "high",
   "content": {
     "type": "notification",
+    "aimaestro_task_id": "<epic-task-id, OPTIONAL — omitted when AI-Maestro is not in use>",
     "message": "Architecture design complete for <project-name>. Handoff document ready. Modules: <count>. Ready for implementation planning.",
     "data": {
       "handoff_doc": "docs_dev/design/handoffs/<handoff-id>.md",
@@ -252,6 +253,15 @@ This document provides the complete AI Maestro message templates for all common 
   }
 }
 ```
+
+**Read-side (`aimaestro_task_id`):** the architect (architect#7, shipped v2.11.0) stamps the
+AI-Maestro `epic` task id into the handoff as a top-level key in `content` (the same position
+in its `design_complete` / `handoff` shapes). Read it with
+`shared/amoa_design_handoff.py::extract_aimaestro_task_id(content)` — it returns the id, or
+`None` when the key is absent (older handoffs / AI-Maestro not in use). When present, hang the
+implementation child tasks under that epic (kanban-management PROCEDURE 5,
+`amp-kanban-create-task --parent`); when `None`, break down exactly as today — no regression.
+This is the read-side of orch#26.
 
 ---
 

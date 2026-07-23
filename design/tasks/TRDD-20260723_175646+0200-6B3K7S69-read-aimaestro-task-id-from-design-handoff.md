@@ -1,17 +1,17 @@
 ---
 trdd-id: 6B3K7S69
 title: Read aimaestro_task_id from the architect design-handoff (orch #26 read-side, parse-half)
-column: dev
+column: testing
 scope: project
 created: 2026-07-23T17:56:46+0200
-updated: 2026-07-23T17:56:46+0200
+updated: 2026-07-23T18:02:03+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
 relevant-rules: []
 external-refs: [orch#26, architect#7, ai-maestro#77]
 blocked-by: []
-implementation-commits: []
+implementation-commits: [45e409e]
 ---
 
 # Read aimaestro_task_id from the architect design-handoff (orch #26 read-side, parse-half)
@@ -33,9 +33,11 @@ architect side's TRDD-364ccafc Phase 0. Not blocked by ai-maestro#46: the spec o
 the colliding address was display-only.
 
 ### NEXT ACTION
-Implement `shared/amoa_design_handoff.py::extract_aimaestro_task_id` + its unit tests, run
-pytest/ruff/mypy, then document the read + `--parent` attach procedure in the
-`amoa-kanban-management` skill and the design-handoff receive template.
+DONE for everything runnable from a dev session: helper + 11 unit tests (green), ruff+mypy
+clean, and the read + `--parent` attach procedure documented (kanban-management PROCEDURE 5
++ design-handoff §2.9 receive note). The ONLY open item is the deployment-time live
+round-trip (children read back under the epic), which needs a live AI-Maestro server + an
+AMCOS-spawned agent binding — deferred, cannot run here.
 
 ### Load-bearing facts / contract (✓ verified against the architect's live templates)
 - Key path: `content.aimaestro_task_id` (top-level of `content`, NOT under `content.data`).
@@ -78,13 +80,13 @@ pytest/ruff/mypy, then document the read + `--parent` attach procedure in the
   not the optional-absent case, so they surface rather than mis-link a child task.
 
 ## Acceptance criteria
-- [ ] `extract_aimaestro_task_id` returns the id for both `design_complete` and `handoff`
+- [x] `extract_aimaestro_task_id` returns the id for both `design_complete` and `handoff`
       content shapes, given a dict and given a JSON string.
-- [ ] Absent key → `None` (no regression).
-- [ ] Present-but-empty / present-but-non-string → raises (fail-fast).
-- [ ] Non-object content → raises (fail-fast).
-- [ ] Unit tests cover every branch; pytest green, ruff clean, mypy clean.
-- [ ] Kanban skill + design-handoff receive template document the read + `--parent` attach.
+- [x] Absent key → `None` (no regression).
+- [x] Present-but-empty / present-but-non-string → raises (fail-fast).
+- [x] Non-object content → raises (fail-fast).
+- [x] Unit tests cover every branch; pytest green (11 new, 122 total), ruff clean, mypy clean.
+- [x] Kanban skill + design-handoff receive template document the read + `--parent` attach.
 - [ ] (Deployment) children read back under the epic — deferred, live-server check.
 
 ## Notes and lessons learned
