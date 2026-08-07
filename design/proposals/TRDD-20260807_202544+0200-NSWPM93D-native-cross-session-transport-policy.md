@@ -2,13 +2,17 @@
 trdd-id: NSWPM93D
 title: Decide AMOA policy for Claude Code native cross-session messaging alongside AMP
 column: proposal
-approval-tier: 2
+min-approval-requirement: manager
+routed-via: manager
 created: 2026-08-07T20:25:44+0200
-updated: 2026-08-07T21:18:00+0200
+updated: 2026-08-08T00:19:44+0200
 current-owner: ai-maestro-orchestrator-agent
+assignee: ai-maestro-orchestrator-agent
 task-type: docs
 scope: project
 project-id: ai-maestro-orchestrator-agent
+blocked-by: []
+release-via: none
 relevant-rules: []
 external-refs: [https://github.com/Emasoft/ai-maestro-plugin/issues/61]
 ---
