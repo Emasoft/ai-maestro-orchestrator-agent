@@ -19,7 +19,8 @@
       {
         "_id": "amoa-instruction-verification-check",
         "_description": "MANDATORY: Blocks agent work reports if instruction verification incomplete",
-        "matcher": "Task",
+        "_matcher_note": "ANCHORED ON PURPOSE. The subagent tool is named Agent on current Claude Code and Task on older builds, so this gate must match both or it silently never fires. It must NOT be written as bare 'Task|Agent': matchers are regex, and unanchored 'Agent' also matches ListAgents, which would fire this MANDATORY gate on every peer-discovery call.",
+        "matcher": "^(Task|Agent)$",
         "hooks": [
           {
             "type": "command",
@@ -46,7 +47,8 @@
       {
         "_id": "amoa-file-tracker",
         "_description": "Track file modifications for orchestration context",
-        "matcher": "Edit|MultiEdit|Write",
+        "_matcher_note": "MultiEdit was removed from Claude Code, so its alternation branch was dead. Anchored so a longer future tool name containing 'Edit' or 'Write' cannot match by accident.",
+        "matcher": "^(Edit|Write)$",
         "hooks": [
           {
             "type": "command",

@@ -2,7 +2,7 @@
 """
 File Tracker - Track file modifications for orchestration context.
 
-This PostToolUse hook script tracks files modified via Edit, MultiEdit, or Write
+This PostToolUse hook script tracks files modified via Edit or Write
 operations and logs them for orchestration awareness.
 
 Usage:
@@ -104,26 +104,21 @@ def main() -> int:
     tool_name = hook_input.get("tool_name", "")
     tool_input = hook_input.get("tool_input", {})
 
-    # Only track file modification tools
-    if tool_name not in ("Edit", "MultiEdit", "Write"):
+    # Only track file modification tools. Must stay in lockstep with the
+    # "^(Edit|Write)$" matcher in hooks/hooks.json — the matcher decides what
+    # reaches us, this decides what we act on, and a drift between them is
+    # silent in both directions.
+    if tool_name not in ("Edit", "Write"):
         return 0
 
-    # Extract file path based on tool type
-    file_path = None
-    if tool_name == "Write":
-        file_path = tool_input.get("file_path")
-    elif tool_name == "Edit":
-        file_path = tool_input.get("file_path")
-    elif tool_name == "MultiEdit":
-        # MultiEdit may have multiple files
-        edits = tool_input.get("edits", [])
-        for edit in edits:
-            edit_path = edit.get("file_path")
-            if edit_path:
-                track_file(edit_path, tool_name)
-        return 0
+    # Edit and Write both carry the path at the tool_input level, so one lookup
+    # serves both. There is deliberately no MultiEdit branch: MultiEdit was
+    # removed from Claude Code, and the branch that handled it never worked
+    # anyway — it scanned edits[] for a "file_path" key that those entries never
+    # carried (they held old_string/new_string), found nothing, and returned
+    # early, so every MultiEdit call was silently dropped from the log.
+    file_path = tool_input.get("file_path")
 
-    # Track single file
     if file_path:
         track_file(file_path, tool_name)
 
