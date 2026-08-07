@@ -4,7 +4,7 @@ title: Decide AMOA policy for Claude Code native cross-session messaging alongsi
 column: proposal
 approval-tier: 2
 created: 2026-08-07T20:25:44+0200
-updated: 2026-08-07T20:25:44+0200
+updated: 2026-08-07T20:41:00+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: docs
 scope: project
@@ -40,17 +40,46 @@ native transport carries neither.
 So there are now **two** live transports between agents, one governed and one
 not, and no ruling on when the ungoverned one may be used.
 
-## The question for MANAGER
+## CORRECTION 2026-08-07 — R42.3 already answers the transport question
 
-Pick one:
+This TRDD was first written as "MANAGER picks one of three transport options."
+**That framing was wrong**, and the correction narrows the ask rather than
+widening it.
 
-1. **AMP only.** Native `SendMessage`/`ListAgents` are not to be used for
-   agent-to-agent work traffic. Requires saying what an agent should do when AMP
-   is unreachable (today the honest answer is "stop and surface it").
-2. **AMP primary, native permitted for a named exception set.** Requires
-   defining the set narrowly and stating how native traffic is recorded, since
-   it is invisible to AMP's audit trail.
-3. **Both, agent's discretion.** Not recommended — see below.
+Verified first-hand against the published artifact — `docs/GOVERNANCE-RULES.md`
+line 1531 on branch `governance-rules`, not a peer's paraphrase:
+
+> **R42.3** — The **messaging system (AMP) is the ONLY channel** by which one
+> agent may influence another, and it is governed by the R6 communication graph
+> (who may message whom). *Authority: Explicit (USER).*
+
+So AMP-only is not an option to be chosen; it is the standing rule, at USER
+authority — which means **MANAGER cannot weaken it** (see the golden/silver
+split; only USER can). Native `SendMessage` used to hand another agent work is
+plainly "influencing another agent" and is therefore already outside R42.3.
+
+COS reached the same conclusion independently from the R42 reading and raised it
+to CORE as `ai-maestro#76`, adding that R42.1's ban on injecting **queued input**
+bites too (native auto-delivers where AMP is polled), and that R6's comm graph
+goes advisory because `ListAgents` enumerates sessions across machines
+regardless of topology. **CORE has not ruled.**
+
+## What actually remains for MANAGER
+
+Not the transport choice. Two narrower things R42.3 does not settle:
+
+1. **The AMP-unreachable case.** R42.3 says AMP is the only channel; it does not
+   say what an agent does when AMP is down. Absent a ruling the honest default
+   is "stop and surface it" — which should be stated, because the vacuum is what
+   invites the native path.
+2. **Whether any exception set exists at all**, and if so, that it EXCLUDES
+   outbound-unreachable senders (COS's addition — see the fourth failure below).
+   An exception that permits a sender the recipient cannot answer is the one
+   shape already shown to cause harm.
+
+Recording this correction rather than quietly rewriting the file: the original
+framing was already relayed to MANAGER via COS, so the record must show the
+question changed.
 
 ## Why I am NOT proposing option 3, and why this was not just documented
 
