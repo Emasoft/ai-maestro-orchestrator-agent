@@ -35,6 +35,7 @@ its tool set, with nothing anywhere reporting a problem.
 """
 
 import re
+import sys
 from pathlib import Path
 
 SKILLS_DIR = Path(__file__).resolve().parents[2] / "skills"
@@ -64,9 +65,28 @@ def _frontmatter(skill_md: Path) -> dict[str, str]:
 
 
 def _skill_files() -> list[Path]:
+    """The shippable skill population: exactly `skills/<name>/SKILL.md`, one level deep.
+
+    THE GLOB IS THE POPULATION RULE -- do not "improve" it to `rglob`. A repo
+    routinely contains OTHER COPIES of its own skills that must never be counted:
+
+      * `.trashcan/<ts>/skills/<name>/SKILL.md` -- deleted skills staged by
+        `/janitor-safe-delete`. These have REAL line-1 frontmatter, so a strict
+        parser matches them; only a population rule excludes them.
+      * `.claude/worktrees/<id>/skills/...` -- a git worktree is another checkout
+        of this repo, so every skill appears again, often at a PRE-FIX commit.
+      * `reports_dev/` / `docs_dev/` backups, and test fixtures.
+
+    Two of those carry valid frontmatter, so parsing correctly (which defeats the
+    fenced-doc-example false positive) does NOT defeat them. Only anchoring does.
+    """
     files = sorted(SKILLS_DIR.glob("*/SKILL.md"))
     assert files, f"no SKILL.md found under {SKILLS_DIR} -- this test would pass vacuously"
     return files
+
+
+# Path segments that mark a NON-shippable copy of a skill tree.
+EXCLUDED_SEGMENTS = (".trashcan", "worktrees", "reports_dev", "docs_dev", "node_modules")
 
 
 def test_every_forked_skill_opts_out_of_backgrounding():
@@ -103,3 +123,44 @@ def test_fork_skill_count_is_covered():
         "parsed zero forked skills -- either the frontmatter parser broke or the skills "
         "changed shape; both make the assertions above vacuous"
     )
+
+
+def test_population_excludes_dead_and_duplicate_skill_trees(tmp_path, monkeypatch):
+    """Dead copies and worktree duplicates must not enter the population, even with valid frontmatter.
+
+    Parsing frontmatter defeats the fenced-doc-example false positive, but NOT
+    this one: a skill staged in `.trashcan/` or duplicated in a worktree has real
+    line-1 frontmatter and parses perfectly. Only anchoring the glob excludes it.
+
+    This test exists so that immunity is ASSERTED rather than emergent. Today it
+    holds because `_skill_files` globs one level under `skills/`; widen that to
+    `rglob` and this fails instead of silently counting dead skills as live ones.
+    """
+    unpinned = "---\nname: x\ncontext: fork\n---\n\nbody\n"
+
+    (tmp_path / "skills" / "live").mkdir(parents=True)
+    (tmp_path / "skills" / "live" / "SKILL.md").write_text(
+        "---\nname: live\ncontext: fork\nbackground: false\n---\n\nbody\n"
+    )
+    # A deleted skill staged by /janitor-safe-delete -- real frontmatter, unpinned.
+    (tmp_path / ".trashcan" / "20260523_120000" / "skills" / "dead").mkdir(parents=True)
+    (tmp_path / ".trashcan" / "20260523_120000" / "skills" / "dead" / "SKILL.md").write_text(unpinned)
+    # A git worktree: another checkout of this repo at a possibly pre-fix commit.
+    (tmp_path / ".claude" / "worktrees" / "wt-abc" / "skills" / "stale").mkdir(parents=True)
+    (tmp_path / ".claude" / "worktrees" / "wt-abc" / "skills" / "stale" / "SKILL.md").write_text(unpinned)
+
+    monkeypatch.setattr(sys.modules[__name__], "SKILLS_DIR", tmp_path / "skills")
+
+    found = _skill_files()
+    assert [p.parent.name for p in found] == ["live"], (
+        f"population leaked non-shippable copies: {[str(p) for p in found]}"
+    )
+    for p in found:
+        assert not any(seg in p.parts for seg in EXCLUDED_SEGMENTS), f"excluded tree in population: {p}"
+
+    # The whole point: an unbounded sweep DOES see them, so the anchoring is load-bearing.
+    unbounded = sorted(tmp_path.rglob("SKILL.md"))
+    assert len(unbounded) == 3, "fixture wrong -- expected 3 SKILL.md across the three trees"
+
+    # And with the correct population, the real assertions pass despite two unpinned decoys.
+    test_every_forked_skill_opts_out_of_backgrounding()
