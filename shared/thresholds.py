@@ -9,6 +9,13 @@ import os
 
 # ── Subagent concurrency and nesting ──
 #
+# THESE ARE REFERENCE VALUES, NOT ENFORCEMENT. No script reads them and nothing
+# in AMOA can refuse an over-cap dispatch — the orchestrator honors them by
+# reading the prose in
+# skills/amoa-orchestration-guardrails/references/subagent-platform-limits.md.
+# When a platform limit changes, update BOTH: changing only these constants
+# changes nothing about how the orchestrator actually behaves.
+#
 # Claude Code caps concurrently-running subagents (20 by default since CC
 # 2.1.217, overridable via CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS). The separate
 # per-session cap of 200 total spawns was REMOVED in CC 2.1.224, so lifetime

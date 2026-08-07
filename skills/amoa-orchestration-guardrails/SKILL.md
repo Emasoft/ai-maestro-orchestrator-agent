@@ -32,6 +32,10 @@ Guardrail validation reports, rule violation alerts, delegation checklists.
 2. Verify requirements are immutable per rule-14-enforcement.md
 3. Ensure all communication flows through orchestrator per orchestrator-exclusive-communications.md
 4. Use delegation-checklist.md for task handoff validation
+5. Before dispatching a wave of agents, check subagent-platform-limits.md -- the
+   platform caps concurrency and every limit degrades SILENTLY (excess spawns
+   queue rather than erroring, so a throttled agent is indistinguishable from a
+   stalled one)
 
 Copy this checklist and track your progress:
 
@@ -39,6 +43,7 @@ Copy this checklist and track your progress:
 - [ ] Requirements immutable (RULE 14)?
 - [ ] Communication via orchestrator only?
 - [ ] Delegation checklist complete?
+- [ ] Wave size within the concurrency budget, and every dispatched agent told not to fan out?
 
 ## Examples
 
@@ -123,3 +128,10 @@ Rule violation detected: stop, reassess, delegate to worker agent.
   - Purpose
   - Role Boundaries with Orchestrator Section
   - ...
+- [subagent-platform-limits.md](./references/subagent-platform-limits.md)
+  <!-- TOC: Why this file exists | Concurrency: dispatch at most 16 at a time | Nesting: bundled agents do not fan out | Lifetime spawns: no longer capped | A queued agent looks exactly like a slow one | Where these numbers live | See Also -->
+  - Concurrency: dispatch at most 16 at a time
+  - Nesting: bundled agents do not fan out
+  - Lifetime spawns: no longer capped
+  - A queued agent looks exactly like a slow one
+  - Where these numbers live
