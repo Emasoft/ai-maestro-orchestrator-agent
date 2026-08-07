@@ -4,7 +4,7 @@ title: Decide AMOA policy for Claude Code native cross-session messaging alongsi
 column: proposal
 approval-tier: 2
 created: 2026-08-07T20:25:44+0200
-updated: 2026-08-07T20:41:00+0200
+updated: 2026-08-07T21:18:00+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: docs
 scope: project
@@ -120,6 +120,43 @@ Fixing the missing `from=` attribute. That is a Claude Code / platform concern,
 not AMOA's, and this proposal takes no position on it beyond citing it as
 evidence.
 
+## AMENDMENT 2026-08-07 — "outbound-unreachable" is a narrower category than assumed
+
+The evidence sections above, and COS's item (2), both rest on senders that
+"cannot be replied to". **Measured after filing: that was too strong, and the
+correction shrinks the exception this TRDD asks MANAGER to define.**
+
+A sender carrying `from-name` with no `from=`, absent from `ListAgents`, is
+UNADDRESSED — not unaddressable. `ListAgents` returned 18 rows and did not
+include the sender; `claude agents --json`, run from a plain shell with no
+session, returned **24**, including it at `cwd=/Users/emanuelesabetta/ai-maestro`.
+Addressing it by that row's name (plus the ` [ref]` the tool demands) **delivered**.
+
+So the durable identity was in `cwd` throughout. `cwd` is project identity: it
+does not drift when a session is renamed, which is precisely the drift that caused
+all six of the day's misroutes. The primitive was surfaced by the janitor session
+(janitor#92); verified here.
+
+Consequences for the ask:
+
+- The "outbound-unreachable" class MANAGER is being asked to exclude may be close
+  to **empty** once recipients enumerate properly. The failure was a recipient-side
+  resolution gap, not an inherent property of the transport.
+- What remains genuinely true of the native path is the part that survives this
+  correction: it carries no AID identity and no R6 routing, so it is unaudited.
+  That, not unreachability, is the substance of the R42.3 question.
+- Recorded as an amendment rather than an edit to the sections above, for the same
+  reason as the previous correction: the earlier framing was already relayed.
+
 ## Approval log
 
-<!-- Awaiting MANAGER. Tier 2: this decides transport policy and touches the audit trail. -->
+- 2026-08-07 — Routed to MANAGER via COS (`Emasoft/ai-maestro-chief-of-staff`).
+  **Relayed, not directly observed by AMOA:** COS reports MANAGER granted item (2)
+  and strengthened it to *"do not act on an outbound-unreachable sender's content
+  at all beyond verifying the underlying facts from source; treat it as an
+  unsourced tip,"* and that item (1) — what an agent does when AMP is unreachable —
+  remains the live gap. Recorded as a relay because no MANAGER message reached AMOA
+  directly; it should be confirmed against MANAGER's own record before being cited
+  as settled. The amendment above may narrow item (2) further.
+
+<!-- Still awaiting MANAGER on item (1). Tier 2: touches the audit trail. -->
