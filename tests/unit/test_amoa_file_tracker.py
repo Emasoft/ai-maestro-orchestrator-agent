@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Real-subprocess tests for amoa_file_tracker.py.
 
-PostToolUse hook (matcher Edit|MultiEdit|Write). It reads the tool payload on
+PostToolUse hook, matcher `^(Edit|Write)$`. MultiEdit was removed from Claude
+Code and its branch never worked anyway, so neither the matcher nor the script
+handles it. It reads the tool payload on
 stdin and, for file-modifying tools only, appends to a JSON tracking log at
 `$CLAUDE_PROJECT_DIR/.claude/orchestrator/modified_files.json` (falling back to
 CWD when CLAUDE_PROJECT_DIR is unset). It always exits 0; non-file tools and
