@@ -83,7 +83,7 @@ jobs:
 
             Respond with a helpful comment addressing what was asked.
           claude_args: |
-            --model "claude-sonnet-4-20250514"
+            --model "claude-sonnet-5"
             --allowedTools "Read,Glob,Grep"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

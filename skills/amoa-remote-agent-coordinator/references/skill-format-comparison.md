@@ -136,7 +136,7 @@ skill-name/
 name: my-skill-name
 description: What this skill does and when to use it. Include trigger keywords.
 allowed-tools: Read, Grep, Glob
-model: claude-sonnet-4-20250514
+model: claude-sonnet-5
 ---
 
 # My Skill Name
@@ -177,7 +177,7 @@ allowed-tools: Read, Grep, Glob
 Specify model when skill is active:
 
 ```yaml
-model: claude-sonnet-4-20250514
+model: claude-sonnet-5
 ```
 
 - Defaults to conversation's current model if omitted
@@ -282,7 +282,7 @@ Add Claude Code fields as needed:
 name: my-skill-name
 description: What this does and when to use it
 allowed-tools: Read, Grep, Glob
-model: claude-sonnet-4-20250514
+model: claude-sonnet-5
 ---
 ```
 

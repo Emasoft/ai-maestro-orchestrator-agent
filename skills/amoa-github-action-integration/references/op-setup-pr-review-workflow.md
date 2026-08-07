@@ -110,7 +110,7 @@ jobs:
 
             Provide inline comments for specific issues and a summary comment with overall assessment.
           claude_args: |
-            --model "claude-sonnet-4-20250514"
+            --model "claude-sonnet-5"
             --allowedTools "Read,Glob,Grep,Bash(git diff:*)"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

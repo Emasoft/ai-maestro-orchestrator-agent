@@ -5,8 +5,35 @@ These thresholds configure behavior for task distribution,
 agent coordination, and progress monitoring.
 """
 
+import os
+
+# ── Subagent concurrency and nesting ──
+#
+# Claude Code caps concurrently-running subagents (20 by default since CC
+# 2.1.217, overridable via CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS). The separate
+# per-session cap of 200 total spawns was REMOVED in CC 2.1.224, so lifetime
+# spawn count is no longer bounded for us — concurrency is the only live limit.
+#
+# WHY we deliberately sit BELOW the platform cap rather than matching it: at
+# exactly the cap the orchestrator saturates the platform's own limit, leaving
+# no slot for a subagent spawned by anything else in the session. Excess spawns
+# then queue silently rather than erroring, so the orchestrator sees a stalled
+# agent and cannot distinguish it from a slow one.
+PLATFORM_MAX_CONCURRENT_SUBAGENTS = int(
+    os.environ.get("CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS", "20")
+)
+CONCURRENCY_HEADROOM = 4
+MAX_CONCURRENT_AGENTS = max(1, PLATFORM_MAX_CONCURRENT_SUBAGENTS - CONCURRENCY_HEADROOM)
+
+# Subagents may themselves spawn subagents up to depth 3 by default (CC 2.1.219;
+# nesting was disabled outright in CC 2.1.217, and depth 1 before that). Depth 3
+# multiplied by the concurrency cap means one dispatch can fan out far wider than
+# the orchestrator's accounting expects, so agents WE bundle must not fan out
+# further — enforce this in every subagent prompt, not just here.
+MAX_AGENT_SPAWN_DEPTH = 3
+BUNDLED_AGENTS_MAY_FAN_OUT = False
+
 # Task management
-MAX_CONCURRENT_AGENTS = 20
 MAX_TASKS_PER_MODULE = 10
 TASK_TIMEOUT_MINUTES = 30
 
