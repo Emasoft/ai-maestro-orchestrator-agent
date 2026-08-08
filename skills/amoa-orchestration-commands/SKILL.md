@@ -8,6 +8,7 @@ metadata:
   version: 1.0.0
 user-invocable: false
 context: fork
+background: false
 agent: amoa-main
 ---
 

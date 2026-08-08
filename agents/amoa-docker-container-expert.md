@@ -1,6 +1,5 @@
 ---
 name: amoa-docker-container-expert
-model: opus
 description: Manages Docker containers for cross-platform development and isolated testing. Requires AI Maestro installed.
 type: local-helper
 skills:

@@ -43,11 +43,11 @@ Use this operation when customizing Claude Code Action workflows for your specif
 ```yaml
 # Default (Sonnet - fast, cost-effective)
 claude_args: |
-  --model "claude-sonnet-4-20250514"
+  --model "claude-sonnet-5"
 
 # For complex reviews (Opus - more thorough)
 claude_args: |
-  --model "claude-opus-4-5-20251101"
+  --model "claude-opus-5"
 ```
 
 ### Step 2: Restrict Available Tools
@@ -151,7 +151,7 @@ jobs:
         with:
           prompt: "Brief review due to time constraints..."
           claude_args: |
-            --model "claude-sonnet-4-20250514"
+            --model "claude-sonnet-5"
 ```
 
 ### Step 7: Add Labels Based on Review
@@ -233,7 +233,7 @@ jobs:
 
       CRITICAL: Report any security issues found.
     claude_args: |
-      --model "claude-opus-4-5-20251101"
+      --model "claude-opus-5"
       --allowedTools "Read,Glob,Grep"
 ```
 

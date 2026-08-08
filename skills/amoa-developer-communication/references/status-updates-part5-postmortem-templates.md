@@ -88,10 +88,10 @@ Every post-mortem needs concrete follow-ups. No action items = learning lost.
 
 | Priority | Action | Owner | Due Date | Status |
 |----------|--------|-------|----------|--------|
-| P1 | Add auth failure rate alerting | @sre-team | Next sprint | Not started |
-| P1 | Create auth service runbook | @auth-lead | 2024-02-15 | In progress |
-| P2 | Security review process for auth PRs | @security | 2024-02-28 | Not started |
-| P2 | Tag releases with stability indicators | @devops | 2024-03-01 | Not started |
+| P1 | Add auth failure rate alerting | [sre-team] | Next sprint | Not started |
+| P1 | Create auth service runbook | [auth-lead] | 2024-02-15 | In progress |
+| P2 | Security review process for auth PRs | [security] | 2024-02-28 | Not started |
+| P2 | Tag releases with stability indicators | [devops] | 2024-03-01 | Not started |
 ```
 
 **Good action items are**:

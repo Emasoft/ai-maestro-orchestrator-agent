@@ -18,17 +18,30 @@ import json
 import sys
 from pathlib import Path
 
-# ── Per-model pricing (USD per million tokens, as of 2025-12) ──
+# ── Per-model pricing (USD per million tokens, as of 2026-08) ──
+# Input/output are first-party Claude API list rates. The two cache columns are
+# DERIVED, not independently published: cache_write = 1.25x input (the 5-minute
+# TTL rate; a 1-hour TTL would be 2x), cache_read = 0.10x input. Keep any new row
+# consistent with that derivation or the totals stop being comparable across models.
 MODEL_PRICING: dict[str, dict[str, float]] = {
-    "claude-opus-4-6":   {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},
-    "claude-opus-4-5":   {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},
-    "claude-sonnet-4-6": {"input": 3.0,  "output": 15.0, "cache_write": 3.75,  "cache_read": 0.30},
-    "claude-sonnet-4-5": {"input": 3.0,  "output": 15.0, "cache_write": 3.75,  "cache_read": 0.30},
-    "claude-haiku-4-5":  {"input": 1.0,  "output": 5.0,  "cache_write": 1.25,  "cache_read": 0.10},
-    "claude-sonnet-4":   {"input": 3.0,  "output": 15.0, "cache_write": 3.75,  "cache_read": 0.30},
-    "claude-opus-4":     {"input": 15.0, "output": 75.0, "cache_write": 18.75, "cache_read": 1.50},
-    "claude-opus-4-1":   {"input": 15.0, "output": 75.0, "cache_write": 18.75, "cache_read": 1.50},
-    "claude-haiku-3-5":  {"input": 0.80, "output": 4.0,  "cache_write": 1.00,  "cache_read": 0.08},
+    "claude-fable-5":     {"input": 10.0, "output": 50.0, "cache_write": 12.50, "cache_read": 1.00},
+    "claude-mythos-5":    {"input": 10.0, "output": 50.0, "cache_write": 12.50, "cache_read": 1.00},
+    "claude-opus-5":      {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},
+    "claude-opus-4-8":    {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},
+    "claude-opus-4-7":    {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},
+    "claude-opus-4-6":    {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},
+    "claude-opus-4-5":    {"input": 5.0,  "output": 25.0, "cache_write": 6.25,  "cache_read": 0.50},
+    # Sonnet 5 carries a promotional $2/$10 rate through 2026-08-31. Standard rates
+    # are used here on purpose: a hardcoded promo silently becomes wrong the day it
+    # lapses, and this table is read long after anyone remembers to revisit it.
+    "claude-sonnet-5":    {"input": 3.0,  "output": 15.0, "cache_write": 3.75,  "cache_read": 0.30},
+    "claude-sonnet-4-6":  {"input": 3.0,  "output": 15.0, "cache_write": 3.75,  "cache_read": 0.30},
+    "claude-sonnet-4-5":  {"input": 3.0,  "output": 15.0, "cache_write": 3.75,  "cache_read": 0.30},
+    "claude-haiku-4-5":   {"input": 1.0,  "output": 5.0,  "cache_write": 1.25,  "cache_read": 0.10},
+    "claude-sonnet-4":    {"input": 3.0,  "output": 15.0, "cache_write": 3.75,  "cache_read": 0.30},
+    "claude-opus-4":      {"input": 15.0, "output": 75.0, "cache_write": 18.75, "cache_read": 1.50},
+    "claude-opus-4-1":    {"input": 15.0, "output": 75.0, "cache_write": 18.75, "cache_read": 1.50},
+    "claude-haiku-3-5":   {"input": 0.80, "output": 4.0,  "cache_write": 1.00,  "cache_read": 0.08},
 }
 DEFAULT_PRICING: dict[str, float] = {"input": 3.0, "output": 15.0, "cache_write": 3.75, "cache_read": 0.30}
 
@@ -39,20 +52,28 @@ def get_pricing(model_name: str) -> dict[str, float]:
         return DEFAULT_PRICING
     if model_name in MODEL_PRICING:
         return MODEL_PRICING[model_name]
-    # Try prefix/substring match
-    for key, pricing in MODEL_PRICING.items():
+    # Try prefix/substring match, LONGEST KEY FIRST.
+    # WHY the sort: several ids are prefixes of others ("claude-opus-4" is a prefix
+    # of "claude-opus-4-1", "-4-6", "-4-7", "-4-8"). In plain dict order the shorter
+    # key matches first and permanently shadows every longer one — so a request for
+    # claude-opus-4-8 ($5/$25) would silently bill at claude-opus-4's $15/$75.
+    # Sorting by descending key length makes the most specific id always win.
+    for key in sorted(MODEL_PRICING, key=len, reverse=True):
         if key in model_name or model_name.startswith(key):
-            return pricing
-    # Fuzzy family match
+            return MODEL_PRICING[key]
+    # Fuzzy family match, for ids released after this table was last updated.
+    # Check the most capable families first: "opus" must not swallow an id that is
+    # really a Fable/Mythos variant, and an unrecognized member of a family should
+    # fall back to that family's CURRENT rate, never to a retired model's rate.
     ml = model_name.lower()
-    if "opus" in ml and ("4-6" in ml or "4.6" in ml):
-        return MODEL_PRICING["claude-opus-4-6"]
-    if "opus" in ml and ("4-5" in ml or "4.5" in ml):
-        return MODEL_PRICING["claude-opus-4-5"]
-    if "opus" in ml:
+    if "fable" in ml or "mythos" in ml:
+        return MODEL_PRICING["claude-fable-5"]
+    if "opus" in ml and ("4-1" in ml or "4.1" in ml):
         return MODEL_PRICING["claude-opus-4-1"]
+    if "opus" in ml:
+        return MODEL_PRICING["claude-opus-5"]
     if "sonnet" in ml:
-        return MODEL_PRICING["claude-sonnet-4-6"]
+        return MODEL_PRICING["claude-sonnet-5"]
     if "haiku" in ml:
         return MODEL_PRICING["claude-haiku-4-5"]
     return DEFAULT_PRICING

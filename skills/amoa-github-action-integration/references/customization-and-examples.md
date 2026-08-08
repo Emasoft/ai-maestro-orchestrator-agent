@@ -14,7 +14,7 @@ Edit the `claude_args` section in any workflow:
 
 ```yaml
 claude_args: |
-  --model "claude-sonnet-4-20250514"  # or claude-opus-4-5-20251101
+  --model "claude-sonnet-5"  # or claude-opus-5
 ```
 
 ## Restricting Tools

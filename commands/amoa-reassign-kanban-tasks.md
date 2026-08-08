@@ -67,8 +67,8 @@ Adds a comment to each issue documenting the reassignment:
 
 | Field | Value |
 |-------|-------|
-| **Previous Agent** | @old-agent |
-| **New Agent** | @new-agent |
+| **Previous Agent** | [old-agent] |
+| **New Agent** | [new-agent] |
 | **Reason** | agent_replacement |
 | **Timestamp** | 2026-01-31T14:30:00Z |
 
@@ -180,7 +180,7 @@ Include in handoff document for new agent review.
 If new agent already has this task:
 
 ```
-Warning: Issue #42 already has @new-agent as assignee
+Warning: Issue #42 already has [new-agent] as assignee
 Skipping assignee change, updating labels only.
 ```
 

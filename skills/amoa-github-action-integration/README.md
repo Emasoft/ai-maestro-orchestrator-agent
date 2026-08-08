@@ -45,7 +45,7 @@ Set up Claude Code in GitHub Actions for automated PR reviews, @claude mention r
 Edit `claude_args` to change model or restrict tools:
 ```yaml
 claude_args: |
-  --model "claude-sonnet-4-20250514"
+  --model "claude-sonnet-5"
   --allowedTools "Read,Glob,Grep"
 ```
 

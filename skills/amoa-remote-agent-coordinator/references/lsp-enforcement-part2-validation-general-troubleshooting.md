@@ -383,7 +383,7 @@ pyright --createstub <library-name>
 
 **Issue: "Cannot find name" for global types**
 
-**Cause:** Missing @types packages or incorrect tsconfig.json
+**Cause:** Missing `@types` packages or incorrect tsconfig.json
 
 **Solution:**
 ```bash

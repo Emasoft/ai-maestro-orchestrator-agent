@@ -85,7 +85,7 @@ When scope changes affect timeline, explain the tradeoff clearly.
 **Options**:
 1. Accept delay: Deliver full feature by next Wednesday instead of Friday
 2. Cut scope: Ship basic auth Friday, add MFA in v1.1 (next sprint)
-3. Add resources: If @backend-dev can help with MFA, might make original timeline
+3. Add resources: If [backend-dev] can help with MFA, might make original timeline
 
 **My recommendation**: Option 2 - ship basic auth, add MFA next sprint
 - MFA is valuable but not blocking launch

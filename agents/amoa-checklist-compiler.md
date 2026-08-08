@@ -1,6 +1,5 @@
 ---
 name: amoa-checklist-compiler
-model: opus
 description: Compiles verification checklists from requirements and specifications. Requires AI Maestro installed.
 type: local-helper
 skills:

@@ -141,7 +141,7 @@
 **Solution**:
 1. Verify developer is assigned to GitHub Issue
 2. Check developer's GitHub notification settings
-3. Use @mention in issue comments
+3. Use an `@mention` in issue comments
 4. Send direct communication outside GitHub if urgent
 
 ---

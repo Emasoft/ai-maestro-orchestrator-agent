@@ -7,6 +7,7 @@ metadata:
   author: Emasoft
   version: 1.0.0
 context: fork
+background: false
 user-invocable: false
 agent: amoa-main
 ---
@@ -31,6 +32,10 @@ Guardrail validation reports, rule violation alerts, delegation checklists.
 2. Verify requirements are immutable per rule-14-enforcement.md
 3. Ensure all communication flows through orchestrator per orchestrator-exclusive-communications.md
 4. Use delegation-checklist.md for task handoff validation
+5. Before dispatching a wave of agents, check subagent-platform-limits.md -- the
+   platform caps concurrency and every limit degrades SILENTLY (excess spawns
+   queue rather than erroring, so a throttled agent is indistinguishable from a
+   stalled one)
 
 Copy this checklist and track your progress:
 
@@ -38,6 +43,7 @@ Copy this checklist and track your progress:
 - [ ] Requirements immutable (RULE 14)?
 - [ ] Communication via orchestrator only?
 - [ ] Delegation checklist complete?
+- [ ] Wave size within the concurrency budget, and every dispatched agent told not to fan out?
 
 ## Examples
 
@@ -122,3 +128,10 @@ Rule violation detected: stop, reassess, delegate to worker agent.
   - Purpose
   - Role Boundaries with Orchestrator Section
   - ...
+- [subagent-platform-limits.md](./references/subagent-platform-limits.md)
+  <!-- TOC: When deciding how many agents to dispatch at once | When a dispatched agent wants to spawn its own agents | When estimating how many agents a session can spawn in total | When you think a dispatched agent has stalled | When updating these numbers -->
+  - When deciding how many agents to dispatch at once
+  - When a dispatched agent wants to spawn its own agents
+  - When estimating how many agents a session can spawn in total
+  - When you think a dispatched agent has stalled
+  - When updating these numbers

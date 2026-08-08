@@ -140,7 +140,7 @@ When AI Maestro is down, use these fallback methods:
 ```markdown
 ## AI Maestro Fallback: Task Assignment
 
-**To**: @agent-name
+**To**: [agent-name]
 **Priority**: HIGH
 **Type**: task_assignment
 

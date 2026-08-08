@@ -106,7 +106,7 @@ jobs:
 
           claude_args: |
             --allowedTools "Bash(gh issue:*),Bash(gh search:*),Read,Glob"
-            --model "claude-sonnet-4-20250514"
+            --model "claude-sonnet-5"
 
       - name: Post triage summary
         if: always()

@@ -80,7 +80,7 @@ Be specific about the help you need.
 **Example**:
 ```
 **To unblock, I need one of these**:
-- Option A: @devops to update IAM role with sts:AssumeRole permission
+- Option A: [devops] to update IAM role with sts:AssumeRole permission
 - Option B: Someone to run the deployment manually using admin credentials
 - Option C: Workaround using different deployment method (if it exists)
 

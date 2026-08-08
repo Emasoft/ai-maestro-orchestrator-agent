@@ -107,7 +107,7 @@ jobs:
             - Be welcoming in the response
             - If issue lacks information, add a comment requesting clarification
           claude_args: |
-            --model "claude-sonnet-4-20250514"
+            --model "claude-sonnet-5"
             --allowedTools "Read,Glob,Grep,Bash(gh issue:*)"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

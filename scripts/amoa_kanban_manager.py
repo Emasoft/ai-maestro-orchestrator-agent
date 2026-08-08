@@ -34,10 +34,25 @@ from amoa_aimaestro_sync import (  # noqa: E402  (path injected above, on purpos
     notify_sync_result,
     sync_task,
 )
+from amoa_dispatch_gate import (  # noqa: E402  (path injected above, on purpose)
+    Dependency,
+    dependency_from_gh,
+    evaluate_dispatch_precondition,
+    format_refusal,
+)
 from amoa_kanban_vocab import (  # noqa: E402  (path injected above, on purpose)
     KANBAN_COLUMNS,
     LEGACY_STATUS_MIGRATION,
+    assert_orchestrator_may_transition,
     resolve_column,
+)
+from amoa_trdd_link import (  # noqa: E402  (path injected above, on purpose)
+    add_external_ref,
+    crosses_zone,
+    extract_trdd_id,
+    find_trdd,
+    set_column,
+    zone_for_column,
 )
 
 # GitHub configuration
@@ -185,8 +200,24 @@ def create_task_issue(
     priority: str = "normal",
     dependencies: list[int] | None = None,
     task_requirements_doc: str | None = None,
+    trdd_id: str | None = None,
 ) -> dict[str, Any] | None:
-    """Create a GitHub issue for a task."""
+    """Create a GitHub issue for a task.
+
+    Args:
+        trdd_id: the `TRDD-<id8>` this card implements, for a TRDD-backed task.
+            Appended to the TITLE rather than the body, per the ratified linkage
+            shape — a title survives body edits that would drop a marker line,
+            and it keeps the id greppable from `gh issue list` output alone.
+            This is what makes the board→TRDD write-through resolvable at all:
+            without it, a move has no card to land in. Optional because not
+            every issue is TRDD-backed.
+    """
+    if trdd_id:
+        canonical = trdd_id.upper()
+        # Idempotent: re-creating or retitling must not stack the citation.
+        if f"TRDD-{canonical}" not in title:
+            title = f"{title} (TRDD-{canonical})"
 
     # Build labels
     labels = [f"assign:{assigned_agent}", f"priority:{priority}"]
@@ -353,8 +384,22 @@ def assign_task_to_agent(issue_number: int, agent_name: str) -> bool:
     return True
 
 
-def update_task_status(issue_number: int, status: str) -> bool:
-    """Update task status by changing labels."""
+def update_task_status(
+    issue_number: int, status: str, approved_by: str | None = None
+) -> bool:
+    """Update task status by changing labels.
+
+    Args:
+        issue_number: the GitHub issue backing the card.
+        status: target column (ratified or a known legacy value).
+        approved_by: the approver, when this transition was already granted by a
+            MANAGER or the USER. Supplying it turns this call from a decision the
+            orchestrator ORIGINATES into a mirror of one already made, which is
+            what makes a governed transition legitimate here. It is recorded on
+            the issue so the approval is auditable from the board, not only from
+            whatever conversation granted it. Leave it None for ordinary
+            mechanical moves.
+    """
 
     # Resolve to a ratified column: a legacy value migrates, an unknown value is
     # rejected here rather than written to the board as a bogus `status:` label
@@ -388,6 +433,31 @@ def update_task_status(issue_number: int, status: str) -> bool:
         label["name"] for label in current_labels if label["name"] in status_labels
     ]
 
+    # EDITOR AUTHORITY GATE (alignment contract, "Orchestrator-plugin alignment":
+    # an ORCHESTRATOR moves and re-assigns; it does NOT silently perform USER- or
+    # MANAGER-gated transitions).
+    #
+    # This is the gate the resolve_column invariant demands. On a GitHub-issue
+    # -native board the `status:` label IS the state, so this call ORIGINATES the
+    # decision rather than mirroring one — which is exactly the case the invariant
+    # says must be gated. `approved_by` is how an already-approved transition is
+    # RECORDED: with it we are mirroring somebody else's decision, and mirroring
+    # is exempt (approval-defaults §A). Without it, a release-pipeline or
+    # abandonment transition would land with no approver anywhere in the record.
+    from_column = None
+    for label in labels_to_remove:
+        try:
+            from_column = resolve_column(label.removeprefix("status:"))
+            break
+        except ValueError:
+            continue  # a stale label outside the vocabulary tells us nothing
+    if approved_by is None:
+        try:
+            assert_orchestrator_may_transition(from_column, column)
+        except PermissionError as exc:
+            print(f"REFUSED: {exc}", file=sys.stderr)
+            return False
+
     # Remove old status labels
     for label in labels_to_remove:
         args = [
@@ -416,6 +486,37 @@ def update_task_status(issue_number: int, status: str) -> bool:
     if returncode != 0:
         print(f"Failed to update status: {stderr}", file=sys.stderr)
         return False
+
+    # Record a governed transition's approver ON THE BOARD. Written only after
+    # the label change succeeds, so we never claim an approval for a move that
+    # did not happen. A failure to comment is not fatal — the transition is
+    # already real, and losing the audit line is better than reporting the whole
+    # move as failed and inviting a retry that double-applies it.
+    if approved_by is not None:
+        run_gh_command([
+            "issue", "comment", str(issue_number),
+            "--repo", f"{GITHUB_OWNER}/{GITHUB_REPO}",
+            "--body",
+            f"_Posted by the Claude developing **ai-maestro-orchestrator-agent** "
+            f"(via the shared owner gh auth)._\n\n"
+            f"Status → `{column}`"
+            + (f" (from `{from_column}`)" if from_column else "")
+            + f", approved by **{approved_by}**, recorded {get_timestamp()}.",
+        ])
+
+    # TRDD WRITE-THROUGH — the SSOT half of the alignment contract ("every board
+    # mutation lands in the TRDD file (and its folder), not only in a mirror").
+    #
+    # Deliberately placed AFTER the authority gate above, so it is gated by
+    # construction: every column decision that reaches here has either passed
+    # `assert_orchestrator_may_transition` or carries an explicit `approved_by`.
+    # That is the condition MANAGER ruling orch#27 attached to originating TRDD
+    # writes, and putting this call anywhere earlier would silently void it.
+    #
+    # Also after the label write, not before: if the mirror fails we return
+    # early and the TRDD is never touched, so the two cannot disagree with the
+    # TRDD claiming a move the board did not make.
+    _write_through_to_trdd(issue_number, column, from_column)
 
     # Sync status change to AI Maestro
     if TEAM_ID:
@@ -519,8 +620,148 @@ def set_task_dependency(issue_number: int, blocked_by: list[int]) -> bool:
     return True
 
 
+# Git calls here are single, local, and fast (`git mv`); a bounded timeout keeps
+# a hung git from wedging a board move. Mirrors shared/thresholds.py TIMEOUTS.GIT
+# — kept as a local constant so this script has no import-time dependency on a
+# module it otherwise does not need.
+GIT_TIMEOUT_SECONDS = 30
+
+
+def get_project_root() -> Path:
+    """The repo root whose `design/` holds this project's TRDD corpus.
+
+    `CLAUDE_PROJECT_DIR` when the harness sets it, else the CWD. Never an
+    absolute path baked in: R52.1 confines writes to the agent's own working
+    directory, and a hardcoded root is how a tool starts writing into somebody
+    else's tree.
+    """
+    return Path(os.environ.get("CLAUDE_PROJECT_DIR") or Path.cwd())
+
+
+def run_command(args: list[str]) -> tuple[int, str, str]:
+    """Run a non-gh command (git), returning (returncode, stdout, stderr)."""
+    result = subprocess.run(args, capture_output=True, text=True, timeout=GIT_TIMEOUT_SECONDS)
+    return result.returncode, result.stdout, result.stderr
+
+
+def _write_through_to_trdd(
+    issue_number: int, column: str, from_column: str | None
+) -> bool:
+    """Land a board move in the TRDD that backs the issue, and in its folder.
+
+    Returns True when a TRDD was updated, False when the card has none. A card
+    with no TRDD behind it is legitimate (not every issue is TRDD-backed), so
+    absence is reported, never raised.
+
+    Best-effort by design: the mirror has already moved by the time we get here,
+    so a failure to reach the TRDD must not report the whole transition as
+    failed and invite a retry that re-applies the label. It logs loudly instead —
+    a silent divergence between board and SSOT is exactly what this contract
+    exists to prevent, so it must be visible even though it is not fatal.
+    """
+    rc, stdout, _ = run_gh_command([
+        "issue", "view", str(issue_number),
+        "--repo", f"{GITHUB_OWNER}/{GITHUB_REPO}",
+        "--json", "title,body,url",
+    ])
+    if rc != 0:
+        print(f"WARNING: TRDD write-through skipped for #{issue_number}: cannot read issue",
+              file=sys.stderr)
+        return False
+
+    data = json.loads(stdout)
+    # Title first: the ratified linkage puts the id there because a title
+    # survives body edits that would drop a body marker.
+    trdd_id = extract_trdd_id(data.get("title", "")) or extract_trdd_id(data.get("body", ""))
+    if not trdd_id:
+        return False
+
+    design_root = get_project_root() / "design"
+    trdd_path = find_trdd(trdd_id, design_root)
+    if trdd_path is None:
+        print(
+            f"WARNING: issue #{issue_number} cites {trdd_id} but no such TRDD exists "
+            f"under {design_root} — board and SSOT are now out of step",
+            file=sys.stderr,
+        )
+        return False
+
+    try:
+        set_column(trdd_path, column, get_timestamp())
+        add_external_ref(trdd_path, data.get("url", ""))
+    except ValueError as exc:
+        print(f"WARNING: cannot write {trdd_path}: {exc}", file=sys.stderr)
+        return False
+
+    # The folder is part of the state, so a zone crossing needs a `git mv` — a
+    # frontmatter-only edit would leave a completed card sitting in tasks/,
+    # where every board query still counts it as open work.
+    if crosses_zone(from_column, column):
+        dest_dir = design_root / zone_for_column(column)
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        dest = dest_dir / trdd_path.name
+        rc_mv, _, err = run_command(["git", "mv", str(trdd_path), str(dest)])
+        if rc_mv != 0:
+            print(
+                f"WARNING: {trdd_path.name} needs to move to {dest_dir.name}/ but "
+                f"`git mv` failed: {err.strip()}",
+                file=sys.stderr,
+            )
+        else:
+            print(f"  Moved {trdd_path.name} -> design/{dest_dir.name}/")
+
+    return True
+
+
+def check_dispatch_precondition(
+    issue_number: int, dependencies: list[int], base: str = "main"
+) -> bool:
+    """Enforce TRDD-BYCN5PB7 before a card is handed to a worker as a build order.
+
+    Stricter than check_dependencies_resolved on purpose: that function asks only
+    whether the dependency issue is CLOSED, which is true the moment somebody
+    clicks close — including while the code satisfying it sits in an unmerged PR.
+    Dispatching on that produces the deadlock the rule exists to prevent: the
+    worker reads its NPT gate, correctly refuses to build because the prerequisite
+    is genuinely absent from its base, and the dispatcher believes it shipped.
+
+    Fetches each dependency's closing PRs, then defers to the pure evaluator in
+    shared/amoa_dispatch_gate.py.
+    """
+    deps: list[Dependency] = []
+    for dep in dependencies:
+        returncode, stdout, stderr = run_gh_command([
+            "issue", "view", str(dep),
+            "--repo", f"{GITHUB_OWNER}/{GITHUB_REPO}",
+            "--json", "number,state,closedByPullRequestsReferences",
+        ])
+        if returncode != 0:
+            # Fail CLOSED. An unreadable prerequisite is an unproven one, and the
+            # whole rule is about not dispatching against prerequisites we cannot
+            # show are met. Treating a query failure as "probably fine" would
+            # reintroduce the deadlock through the error path.
+            print(
+                f"REFUSED to dispatch #{issue_number}: cannot read dependency "
+                f"#{dep} ({stderr.strip() or 'gh query failed'})",
+                file=sys.stderr,
+            )
+            return False
+        deps.append(dependency_from_gh(json.loads(stdout)))
+
+    satisfied, reasons = evaluate_dispatch_precondition(base, deps)
+    if not satisfied:
+        print(format_refusal(issue_number, base, reasons), file=sys.stderr)
+    return satisfied
+
+
 def check_dependencies_resolved(dependencies: list[int]) -> bool:
-    """Check if all dependencies are resolved (closed)."""
+    """Check if all dependencies are resolved (closed).
+
+    NOTE: closed-ness alone does NOT authorize a dispatch — use
+    check_dispatch_precondition for that (TRDD-BYCN5PB7). This remains the right
+    check for readiness DISPLAY (get_ready_tasks), where the question is "has the
+    blocking work been declared done", not "will the worker's base contain it".
+    """
 
     for dep in dependencies:
         args = [

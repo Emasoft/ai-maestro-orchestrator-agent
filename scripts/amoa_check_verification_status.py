@@ -16,6 +16,7 @@ Exit codes:
 - 2: Verification incomplete - blocks the tool use
 """
 
+import contextlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -44,7 +45,11 @@ def parse_frontmatter(file_path: Path) -> tuple[dict[str, Any], bool]:
 
     try:
         content = file_path.read_text(encoding="utf-8")
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
+        # Narrowed from a blind `except Exception`: the only failures this read
+        # can legitimately produce are I/O and a non-UTF-8 file. A blind catch
+        # also absorbed programming errors here and reported them as a read
+        # failure, which sends the next reader to the filesystem for a bug.
         log_error(f"Failed to read file {file_path}: {e}")
         return {}, False
 
@@ -55,15 +60,19 @@ def parse_frontmatter(file_path: Path) -> tuple[dict[str, Any], bool]:
     if end_idx == -1:
         return {}, True  # Malformed but not critical
 
+    # Imported inside the function so a missing PyYAML is a clean diagnostic
+    # rather than an import-time crash of the whole hook. Split from the parse
+    # below so the two failures cannot be confused for one another.
     try:
         import yaml
-
-        result = yaml.safe_load(content[3:end_idx]) or {}
-        return result, True
     except ImportError:
         log_error("PyYAML not installed - cannot parse state file")
         return {}, False
-    except Exception as e:
+
+    try:
+        result = yaml.safe_load(content[3:end_idx]) or {}
+        return result, True
+    except yaml.YAMLError as e:
         log_error(f"YAML parsing error: {e}")
         return {}, False
 
@@ -182,12 +191,16 @@ def main() -> None:
     """
     # Read stdin for hook context (if any)
     # Note: hook_input reserved for future use when context-aware decisions needed
-    try:
+    # This hook's verdict comes entirely from the state file; stdin is read only
+    # to validate that a payload parses. So an absent or malformed payload is
+    # genuinely not an error here — but the previous
+    # `except (json.JSONDecodeError, Exception): pass` was wrong twice over:
+    # `Exception` subsumes `JSONDecodeError`, making the tuple decorative, and a
+    # bare `pass` swallowed every real bug in the block along with it.
+    with contextlib.suppress(OSError, json.JSONDecodeError):
         stdin_data = sys.stdin.read()
         if stdin_data.strip():
-            _ = json.loads(stdin_data)  # Parse to validate, may use context later
-    except (json.JSONDecodeError, Exception):
-        pass  # No hook context available
+            _ = json.loads(stdin_data)
 
     # Check verification status
     is_ok, message = check_verification_status()

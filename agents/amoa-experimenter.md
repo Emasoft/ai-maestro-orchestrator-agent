@@ -1,6 +1,5 @@
 ---
 name: amoa-experimenter
-model: opus
 description: Experimental validation agent - the ONLY local agent authorized to write code. Requires AI Maestro installed.
 type: local-experimenter
 skills:

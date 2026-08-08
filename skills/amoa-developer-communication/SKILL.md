@@ -7,6 +7,7 @@ metadata:
   version: 1.0.0
   author: Emasoft
 context: fork
+background: false
 user-invocable: false
 agent: amoa-main
 ---

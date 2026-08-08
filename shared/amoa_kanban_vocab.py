@@ -172,3 +172,96 @@ def resolve_column(status: str) -> str:
         f"({', '.join(KANBAN_COLUMNS)}) nor a known legacy value "
         f"({', '.join(sorted(LEGACY_STATUS_MIGRATION))})"
     )
+
+
+# ── Transition authority — THE GATE the invariant above demands ──
+#
+# The invariant on resolve_column says: if you ever add a path that ORIGINATES a
+# column write rather than mirroring one, "GATE THE PATH, not this map". This is
+# that gate, kept here beside the vocabulary so a second copy cannot drift.
+#
+# An ORCHESTRATOR moves and re-assigns; it does NOT silently perform USER- or
+# MANAGER-gated transitions (the alignment contract in ai-maestro
+# rules/aimaestro/aimaestro-kanban-multiagent.md, "Orchestrator-plugin
+# alignment"). The gated sets below are the NON-EXEMPT operations from
+# aimaestro-manager-approval-defaults.md §Y and §Z.
+
+# Mechanical, judgment-free transitions an ORCHESTRATOR performs on its own
+# authority (approval-defaults §A). Pairs, because the authority depends on where
+# the card came FROM: `testing → dev` is a routine test failure, while
+# `human_review → dev` is a USER decision being relayed.
+ORCHESTRATOR_TRANSITIONS: frozenset[tuple[str, str]] = frozenset({
+    ("dispatch", "dev"),        # assignee set; work starts
+    ("dev", "testing"),         # code ready for tests
+    ("testing", "ai_review"),   # all required tests passed
+    ("testing", "dev"),         # test FAILED — back to the assignee
+    ("ai_review", "dev"),       # AI reviewer rejected — back to the assignee
+    ("live", "live_auditing"),  # soak entry
+    ("live_auditing", "live"),  # soak window elapsed clean
+    ("backburner", "todo"),     # intake grooming
+    ("todo", "design"),
+    ("design", "dispatch"),
+})
+
+# Transitions requiring MANAGER approval (§Y: release pipeline, abandonment,
+# force-supersede, escalation to human review).
+MANAGER_GATED_TARGETS: frozenset[str] = frozenset({
+    "publish", "published", "deploy", "live", "failed", "superseded", "human_review",
+})
+
+# Transitions requiring USER approval (§Z: the human's own verdict being
+# recorded). Keyed on the pair — leaving `human_review` at all IS the verdict.
+USER_GATED_TRANSITIONS: frozenset[tuple[str, str]] = frozenset({
+    ("human_review", "complete"),
+    ("human_review", "dev"),
+})
+
+
+def transition_authority(from_column: str | None, to_column: str) -> str:
+    """Return the authority a transition requires: 'orchestrator', 'manager', or 'user'.
+
+    `from_column` may be None when the card's current column is unknown (e.g. an
+    issue carrying no `status:` label yet). An unknown origin is treated as the
+    STRICTER case rather than the looser one: if the target is gated, the answer
+    is gated. Guessing "probably fine" is how an ungated write reaches a governed
+    column, which is precisely the hazard the resolve_column invariant names.
+    """
+    to_col = resolve_column(to_column)
+    from_col = resolve_column(from_column) if from_column else None
+
+    # ORDER IS LOAD-BEARING: an explicit PAIR is more specific than a
+    # target-based rule and must win over it. `live_auditing -> live` is the
+    # mechanical soak EXIT (approval-defaults section A) while `deploy -> live`
+    # is a governed release; both target `live`, so classifying by target alone
+    # gates the soak exit and stalls every audited card. Pairs first, then
+    # targets.
+    if from_col is not None and (from_col, to_col) in USER_GATED_TRANSITIONS:
+        return "user"
+    if from_col is not None and (from_col, to_col) in ORCHESTRATOR_TRANSITIONS:
+        return "orchestrator"
+    if to_col in MANAGER_GATED_TARGETS:
+        return "manager"
+    # `complete` is reachable only from human_review (USER) or as a MANAGER
+    # decision; it is never an orchestrator's call to declare work finished.
+    if to_col == "complete":
+        return "manager"
+    # Everything else — intake, grooming, blocking — is the orchestrator's.
+    return "orchestrator"
+
+
+def assert_orchestrator_may_transition(from_column: str | None, to_column: str) -> None:
+    """Raise PermissionError unless an ORCHESTRATOR may perform this transition alone.
+
+    Call this on any path that ORIGINATES a column decision. Do NOT call it on a
+    pure mirror write: mirroring a transition somebody else already approved is
+    exempt, and gating the mirror would block the orchestrator from recording
+    decisions it is required to record.
+    """
+    authority = transition_authority(from_column, to_column)
+    if authority != "orchestrator":
+        raise PermissionError(
+            f"transition {from_column or '<unknown>'} -> {to_column} requires "
+            f"{authority.upper()} approval; an ORCHESTRATOR may not perform it "
+            f"unilaterally (aimaestro-manager-approval-defaults §Y/§Z). Route an "
+            f"approval request, then mirror the approved transition."
+        )
