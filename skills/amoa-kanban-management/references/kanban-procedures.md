@@ -64,21 +64,25 @@ hang its child tasks under that epic, completing design-doc → epic → child �
 traceability. This is the read-side of orch#26.
 
 **Steps:**
-1. Read the epic id from the received handoff `content` with the shared helper — it returns
-   `None` for older handoffs / when AI-Maestro is not in use, so absence is normal:
+1. Read the epic id from the handoff with `extract_aimaestro_task_id` (None when absent)
+
+   Absence is normal — older handoffs, or AI-Maestro not in use:
    ```python
    from amoa_design_handoff import extract_aimaestro_task_id  # shared/ on sys.path
    epic = extract_aimaestro_task_id(message_content)   # str | None
    ```
-2. For each first-level child task in the breakdown, create it under the epic when present
-   (frozen verb; never a raw `/api/*` call — R23):
+2. Create each first-level child under the epic with `amp-kanban-create-task --parent`
+
+   Frozen verb only; never a raw `/api/*` call (R23):
    ```bash
    amp-kanban-create-task "<child subject>" \
      ${EPIC:+--parent "$EPIC"} \
      --task-type <feature|bugfix|refactor|infra|docs> --status backburner
    ```
-3. When `epic` is `None` (or `$EPIC` unset), create the children unparented — behave exactly
-   as before AI-Maestro linkage existed. NO regression on a handoff without the key.
+3. When the epic id is None, create the children unparented — no regression
+
+   Behave exactly as before AI-Maestro linkage existed. A handoff without the key
+   must produce the same result it always did.
 
 **Note (deployment-time):** confirming the children actually read back under the epic
 (`parentTask` round-trips) needs a live AI-Maestro server + an AMCOS-spawned agent binding —
