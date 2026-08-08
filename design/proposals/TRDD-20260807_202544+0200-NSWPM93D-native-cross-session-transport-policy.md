@@ -133,7 +133,8 @@ correction shrinks the exception this TRDD asks MANAGER to define.**
 A sender carrying `from-name` with no `from=`, absent from `ListAgents`, is
 UNADDRESSED — not unaddressable. `ListAgents` returned 18 rows and did not
 include the sender; `claude agents --json`, run from a plain shell with no
-session, returned **24**, including it at `cwd=/Users/emanuelesabetta/ai-maestro`.
+session, returned **24**, including it at the ai-maestro server's own working
+directory (`~/ai-maestro`).
 Addressing it by that row's name (plus the ` [ref]` the tool demands) **delivered**.
 
 So the durable identity was in `cwd` throughout. `cwd` is project identity: it
