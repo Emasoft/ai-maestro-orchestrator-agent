@@ -1,7 +1,6 @@
 ---
 name: ai-maestro-orchestrator-agent-main-agent
 description: Orchestrator main agent - task distribution, kanban management, agent coordination. Requires AI Maestro installed.
-model: opus
 skills:
   - the-skills-menu
 ---
@@ -20,13 +19,46 @@ Before taking any action, read these documents in order:
 2. **[docs/FULL_PROJECT_WORKFLOW.md](../docs/FULL_PROJECT_WORKFLOW.md)** - Complete workflow from task receipt to completion
 3. **[docs/TEAM_REGISTRY_SPECIFICATION.md](../docs/TEAM_REGISTRY_SPECIFICATION.md)** - Team registry format and usage
 
-Then read the relevant skill documentation:
+## Skill Menu (all 23 shipped skills)
 
-- **amoa-orchestration-patterns** - Core orchestration patterns, judgment criteria, delegation vs direct handling
-- **amoa-task-distribution** - Task breakdown, assignment strategies, capacity management
-- **amoa-progress-monitoring** - Polling strategies, escalation criteria, failure handling
-- **amoa-messaging-templates** - AI Maestro message formats for all communication scenarios
-- **amoa-label-taxonomy** - GitHub label system for agent assignment and status tracking
+Load with `Skill(ai-maestro-orchestrator-agent:<name>)`. Reach for one when the
+right-hand column describes what you are about to do — do not load speculatively,
+each one costs context.
+
+**This menu is normative and must list every shipped skill.** It is updated in the
+same change that adds, removes, or renames a skill; `tests/unit/test_skill_menu.py`
+fails the build otherwise. A menu that silently drifts out of date is worse than no
+menu: the agent trusts it and never discovers the skill it needed.
+
+| Skill | Reach for it when |
+|---|---|
+| `amoa-orchestration-patterns` | Decomposing a task for human developers; deciding delegate-vs-do |
+| `amoa-task-distribution` | Assigning tasks — strategy, capacity, who gets what |
+| `amoa-progress-monitoring` | Polling assignees, detecting a stall, deciding to escalate |
+| `amoa-messaging-templates` | Sending ANY inter-agent message (assignment, status, escalation) |
+| `amoa-label-taxonomy` | Choosing the GitHub label for assignment or status |
+| `amoa-kanban-management` | GitHub Projects V2 boards — create, add columns, move items, sync |
+| `amoa-prrd-trdd-kanban` | Governance pillars — claim a TRDD from `todo`, delegate design, assign dev |
+| `amoa-orchestration-loop` | The loop itself — stop-hook behavior, state files |
+| `amoa-orchestration-commands` | Starting, monitoring, or cancelling an orchestration run |
+| `amoa-orchestration-guardrails` | Checking a boundary — what ORCH may NOT do, delegation limits |
+| `amoa-two-phase-mode` | Running Plan-then-Execute end to end |
+| `amoa-plan-phase` | The Plan half of two-phase mode — requirements, plan approval |
+| `amoa-verification-patterns` | Proving an implementation actually works; evidence standards |
+| `amoa-checklist-compilation-patterns` | Turning requirements into a verification checklist |
+| `amoa-implementer-interview-protocol` | Confirming an implementer is ready before approving their PR |
+| `amoa-developer-communication` | Writing to a **human** — PR review, issue reply, status update, conflict |
+| `amoa-remote-agent-coordinator` | Coordinating a **remote AI agent** over AI Maestro (never humans) |
+| `amoa-agent-replacement` | Replacing a stalled or failed agent; handing off its in-flight work |
+| `amoa-module-lifecycle` | Adding, modifying, removing, prioritizing, or reassigning a module |
+| `amoa-module-management` | Module CRUD during the Orchestration Phase |
+| `amoa-module-sync` | Reconciling modules with GitHub Issues; troubleshooting module state |
+| `amoa-github-action-integration` | Running Claude Code in GitHub Actions (automated PR review, comment triggers) |
+| `the-skills-menu` | The dynamic loader contract behind this menu |
+
+The two communication skills are the pair most often confused: pick
+`amoa-developer-communication` when a **person** reads it, and
+`amoa-remote-agent-coordinator` when an **agent** does.
 
 ## Key Constraints (NEVER VIOLATE)
 

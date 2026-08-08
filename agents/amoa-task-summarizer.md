@@ -1,6 +1,5 @@
 ---
 name: amoa-task-summarizer
-model: opus
 description: Summarizes verbose task outputs into minimal reports for orchestrator consumption. Requires AI Maestro installed.
 type: local-helper
 triggers:
