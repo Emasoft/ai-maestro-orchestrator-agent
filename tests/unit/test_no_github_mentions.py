@@ -44,7 +44,22 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 
 # Where an agent-copyable template or prompt can live.
-SHIPPED_DIRS = ("skills", "commands", "agents", "docs")
+#
+# `design/requirements` was ADDED after this guard missed a real one. The PRRD's
+# G1.1 rule carries the byline template every agent pastes into GitHub, and it
+# shipped `@owner` — a real organization, registered 2021 — so the rule that exists
+# to attribute authorship was paging a live org from every issue it produced. The
+# guard was green throughout, because governance lived outside the tree it scanned.
+#
+# The lesson generalizes past this file: a template's DANGER follows where its text
+# gets pasted, not which directory it happens to live in. Scoping a guard by
+# directory silently assumes those coincide.
+#
+# NOT the whole of `design/`, deliberately. TRDDs legitimately write `@main` and
+# `@v2.147.1` when recording a git-ref re-pin, and discuss `@mentions` by name;
+# scanning them produced 13 false positives against 1 real finding, and a guard
+# with a 13:1 noise ratio gets muted, taking the real finding with it.
+SHIPPED_DIRS = ("skills", "commands", "agents", "docs", "design/requirements")
 SHIPPED_FILES = ("README.md",)
 
 # GitHub's real mention rule, as measured with `gh api markdown` and recorded in

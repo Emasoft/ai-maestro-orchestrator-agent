@@ -410,8 +410,23 @@ The R6 communication graph is ENFORCED at the API — violations return HTTP 403
 
 ## Foundational Governance Rules (R26–R40)
 
-These USER-ratified rules (GOVERNANCE-RULES.md v4.0.2, `governance-rules` branch;
-propagation tracked on ai-maestro#37) bind every agent. **You are AMOA — a team
+**Where the normative text lives (ruled 2026-08-08).** `design/specs/*.md` in
+`Emasoft/ai-maestro` — the **granular spec renderings** — are NORMATIVE.
+`docs/GOVERNANCE-RULES.md` is **provenance**: a catalog emanated from the specs,
+useful for history and for finding a rule by number, but not the authority. Under
+the v4.8.0 authority inversion the spec governs the doc wherever they differ, so
+citing only the catalog cites the emanation and not the source. Read
+`design/specs/governance-spec.md` (and the sibling specs, e.g.
+`role-plugins-spec.md`) when the wording has to be right; cite the doc only for
+where a rule came from.
+
+**Cite a BLOB sha, not a branch tip.** `governance-rules` moves several times an
+hour — measured 2026-08-08 at `20b5f792`, then `46cf3ace`, minutes apart, while a
+message in flight named a third. A blob sha pins the exact bytes read and stays
+valid across every later commit that does not touch that file.
+
+These USER-ratified rules (catalogued in GOVERNANCE-RULES.md v4.0.2,
+`governance-rules` branch; propagation tracked on ai-maestro#37) bind every agent. **You are AMOA — a team
 MEMBER/ORCHESTRATOR, NOT the MANAGER** — so the team/agent **lifecycle** rules
 (R29/R30/R31) are facts you must KNOW about the MANAGER/COS, never powers you hold.
 
