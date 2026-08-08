@@ -48,14 +48,16 @@ every ORIGINATING write routes through the gated path.
 **Linkage shape — ratified, do NOT invent one.** The issue carries the greppable `TRDD-<id8>` (in
 the TITLE by preference, since it survives body edits; a `**TRDD:** TRDD-<id8>` body marker is the
 alternative), and the TRDD frontmatter carries `external-refs:` with the issue URL. Project-scoped
-cards also carry `project-id:`. `create_task_issue` should take the TRDD id as a required input for
-TRDD-backed cards.
+cards also carry `project-id:`. `create_task_issue` now takes `trdd_id` and appends the citation to
+the title idempotently.
 
-**Load-bearing gotcha:** `shared/amoa_kanban_vocab.py` carries an invariant recording orch#27:
-*"if resolve_column is ever wired into a path that ORIGINATES a TRDD column write, a legacy value
-would land a card on a MANAGER-gated column with no MANAGER stamp. If you add such a path: GATE
-THE PATH, not this map."* Wiring the write-through without the gate is the specific, predicted
-failure. The gate landed first (`e237dfe`); the write-through has not.
+**Load-bearing gotcha — still live, for anyone extending this.** `shared/amoa_kanban_vocab.py`
+carries an invariant recording orch#27: *"if resolve_column is ever wired into a path that
+ORIGINATES a TRDD column write, a legacy value would land a card on a MANAGER-gated column with no
+MANAGER stamp. If you add such a path: GATE THE PATH, not this map."* The gate (`e237dfe`) and the
+write-through (`e02922d`) are both in, and the write-through sits AFTER the gate so it is gated by
+construction. **Moving that call earlier, or adding a second write path that skips the gate, silently
+voids the ruling** — the map itself stays mirror-only and must not be "fixed" to compensate.
 
 ## Scope of this audit — what was checked
 
