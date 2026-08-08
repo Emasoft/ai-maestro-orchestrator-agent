@@ -48,7 +48,7 @@ Searches for tasks assigned to the old agent:
 
 For each issue:
 ```bash
-gh issue edit $ISSUE --remove-assignee "@old-agent" --add-assignee "@new-agent"
+gh issue edit $ISSUE --remove-assignee "$OLD_AGENT" --add-assignee "$NEW_AGENT"
 ```
 
 ### 3. Updates Labels

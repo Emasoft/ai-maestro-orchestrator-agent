@@ -131,6 +131,114 @@ def _published_lines(path: Path) -> list[tuple[int, str]]:
     return out
 
 
+# A `gh` invocation that PUBLISHES text. Matched across the WHOLE file — including
+# fences this module otherwise skips as code examples — because the fence-language
+# heuristic is exactly backwards here.
+#
+# WHY THIS EXISTS AS A SECOND PASS (found 2026-08-08 by the ASSISTANT's fleet
+# re-scan, after the first version of this guard shipped and missed it). The main
+# scan treats a ```bash fence as a harmless code example, which is right for
+# `@staticmethod` and `@rpath` — tokens that mean nothing to GitHub. It is wrong,
+# and dangerous, for:
+#
+#     gh issue comment 42 --body "Assigned to @dev-alice. Please review..."
+#
+# That is not text that MIGHT get pasted. It is a command that POSTS, and
+# `dev-alice` is a real User registered in 2014. Running the template as written
+# notifies a stranger — no copying, no human in the loop, no fence to strip.
+#
+# So the danger is not "is this inside a fence" but "does this string end up in a
+# request body". A `--body` is the one place where being inside a shell fence makes
+# a handle MORE live rather than less.
+#
+# THE NAMES INVERT INTUITION, which is why no blocklist can work: the
+# obviously-fictional ones are taken (`dev-alice` 2014, `new-agent` 2018, `alice`,
+# `bob`) while descriptive ones often are not (`old-agent` 404 — luck, not safety).
+# Verify a handle that must look real with `gh api users/<name>`; 404 = safe today,
+# and only today.
+GH_POSTING_CMD = re.compile(
+    r"\bgh\s+(?:issue|pr|release)\s+(?:create|comment|edit|review|close|reopen)\b"
+)
+
+
+# `gh` flags whose VALUE is a login, where `@me` and `@copilot` are documented
+# literals rather than mentions:
+#   --add-assignee login   "Use \"@me\" to assign yourself, or \"@copilot\" ..."
+# The allowance is scoped to these flags ON PURPOSE. `@me` in a `--body` is NOT
+# special — it is a plain mention of the user `me`, a real account since 2008 — so
+# a blanket allowance would punch a hole in the exact check this function is for.
+LOGIN_FLAG = re.compile(r"--(?:add-|remove-)?(?:assignee|reviewer)[= ]\s*\"?$")
+GH_LOGIN_LITERALS = frozenset({"me", "copilot"})
+
+
+def _is_login_flag_value(line: str, start: int) -> bool:
+    """True when the handle at `start` is the value of an assignee/reviewer flag."""
+    return bool(LOGIN_FLAG.search(line[:start]))
+
+
+def _posting_violations() -> list[str]:
+    """Handles inside `gh ...` posting lines, scanned in EVERY fence."""
+    found: list[str] = []
+    for path in _shipped_markdown():
+        for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if not GH_POSTING_CMD.search(line):
+                continue
+            for m in MENTION.finditer(line):
+                if line[m.end() : m.end() + 1] == "/" or m.group(1).lower() in ALLOWED:
+                    continue
+                if m.group(1).lower() in GH_LOGIN_LITERALS and _is_login_flag_value(
+                    line, m.start()
+                ):
+                    continue  # `--add-assignee "@me"` — gh's own literal, correct code
+                found.append(
+                    f"{path.relative_to(REPO)}:{n}  @{m.group(1)}  (in a gh posting command)"
+                    f"\n      {line.strip()[:96]}"
+                )
+    return found
+
+
+def test_no_handles_in_gh_posting_commands():
+    """A handle in a `gh ... --body` is published by RUNNING it, not by pasting it.
+
+    Strictest check in this file, and the only one that ignores fences entirely: a
+    shell fence does not make a posting command safe, it makes it executable.
+    """
+    found = _posting_violations()
+    assert not found, (
+        f"{len(found)} handle(s) inside gh commands that POST — running these "
+        "notifies whoever owns the username, with no human in the loop:\n  "
+        + "\n  ".join(found)
+        + "\n\nUse a shell slot (\"$ASSIGNEE\" / ${NEW_AGENT}) or a plain name. "
+        "Backticks and fences do not help here."
+    )
+
+
+def test_gh_login_literals_allowed_only_as_flag_values(tmp_path):
+    """`@me` is correct in `--add-assignee`, and a real mention in a `--body`.
+
+    Pins the narrowness of the one allowance in this check. `me` is a real account
+    (registered 2008), so `@me` is special ONLY because gh documents it as a literal
+    for the assignee/reviewer flags. The same three characters in a posted body page
+    that person. A blanket name-based allowance would open exactly the hole this
+    function exists to close — which is why the check is context-scoped and not a
+    list of safe words.
+    """
+    doc = tmp_path / "s.md"
+    doc.write_text(
+        '```bash\ngh issue edit 42 --add-assignee "@me"\n'
+        'gh issue comment 42 --body "ping @me please"\n```\n',
+        encoding="utf-8",
+    )
+    lines = doc.read_text(encoding="utf-8").splitlines()
+    flag_line, body_line = lines[1], lines[2]
+
+    at = flag_line.index("@me")
+    assert _is_login_flag_value(flag_line, at), "assignee-flag @me must be allowed"
+
+    at = body_line.index("@me")
+    assert not _is_login_flag_value(body_line, at), "@me in a --body is a real mention"
+
+
 def _violations() -> list[str]:
     found: list[str] = []
     for path in _shipped_markdown():

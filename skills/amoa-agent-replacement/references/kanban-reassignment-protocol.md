@@ -267,7 +267,7 @@ If there's an open PR:
 PR_NUMBER=123
 
 # Add comment about reassignment
-gh pr comment "$PR_NUMBER" --body "This PR is being reassigned from @old-agent to @new-agent due to agent replacement. See handoff: URL"
+gh pr comment "$PR_NUMBER" --body "This PR is being reassigned from ${OLD_AGENT} to ${NEW_AGENT} due to agent replacement. See handoff: URL"
 
 # Note: GitHub doesn't allow reassigning PR authors
 # New agent may need to continue on same branch or create new PR

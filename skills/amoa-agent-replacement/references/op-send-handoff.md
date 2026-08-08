@@ -131,7 +131,7 @@ Send a retry reminder using the `agent-messaging` skill:
 
 If still no response, escalate to AMCOS (relays to AMAMA for the MAESTRO's decision):
 ```bash
-gh issue comment <ISSUE_NUM> --body "@USER: Replacement agent $REPLACEMENT_AGENT has not acknowledged handoff. Manual intervention may be needed."
+gh issue comment <ISSUE_NUM> --body "USER ESCALATION: Replacement agent $REPLACEMENT_AGENT has not acknowledged handoff. Manual intervention may be needed."
 ```
 
 ## Output

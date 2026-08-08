@@ -215,10 +215,11 @@ For human developers, update GitHub issue:
 
 ```bash
 # Assign issue
-gh issue edit 42 --add-assignee dev-alice
+gh issue edit 42 --add-assignee "$ASSIGNEE"
 
-# Add comment
-gh issue comment 42 --body "Assigned to @dev-alice. Please review the requirements and confirm understanding before starting."
+# Add comment. NO `@` in a --body: this command POSTS, so a handle here notifies
+# whoever owns that username. Short role-shaped names are already taken.
+gh issue comment 42 --body "Assigned to ${ASSIGNEE}. Please review the requirements and confirm understanding before starting."
 
 # Update labels
 gh issue edit 42 --add-label "in-progress,assigned"
