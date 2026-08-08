@@ -76,9 +76,18 @@ leftovers; they are the fix's documentation, not its residue.
 Also on this card (orch#25, B-MED): **R24** cited at the Memory Protocol heading and
 **R25** at the pillar wiring, both previously ungrepped.
 
-## Still open on orch#25 (not claimed by this card)
+## The rest of orch#25 — resolved after this card was written
 
-- Governance scenarios lack pillar-op / approval-tier coverage (B-MED).
+- **Scenario coverage (B-MED): CLOSED in v1.13.0**, not outstanding as this card
+  first said. SCEN-G12–G15 already existed on the stranded
+  `feat/governance-readiness-25` branch and were salvaged by cherry-pick. Correcting
+  the line rather than leaving it: a card that under-claims is as misleading as one
+  that over-claims, and this one would have sent the next session to rewrite work
+  that had already shipped.
+- **Self-id (B-HIGH): CLOSED in v1.13.0** — the PRRD G1.1 line is embedded in the
+  GH issue-body templates. Its salvaged form shipped `@Emasoft` inside the template,
+  which the orch#31 mention guard caught on the cherry-pick; fixed to name the owner
+  without the sigil.
 - `approval-tier:` population (B-MED) is **superseded**, not outstanding: the field
   is RETIRED and `min-approval-requirement` replaces it. Every card authored today
   carries the new field; the one legacy card migrates on its next touch, never in a
@@ -98,7 +107,7 @@ Also on this card (orch#25, B-MED): **R24** cited at the Memory Protocol heading
 - [x] Retired monolithic-skill references removed
 - [x] Capability-probe rule recorded
 - [x] R24 / R25 cited by number
-- [ ] Released — closure record
+- [x] Released — **v1.12.0** (rewire) + **v1.13.0** (salvaged #25 work)
 - [ ] MANAGER stamp for the terminal transition
 
 ## Approval log

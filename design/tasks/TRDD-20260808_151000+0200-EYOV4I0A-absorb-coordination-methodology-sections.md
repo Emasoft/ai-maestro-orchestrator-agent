@@ -78,7 +78,7 @@ card lives here, and the closure record below is re-measurable.
 - [x] §6 absorbed (parallel by default, clock rule, worker contract)
 - [x] §11 absorbed (honest columns, call-path gate)
 - [x] Second item (5 opus subagent pins) — satisfied by v1.11.0 / TRDD-QQY1PJZI
-- [ ] Released — closure record with tag + sha + timestamps
+- [x] Released — **v1.12.0**, created 2026-08-08T13:12:53Z; source commit `cfd568b8`
 - [ ] MANAGER stamp for the terminal transition (ORCH cannot self-complete)
 
 ## Approval log
