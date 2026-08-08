@@ -34,8 +34,8 @@ the colliding address was display-only.
 
 ### NEXT ACTION
 DONE for everything runnable from a dev session: helper + 11 unit tests (green), ruff+mypy
-clean, and the read + `--parent` attach procedure documented (kanban-management PROCEDURE 5
-+ design-handoff §2.9 receive note). The ONLY open item is the deployment-time live
+clean, and the read + `--parent` attach procedure documented (kanban-management
+PROCEDURE 5 + design-handoff §2.9 receive note). The ONLY open item is the deployment-time live
 round-trip (children read back under the epic), which needs a live AI-Maestro server + an
 AMCOS-spawned agent binding — deferred, cannot run here.
 

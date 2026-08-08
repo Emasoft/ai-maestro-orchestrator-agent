@@ -129,9 +129,9 @@ Rule violation detected: stop, reassess, delegate to worker agent.
   - Role Boundaries with Orchestrator Section
   - ...
 - [subagent-platform-limits.md](./references/subagent-platform-limits.md)
-  <!-- TOC: Why this file exists | Concurrency: dispatch at most 16 at a time | Nesting: bundled agents do not fan out | Lifetime spawns: no longer capped | A queued agent looks exactly like a slow one | Where these numbers live | See Also -->
-  - Concurrency: dispatch at most 16 at a time
-  - Nesting: bundled agents do not fan out
-  - Lifetime spawns: no longer capped
-  - A queued agent looks exactly like a slow one
-  - Where these numbers live
+  <!-- TOC: When deciding how many agents to dispatch at once | When a dispatched agent wants to spawn its own agents | When estimating how many agents a session can spawn in total | When you think a dispatched agent has stalled | When updating these numbers -->
+  - When deciding how many agents to dispatch at once
+  - When a dispatched agent wants to spawn its own agents
+  - When estimating how many agents a session can spawn in total
+  - When you think a dispatched agent has stalled
+  - When updating these numbers
