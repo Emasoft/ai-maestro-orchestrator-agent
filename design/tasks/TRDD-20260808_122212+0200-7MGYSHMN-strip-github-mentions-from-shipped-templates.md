@@ -1,9 +1,9 @@
 ---
 trdd-id: 7MGYSHMN
 title: Strip GitHub @mentions from every shipped template and guard the defect class with a test
-column: testing
+column: ai_review
 created: 2026-08-08T12:22:12+0200
-updated: 2026-08-08T12:22:12+0200
+updated: 2026-08-08T15:00:41+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: bugfix
@@ -109,8 +109,22 @@ test fails is never to extend that set.**
 - [x] A test fails on any `@mention` in shipped published text
 - [x] The test does not fire on code examples or correctly-backticked prose
 - [x] Mutation-verified that the test guards rather than decorates
-- [ ] orch#31 answered and closed
-- [ ] Released so the fix reaches installed copies
+- [x] orch#31 answered and closed (comment `5225691166`, closed 2026-08-08)
+- [x] Released so the fix reaches installed copies — **v1.11.0**
+
+## Closure record
+
+- **Release:** `v1.11.0`, created 2026-08-08T10:53:18Z (12:53:18+0200), cut from
+  `main` after PR #32 merged as `c58e501`.
+- **Verified AT THE TAG**, not in the working tree — `git grep '@maintainer'
+  v1.11.0 -- skills/` → **0**, and `tests/unit/test_no_github_mentions.py` is
+  present in the published tree. A working-tree check would have proved only that
+  my disk was clean, which is not the thing that reaches users.
+- **Column stopped at `ai_review`, deliberately.** `transition_authority("testing",
+  "complete")` returns `manager` — my own gate (`shared/amoa_kanban_vocab.py`,
+  shipped for TRDD-704ZBCR8 F3) refuses to let an ORCHESTRATOR mark this complete.
+  The terminal transition needs a MANAGER stamp. Dogfooding the gate rather than
+  routing around it is the point of having built it.
 
 ## Notes and lessons learned
 

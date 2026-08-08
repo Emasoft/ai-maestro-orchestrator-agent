@@ -1,9 +1,9 @@
 ---
 trdd-id: QQY1PJZI
 title: Adopt RP-MODEL-01 (drop the model pin) and RP-SKILL-MENU-01 (full skill menu) from role-plugins-spec 1.1.0
-column: testing
+column: ai_review
 created: 2026-08-08T12:38:49+0200
-updated: 2026-08-08T12:38:49+0200
+updated: 2026-08-08T15:00:41+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -117,8 +117,29 @@ rather than heeded.
 - [x] Menu lists all 23 shipped skills with when-to-reach-for-it guidance
 - [x] Publish gate compares menu entries against shipped `SKILL.md` count
 - [x] Mutation-verified that both guards guard rather than decorate
-- [ ] Released — closure record with release tag pasted below
-- [ ] Correction reported to the hub (subagents were NOT omitting; 6 files, not 1)
+- [x] Released — closure record below
+- [x] Correction reported to the hub (subagents were NOT omitting; 6 files, not 1)
+
+## Closure record — as the hub asked (release tag + sha + pasted timestamps)
+
+| item | value |
+|---|---|
+| Release tag | `v1.11.0` |
+| Release created | 2026-08-08T10:53:18Z (**12:53:18+0200** local) |
+| Merge commit on `main` | `c58e501` (PR #32) |
+| `main` tip at publish | `9a72807` |
+| Spec adopted | role-plugins-spec **1.1.0**, blob `bb99e877` (18,832 bytes) |
+| Spec read at | 2026-08-08T12:35+0200 |
+| Adoption commit | `ebe3202` |
+
+**Verified AT THE TAG**, not in the working tree: `git grep '^model:' v1.11.0 --
+agents/` → **0 matches**; the menu in `v1.11.0:agents/…-main-agent.md` carries
+**23 rows** against 23 shipped skills; both guards present in the published tree.
+
+**Column stopped at `ai_review`.** `transition_authority("testing", "complete")`
+returns `manager` — the gate this plugin ships (F3 of TRDD-704ZBCR8) refuses to let
+an ORCHESTRATOR mark its own card complete. Awaiting a MANAGER stamp rather than
+routing around the gate I built.
 
 ## Approval log
 
