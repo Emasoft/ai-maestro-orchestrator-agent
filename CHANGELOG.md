@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.10.0] — 2026-08-08
+## [1.11.0] — 2026-08-08
 
 ### Bug Fixes
 
@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 
 - Bump version to 1.10.0 (1ee3dfe)
 - Bump version to 1.10.0 (09f9935)
+- Bump version to 1.10.0 (554dfaf)
 
 ### Refactor
 
