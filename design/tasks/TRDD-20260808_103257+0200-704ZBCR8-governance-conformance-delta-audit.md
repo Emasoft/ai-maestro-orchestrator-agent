@@ -3,7 +3,7 @@ trdd-id: 704ZBCR8
 title: Governance-readiness conformance delta for the ORCHESTRATOR role-plugin against the ai-maestro SSOT
 column: live_auditing
 created: 2026-08-08T10:32:57+0200
-updated: 2026-08-08T10:32:57+0200
+updated: 2026-08-08T10:52:39+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: audit
@@ -23,17 +23,28 @@ release-via: none
 
 ## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-08-08
 
-**Artifact audited against:** `ai-maestro@governance-rules` commit `0329558c` (**LOCAL** tree
-`~/ai-maestro`), `docs/GOVERNANCE-RULES.md` v5.3.2. Named explicitly because the published remote
-tip `2ca29e43` is v5.2.0 and **243 commits behind** — the newer text is the unpublished one, so
-"the artifact" is ambiguous right now and a citation that does not say which is not checkable.
-Under the **v4.8.0 authority inversion**, `design/specs/*.md` governs `docs/GOVERNANCE-RULES.md`
-where they differ.
+**Artifact audited against:** `ai-maestro@governance-rules` (**LOCAL** tree `~/ai-maestro`) —
+F1–F6/F8 at commit `0329558c`, v5.3.2; **F7 (R52) re-read at `2d5060ec`, v5.3.3**, because the tip
+moved mid-audit. Named explicitly, with the version per finding, because the published remote tip
+`2ca29e43` is v5.2.0 and **243 commits behind**: the newer text is the unpublished one, so "the
+artifact" is ambiguous right now and a citation that does not say which is not checkable. Under the
+**v4.8.0 authority inversion**, `design/specs/*.md` governs `docs/GOVERNANCE-RULES.md` where they
+differ — so a catalog citation is a citation of the emanation, not the source.
 
-**NEXT ACTION:** answer is pending from the ai-maestro server on whether MANAGER ruling orch#27
-(resolve_column is mirror-only) permits AMOA to originate TRDD `column:` writes now that the path
-is gated. Findings F2 and F4 are blocked on that answer and on **nothing else** — the gate they
-require already exists.
+**NEXT ACTION:** implement the TRDD write-through and GitHub-Project round-trip (F2/F4). The
+ai-maestro server **confirmed the orch#27 reconciliation on 2026-08-08**: "GATE THE PATH" is a
+build-condition, not a standing prohibition, and building the gate first (landed `e237dfe`) IS the
+lift condition. Three constraints bind the implementation: (a) the write flows BACKWARDS into the
+TRDD's `column:` plus the folder `git mv` when the move crosses a lifecycle zone — never the mirror
+alone; (b) the Part B2 authority table still binds, so an ORCHESTRATOR never performs a
+USER/MANAGER-gated transition even through its own gate; (c) `resolve_column` stays mirror-only, and
+every ORIGINATING write routes through the gated path.
+
+**Linkage shape — ratified, do NOT invent one.** The issue carries the greppable `TRDD-<id8>` (in
+the TITLE by preference, since it survives body edits; a `**TRDD:** TRDD-<id8>` body marker is the
+alternative), and the TRDD frontmatter carries `external-refs:` with the issue URL. Project-scoped
+cards also carry `project-id:`. `create_task_issue` should take the TRDD id as a required input for
+TRDD-backed cards.
 
 **Load-bearing gotcha:** `shared/amoa_kanban_vocab.py` carries an invariant recording orch#27:
 *"if resolve_column is ever wired into a path that ORIGINATES a TRDD column write, a legacy value
@@ -57,7 +68,7 @@ grepping for its absence.
 - **F4 — GitHub-Project round-trip to TRDDs: NOT CONFORMANT.** Nothing flows back. Same blocker as F2; the two land together or not at all.
 - **F5 — dispatch precondition: WAS NOT CONFORMANT, FIXED `e237dfe`.** `check_dependencies_resolved` tested only that the dependency issue was CLOSED — true while the satisfying code sits in an unmerged PR, which is the SCEN-031 deadlock. `check_dispatch_precondition` now requires a closing PR merged into the base the worker branches from, and fails CLOSED on a query error.
 - **F6 — `min-approval-requirement` supersedes `approval-tier`: PARTIALLY MIGRATED.** Applied to TRDD-NSWPM93D on its next touch (`6f42ae3`); **one** other card still carries the legacy field and is deliberately left for its own next touch, since the rule forbids a mass rewrite.
-- **F7 — R52 THE WRITE BOUNDARY (5.1.0): NOT AUDITED.** AMOA ships `amoa_aimaestro_sync.py` and calls `sync_task(...)` into server-owned stores, so it is in scope. Recorded as unaudited rather than assumed clean — section requested from the server.
+- **F7 — R52 THE WRITE BOUNDARY (5.1.0): CONFORMANT.** `sync_task` upserts through `_run_task_command` → `aimaestro-task.sh`, the frozen CLI, satisfying **R52.4** ("mutate it BY ASKING THAT CLI, never by hand-editing"). Every write target in `scripts/` and `shared/` is project-relative — no absolute paths, no `expanduser` writes, nothing into `~/.aimaestro/` — so **R52.1** holds via the "agent working directories, including an adopted project folder" clause. **R52.2** (installer, not runtime) and **R52.3** (user-scoped exception) do not bind AMOA's runtime surface.
 - **F8 — `context: fork` skill backgrounding: CONFORMANT.** All 21 forked skills declare `background: false` (`0ad4599`), independently verified by the ai-maestro server at `9c1c7b8` (23 SKILL.md / 21 forked / 0 unpinned). Guarded by `tests/unit/test_skill_frontmatter.py`, which also excludes `.trashcan/` and worktree copies from the population.
 
 ## Conformant — with what was checked
@@ -67,21 +78,24 @@ A zero-findings claim is worthless without its coverage, so:
 - **F1** — read `shared/amoa_kanban_vocab.py` in full; confirmed `KANBAN_COLUMNS` is the ratified 17 in lifecycle order, `resolve_column` raises `ValueError` on unknown input, and grepped every consumer for a competing status→column map (none).
 - **F8** — parsed the delimited frontmatter block of all 23 `skills/*/SKILL.md` (not a line grep: a line grep counts fenced ```yaml doc examples as config, which was measured to over-count by exactly the documentation). Mutation-verified both directions.
 - **F3/F5** — the fixes carry 32 new tests; each was checked to FAIL against the pre-fix behaviour, so they guard rather than decorate.
+- **F7** — read R52.0–R52.4 in full at `2d5060ec`; read `sync_task` and `get_aimaestro_tasks` to their transport call; enumerated every write site in `scripts/` and `shared/` and checked each for an absolute or `$HOME`-relative target.
 
 ## Not checked (stated so the coverage is honest)
 
-`amoa_reassign_kanban_tasks.py`, `amoa_aimaestro_sync.py` and `amoa_sync_github_issues.py` were
-classified by their mutation surface but not read line-by-line; they are mirror-writers and so are
-governed by the same F2/F4 answer. R52 (F7) is unaudited. The GitHub-Project field mapping in
-`amoa_sync_kanban.py` was read for direction of sync only.
+`amoa_reassign_kanban_tasks.py` and `amoa_sync_github_issues.py` were classified by their mutation
+surface but not read line-by-line; they are mirror-writers and so are governed by the same F2/F4
+work. The GitHub-Project field mapping in `amoa_sync_kanban.py` was read for direction of sync only.
+`scripts/publish.py` and `scripts/smart_exec.py` were excluded from the R52 write-site sweep: they
+are developer tooling, not the agent runtime R52.1 binds — an exclusion by argument, which someone
+may disagree with, rather than an oversight.
 
 ## Acceptance criteria
 
 - [x] Four-point alignment contract assessed, each point with its evidence
 - [x] Dispatch precondition implemented and tested, not merely acknowledged
 - [x] Editor-authority gate implemented and tested
-- [ ] F2/F4 resolved once the orch#27 reconciliation lands
-- [ ] F7 (R52 write boundary) audited
+- [x] F7 (R52 write boundary) audited — conformant
+- [ ] F2/F4 implemented (unblocked 2026-08-08; the orch#27 reconciliation is confirmed)
 
 ## Approval log
 
