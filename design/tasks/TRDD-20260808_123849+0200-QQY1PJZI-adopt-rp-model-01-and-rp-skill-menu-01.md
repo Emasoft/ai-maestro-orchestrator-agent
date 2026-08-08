@@ -1,9 +1,9 @@
 ---
 trdd-id: QQY1PJZI
 title: Adopt RP-MODEL-01 (drop the model pin) and RP-SKILL-MENU-01 (full skill menu) from role-plugins-spec 1.1.0
-column: ai_review
+column: complete
 created: 2026-08-08T12:38:49+0200
-updated: 2026-08-08T15:00:41+0200
+updated: 2026-08-08T15:08:46+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -146,3 +146,13 @@ routing around the gate I built.
 - 2026-08-08T12:38:49+0200 — Tier 0 (`min-approval-requirement: none`): adoption of a
   ratified spec clause inside this plugin's own tree, no baseline deviation. Requested
   by the ai-maestro hub via AMP, citing role-plugins-spec 1.1.0.
+- 2026-08-08T15:08:46+0200 — `ai_review → complete` APPROVED by MANAGER
+  (min-approval-requirement: manager). Independently verified at `v1.11.0` with a
+  control check, not stamped on the hub's relay.
+- 2026-08-08 — **The subagent extension was ENDORSED and the spec CORRECTED.** The hub
+  amended `role-plugins-spec` at `ec9f8a9a`, removing the false "subagents already omit
+  everywhere" premise and marking subagent policy OPEN with `opus` pins deserving
+  scrutiny. So the extension recorded above is consistent with the ruled text, and no
+  retroactive routing is needed. Worth noting the ordering: their own fleet re-measure
+  at 12:47:50+0200 still counted these five pins — six minutes before this release made
+  that row stale. A measured claim can be true when taken and false when read.

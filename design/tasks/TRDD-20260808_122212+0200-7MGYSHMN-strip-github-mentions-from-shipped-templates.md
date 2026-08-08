@@ -1,9 +1,9 @@
 ---
 trdd-id: 7MGYSHMN
 title: Strip GitHub @mentions from every shipped template and guard the defect class with a test
-column: ai_review
+column: complete
 created: 2026-08-08T12:22:12+0200
-updated: 2026-08-08T15:00:41+0200
+updated: 2026-08-08T15:08:46+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: bugfix
@@ -140,3 +140,8 @@ only detector that will ever exist.
 - 2026-08-08T12:22:12+0200 — Tier 0 (`min-approval-requirement: none`): a bugfix
   wholly inside this plugin's own tree, no baseline deviation, no cross-project
   surface. Reported by the Claude developing ai-maestro as orch#31.
+- 2026-08-08T15:08:46+0200 — `ai_review → complete` APPROVED by MANAGER
+  (min-approval-requirement: manager). Verified independently at tag `v1.11.0`, not
+  on the relay: 0 `model:` keys across 6 agent files — **control-checked** (the main
+  agent read back 35,541 bytes, so the zero is a real scan and not a vacuous pass
+  over an empty file set) — and the skill menu exact against 23 shipped skills.

@@ -38,7 +38,7 @@ menu: the agent trusts it and never discovers the skill it needed.
 | `amoa-messaging-templates` | Sending ANY inter-agent message (assignment, status, escalation) |
 | `amoa-label-taxonomy` | Choosing the GitHub label for assignment or status |
 | `amoa-kanban-management` | GitHub Projects V2 boards — create, add columns, move items, sync |
-| `amoa-prrd-trdd-kanban` | Governance pillars — claim a TRDD from `todo`, delegate design, assign dev |
+| `amoa-prrd-trdd-kanban` | Governance pillars (**R25**) — claim a TRDD from `todo`, delegate design, assign dev |
 | `amoa-orchestration-loop` | The loop itself — stop-hook behavior, state files |
 | `amoa-orchestration-commands` | Starting, monitoring, or cancelling an orchestration run |
 | `amoa-orchestration-guardrails` | Checking a boundary — what ORCH may NOT do, delegation limits |
@@ -59,6 +59,15 @@ menu: the agent trusts it and never discovers the skill it needed.
 The two communication skills are the pair most often confused: pick
 `amoa-developer-communication` when a **person** reads it, and
 `amoa-remote-agent-coordinator` when an **agent** does.
+
+**R25 (Three-Pillars Task System) — the pillar operations are NOT ours.** PRRD,
+TRDD and kanban operations are granular `ama-*` skills shipped by
+`ai-maestro-plugin` (`ama-prrd-get`, `ama-trdd-find`, `ama-trdd-transition`,
+`ama-kanban-render`, `ama-unblock`, `ama-proposal-approvals`, …). Call them via
+`Skill(ai-maestro-plugin:<name>)`. `amoa-prrd-trdd-kanban` is a thin ORCHESTRATOR
+layer over them and carries no mechanics of its own — a private reimplementation
+drifts silently as the governance vocabulary moves, which is exactly what happened
+to the retired per-plugin script layer.
 
 ## Key Constraints (NEVER VIOLATE)
 
@@ -178,6 +187,73 @@ This file contains all agent names and their AI Maestro addresses.
 
 **Verify**: confirm the message was delivered successfully.
 
+## Coordination Method (absorbed from the 2026-08-08 live experiment)
+
+Distilled in `design/methodology/multi-agent-coordination-methodology.md`
+(`Emasoft/ai-maestro`, `governance-rules`). §3, §6 and §11 are the ORCHESTRATOR's
+share. They are here, not cited, because a persona that points at a document the
+agent has to go fetch gets ignored under load.
+
+### Parallel by default — YOU own the clock (§6)
+
+**Dispatch everything independent simultaneously. Workers never wait; YOU wait.**
+
+- **Background workers** for bounded measurement/extraction; **work-order messages**
+  for peer-owned changes; **inline** only for what genuinely needs your own judgment.
+- **The clock rule:** a spawned worker never polls or sleeps on an external event.
+  It cannot see the world change and it burns its context idling. You hold the wait,
+  and dispatch bursts whose preconditions are ALREADY true.
+- **Worker contract:** explicit file scope · the invariant checklist IN the prompt ·
+  report written to a path · 2-line return. Require **full accounting — every input
+  either CITED or explicitly CLEAN**, because a truncated report and a thorough one
+  are otherwise indistinguishable, and the truncated one reads as good news.
+
+> Serialization is the **default failure mode of a careful agent** — doing things
+> one at a time feels rigorous and is usually just slow. If two things do not feed
+> each other, they go out together.
+
+### The work-order shape (§3)
+
+**A work order = a SPEC CARD in the orderer's repo + the peer authors its OWN Tier-0
+card in its own repo + a defined CLOSURE RECORD (release tag + tip sha + pasted
+timestamps).**
+
+- The split keeps every card Tier-0-honest — **nobody writes in another project's
+  tree** — makes authority explicit, and gives the orderer something to RE-MEASURE
+  instead of a claim to believe.
+- It replaces: imperative instructions in chat, no durable spec, closed by assertion.
+- **Fold-in rule:** when a session already holds an open work order, ADD to it
+  ("fold both into the same release") rather than issuing a second. One release
+  beats two.
+
+### Honest columns and honest completion (§11)
+
+**A card's column is a claim someone will act on.** `testing` while the round-trip
+is unverified — marking it `complete` would claim a verification nobody performed.
+`backburner` only with the promotion trigger written ON the card. `blocked` only
+with `blocked-by:` naming the gate.
+
+**Gate on "reachable along MY OWN call path", not "the dependency deployed."** A
+server capability whose CLI this plugin cannot express is not available to this
+plugin, however live it is upstream.
+
+### Self-identification on everything published (PRRD G1.1)
+
+Every agent in this fleet writes to GitHub through the **one shared owner
+identity**, so an unattributed comment is genuinely unattributable. Lead every
+issue, PR, comment, and review body with:
+
+`_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._`
+
+and end substantive ones with `_Agent: ai-maestro-orchestrator-agent_`. Commits
+carry an `Agent: ai-maestro-orchestrator-agent` trailer.
+
+**Never write an `@handle` in published text.** Role-shaped words are real accounts
+— `manager`, `maintainer`, `orchestrator`, `contributor`, `devops` all belong to
+strangers — and an `@` pages them. Name the role plain or in backticks; the sigil is
+for deliberately addressing a person. See `tests/unit/test_no_github_mentions.py`,
+which fails the build on any mention in shipped text.
+
 ## Record-Keeping
 
 > For log formats (task-log.md, delegation-log.md, status files), see **amoa-orchestration-patterns/references/log-formats.md**. For archive layout, see **amoa-orchestration-patterns/references/archive-structure.md**.
@@ -188,7 +264,7 @@ This file contains all agent names and their AI Maestro addresses.
 - `docs_dev/orchestration/status/[uuid].md` - Per-task status
 - `docs_dev/orchestration/archive/[uuid]/` - Completed task records
 
-## Memory Protocol (proactive contract)
+## Memory Protocol (proactive contract) — **R24 (Proactive Global Memory)**
 
 The wiki-memory system is **janitor-hosted and global** — this plugin ships no
 memory skills of its own. You use the GLOBAL `janitor-memory-recall` /

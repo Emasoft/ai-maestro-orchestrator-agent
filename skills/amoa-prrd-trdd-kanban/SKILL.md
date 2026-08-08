@@ -1,10 +1,10 @@
 ---
 name: amoa-prrd-trdd-kanban
 description: "ORCHESTRATOR's role in the PRRD / TRDD / Kanban workflow. Use when ORCH claims TRDDs from todo, delegates design to ARCHITECT, assigns dev work to MEMBERs, manages the RED (blocked) column priority, or coordinates AMP messages with the team."
-allowed-tools: "Bash(python3:*), Bash(get-prrd.py:*), Bash(findprrd.py:*), Bash(findtrdd.py:*), Bash(kanban.py:*), Bash(amp-send:*), Read, Edit, Grep, Glob"
+allowed-tools: "Skill, Bash(amp-send:*), Bash(amp-kanban-list:*), Bash(amp-kanban-move:*), Read, Edit, Grep, Glob"
 metadata:
   author: "Emasoft"
-  version: "1.0.0"
+  version: "2.0.0"
 ---
 
 ## Overview
@@ -17,37 +17,86 @@ minimise the time TRDDs spend there. ORCH owns three columns: `todo`
 (claims promoted TRDDs from AMAMA), `dispatch` (assigns designed TRDDs
 to agents and moves to `dev`), and `blocked` 🔴. It reads but does not
 own `dev`, `testing`, `ai_review`, `human_review` for upward status.
-For the universal mechanics, see the `prrd-trdd-kanban` skill in
-`ai-maestro-plugin`.
+
+## The pillar operations live in the CORE plugin — call them, do not reimplement
+
+Every PRRD / TRDD / kanban operation is a **granular `ama-*` skill shipped by
+`ai-maestro-plugin`**. Load one with `Skill(ai-maestro-plugin:<name>)`. This file
+carries only what is ORCHESTRATOR-*specific* — which columns ORCH owns, and how it
+ranks the red column. It deliberately carries no mechanics of its own.
+
+| Need | Core skill |
+|---|---|
+| Read a PRRD rule by number | `ama-prrd-get` |
+| Search the PRRD | `ama-prrd-find` |
+| Edit a SILVER rule (authority-gated) | `ama-prrd-edit` |
+| Propose a rule change | `ama-prrd-propose` |
+| Find TRDDs by column / field | `ama-trdd-find` |
+| Author a TRDD | `ama-trdd-write` |
+| Update TRDD frontmatter | `ama-trdd-update` |
+| Move a card between columns | `ama-trdd-transition` |
+| Render the board | `ama-kanban-render` |
+| Rank / clear the blocked column | `ama-unblock` |
+| Approve or refuse a proposal | `ama-proposal-approvals` |
+
+**Why this matters and is not mere tidiness.** This skill previously wired a
+per-plugin copy of the old script layer (`get-prrd.py`, `findprrd.py`,
+`findtrdd.py`, `kanban.py`). A second implementation of a governance operation does
+not stay equivalent: the vocabulary, the authority table and the approval record
+all moved under the MANAGER wave, and a private copy silently keeps enforcing the
+retired shape while looking correct. The core skills are the one implementation
+that moves with the rules.
+
+**Probe capability, never a version.** When you depend on a contract that may not
+be seeded yet, test for the contract itself —
+`grep -q min-approval-requirement .claude/rules/aimaestro-trdd-approval.md` — never
+a plugin version or branch name. A version check answers a question about
+packaging; the behaviour you actually need is what the seeded rules say.
 
 ## Prerequisites
 
-- The universal `prrd-trdd-kanban` skill (ai-maestro-plugin) for shared
-  mechanics, transition numbers, and the exempt-operations matrix.
-- A PRRD plus a populated `design/tasks/` tree of TRDD `.md` files —
-  the TRDD files are the single source of truth.
+- `ai-maestro-plugin` installed — it ships the `ama-*` skills above. This skill is
+  a thin role layer over them and does nothing useful without it.
+- A PRRD plus a populated `design/tasks/` tree of TRDD `.md` files. **The files are
+  the SSOT for state**; the server board is a mirror, and the script verbs are
+  correctness wrappers, not an authorization boundary.
 - AI Maestro Plugin (AMP) installed for inter-agent messaging; ORCH
   routes every cross-team message through its CHIEF-OF-STAFF (COS).
 
 ## Instructions
 
-1. Claim a todo: `findtrdd.py --column todo`, pick highest-priority
-   (oldest breaks ties), read body + frontmatter for intent.
+1. Claim a todo: `Skill(ai-maestro-plugin:ama-trdd-find)` filtered to
+   `column: todo`, pick highest-priority (oldest breaks ties), read body +
+   frontmatter for intent.
 2. Delegate design to ARCHITECT: AMP-send via COS "delegate TRDD-<id>
-   to ARCHITECT", then edit `column: design` and bump `updated:`.
+   to ARCHITECT", then transition to `design` with
+   `Skill(ai-maestro-plugin:ama-trdd-transition)` (it bumps `updated:` for you —
+   do not also hand-edit the field, or the board's sort order reflects two writes).
 3. On design→dispatch, ARCHITECT signals via AMP (a 1→N split leaves N
    child TRDDs in `dispatch`, parent `superseded`); verify each child's
    `task-type:`, `test-requirements:`, `review-requirements:`, `eht:`.
-4. Assign each dispatch TRDD: set `assignee:` (skill matches
-   `task-type:`, capacity via `kanban.py --group-by assignee`),
-   `column: dev`, bump `updated:`, AMP-send the assignee via COS.
-5. Run `kanban.py --red` every session. For each TRDD in the
-   **🔓 BLOCK-CLEARING PRIORITY** ranking, raise `priority:` toward `1`
-   in proportion to `unblocks_count`; assign unassigned blockers now;
-   recurse into chained (transitively blocked) blockers first.
-6. Escalate non-exempt actions via COS — cross-team reassignment,
+4. **Before dispatching, check the DISPATCH PRECONDITION** — every dependency must
+   have a closing PR **merged into the base this worker will branch from**, not
+   merely a closed issue. `shared/amoa_dispatch_gate.py` evaluates it. A closed
+   issue whose fix sits in an unmerged PR is the SCEN-031 deadlock: the worker
+   branches off a base that lacks the dependency and cannot proceed.
+5. Assign each dispatch TRDD: set `assignee:` (skill matches `task-type:`, capacity
+   from `Skill(ai-maestro-plugin:ama-kanban-render)` grouped by assignee), move to
+   `dev`, AMP-send the assignee via COS.
+6. Work the blocked column every session with
+   `Skill(ai-maestro-plugin:ama-unblock)`. Raise `priority:` toward `1` in
+   proportion to `unblocks_count`; assign unassigned blockers now; recurse into
+   chained (transitively blocked) blockers first.
+7. **Gate on "reachable along MY OWN call path", not "the dependency shipped."** A
+   server capability that this plugin's CLI cannot yet express is not available to
+   this plugin, however deployed it is upstream. Promote a `backburner` card only
+   when the trigger written on the card is reachable from here.
+8. Escalate non-exempt actions via COS — cross-team reassignment,
    `human_review`, force-`failed`. Exempt (no approval): dispatch→dev
    assignment, red-column priority bumps, within-team reassignment.
+   `shared/amoa_kanban_vocab.py::transition_authority()` answers this
+   mechanically — consult it rather than recalling the table, and note it will
+   refuse ORCH's own card completions by design.
 
 ## Output
 
@@ -71,15 +120,13 @@ For the universal mechanics, see the `prrd-trdd-kanban` skill in
 
 ## Examples
 
-```bash
-# Start every session by inspecting the RED column priority ranking
-kanban.py --red
-```
+```text
+# Start every session on the blocked column — it is the delay source ORCH owns
+Skill(ai-maestro-plugin:ama-unblock)
 
-```bash
 # See what is waiting to be assigned, then assign by capacity
-findtrdd.py --column dispatch
-kanban.py --group-by assignee
+Skill(ai-maestro-plugin:ama-trdd-find)      # filter: column = dispatch
+Skill(ai-maestro-plugin:ama-kanban-render)  # group by assignee
 ```
 
 ## Single-writer-per-domain and NPT/EHT collision avoidance
@@ -96,7 +143,7 @@ of truth.
 When authoring derived NPT/EHT child TRDDs, prevent cross-instance
 collisions (PRRD S6.1): each child declares in its body the
 files/domains it will touch, and before creating it, scan the open
-TRDDs (`findtrdd.py --column dev` / `dispatch` / `testing`) for a domain
+TRDDs (`ama-trdd-find` over `dev` / `dispatch` / `testing`) for a domain
 overlap. On collision, serialise the children — make one `blocked-by:`
 the other so only one writes the shared domain at a time — or merge them
 into a single TRDD, rather than letting two instances edit the same
@@ -106,12 +153,15 @@ front by asking each MEMBER which files/domains it will touch.
 
 ## Resources
 
-For shared mechanics, transition numbers, and the approval matrix, read
-the universal `prrd-trdd-kanban` skill in `ai-maestro-plugin` — in
-particular its `exempt-operations.md` (which transitions need MANAGER
-approval) and `column-transitions.md` (the full numbered transition
-list). The existing `amoa-kanban-management` skill manages an AI Maestro
-server-backed board and coexists with this file-based flow: the
-server board is a UI mirror, while the TRDD `.md` files remain the
-source of truth and `kanban.py` drives in-session red-column decisions.
+Shared mechanics, the 17-column vocabulary, and the approval matrix live in the
+granular `ama-*` skills listed above — `ama-trdd-transition` carries the transition
+rules, `ama-proposal-approvals` the approval flow. There is no monolithic
+`prrd-trdd-kanban` skill to defer to any more; that name was retired when the
+operations were split, and a reference to it resolves to nothing.
+
+The `amoa-kanban-management` skill manages the AI Maestro server-backed board and
+coexists with this file-based flow: **the server board is a mirror; the TRDD `.md`
+files are the SSOT.** When the two disagree, the files win and the mirror is
+re-synced from them — never the reverse.
+
 The ORCHESTRATOR persona lives in the agent's main-agent definition.
