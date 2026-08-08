@@ -37,6 +37,31 @@ def check_claude_tasks(transcript_path: str) -> tuple[int, list[str]]:
         Tuple of (pending_count, sample_tasks) where:
         - pending_count: Number of pending + in-progress tasks
         - sample_tasks: List of up to 2 sample task subjects prefixed with [Task]
+
+    KNOWN DOUBLE-COUNT WITH `check_todo_list` — deliberately NOT "fixed" (orch#25,
+    routed to MANAGER 2026-08-08). This docstring says it reads native
+    TaskCreate/TaskList data, but the body below parses the `"todos":` key, which is
+    TodoWrite's. `check_todo_list` (SOURCE 4) parses the SAME array, so a session
+    using both counts each pending item twice.
+
+    The correct dedup depends on a fact nobody in the fleet owns: the native
+    TaskCreate/TaskUpdate/TaskList TRANSCRIPT SERIALIZATION FORMAT. That is Claude
+    Code's, not AI Maestro's — MANAGER confirmed there is no fleet role to route it
+    to, so "ask the owner" has no destination. Two mutually exclusive fixes follow
+    from it:
+      - if `"todos":` IS what this function should read -> SOURCE 4 is a pure
+        duplicate and should be dropped;
+      - if native-Task data lives under a DIFFERENT key -> fix the key here, and the
+        two sources become genuinely distinct rather than redundant.
+
+    WHY IT IS SAFE TO LEAVE. The exit gate is `total_pending == 0`, so a double-count
+    can only INFLATE the total, never falsely zero it. The failure mode is "the hook
+    declines to let you stop when you could have" — annoying, never unsafe. Guessing
+    on a safety hook to remove a cosmetic wart would trade a harmless bug for a
+    possible silent one.
+
+    This note exists so that if the harness format is ever published, the fix is a
+    five-minute edit rather than a re-derivation of why the code looks wrong.
     """
     # Skip if no transcript path or file doesn't exist
     if not transcript_path or not Path(transcript_path).exists():
