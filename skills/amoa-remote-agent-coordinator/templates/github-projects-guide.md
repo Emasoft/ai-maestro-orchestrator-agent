@@ -185,7 +185,7 @@ gh issue comment {ISSUE_NUM} --body "## Blocked
 2. Mock database layer temporarily
 3. Split into two PRs
 
-@orchestrator Please advise."
+[orchestrator] Please advise."
 ```
 
 ---

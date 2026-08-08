@@ -95,7 +95,7 @@ The agent ID should match the developer's GitHub username:
 **Why match GitHub username?**
 - Enables automatic issue assignment
 - Links PRs to developer
-- Enables @mentions in comments
+- Enables `@mentions` in comments
 
 ### 3.2.2 GitHub Project Integration
 

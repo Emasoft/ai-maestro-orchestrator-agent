@@ -126,12 +126,17 @@ Credit contributors by their GitHub username when they contributed a significant
 **Format:**
 
 ```markdown
-- Added dark mode support (contributed by @username) (#78)
-- Fixed race condition in WebSocket handler (reported by @reporter, fixed by @developer) (#92)
+- Added dark mode support (contributed by @<username>) (#78)
+- Fixed race condition in WebSocket handler (reported by @<reporter-username>, fixed by @<fixer-username>) (#92)
 ```
 
 **Rules:**
-- Use the `@username` format for GitHub usernames
+- Substitute the contributor's real handle for the `@<username>` placeholder. The
+  angle brackets are there so the placeholder itself cannot page anyone: a GitHub
+  username may not begin with `<`, so `@<username>` is inert until you replace it.
+  Short role-shaped words are the usernames most likely to be already claimed —
+  `manager`, `maintainer`, `reporter` and `orchestrator` are all real accounts — so
+  a literal placeholder left in a published changelog notifies a stranger.
 - Credit both the reporter and the fixer when they are different people
 - Attribution is optional for routine changes by core maintainers
 - Attribution is mandatory for contributions from external contributors
@@ -319,7 +324,7 @@ CONTENT CHECKS:
 - [ ] Every change description is specific (names the component, trigger, and symptom)
 - [ ] No vague entries like "Fixed bug" or "Various improvements"
 - [ ] Related issue numbers are referenced using #N syntax
-- [ ] External contributors are credited with @username
+- [ ] External contributors are credited with their real `@<username>` handle, with no placeholder left unsubstituted
 - [ ] Breaking changes include migration instructions with Before/After examples
 - [ ] Security fixes reference the CVE number if applicable
 - [ ] Quantifiable improvements include numbers (percentage, time, size)

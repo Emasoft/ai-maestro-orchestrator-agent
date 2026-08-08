@@ -115,7 +115,7 @@ Human developers receive assignments and communicate through GitHub:
 | Issue comments | Discuss requirements, ask questions |
 | Pull requests | Submit work for review |
 | PR reviews | Receive feedback |
-| @mentions | Get attention for urgent items |
+| `@mentions` | Get attention for urgent items |
 
 **Communication flow**:
 ```
@@ -167,7 +167,7 @@ Track human developer progress through:
 ```markdown
 ## Progress Check
 
-Hi @dev-alice, checking in on the auth-core module (#42).
+Hi [dev-alice], checking in on the auth-core module (#42).
 
 - How's progress going?
 - Any blockers or questions?

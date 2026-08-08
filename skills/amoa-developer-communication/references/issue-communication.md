@@ -36,7 +36,7 @@ Every bug report deserves a response, even if you can't fix it immediately. Sile
 
 **Template**:
 ```markdown
-Thanks for reporting this, @username!
+Thanks for reporting this, @<username>!
 
 I can see this is affecting your workflow. Let me look into it.
 
@@ -108,7 +108,7 @@ Options:
 2. Implement a workaround (adds complexity but unblocks us)
 3. Pin to older version (loses security fixes)
 
-@username - which would work best for your use case?
+@<username> - which would work best for your use case?
 ```
 
 ### 2.1.4 Resolution Communication
@@ -154,7 +154,7 @@ Feature requests are gifts - someone cared enough to suggest an improvement. Tre
 
 **Good**:
 ```markdown
-Thanks for the suggestion, @username! I can see how this would streamline your workflow.
+Thanks for the suggestion, @<username>! I can see how this would streamline your workflow.
 
 The use case makes sense - currently you have to export, transform, and reimport, when a direct transformation would save several steps.
 ```
@@ -321,7 +321,7 @@ Issues go stale. Handle them proactively:
 
 **Check-in Template (60 days)**:
 ```markdown
-Hi @username - checking in on this issue.
+Hi @<username> - checking in on this issue.
 
 Is this still affecting you? We've made several changes since this was reported that might have addressed it.
 
@@ -400,7 +400,7 @@ If you hit any other issues, please open a new issue. Your reports make the proj
 
 ### Bug Acknowledgment
 ```markdown
-Thanks for reporting this, @username! Let me look into it.
+Thanks for reporting this, @<username>! Let me look into it.
 
 Quick questions to help me reproduce:
 - Version: (`app --version`)

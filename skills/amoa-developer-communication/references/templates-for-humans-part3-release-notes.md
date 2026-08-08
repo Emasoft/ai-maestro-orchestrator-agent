@@ -106,14 +106,14 @@ Connect release notes to detailed information for those who want it.
 
 **Template**:
 ```markdown
-- [Feature description] ([#PR](link)) - Thanks @contributor!
+- [Feature description] ([#PR](link)) - Thanks @<contributor-username>!
 ```
 
 **Example**:
 ```markdown
 ## New Features
 - Two-factor authentication ([#456](https://github.com/org/repo/pull/456))
-- Dark mode support ([#423](https://github.com/org/repo/pull/423)) - Thanks @community-contributor!
+- Dark mode support ([#423](https://github.com/org/repo/pull/423)) - Thanks @<contributor-username>!
 
 ## Bug Fixes
 - Fixed: Charts not rendering in Safari 17 ([#489](https://github.com/org/repo/issues/489))

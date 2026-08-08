@@ -71,12 +71,12 @@ Blockers should include who can resolve them and what resolution looks like.
 **Good** (actionable):
 ```
 - Blocked: Need AWS credentials for staging environment
-  - Who: @devops-team
+  - Who: [devops-team]
   - Needed: IAM role with S3 read access
   - Impact: Cannot test file upload feature
 
 - Blocked: Waiting for API contract review
-  - Who: @backend-lead
+  - Who: [backend-lead]
   - Needed: Approval of authentication flow design doc
   - Impact: Cannot finalize implementation details
 ```

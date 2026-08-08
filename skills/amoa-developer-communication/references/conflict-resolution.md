@@ -334,9 +334,9 @@ Some disagreements need a tiebreaker. Knowing when and how to escalate prevents 
 ```
 I think we've reached an impasse on the caching architecture. We've both made our cases and tried to find middle ground, but we have fundamental disagreements about the consistency requirements.
 
-Could we bring @architect-name into the discussion? They have context on the broader system and can help us decide.
+Could we bring [architect-name] into the discussion? They have context on the broader system and can help us decide.
 
-@other-developer - does that sound fair to you?
+[other-developer] - does that sound fair to you?
 ```
 
 ### 4.4.2 Technical Leads and Architects
@@ -346,12 +346,12 @@ When escalating to leads or architects, present the disagreement fairly.
 **Template for escalation**:
 ```markdown
 ## Summary
-We need a decision on [topic]. @developer-a and I have different views and couldn't reach agreement.
+We need a decision on [topic]. [developer-a] and I have different views and couldn't reach agreement.
 
 ## Context
 [Brief background on why this decision matters]
 
-## Position A (@developer-a)
+## Position A ([developer-a])
 [Their view, stated charitably]
 - Key argument: [...]
 - Supporting evidence: [...]
@@ -387,12 +387,12 @@ Even after resolution, document the disagreement and decision. Future developers
 
 ## Options Considered
 ### Option A: [Name]
-- Proposed by: @developer-a
+- Proposed by: [developer-a]
 - Pros: [...]
 - Cons: [...]
 
 ### Option B: [Name]
-- Proposed by: @developer-b
+- Proposed by: [developer-b]
 - Pros: [...]
 - Cons: [...]
 
@@ -400,7 +400,7 @@ Even after resolution, document the disagreement and decision. Future developers
 We chose **Option B** because [reasoning].
 
 ## Dissenting View
-@developer-a preferred Option A because [their reasoning, stated fairly].
+[developer-a] preferred Option A because [their reasoning, stated fairly].
 
 ## When to Revisit
 Revisit this decision if [conditions change].
@@ -423,7 +423,7 @@ In open source, maintainers are the final authority. Know when to escalate to th
 ```
 This discussion seems to have stalled. We have two different approaches and haven't been able to reach consensus.
 
-@maintainer - could you weigh in? Specifically:
+[maintainer] - could you weigh in? Specifically:
 1. Does this feature fit the project direction?
 2. If yes, which approach aligns better with the codebase philosophy?
 
@@ -440,12 +440,12 @@ When a PR is blocked by unresolved disagreement:
 
 **Good**:
 ```
-@maintainer - This PR has been open for 3 weeks with ongoing discussion about [issue]. We haven't been able to resolve it.
+[maintainer] - This PR has been open for 3 weeks with ongoing discussion about [issue]. We haven't been able to resolve it.
 
 Current state:
 - Code is complete and tested
 - Blocking issue: [description]
-- @reviewer-a wants: [...]
+- [reviewer-a] wants: [...]
 - I implemented: [...]
 
 Could you make a call on this so we can either merge or adjust?
@@ -453,7 +453,7 @@ Could you make a call on this so we can either merge or adjust?
 
 **Bad**:
 ```
-@maintainer - Please merge this, @reviewer-a is being unreasonable.
+[maintainer] - Please merge this, [reviewer-a] is being unreasonable.
 ```
 
 ### 4.5.3 Community Conduct Issues
@@ -468,7 +468,7 @@ Some conflicts aren't about code but about behavior. These need maintainer invol
 
 **How to report**:
 ```
-@maintainer (or use private reporting channel if available)
+[maintainer] (or use private reporting channel if available)
 
 I'm concerned about the tone in [link to discussion]. Specifically:
 - [Quote specific problematic statement]
