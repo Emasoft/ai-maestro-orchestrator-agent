@@ -8,7 +8,7 @@ resolution-markers = [
 
 [[package]]
 name = "ai-maestro-orchestrator-agent"
-version = "1.13.3"
+version = "1.13.4"
 source = { virtual = "." }
 
 [package.optional-dependencies]
