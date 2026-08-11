@@ -237,7 +237,7 @@ with `blocked-by:` naming the gate.
 server capability whose CLI this plugin cannot express is not available to this
 plugin, however live it is upstream.
 
-### Self-identification on everything published (PRRD G1.1)
+### Self-identification on everything published (PRRD G1)
 
 Every agent in this fleet writes to GitHub through the **one shared owner
 identity**, so an unattributed comment is genuinely unattributable. Lead every

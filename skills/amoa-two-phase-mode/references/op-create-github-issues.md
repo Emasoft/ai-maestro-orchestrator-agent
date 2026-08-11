@@ -32,7 +32,7 @@ Trigger this operation when:
 
 ### Step 1: Prepare Issue Content
 
-For each module, prepare the issue content. Per **PRRD G1.1** (every agent
+For each module, prepare the issue content. Per **PRRD G1** (every agent
 writing to GitHub self-identifies — see the main agent's "GitHub Authorship
 Self-Identification" section), lead the body with the self-id line:
 

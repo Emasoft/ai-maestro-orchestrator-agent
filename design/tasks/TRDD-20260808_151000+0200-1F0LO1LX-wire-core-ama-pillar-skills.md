@@ -84,7 +84,7 @@ Also on this card (orch#25, B-MED): **R24** cited at the Memory Protocol heading
   the line rather than leaving it: a card that under-claims is as misleading as one
   that over-claims, and this one would have sent the next session to rewrite work
   that had already shipped.
-- **Self-id (B-HIGH): CLOSED in v1.13.0** — the PRRD G1.1 line is embedded in the
+- **Self-id (B-HIGH): CLOSED in v1.13.0** — the PRRD G1 line is embedded in the
   GH issue-body templates. Its salvaged form shipped `@Emasoft` inside the template,
   which the orch#31 mention guard caught on the cherry-pick; fixed to name the owner
   without the sigil.
