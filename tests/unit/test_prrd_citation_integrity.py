@@ -116,6 +116,80 @@ def dangling_citations() -> list[str]:
     return bad
 
 
+# Each rule's BODY hash, keyed by its full citation. Reported 2026-08-11 by the
+# Claude developing ai-maestro-programmer-agent, who found this hole in their own
+# guard after checking my report against their implementation instead of filing it
+# as already-handled.
+#
+# WHY THE CITATION CHECK ALONE IS NOT ENOUGH. That check binds CITATION -> version.
+# Nothing bound TEXT -> version, which is precisely the direction this repo failed
+# in: on 2026-08-08 I edited G1.1's text and left the version at .1, so every
+# citation still resolved, to changed content, and pytest / ruff / CPV --strict all
+# stayed green. A guard that only catches the loud direction leaves the silent one
+# open, and the silent one is the one that actually happened here.
+#
+# ON A LEGITIMATE EDIT this fails and PRINTS the hash to paste, so the cost is one
+# line on a rule the author is already editing to bump. Do NOT "fix" a failure by
+# regenerating the whole fixture blindly — that is the one move that converts this
+# guard back into decoration.
+RULE_BODY = re.compile(
+    r"^-\s+\*\*([GS])(\d+)\.(\d+)\*\*\s*(.*?)(?=^-\s+\*\*[GS]\d+\.\d+\*\*|^##|\Z)",
+    re.MULTILINE | re.DOTALL,
+)
+RULE_BODY_HASHES = {
+    "G1.2": "aa0bcd191bbe5282",
+    "S2.1": "aa7a8a2c67d6aa31",
+    "S3.1": "8e16a7756bb4076c",
+    "S4.1": "7cf7183d222c7ea3",
+    "S5.1": "1d53473bbb0e3953",
+    "S6.1": "d8a1f7bd6aae76c0",
+    "S7.1": "86d1ad67ee3545ba",
+    "S8.1": "62b8df094293cdf7",
+}
+
+
+def _rule_body_hashes() -> dict[str, str]:
+    import hashlib
+
+    out: dict[str, str] = {}
+    for letter, num, ver, body in RULE_BODY.findall(PRRD.read_text(encoding="utf-8")):
+        # Whitespace-normalized: a reflow is not a revision, and failing on one
+        # would train the author to regenerate the fixture without reading it.
+        norm = " ".join(body.split())
+        out[f"{letter}{num}.{ver}"] = hashlib.sha256(norm.encode()).hexdigest()[:16]
+    return out
+
+
+def test_rule_text_matches_its_version():
+    """A rule's text may not change without its version moving.
+
+    Reports new / removed / mutated distinctly, because each needs a different fix:
+    a NEW rule needs a fixture entry, a REMOVED one needs its entry dropped, and a
+    MUTATED one needs a version bump (or, if the edit was accidental, a revert).
+    """
+    actual, expected = _rule_body_hashes(), RULE_BODY_HASHES
+    new = sorted(set(actual) - set(expected))
+    gone = sorted(set(expected) - set(actual))
+    moved = sorted(k for k in set(actual) & set(expected) if actual[k] != expected[k])
+
+    problems: list[str] = []
+    if moved:
+        problems.append(
+            "TEXT CHANGED WITHOUT A VERSION BUMP — bump the rule, then set the hash:\n    "
+            + "\n    ".join(f'"{k}": "{actual[k]}",  (fixture has {expected[k]})' for k in moved)
+        )
+    if new:
+        problems.append(
+            "NEW rule id(s) — add to RULE_BODY_HASHES:\n    "
+            + "\n    ".join(f'"{k}": "{actual[k]}",' for k in new)
+        )
+    if gone:
+        problems.append(
+            "rule id(s) no longer in the PRRD — drop from RULE_BODY_HASHES: " + ", ".join(gone)
+        )
+    assert not problems, "\n\n".join(problems)
+
+
 def test_prrd_has_parseable_rule_definitions():
     """Guards the guard: a PRRD this cannot parse would pass everything vacuously."""
     rules = current_rules()
