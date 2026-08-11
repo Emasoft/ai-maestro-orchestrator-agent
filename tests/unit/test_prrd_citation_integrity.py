@@ -190,6 +190,77 @@ def test_rule_text_matches_its_version():
     assert not problems, "\n\n".join(problems)
 
 
+def test_rule_capture_spans_continuation_lines_but_ignores_reflow():
+    """The two controls pull OPPOSITE ways, so one alone hides the other.
+
+    Reported 2026-08-11 by the Claude developing ai-maestro-programmer-agent, who
+    found their own guard carrying the defect class it exists to catch: `(.*)$`
+    under `re.M` stops at the first newline, so a rule wrapped across lines was
+    truncated to its FIRST line and an edit to any continuation line hashed
+    IDENTICALLY. The guard passed while the rule's meaning changed.
+
+    That is silent UNDER-coverage, and it is worse than a false positive: a false
+    alarm announces itself, a guard that quietly stopped covering never does.
+
+    THIS IMPLEMENTATION IS ALREADY CORRECT — `(.*?)` with DOTALL plus a lookahead
+    to the next bullet/heading/EOF captures the whole BLOCK. This test exists
+    because it was correct and UNPROVEN: the only control shipped was a first-line
+    edit, which passes under both the correct regex and the broken one. So the
+    property was one well-meaning "simplification" to `(.*)$` away from silently
+    vanishing, with every test still green.
+
+    Both directions are pinned together deliberately. Fixing a false positive by
+    normalizing whitespace, and fixing under-coverage by capturing the block, pull
+    against each other — a single control in either direction hides a regression in
+    the other, which is precisely how the original passed review.
+    """
+    import hashlib
+
+    def hashes(text: str) -> dict[str, str]:
+        return {
+            f"{a}{b}.{c}": hashlib.sha256(" ".join(d.split()).encode()).hexdigest()[:16]
+            for a, b, c, d in RULE_BODY.findall(text)
+        }
+
+    base = (
+        "## GOLDEN\n\n"
+        "- **G1.1** — first line here\n"
+        "  second line zeta continues\n"
+        "  third line\n\n"
+        "- **S2.1** — a different rule\n"
+    )
+    # A: meaning changed on a CONTINUATION line -> must be detected.
+    changed = base.replace("zeta", "OMEGA")
+    assert hashes(changed)["G1.1"] != hashes(base)["G1.1"], (
+        "a word changed on a continuation line hashed IDENTICALLY — the capture is "
+        "truncating at the first newline, so multi-line rules are silently uncovered"
+    )
+    # B: pure reflow, no meaning change -> must NOT be detected.
+    reflowed = base.replace("first line here\n  second line", "first line here second line")
+    assert hashes(reflowed)["G1.1"] == hashes(base)["G1.1"], (
+        "a pure reflow changed the hash — that trains the author to regenerate the "
+        "fixture without reading it, which turns this guard into decoration"
+    )
+    # And the block must stop at the next rule, not swallow it.
+    bodies = [groups[3] for groups in RULE_BODY.findall(base) if "zeta" in groups[3]]
+    assert "different rule" not in " ".join(bodies), (
+        "the capture ran past its own rule into the next one"
+    )
+
+    # C: the broken shape must actually be broken. Without this, the two asserts
+    # above pass under a regex that never had the property — they only prove the
+    # CURRENT pattern behaves, not that the pattern is what makes it behave.
+    broken = re.compile(r"^-\s+\*\*([GS])(\d+)\.(\d+)\*\*\s*(.*)$", re.MULTILINE)
+    assert hashes(base)["G1.1"] != {
+        f"{a}{b}.{c}": hashlib.sha256(" ".join(d.split()).encode()).hexdigest()[:16]
+        for a, b, c, d in broken.findall(base)
+    }["G1.1"], (
+        "the block-capture and the first-line-only capture produced the SAME hash, "
+        "so this fixture no longer distinguishes them and the controls above are "
+        "vacuous — give the synthetic rule a real continuation line"
+    )
+
+
 def test_prrd_has_parseable_rule_definitions():
     """Guards the guard: a PRRD this cannot parse would pass everything vacuously."""
     rules = current_rules()
