@@ -68,14 +68,71 @@ def _text() -> str:
     return SKILL.read_text(encoding="utf-8")
 
 
-def test_skill_restates_no_pillar_mechanics():
-    """Zero occurrences of the pillar schema / retired approval vocabulary."""
-    text = _text()
+def _mechanics_hits(text: str) -> list[str]:
+    """Lines restating pillar mechanics. Takes TEXT so a control can drive it.
+
+    Split out for testability, which is load-bearing rather than cosmetic: with
+    the detector reading only the live file, every test below can assert the skill
+    is currently clean but none can show the detector REPORTS anything, so a
+    detector that silently matched nothing would look exactly like a passing one.
+    """
     hits: list[str] = []
     for pattern in MECHANICS_MARKERS:
         for n, line in enumerate(text.splitlines(), 1):
             if re.search(pattern, line):
-                hits.append(f"{SKILL.name}:{n}  /{pattern}/  {line.strip()[:70]}")
+                hits.append(f"{n}  /{pattern}/  {line.strip()[:70]}")
+    return hits
+
+
+def _max_columns_on_a_line(text: str) -> int:
+    return max(
+        (sum(1 for c in KANBAN_COLUMNS_SAMPLE if re.search(rf"\b{c}\b", line))
+         for line in text.splitlines()),
+        default=0,
+    )
+
+
+def test_controls_are_not_vacuous():
+    """Drive each check on KNOWN-BAD text and prove it reports the defect.
+
+    Committed rather than ad-hoc (learned 2026-08-11 from the Claude developing
+    ai-maestro-programmer-agent, who discovered every one of their controls had
+    been a throwaway inline script). I "mutation-tested" this guard by appending
+    `trdd-id:` to the live SKILL.md with a shell one-liner, watching it redden, and
+    restoring — which proved it could fail once, then left no trace, and would
+    corrupt the file if interrupted between the two steps.
+
+    A live-file read can only ever assert the skill is currently clean. It cannot
+    show the detector fires, so a detector that had quietly stopped matching would
+    be indistinguishable from a passing one — the exact failure this whole file
+    exists to prevent, one level up.
+    """
+    thickened = (
+        "## Overview\n"
+        "Some ORCH policy prose that is fine.\n"
+        "trdd-id: M7BZ4X1Q\n"
+        "The approval-tier for this card is 2.\n"
+    )
+    hits = _mechanics_hits(thickened)
+    assert len(hits) >= 2, f"mechanics markers NOT reported on known-bad text: {hits}"
+    assert not _mechanics_hits("## Overview\nPure ORCH policy, no schema.\n"), (
+        "clean text produced a finding — this check would redden on correct writing"
+    )
+
+    enumerated = (
+        "Columns: backburner todo design dispatch dev testing ai_review human_review complete\n"
+    )
+    assert _max_columns_on_a_line(enumerated) > MAX_COLUMNS_ON_ONE_LINE, (
+        "an enumerated column vocabulary was NOT detected"
+    )
+    assert _max_columns_on_a_line("ORCH owns todo and dispatch.\n") <= MAX_COLUMNS_ON_ONE_LINE, (
+        "naming the two columns ORCH owns tripped the enumeration check"
+    )
+
+
+def test_skill_restates_no_pillar_mechanics():
+    """Zero occurrences of the pillar schema / retired approval vocabulary."""
+    hits = [f"{SKILL.name}:{h}" for h in _mechanics_hits(_text())]
     assert not hits, (
         "the pillar skill has started restating mechanics instead of delegating:\n  "
         + "\n  ".join(hits)

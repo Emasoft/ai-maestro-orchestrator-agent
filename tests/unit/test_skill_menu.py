@@ -72,13 +72,71 @@ def shipped_skills() -> set[str]:
     return {p.parent.name for p in SKILLS_DIR.glob("*/SKILL.md")}
 
 
-def menu_entries() -> dict[str, str]:
+def menu_entries(text: str | None = None) -> dict[str, str]:
+    """Parse the menu. Takes TEXT so a control can drive it on synthetic input.
+
+    The parameter exists for testability, and that is not incidental: without it
+    every test here can only read the live persona and assert it is currently
+    good, so the guard is never shown to FAIL and a broken parser would look
+    identical to a correct one. See `test_controls_are_not_vacuous`.
+    """
+    if text is None:
+        text = MAIN_AGENT.read_text(encoding="utf-8")
     entries: dict[str, str] = {}
-    for line in _menu_section(MAIN_AGENT.read_text(encoding="utf-8")):
+    for line in _menu_section(text):
         m = MENU_ROW.match(line.strip())
         if m and m.group(1) != "Skill":  # skip the header row
             entries[m.group(1)] = m.group(2)
     return entries
+
+
+def test_controls_are_not_vacuous():
+    """Drive the detector on KNOWN-BAD input and prove it reports the defect.
+
+    WHY THIS IS COMMITTED AND NOT AN AD-HOC CHECK (learned 2026-08-11 from the
+    Claude developing ai-maestro-programmer-agent, who found every one of their
+    controls had been a throwaway inline script). I had the same gap here: I
+    "mutation-tested" this guard by deleting a menu row with a shell one-liner,
+    watching it go red, and restoring the file. That proved the guard could fail
+    at one instant, then evaporated — from the repo's point of view this detector
+    had never been shown to fail at all.
+
+    Two things are wrong with the ad-hoc form beyond leaving no trace:
+      - it edits the LIVE persona and restores it afterwards, so an interruption
+        between the two leaves the repo corrupted;
+      - it cannot distinguish a working detector from one that was broken later,
+        because nothing re-runs it.
+
+    So the controls below use SYNTHETIC text and ship with the suite. Each asserts
+    the detector REPORTS a defect it is supposed to catch — the direction a live
+    read can never exercise, because the live repo is (correctly) clean.
+    """
+    shipped = {"amoa-alpha", "amoa-beta"}
+
+    # A skill absent from the menu must be reported as missing.
+    entries = menu_entries(
+        "## Skill Menu\n\n| Skill | Reach for it when |\n|---|---|\n"
+        "| `amoa-alpha` | Doing the alpha thing when you need it |\n"
+    )
+    assert sorted(shipped - set(entries)) == ["amoa-beta"], (
+        "a shipped skill missing from the menu was NOT reported — the detector "
+        "cannot see the defect it exists to catch"
+    )
+
+    # A menu row naming no shipped skill must be reported as dangling.
+    entries = menu_entries(
+        "## Skill Menu\n\n| Skill | Reach for it when |\n|---|---|\n"
+        "| `amoa-alpha` | Doing the alpha thing when you need it |\n"
+        "| `amoa-beta` | Doing the beta thing when you need it |\n"
+        "| `amoa-ghost` | A skill that does not exist at all |\n"
+    )
+    assert sorted(set(entries) - shipped) == ["amoa-ghost"], "a dangling row was NOT reported"
+
+    # And a row with no usable guidance must be catchable by the thin-row rule.
+    entries = menu_entries(
+        "## Skill Menu\n\n| Skill | Reach for it when |\n|---|---|\n| `amoa-alpha` | alpha |\n"
+    )
+    assert len(entries["amoa-alpha"]) < 20, "the thin-guidance control no longer describes a thin row"
 
 
 def test_menu_lists_every_shipped_skill():
