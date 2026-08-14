@@ -5,7 +5,7 @@ column: proposal
 min-approval-requirement: manager
 routed-via: manager
 created: 2026-08-07T20:25:44+0200
-updated: 2026-08-08T00:19:44+0200
+updated: 2026-08-14T12:56:48+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: docs
@@ -136,6 +136,22 @@ include the sender; `claude agents --json`, run from a plain shell with no
 session, returned **24**, including it at the ai-maestro server's own working
 directory (`~/ai-maestro`).
 Addressing it by that row's name (plus the ` [ref]` the tool demands) **delivered**.
+
+> **Platform change since this was measured — 2026-08-14, material to the ask.**
+> The parenthetical above is no longer true of the tool in general. **CC 2.1.232**:
+> "`SendMessage` now delivers to a bare name that exactly matches one live session,
+> instead of asking to confirm with a ref first." The measurement stands as taken —
+> a ref *was* demanded on 2026-08-08 and delivery *did* succeed — but a reader must
+> not carry "the tool demands a ref" forward as a present-tense property.
+>
+> This **widens** what MANAGER is being asked to rule on rather than narrowing it:
+> the same release also routes an `@`-mention typed in the prompt through
+> `SendMessage`, and 2.1.225 lets `SendMessage` open a conversation with a Remote
+> Control session on another machine by name. Native cross-session addressing is
+> therefore cheaper and more reachable than the evidence below assumes — which cuts
+> against any exception scoped on the premise that native addressing is awkward
+> enough to be self-limiting. Flagged, not resolved: re-scoping the ask is
+> MANAGER's call, and this note deliberately does not touch the argument itself.
 
 So the durable identity was in `cwd` throughout. `cwd` is project identity: it
 does not drift when a session is renamed, which is precisely the drift that caused

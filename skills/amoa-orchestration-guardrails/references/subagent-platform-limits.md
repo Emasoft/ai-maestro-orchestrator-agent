@@ -61,6 +61,39 @@ Do not carry forward a plan that rations dispatches against a 200-spawn budget �
 it is optimizing against a limit that no longer exists, at the cost of
 parallelism that does.
 
+## Background is now the default — keep saying it anyway
+
+Since **CC 2.1.232**, a non-teammate agent spawn in an interactive session runs
+in the background by default. That does not change RULE 17; it ratifies it. Keep
+passing `run_in_background: true` explicitly all the same: the defaults on this
+surface have swung repeatedly (see the nesting note above, which swung twice),
+and a dispatch that reads as background only because of a default becomes a
+blocking dispatch the day the default moves back. Explicit costs one key and
+cannot silently invert.
+
+## `subagent_type: "fork"` is not a fresh context — AMOA does not use it
+
+Also **CC 2.1.232**: forking is on by default, and a `subagent_type: "fork"`
+subagent inherits **the full conversation and the prompt cache**. It is not a
+clean cheap worker; it is a copy of the dispatcher.
+
+Two consequences, and they are why AMOA dispatches named agent types instead:
+
+- **Confidentiality.** A fork sees everything in the orchestrator's context —
+  including other agents' assignments, their credentials-adjacent context, and
+  any user material the orchestrator is holding. A per-module implementer must
+  not receive the whole board.
+- **Cost accounting.** A fork rides the inherited cache rather than starting
+  from a small base, so it does not behave like the bounded fresh contexts the
+  token-budget rules assume. Budgeting a fork as if it were a fresh spawn
+  understates it.
+
+**Therefore: do not reach for `context`/`subagent_type: "fork"` on the Agent
+tool to get a "cheap clone".** It is the opposite. Dispatch a named agent type
+and pass what it needs in the prompt. (This is distinct from the `context: fork`
+frontmatter on this plugin's own SKILLs, which is a different surface and is
+deliberately pinned with `background: false` — see `tests/unit/test_skill_frontmatter.py`.)
+
 ## A queued agent looks exactly like a slow one
 
 This is the operational consequence that matters, and the reason the headroom
