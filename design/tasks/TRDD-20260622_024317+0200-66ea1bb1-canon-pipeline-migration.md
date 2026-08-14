@@ -1,9 +1,9 @@
 ---
 trdd-id: 66ea1bb1-0982-4d6b-b680-5b15ed1388ad
 title: Canonical-pipeline migration to CPV 2.136.1 standard — publish v1.9.2
-column: dev
+column: testing
 created: 2026-06-22T02:43:17+0200
-updated: 2026-06-22T02:43:17+0200
+updated: 2026-08-15T00:35:00+0200
 current-owner: plugin-fixer
 assignee: plugin-fixer
 task-type: infra
@@ -21,6 +21,12 @@ external-refs: ["github.com/Emasoft/ai-maestro/issues/44", "github.com/Emasoft/a
 # Canonical-pipeline migration to CPV 2.136.1 standard — publish v1.9.2
 
 ## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-06-22
+
+**2026-08-15 board-honesty update (fleet-alignment TRDD-BDRWMBDC):** the migrated
+pipeline is the one that has shipped every release from v1.9.2 through v1.13.8
+(`publish.py` remote-validation profile, CI green) — the work is done and field-proven.
+Moved `dev → testing` (exempt transition); `testing → complete` needs the MANAGER stamp,
+same as TRDD-1F0LO1LX / TRDD-EYOV4I0A. Card had sat untouched at `dev` since 2026-06-22.
 
 **Goal:** bring `ai-maestro-orchestrator-agent` publish pipeline to the current CPV
 canonical standard (CPV 2.136.1), preserving the by-design **remote-validation**

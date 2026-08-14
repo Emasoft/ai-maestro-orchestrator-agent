@@ -372,7 +372,7 @@ Details: [filename if written]
 
 ## Communication Permissions (R6)
 
-The R6 communication graph is ENFORCED at the API — violations return HTTP 403 `title_communication_forbidden` with a routing suggestion. This list mirrors the server graph (`lib/communication-graph.ts`) at **R6 v3**: the HUMAN node + reply-only edges from the 2026-04-22 update, plus v3's defining rule — **MANAGER (AMAMA) reaches team-internal agents ONLY via AMCOS; there is no AMAMA↔AMOA direct edge** (`docs/ROLE_BOUNDARIES.md:7`). The edges below are v3 edges. If the API rejects a message you believe should be allowed, re-read the server's routing suggestion before retrying — it is authoritative.
+The R6 communication graph is enforced at the **AMP server API** — an AMP violation returns HTTP 403 `title_communication_forbidden` with a routing suggestion. Claude Code's native cross-session channel (`SendMessage`/`ListAgents`, CC ≥ 2.1.224) has **no enforcement point**: nothing on that path can return a 403, so on the native transport the graph binds as POLICY — never use it to reach a title this section forbids (R42.3 governs; see `design/proposals/` TRDD-NSWPM93D). This list mirrors the server graph (`lib/communication-graph.ts`) at **R6 v3**: the HUMAN node + reply-only edges from the 2026-04-22 update, plus v3's defining rule — **MANAGER (AMAMA) reaches team-internal agents ONLY via AMCOS; there is no AMAMA↔AMOA direct edge** (`docs/ROLE_BOUNDARIES.md:7`). The edges below are v3 edges. If the API rejects a message you believe should be allowed, re-read the server's routing suggestion before retrying — it is authoritative.
 
 **Your title:** ORCHESTRATOR (team layer)
 
