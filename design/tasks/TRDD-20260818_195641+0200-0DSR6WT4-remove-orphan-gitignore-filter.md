@@ -1,7 +1,7 @@
 ---
 trdd-id: 0DSR6WT4
 title: Remove the orphaned scripts/gitignore_filter.py (audit C2)
-column: todo
+column: complete
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T19:56:41+0200
@@ -42,10 +42,17 @@ surface.
 
 ## Acceptance criteria
 
-- [ ] Indirect-invocation sweep documented in this card (patterns searched, 0 hits).
-- [ ] `scripts/gitignore_filter.py` gone; `grep -rn "gitignore_filter"` → 0 hits tree-wide.
-- [ ] Tests green.
+- [x] Indirect-invocation sweep documented: `gitignore_filter` / `gitignore.filter` /
+      `gitignore-filter` greps → 0 hits outside this card; no `importlib`/`__import__` in
+      scripts/ or hooks/; no plugin.json mention. The file was a GitignoreFilter helper "all
+      validators should use" — local validators were removed when CPV became the single
+      validation source, which is WHY it orphaned.
+- [x] `scripts/gitignore_filter.py` deleted (git-tracked at deletion → recoverable from
+      history per RULE 0).
+- [x] Tests green (suite run in the C5 card's verification, same session).
 
 ## Approval log
+
+- 2026-08-18T19:56:41+0200 — COMPLETE under the hub's Phase-2 GO + USER "permission granted".
 
 ## Notes and lessons learned
