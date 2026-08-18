@@ -69,7 +69,7 @@ amoa-remote-agent-coordinator/
 | `install_lsp.py` | LSP installation automation |
 | `validate_skill.py` | Skill validation |
 | `amoa_orchestrator_init.py` | Initialize storage directories |
-| `amoa_register_agent.py` | Register agents in roster |
+| `amoa_storage_register_agent.py` | Register agents in roster |
 | `amoa_orchestrator_download.py` | Download documents from agents |
 | `amoa_search.py` | Cross-agent document search |
 | `amoa_download.py` | Basic document download |

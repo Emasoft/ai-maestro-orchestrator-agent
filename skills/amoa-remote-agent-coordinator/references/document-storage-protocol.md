@@ -105,7 +105,7 @@ When receiving documents, verify integrity:
 | Script | Purpose |
 |--------|---------|
 | `scripts/amoa_orchestrator_init.py <!-- TODO: Rename to amoa_orchestrator_init.py -->` | Initialize orchestrator storage structure |
-| `scripts/amoa_register_agent.py <!-- TODO: Rename to amoa_register_agent.py -->` | Register new agents, list registered agents |
+| `scripts/amoa_storage_register_agent.py` | Register new agents, list registered agents |
 | `scripts/amoa_orchestrator_download.py <!-- TODO: Rename to amoa_orchestrator_download.py -->` | Download documents from agents to per-agent folders |
 | `scripts/amoa_search.py <!-- TODO: Rename to amoa_search.py -->` | Search across all agents by task, agent, date, category |
 
@@ -116,7 +116,7 @@ When receiving documents, verify integrity:
 python scripts/amoa_orchestrator_init.py <!-- TODO: Rename to amoa_orchestrator_init.py --> --project-root .
 
 # Register a new agent
-python scripts/amoa_register_agent.py <!-- TODO: Rename to amoa_register_agent.py --> register \
+python scripts/amoa_storage_register_agent.py register \
   --name helper-agent-macos-arm64 \
   --platform macos \
   --architecture arm64

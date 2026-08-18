@@ -6,8 +6,14 @@ Registers a new remote agent in the orchestrator's tracking system.
 Creates the agent folder structure and metadata file.
 
 Usage:
-    python amoa_register_agent.py --name AGENT_NAME --platform PLATFORM --architecture ARCH
-    python amoa_register_agent.py --name helper-agent-macos-arm64 --platform macos --architecture arm64
+    python amoa_storage_register_agent.py register --name AGENT_NAME --platform PLATFORM --architecture ARCH
+    python amoa_storage_register_agent.py register --name helper-agent-macos-arm64 --platform macos --architecture arm64
+    python amoa_storage_register_agent.py list
+
+NOTE: renamed from amoa_register_agent.py (TRDD-73OGGN69) — that basename collided
+with the top-level scripts/amoa_register_agent.py, which is a DIFFERENT program
+(state-file agent registration); this one registers agents in the document-storage
+folder structure.
 """
 
 from __future__ import annotations

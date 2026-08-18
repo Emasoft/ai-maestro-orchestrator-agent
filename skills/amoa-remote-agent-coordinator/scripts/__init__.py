@@ -3,8 +3,8 @@
 
 WHY this file exists: the repo-wide type check (mypy, run by the CPV lint
 engine over every scripts/ tree) maps module names from file basenames.
-Two scripts here (validate_skill.py, amoa_register_agent.py) share their
-basename with files in the top-level scripts/ directory; without a package
+A script here (validate_skill.py) shares its
+basename with a file in the top-level scripts/ directory; without a package
 marker both map to the same bare module name and mypy aborts with
 "Duplicate module named". With this marker the scripts in THIS directory
 become the distinct `scripts.<name>` modules of this skill-local package,

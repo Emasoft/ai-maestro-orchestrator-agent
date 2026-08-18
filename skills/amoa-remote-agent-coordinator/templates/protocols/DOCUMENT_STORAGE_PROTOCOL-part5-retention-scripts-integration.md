@@ -90,7 +90,7 @@ python3 scripts/amoa_orchestrator_init.py <!-- TODO: Rename to amoa_orchestrator
 
 ```bash
 # When orchestrator first contacts a new agent
-python3 scripts/amoa_register_agent.py <!-- TODO: Rename to amoa_register_agent.py --> \
+python3 scripts/amoa_storage_register_agent.py register \
   --name "helper-agent-macos-arm64" \
   --platform macos \
   --architecture arm64 \
