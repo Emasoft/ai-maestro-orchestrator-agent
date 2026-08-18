@@ -1,9 +1,9 @@
 ---
 trdd-id: EYOV4I0A
 title: Absorb coordination-methodology sections 3, 6 and 11 into the ORCHESTRATOR persona
-column: testing
+column: complete
 created: 2026-08-08T15:10:00+0200
-updated: 2026-08-08T15:10:00+0200
+updated: 2026-08-16T16:31:21+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: docs
@@ -79,9 +79,10 @@ card lives here, and the closure record below is re-measurable.
 - [x] §11 absorbed (honest columns, call-path gate)
 - [x] Second item (5 opus subagent pins) — satisfied by v1.11.0 / TRDD-QQY1PJZI
 - [x] Released — **v1.12.0**, created 2026-08-08T13:12:53Z; source commit `cfd568b8`
-- [ ] MANAGER stamp for the terminal transition (ORCH cannot self-complete)
+- [x] MANAGER stamp for the terminal transition (ORCH cannot self-complete)
 
 ## Approval log
 
 - 2026-08-08T15:10:00+0200 — Tier 0 (`min-approval-requirement: none`): documentation
   of this plugin's own persona, no baseline deviation, no cross-project write.
+- 2026-08-16T16:31:21+0200 — APPROVED by ai-maestro hub session (fleet coordination, USER-granted 2026-08-16). testing -> complete. Evidence: agents/ai-maestro-orchestrator-agent-main-agent.md:190 "## Coordination Method".

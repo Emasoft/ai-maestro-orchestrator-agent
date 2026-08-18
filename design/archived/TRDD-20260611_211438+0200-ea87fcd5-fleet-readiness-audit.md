@@ -74,7 +74,16 @@ governance work order on `ai-maestro-orchestrator-agent#13`. USER authorized exe
 
 ## Verdicts (M1–M13) and resolution status
 
-| # | Verdict (audit) | Phase | Status |
+> **2026-08-16 — HISTORY, NOT OPEN WORK. Every `pending` in the Status column below is
+> AUTHORING-TIME text from 2026-06-11; it was never updated after the work shipped.** The card is
+> `column: published` and the closures are machine-verifiable at the release tag: `v1.8.0` exists,
+> and `git show v1.8.0:CHANGELOG.md` states "close audit M4/M5/M6/M7/M11" and "close
+> M1/M2/M3/M9/M10/M13". Spot-checked in the current tree: `design/requirements/PRRD.md:5` carries
+> `project-id:` (M2), `docs/STATUS_MAPPING.md` exists (M4), and `docs/ROLE_BOUNDARIES.md:7` states
+> there is no AMAMA↔AMOA direct edge (M6/M11). The table is left intact as the authoring record —
+> read it as what the audit FOUND, never as what is still outstanding.
+
+| # | Verdict (audit) | Phase | Status (as authored 2026-06-11 — see marker above) |
 |---|---|---|---|
 | M1 | no `dependencies:` in plugin.json; AMP dep prose-only | 4 | pending |
 | M2 | PRRD: `project-id:` absent; SILVER empty | 4 | pending |

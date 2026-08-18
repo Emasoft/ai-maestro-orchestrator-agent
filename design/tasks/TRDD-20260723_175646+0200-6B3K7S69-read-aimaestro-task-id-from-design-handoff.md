@@ -33,7 +33,11 @@ architect side's TRDD-364ccafc Phase 0. Not blocked by ai-maestro#46: the spec o
 the colliding address was display-only.
 
 ### NEXT ACTION
-DONE for everything runnable from a dev session: helper + 11 unit tests (green), ruff+mypy
+2026-08-16: the deployment-time round-trip was SPLIT OUT into TRDD-PNIP18BY (a standalone
+derived card, not an `eht:` — an EHT would keep this parent open, which is the block the split
+removes). Nothing outstanding here; awaiting the terminal stamp.
+
+Original (2026-07-23): DONE for everything runnable from a dev session: helper + 11 unit tests (green), ruff+mypy
 clean, and the read + `--parent` attach procedure documented (kanban-management
 PROCEDURE 5 + design-handoff §2.9 receive note). The ONLY open item is the deployment-time live
 round-trip (children read back under the epic), which needs a live AI-Maestro server + an
@@ -87,6 +91,8 @@ AMCOS-spawned agent binding — deferred, cannot run here.
 - [x] Non-object content → raises (fail-fast).
 - [x] Unit tests cover every branch; pytest green (11 new, 122 total), ruff clean, mypy clean.
 - [x] Kanban skill + design-handoff receive template document the read + `--parent` attach.
-- [ ] (Deployment) children read back under the epic — deferred, live-server check.
+- [x] (Deployment) children read back under the epic — SPLIT OUT on 2026-08-16 into the
+      standalone derived card TRDD-PNIP18BY, which owns that live-server round-trip. This box
+      is checked because the scope left this card, not because the check ran.
 
 ## Notes and lessons learned

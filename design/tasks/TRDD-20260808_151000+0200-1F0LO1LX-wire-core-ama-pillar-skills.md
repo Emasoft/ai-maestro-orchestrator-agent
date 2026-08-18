@@ -1,9 +1,9 @@
 ---
 trdd-id: 1F0LO1LX
 title: Wire the core granular ama-* pillar skills and retire the per-plugin script layer
-column: testing
+column: complete
 created: 2026-08-08T15:10:00+0200
-updated: 2026-08-08T15:10:00+0200
+updated: 2026-08-16T16:31:21+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -108,10 +108,11 @@ Also on this card (orch#25, B-MED): **R24** cited at the Memory Protocol heading
 - [x] Capability-probe rule recorded
 - [x] R24 / R25 cited by number
 - [x] Released — **v1.12.0** (rewire) + **v1.13.0** (salvaged #25 work)
-- [ ] MANAGER stamp for the terminal transition
+- [x] MANAGER stamp for the terminal transition
 
 ## Approval log
 
 - 2026-08-08T15:10:00+0200 — Tier 0 (`min-approval-requirement: none`): rewiring this
   plugin's own skill onto already-ratified core skills, no baseline deviation, no
   cross-project write.
+- 2026-08-16T16:31:21+0200 — APPROVED by ai-maestro hub session (fleet coordination, USER-granted 2026-08-16). testing -> complete. Evidence: skills/amoa-prrd-trdd-kanban/SKILL.md:4 allowed-tools carries no script-layer tool names.

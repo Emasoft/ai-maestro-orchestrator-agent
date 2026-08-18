@@ -1,9 +1,9 @@
 ---
 trdd-id: 66ea1bb1-0982-4d6b-b680-5b15ed1388ad
 title: Canonical-pipeline migration to CPV 2.136.1 standard — publish v1.9.2
-column: testing
+column: complete
 created: 2026-06-22T02:43:17+0200
-updated: 2026-08-15T00:35:00+0200
+updated: 2026-08-16T16:31:21+0200
 current-owner: plugin-fixer
 assignee: plugin-fixer
 task-type: infra
@@ -80,3 +80,7 @@ Fleet umbrella Emasoft/ai-maestro#44. AMAMA (MANAGER, v2.12.5) is the exemplar a
 already paid ~5 publishes to find the canon-template defects; this migration pre-empts
 all of them. orchestrator#22 tracks this migration; orchestrator#23 tracks the publish.py
 idempotency fix (folded in here).
+
+## Approval log
+
+- 2026-08-16T16:31:21+0200 — APPROVED by ai-maestro hub session (fleet coordination, USER-granted 2026-08-16). testing -> complete. Evidence: .github/workflows = ci.yml/notify-marketplace.yml/release.yml (legacy validate.yml gone), scripts/publish.py uses cpv-remote-validate plugin --strict, releases shipped through v1.13.8.
