@@ -108,6 +108,34 @@ ARCHIVAL DEFECTS (3P-ZON-05 amended 2026-08-18: every terminal column archives A
   8-column "standard" contradicting 3P-KAN-01's 17 (and our own main-agent list).
 Compliant for contrast: failed-stays-on-board (main-agent.md:535-536, 3P-ZON-06).
 
+### D3+D6 sweep results (agent report, 2026-08-19 — VERIFY file:line first-hand before fixing)
+
+TRANSITION-AUTHORITY DEFECTS vs Part B2 (~/ai-maestro/rules/aimaestro/aimaestro-trdd-approval.md):
+- G1 main-agent.md:77 Key-Constraints table hands ALL column transitions to AMIA/integrator —
+  strips ORCH of its own B2 rows (todo→design, dispatch→dev); contradicts our own SKILL.md:16-18.
+- G2-G6 shared/amoa_kanban_vocab.py:195-203 `transition_authority()` claims for ORCH six
+  transitions B2 assigns elsewhere: dev→testing (assignee), testing→ai_review + testing→dev
+  (test runner), design→dispatch (ARCHITECT), backburner→todo (MANAGER), live→live_auditing
+  (INTEGRATOR). amoa-prrd-trdd-kanban/SKILL.md:97-99 declares this oracle authoritative while
+  its own prose at :19 is B2-correct — the file ships two answers and names the wrong one.
+- G7 release lane: amoa-orchestration-patterns/references/release-coordination-procedure.md
+  assigns complete→publish|deploy→published|live to ORCH+implementer; INTEGRATOR/RELEASER/
+  DEPLOYER appear NOWHERE in the procedure.
+- G8 assignee-moves-to-ai_review taught in 7+ places: amoa-implementer-interview-protocol
+  SKILL.md:41 (+3 restatements), remote-coordinator task templates (part1-core-template.md:374,
+  part1-template.md:330, github-projects-guide.md:137, KANBAN_SYNC part2:36-42),
+  verification-loops-protocol.md:383 — all pre-empt the test runner's transition.
+- G9 main-agent.md:529-536 enumerates 17 columns but carries no transition-authority table
+  nor a Part B2 pointer (nothing corrects G1).
+
+GOVERNANCE GAPS (governance-spec.md, R49; R50/R51 live in all-in-one-spec.md not
+governance-spec — none of our files calls an AIO pipeline, so no R50/R51 finding; R52 clean):
+- G10 R49.6 record-where-actionable MUST absent: refusals + named defect must land in the
+  governing GitHub issue and/or Approval log; main-agent :561-562 covers approvals only.
+- G11 R49.4 second sentence: where no AMP thread exists (plugin session ↔ MANAGER) the
+  cross-repo GitHub issue IS the channel — persona hard-codes inter-agent message only
+  (and :375 says stop-and-surface); add the issue channel.
+
 ### D5 verdicts (triage agent, 2026-08-18)
 Fields background(21)/type(5)/memory_requirements(5)/triggers(2)/hooks `_note`(1) = class B
 plugin-private, harmless — keep, optionally report to CPV as known-benign. The 1 class-C
