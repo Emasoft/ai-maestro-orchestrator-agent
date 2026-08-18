@@ -1,11 +1,11 @@
 ---
 trdd-id: NSWPM93D
 title: Decide AMOA policy for Claude Code native cross-session messaging alongside AMP
-column: planned
+column: complete
 min-approval-requirement: manager
 routed-via: manager
 created: 2026-08-07T20:25:44+0200
-updated: 2026-08-18T19:53:09+0200
+updated: 2026-08-18T19:56:41+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: docs
@@ -116,10 +116,16 @@ recipient to guess who sent it.
 
 ## Acceptance criteria
 
-- [ ] MANAGER records a ruling (option 1, 2, or 3) with a one-line rationale.
-- [ ] If option 2, the exception set is enumerated and the recording mechanism named.
-- [ ] The ruling lands in the PRRD (silver) so it is greppable and binding.
-- [ ] AMOA's skills are updated to match — and, if option 1, say explicitly what to do when AMP is down.
+- [x] MANAGER records a ruling (option 1, 2, or 3) with a one-line rationale — hub ruling
+      2026-08-18, see Approval log (option 1: AMP-only, stop-and-surface).
+- [x] If option 2, the exception set is enumerated and the recording mechanism named — N/A as
+      option 2; ruled EMPTY for work-directing traffic, recorded in PRRD S9.1.
+- [x] The ruling lands in the PRRD (silver) so it is greppable and binding — PRRD S9.1
+      (prrd-version 1.2).
+- [x] AMOA's skills are updated to match — and, if option 1, say explicitly what to do when
+      AMP is down — `agents/ai-maestro-orchestrator-agent-main-agent.md:375` now states STOP
+      AND SURFACE, no native fallback, unsourced-tip handling for unreachable senders. Tree
+      sweep confirmed this is the only non-design touchpoint mentioning the native transport.
 
 ## Out of scope
 
@@ -198,3 +204,8 @@ Consequences for the ask:
   coordination sessions are outside AMOA scope by the USER's explicit instruction to the hub
   ("use SendMessages to orchestrate them").
   Citation fix applied same edit: the COS escalation is ai-maestro#131, not #76.
+- 2026-08-18T19:56:41+0200 — COMPLETE: ruling operationalized. PRRD S9.1 added (prrd-version
+  1.2); agent persona line 375 updated with the explicit AMP-down instruction (stop and
+  surface, no native fallback). All four acceptance boxes verified by grep and ticked.
+  Executed under the hub's Phase-2 GO + the USER's direct "permission granted" (2026-08-18);
+  specs-first ordering per the hub.
