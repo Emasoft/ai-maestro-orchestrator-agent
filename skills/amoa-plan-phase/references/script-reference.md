@@ -182,7 +182,7 @@ Scripts for design document management and GitHub integration:
 
 Scripts modified for Two-Phase Mode:
 
-- **3.1 amoa_orchestrator_stop_check.py** - Phase-aware stop hook
+- **3.1 amoa_stop_check package** - Phase-aware stop hook
   - Plan Phase: blocks if plan_phase_complete: false
   - Orchestration Phase: blocks if modules incomplete or verification loops remaining
   - Output format: JSON with decision, reason, systemMessage, outputToUser
@@ -218,4 +218,5 @@ scripts/
 ├── amoa_design_search.py            # Design document search
 ├── amoa_sync_kanban.py              # GitHub Projects kanban sync
 ├── amoa_create_module_issues.py     # GitHub issue creation for modules
-└── amoa_orchestrator_stop_check.py  ```
+└── amoa_stop_check/                 # Package (entry: main.py)
+```

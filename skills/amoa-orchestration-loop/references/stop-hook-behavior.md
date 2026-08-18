@@ -7,7 +7,7 @@
 
 ## Blocking Conditions
 
-The orchestrator stop hook (`amoa_orchestrator_stop_check.py`) enforces completion requirements:
+The orchestrator stop hook (the `amoa_stop_check` package, entry `python3 -m amoa_stop_check.main`) enforces completion requirements:
 
 - Plan Phase incomplete (requirements not documented, plan not approved)
 - Orchestration Phase incomplete (modules not implemented)

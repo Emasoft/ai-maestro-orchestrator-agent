@@ -67,7 +67,7 @@
 
 ## Stop Hook Enforcement
 
-The stop hook (`amoa_orchestrator_stop_check.py`) is **phase-aware** and enforces:
+The stop hook (the `amoa_stop_check` package, entry `python3 -m amoa_stop_check.main`) is **phase-aware** and enforces:
 
 | Phase | Blocks Exit If |
 |-------|---------------|

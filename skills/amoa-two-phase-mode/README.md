@@ -83,7 +83,7 @@ two-phase-mode/
 
 ### Modified Scripts (1)
 
-- `amoa_orchestrator_stop_check.py` - Phase-aware stop hook
+- `amoa_stop_check/` (package, entry `python3 -m amoa_stop_check.main`) - Phase-aware stop hook
 ## Quick Start
 
 ### Starting a New Project

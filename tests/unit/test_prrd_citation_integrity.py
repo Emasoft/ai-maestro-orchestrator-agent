@@ -145,6 +145,7 @@ RULE_BODY_HASHES = {
     "S6.1": "d8a1f7bd6aae76c0",
     "S7.1": "86d1ad67ee3545ba",
     "S8.1": "62b8df094293cdf7",
+    "S9.1": "2e84665d7202b196",
 }
 
 

@@ -4,14 +4,14 @@ This document covers the modified scripts for Two-Phase Mode.
 
 ## Contents
 
-- 3.1 amoa_orchestrator_stop_check.py - Phase-aware stop hook for completion enforcement
+- 3.1 amoa_stop_check package - Phase-aware stop hook for completion enforcement
 
 ---
 
-## 3.1 amoa_orchestrator_stop_check.py
+## 3.1 amoa_stop_check package
 **Purpose:** Phase-aware stop hook for completion enforcement.
 
-**Location:** `scripts/amoa_orchestrator_stop_check.py`
+**Location:** `scripts/amoa_stop_check/` (entry: `python3 -m amoa_stop_check.main`)
 
 **Modifications for Two-Phase Mode:**
 

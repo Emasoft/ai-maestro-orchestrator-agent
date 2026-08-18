@@ -47,7 +47,7 @@ Located in `../../scripts/`:
 | `amoa_orchestration_status.py` | `/orchestration-status` |
 | `amoa_check_orchestrator_status.py` | `/orchestrator-status` |
 | `amoa_setup_orchestrator_loop.py` | `/orchestrator-loop` |
-| `amoa_orchestrator_stop_check.py` | Stop hook |
+| `amoa_stop_check/` (package) | Stop hook |
 
 ## Usage
 

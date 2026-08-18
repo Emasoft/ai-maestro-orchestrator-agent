@@ -2,7 +2,8 @@
 """
 main.py - Main entry point for Orchestrator Agent Stop Hook (Modular Version).
 
-This is the refactored version of amoa_orchestrator_stop_check.py, split into
+This is the refactored version of the former amoa_orchestrator_stop_check.py
+(removed in TRDD-7I4OPLBA), split into
 focused modules for maintainability. The hook checks multiple task sources
 before allowing the orchestrator to exit.
 

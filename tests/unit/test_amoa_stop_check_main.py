@@ -5,10 +5,10 @@ hooks/hooks.json wires the Stop hook as:
 
     cd ${CLAUDE_PLUGIN_ROOT}/scripts && python3 -m amoa_stop_check.main
 
-i.e. the MODULAR `amoa_stop_check` package, NOT the standalone
-`scripts/amoa_orchestrator_stop_check.py` script (which has its own test file,
-test_amoa_orchestrator_stop_check.py). This file closes that coverage gap by
-exercising the exact module the harness invokes.
+i.e. the MODULAR `amoa_stop_check` package. (Its standalone predecessor
+`scripts/amoa_orchestrator_stop_check.py` and that script's test file were
+REMOVED in TRDD-7I4OPLBA; the phase-behavior cases worth keeping were ported
+into this file.) This file exercises the exact module the harness invokes.
 
 Contract of the modular hook (verified empirically, not assumed):
 
@@ -151,14 +151,95 @@ def test_malformed_stdin_is_fail_safe(tmp_path):
     # Garbage on stdin: the JSON parse error is swallowed (treated as {}), then
     # the decision falls through to the absent orchestrator-loop state file ->
     # allow. A Stop hook must never trap the user on a bad/empty payload.
-    code, parsed, out, err = run_stop_hook(tmp_path, "this is not json {{{")
+    code, parsed, _, err = run_stop_hook(tmp_path, "this is not json {{{")
 
     assert code == 0, f"malformed stdin must not crash the hook; stderr={err!r}"
     if parsed is not None:
         assert parsed.get("decision") != "block"
 
     # Same fail-safe for a completely EMPTY stdin payload.
-    code_empty, parsed_empty, _out2, err2 = run_stop_hook(tmp_path, "")
+    code_empty, parsed_empty, _, err2 = run_stop_hook(tmp_path, "")
     assert code_empty == 0, f"empty stdin must not crash; stderr={err2!r}"
     if parsed_empty is not None:
         assert parsed_empty.get("decision") != "block"
+
+
+def test_blocks_when_plan_phase_incomplete(tmp_path):
+    """An active-but-incomplete plan-phase state file makes the hook emit a plan-phase block."""
+    # phase.PLAN_PHASE_STATE_FILE = ".claude/orchestrator-plan-phase.local.md".
+    # check_plan_phase_completion() blocks when plan_phase_complete != true AND
+    # status is not approved/complete AND requirements_complete != true.
+    _write_orchestrator_loop(tmp_path)
+    _write_plan_phase(tmp_path, complete=False)
+
+    code, parsed, out, err = run_stop_hook(tmp_path, json.dumps({"transcript_path": ""}))
+
+    assert code == 0, f"hook must always exit 0; stderr={err!r}"
+    assert parsed is not None, f"expected a blocking JSON decision; stdout={out!r}"
+    assert parsed["decision"] == "block"
+    # build_phase_block_prompt("plan", ...) headline — proves the block came from
+    # the PLAN PHASE check, not from a later task-source/verification path.
+    assert "PLAN PHASE INCOMPLETE" in parsed["reason"]
+    assert "Requirements incomplete" in parsed["reason"]
+    assert "Plan not approved (status: drafting)" in parsed["reason"]
+
+
+def test_allows_when_plan_phase_complete(tmp_path):
+    """A plan-phase state file marked complete produces no plan-phase block."""
+    # plan_phase_complete: true short-circuits check_plan_phase_completion() to
+    # (False, None). The hook then falls through to the ordinary task-source path
+    # (which may still block for OTHER reasons, e.g. the verification loop) — so
+    # the assertion is specifically that no PLAN-PHASE block was emitted.
+    _write_orchestrator_loop(tmp_path)
+    _write_plan_phase(tmp_path, complete=True)
+
+    code, parsed, out, err = run_stop_hook(tmp_path, json.dumps({"transcript_path": ""}))
+
+    assert code == 0, f"hook must always exit 0; stderr={err!r}"
+    if parsed is not None:
+        assert "PLAN PHASE INCOMPLETE" not in parsed.get("reason", "")
+        assert "PLAN PHASE" not in parsed.get("systemMessage", "")
+    else:
+        assert out == ""
+
+
+def test_corrupt_phase_state_is_fail_safe(tmp_path):
+    """A corrupt plan-phase state file (no frontmatter) neither crashes nor phase-blocks."""
+    # parse_frontmatter() finds no `---` frontmatter block, so it deletes the
+    # corrupted file and calls fail_safe_exit() -> sys.exit(0) with NO decision on
+    # stdout. A Stop hook must never trap the user on unreadable state.
+    _write_orchestrator_loop(tmp_path)
+    claude = tmp_path / ".claude"
+    claude.mkdir(parents=True, exist_ok=True)
+    corrupt = claude / "orchestrator-plan-phase.local.md"
+    corrupt.write_text("\x00\x01 not yaml at all ][}{ no frontmatter\n", encoding="utf-8")
+
+    code, parsed, out, err = run_stop_hook(tmp_path, json.dumps({"transcript_path": ""}))
+
+    assert code == 0, f"corrupt phase state must not crash the hook; stderr={err!r}"
+    if parsed is not None:
+        assert "PLAN PHASE INCOMPLETE" not in parsed.get("reason", ""), (
+            f"unreadable state must not synthesize a phase block; stdout={out!r}"
+        )
+    # The hook removes the corrupted state file rather than re-reading it forever.
+    assert not corrupt.exists()
+
+
+def test_block_output_shape(tmp_path):
+    """A blocking outcome's stdout JSON carries the hook contract's decision/reason/systemMessage."""
+    # Field names verified in phase.build_phase_block_prompt(): the dict is
+    # {"decision": "block", "reason": <prompt>, "systemMessage": <status>} and
+    # main.py prints exactly json.dumps(output, indent=2) on stdout.
+    _write_orchestrator_loop(tmp_path)
+    _write_plan_phase(tmp_path, complete=False)
+
+    code, parsed, out, err = run_stop_hook(tmp_path, json.dumps({"transcript_path": ""}))
+
+    assert code == 0, f"hook must always exit 0; stderr={err!r}"
+    assert isinstance(parsed, dict), f"stdout must be a JSON object; stdout={out!r}"
+    assert set(parsed) >= {"decision", "reason", "systemMessage"}, (
+        f"missing contract fields; got keys={sorted(parsed)}"
+    )
+    assert parsed["decision"] == "block"
+    assert isinstance(parsed["reason"], str) and parsed["reason"].strip()
+    assert isinstance(parsed["systemMessage"], str) and parsed["systemMessage"].strip()

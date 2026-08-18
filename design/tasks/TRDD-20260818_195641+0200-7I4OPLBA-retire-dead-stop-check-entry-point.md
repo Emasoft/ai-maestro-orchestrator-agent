@@ -1,7 +1,7 @@
 ---
 trdd-id: 7I4OPLBA
 title: Retire the dead stop-check entry point scripts/amoa_orchestrator_stop_check.py and repoint its docs (audit C5)
-column: todo
+column: complete
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T19:56:41+0200
@@ -46,12 +46,25 @@ two versions of the stop-check violate the one-version rule.
 
 ## Acceptance criteria
 
-- [ ] Old-script logic diffed against the package; unique behavior ported (recorded here).
-- [ ] `scripts/amoa_orchestrator_stop_check.py` gone; unique test cases migrated to
-      `test_amoa_stop_check_main.py` before its test file is removed.
-- [ ] `grep -rn "amoa_orchestrator_stop_check"` → 0 hits tree-wide.
-- [ ] hooks.json unchanged (already correct); tests green; ruff + mypy clean.
+- [x] Old-script logic diffed against the package. Discovery: the old script read
+      `.ai-maestro/orchestration-state.json`; the package deliberately reads
+      `.claude/orchestrator-{plan,exec}-phase.local.md` instead — a designed state-source
+      migration, so the JSON-hook logic is SUPERSEDED, not missing (the JSON state file
+      itself stays alive for 6 other scripts: amoa_orchestration_status, amoa_check_plan_phase,
+      amoa_check_orchestration_phase, amoa_sync_github_issues, amoa_compile_replacement_context,
+      amoa_confirm_replacement). Nothing to port to the hook.
+- [x] Old script + its test file removed; the 4 phase-behavior cases worth keeping were ported
+      FIRST to `test_amoa_stop_check_main.py` against the package's real state mechanism
+      (plan-phase block, plan-phase allow, corrupt-state fail-safe, block-output shape) —
+      assertions derived from phase.py source, not guessed.
+- [x] Doc sweep: 18 lines across 10 skill files repointed to `python3 -m amoa_stop_check.main`;
+      `grep -rn "amoa_orchestrator_stop_check"` → 0 hits outside deliberate historical notes
+      (main.py provenance docstring, this card, the test-file header — each marked "removed").
+- [x] hooks.json unchanged; suite 196 passed; ruff + mypy clean (also registered PRRD S9.1 in
+      test_prrd_citation_integrity RULE_BODY_HASHES, caught by the suite).
 
 ## Approval log
+
+- 2026-08-18T19:56:41+0200 — COMPLETE under the hub's Phase-2 GO + USER "permission granted".
 
 ## Notes and lessons learned

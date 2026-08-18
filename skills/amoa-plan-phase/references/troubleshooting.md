@@ -154,8 +154,8 @@
 
 **Solution**:
 1. Verify hook is in settings.json or plugin hooks.json
-2. Check script is executable: `chmod +x amoa_orchestrator_stop_check.py`
-3. Run script manually to test: `python amoa_orchestrator_stop_check.py`
+2. Note: the hook invokes the `amoa_stop_check` package via `python3 -m amoa_stop_check.main` (no executable bit needed)
+3. Run manually to test: `cd scripts && echo '{}' | python3 -m amoa_stop_check.main`
 4. Check hook event type is "Stop"
 
 ### Issue: Stop hook allows exit when it shouldn't

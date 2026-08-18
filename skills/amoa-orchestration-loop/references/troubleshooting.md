@@ -123,18 +123,18 @@ cat design/logs/hook.log
 ### Step 4: Check Hook Script
 
 ```bash
-# Verify script exists and is executable
-ls -la "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py"
+# Verify package exists
+ls -la "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/"
 
-# Test script manually
-echo '{}' | python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py"
+# Test package manually
+echo '{}' | (cd "${CLAUDE_PLUGIN_ROOT}/scripts" && python3 -m amoa_stop_check.main)
 ```
 
 ### Step 5: Check for Python Errors
 
 ```bash
 # Look for Python syntax errors
-python3 -m py_compile "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_orchestrator_stop_check.py"
+python3 -m py_compile "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_stop_check/main.py"
 ```
 
 ### Common Hook Issues
