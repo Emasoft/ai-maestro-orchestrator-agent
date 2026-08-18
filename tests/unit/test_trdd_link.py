@@ -207,3 +207,12 @@ def test_issue_title_citation_round_trips(tmp_path):
 
     p = _write(tmp_path, "tasks", "M7BZ4X1Q", "dev")
     assert find_trdd(extract_trdd_id(title), tmp_path / "design") == p
+
+
+def test_complete_zones_by_release_via():
+    """3P-ZON-05 amended: complete archives AS ITSELF only for release-via none."""
+    from amoa_trdd_link import zone_for_column
+    assert zone_for_column("complete", "none") == "archived"
+    assert zone_for_column("complete", "publish") == "tasks"
+    assert zone_for_column("complete", "deploy") == "tasks"
+    assert zone_for_column("complete", None) == "tasks"  # unknown = conservative

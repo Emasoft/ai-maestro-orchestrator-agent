@@ -51,6 +51,8 @@ from amoa_trdd_link import (  # noqa: E402  (path injected above, on purpose)
     crosses_zone,
     extract_trdd_id,
     find_trdd,
+    mark_archived,
+    read_release_via,
     set_column,
     zone_for_column,
 )
@@ -696,8 +698,11 @@ def _write_through_to_trdd(
     # The folder is part of the state, so a zone crossing needs a `git mv` — a
     # frontmatter-only edit would leave a completed card sitting in tasks/,
     # where every board query still counts it as open work.
-    if crosses_zone(from_column, column):
-        dest_dir = design_root / zone_for_column(column)
+    # `complete` archives only for release-via:none cards (3P-ZON-05 amended);
+    # a publish/deploy card still has the release lane ahead and stays in tasks/.
+    release_via = read_release_via(trdd_path)
+    if crosses_zone(from_column, column, release_via):
+        dest_dir = design_root / zone_for_column(column, release_via)
         dest_dir.mkdir(parents=True, exist_ok=True)
         dest = dest_dir / trdd_path.name
         rc_mv, _, err = run_command(["git", "mv", str(trdd_path), str(dest)])
@@ -709,6 +714,15 @@ def _write_through_to_trdd(
             )
         else:
             print(f"  Moved {trdd_path.name} -> design/{dest_dir.name}/")
+            if dest_dir.name == "archived":
+                # 3P-ZON-12: archival writes all three places — set_column did
+                # column+updated, this adds `archived: true` + the body OUTCOME.
+                mark_archived(
+                    dest,
+                    f"Archived {get_timestamp()}: reached terminal column "
+                    f"`{column}` (from `{from_column}`) via board write-through, "
+                    f"issue {data.get('url', '')}.",
+                )
 
     return True
 

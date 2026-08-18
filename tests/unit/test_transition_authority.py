@@ -32,35 +32,51 @@ from amoa_kanban_vocab import (  # noqa: E402
 @pytest.mark.parametrize(
     "frm,to",
     [
+        ("todo", "design"),
         ("dispatch", "dev"),
-        ("dev", "testing"),
-        ("testing", "ai_review"),
-        ("testing", "dev"),
-        ("ai_review", "dev"),
-        ("live", "live_auditing"),
-        ("live_auditing", "live"),
     ],
 )
-def test_mechanical_transitions_need_no_approval(frm, to):
-    """Judgment-free moves are the orchestrator's own (approval-defaults section A)."""
+def test_b2_orchestrator_rows_need_no_approval(frm, to):
+    """The exactly-two transitions Part B2 assigns to the ORCHESTRATOR by name."""
     assert transition_authority(frm, to) == "orchestrator"
     assert_orchestrator_may_transition(frm, to)  # must not raise
 
 
 @pytest.mark.parametrize(
+    "frm,to,actor",
+    [
+        ("backburner", "todo", "manager"),
+        ("design", "dispatch", "architect"),
+        ("dev", "testing", "assignee"),
+        ("testing", "ai_review", "test-runner"),
+        ("testing", "dev", "test-runner"),
+        ("ai_review", "human_review", "ai-reviewer"),
+        ("ai_review", "dev", "reviewer"),
+        ("ai_review", "complete", "reviewer"),
+        ("complete", "publish", "integrator"),
+        ("complete", "deploy", "integrator"),
+        ("publish", "published", "releaser"),
+        ("deploy", "live", "deployer"),
+        ("live", "live_auditing", "integrator"),
+        ("live_auditing", "live", "integrator"),
+    ],
+)
+def test_b2_other_actor_rows_block_the_orchestrator(frm, to, actor):
+    """Every Part B2 row owned by another actor names that actor and raises for ORCH."""
+    assert transition_authority(frm, to) == actor
+    with pytest.raises(PermissionError):
+        assert_orchestrator_may_transition(frm, to)
+
+
+@pytest.mark.parametrize(
     "frm,to",
     [
-        ("complete", "publish"),
-        ("complete", "deploy"),
-        ("publish", "published"),
-        ("deploy", "live"),
-        ("ai_review", "human_review"),
         ("dev", "failed"),
         ("testing", "superseded"),
     ],
 )
-def test_release_and_abandonment_require_manager(frm, to):
-    """Entering the release pipeline, abandoning, or escalating is MANAGER's call."""
+def test_abandonment_requires_manager(frm, to):
+    """Abandoning or force-superseding is MANAGER's call (approval-defaults §Y)."""
     assert transition_authority(frm, to) == "manager"
     with pytest.raises(PermissionError, match="MANAGER"):
         assert_orchestrator_may_transition(frm, to)
@@ -91,9 +107,12 @@ def test_unknown_origin_resolves_to_the_stricter_answer():
 
 
 def test_complete_is_never_the_orchestrators_call():
-    """Declaring work finished is a verdict, from any origin."""
+    """Declaring work finished is a verdict, from any origin — reviewer's from a
+    review column (B2), MANAGER's or USER's from anywhere else."""
     for frm in ("testing", "ai_review", "dev", None):
-        assert transition_authority(frm, "complete") in ("manager", "user")
+        assert transition_authority(frm, "complete") in ("manager", "user", "reviewer")
+        with pytest.raises(PermissionError):
+            assert_orchestrator_may_transition(frm, "complete")
 
 
 def test_every_column_is_classifiable():

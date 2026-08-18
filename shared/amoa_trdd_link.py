@@ -65,6 +65,12 @@ _ZONE_BY_COLUMN: dict[str, str] = {
 }
 DEFAULT_ZONE = "tasks"
 
+# 3P-ZON-05 (amended 2026-08-18): ONLY these terminal values may enter
+# design/archived/, and every one archives AS ITSELF — no rewrite on the way in.
+ARCHIVE_ELIGIBLE_COLUMNS: frozenset[str] = frozenset(
+    {"complete", "completed", "cancelled", "superseded", "published", "live"}
+)
+
 
 def extract_trdd_id(text: str) -> str | None:
     """Pull the canonical `TRDD-<id8>` out of an issue title or body.
@@ -78,16 +84,61 @@ def extract_trdd_id(text: str) -> str | None:
     return m.group(1).upper() if m else None
 
 
-def zone_for_column(column: str) -> str:
-    """The `design/<zone>/` folder a card in `column` belongs in."""
+def zone_for_column(column: str, release_via: str | None = None) -> str:
+    """The `design/<zone>/` folder a card in `column` belongs in.
+
+    `complete` is release-via-DEPENDENT (3P-ZON-05 as amended 2026-08-18): with
+    `release-via: none` it is the card's terminal column and archives AS ITSELF,
+    while a publish/deploy card still has the release lane ahead of it
+    (complete -> publish|deploy, Part B2) and must stay in tasks/. An unknown
+    release_via (None) is treated as NOT-terminal — the conservative answer,
+    because un-archiving is one `git mv` while a card wrongly pulled out of the
+    release lane stalls the whole publish.
+    """
+    if column == "complete":
+        return "archived" if release_via == "none" else DEFAULT_ZONE
     return _ZONE_BY_COLUMN.get(column, DEFAULT_ZONE)
 
 
-def crosses_zone(from_column: str | None, to_column: str) -> bool:
+def crosses_zone(
+    from_column: str | None, to_column: str, release_via: str | None = None
+) -> bool:
     """True when this transition moves the file between design/ folders."""
     if from_column is None:
         return False
-    return zone_for_column(from_column) != zone_for_column(to_column)
+    return zone_for_column(from_column, release_via) != zone_for_column(to_column, release_via)
+
+
+def read_release_via(trdd_path: Path) -> str:
+    """Read the card's `release-via:` (absent defaults to `none` per the TRDD spec)."""
+    m = re.search(
+        r"^release-via:\s*(\S+)", trdd_path.read_text(encoding="utf-8"), re.MULTILINE
+    )
+    return m.group(1) if m else "none"
+
+
+def mark_archived(trdd_path: Path, outcome_line: str) -> bool:
+    """The 3P-ZON-12 archival writes set_column does not do.
+
+    Adds `archived: true` beside the terminal `column:` (idempotent) and appends
+    the OUTCOME/WHY line to the body — the spec requires all three archival
+    writes (column+updated via set_column, this flag, and the body record), and
+    the pre-2026-08-19 path performed only the first (TRDD-8DH44UXH AC5).
+    """
+    text = trdd_path.read_text(encoding="utf-8")
+    changed = False
+    if re.search(r"^archived:\s*true\s*$", text, re.MULTILINE) is None:
+        new_text, n = re.subn(
+            r"(?m)^(column:[^\n]*)$", r"\1\narchived: true", text, count=1
+        )
+        if n:
+            text, changed = new_text, True
+    if outcome_line and outcome_line not in text:
+        text = text.rstrip("\n") + f"\n\n{outcome_line}\n"
+        changed = True
+    if changed:
+        trdd_path.write_text(text, encoding="utf-8")
+    return changed
 
 
 def find_trdd(trdd_id: str, design_root: Path) -> Path | None:

@@ -186,22 +186,40 @@ def resolve_column(status: str) -> str:
 # alignment"). The gated sets below are the NON-EXEMPT operations from
 # aimaestro-manager-approval-defaults.md §Y and §Z.
 
-# Mechanical, judgment-free transitions an ORCHESTRATOR performs on its own
-# authority (approval-defaults §A). Pairs, because the authority depends on where
-# the card came FROM: `testing → dev` is a routine test failure, while
-# `human_review → dev` is a USER decision being relayed.
+# Transitions the ORCHESTRATOR triggers ON ITS OWN per the Part B2
+# transition-authority table (ai-maestro rules/aimaestro/aimaestro-trdd-approval.md
+# §Part B2) — the SSOT this map mirrors. B2 grants the ORCHESTRATOR exactly two
+# named rows; everything else belongs to another actor (OTHER_ACTOR_TRANSITIONS)
+# or is approval-gated. The pre-2026-08-19 version of this set claimed six more
+# rows (dev→testing, testing→ai_review, testing→dev, design→dispatch,
+# backburner→todo, live→live_auditing) that B2 assigns to the assignee, test
+# runner, ARCHITECT, MANAGER and INTEGRATOR — TRDD-8DH44UXH finding G2-G6. Do
+# not re-add a row here without citing its B2 line.
 ORCHESTRATOR_TRANSITIONS: frozenset[tuple[str, str]] = frozenset({
-    ("dispatch", "dev"),        # assignee set; work starts
-    ("dev", "testing"),         # code ready for tests
-    ("testing", "ai_review"),   # all required tests passed
-    ("testing", "dev"),         # test FAILED — back to the assignee
-    ("ai_review", "dev"),       # AI reviewer rejected — back to the assignee
-    ("live", "live_auditing"),  # soak entry
-    ("live_auditing", "live"),  # soak window elapsed clean
-    ("backburner", "todo"),     # intake grooming
-    ("todo", "design"),
-    ("design", "dispatch"),
+    ("todo", "design"),         # B2: ORCHESTRATOR — assigns ARCHITECT via AMP
+    ("dispatch", "dev"),        # B2: ORCHESTRATOR — sets `assignee:`
 })
+
+# Transitions Part B2 assigns to a NAMED actor that is neither the ORCHESTRATOR
+# nor an approval authority. The orchestrator may MIRROR these once the actor
+# performed them, but must never originate them (G2-G8: originating them here is
+# how the orchestrator ended up declaring tests passed).
+OTHER_ACTOR_TRANSITIONS: dict[tuple[str, str], str] = {
+    ("backburner", "todo"): "manager",          # B2: MANAGER (intake)
+    ("design", "dispatch"): "architect",        # B2: ARCHITECT (may split/group)
+    ("dev", "testing"): "assignee",             # B2: assignee — code ready
+    ("testing", "ai_review"): "test-runner",    # B2: test runner — tests passed
+    ("testing", "dev"): "test-runner",          # B2: test runner — tests FAILED
+    ("ai_review", "human_review"): "ai-reviewer",  # B2: AI reviewer escalates
+    ("ai_review", "dev"): "reviewer",           # reviewer rejection
+    ("ai_review", "complete"): "reviewer",      # B2: reviewer verdict
+    ("complete", "publish"): "integrator",      # B2: INTEGRATOR spawns RELEASER
+    ("complete", "deploy"): "integrator",       # B2: INTEGRATOR spawns DEPLOYER
+    ("publish", "published"): "releaser",       # B2: RELEASER via INTEGRATOR
+    ("deploy", "live"): "deployer",             # B2: DEPLOYER via INTEGRATOR
+    ("live", "live_auditing"): "integrator",    # B2: INTEGRATOR (soak entry)
+    ("live_auditing", "live"): "integrator",    # soak exit (approval-defaults §A row: INTEGRATOR)
+}
 
 # Transitions requiring MANAGER approval (§Y: release pipeline, abandonment,
 # force-supersede, escalation to human review).
@@ -237,15 +255,19 @@ def transition_authority(from_column: str | None, to_column: str) -> str:
     # targets.
     if from_col is not None and (from_col, to_col) in USER_GATED_TRANSITIONS:
         return "user"
+    if from_col is not None and (from_col, to_col) in OTHER_ACTOR_TRANSITIONS:
+        return OTHER_ACTOR_TRANSITIONS[(from_col, to_col)]
     if from_col is not None and (from_col, to_col) in ORCHESTRATOR_TRANSITIONS:
         return "orchestrator"
     if to_col in MANAGER_GATED_TARGETS:
         return "manager"
-    # `complete` is reachable only from human_review (USER) or as a MANAGER
-    # decision; it is never an orchestrator's call to declare work finished.
+    # `complete` from a review column is the reviewer's verdict (B2); from any
+    # other/unknown origin it stays a MANAGER decision — never the orchestrator's
+    # call to declare work finished.
     if to_col == "complete":
         return "manager"
-    # Everything else — intake, grooming, blocking — is the orchestrator's.
+    # Everything else — intake edits, blocking/unblocking by the card's owner —
+    # is the orchestrator's (B2 `<any working> → blocked` / back = owner).
     return "orchestrator"
 
 
@@ -260,8 +282,9 @@ def assert_orchestrator_may_transition(from_column: str | None, to_column: str) 
     authority = transition_authority(from_column, to_column)
     if authority != "orchestrator":
         raise PermissionError(
-            f"transition {from_column or '<unknown>'} -> {to_column} requires "
-            f"{authority.upper()} approval; an ORCHESTRATOR may not perform it "
-            f"unilaterally (aimaestro-manager-approval-defaults §Y/§Z). Route an "
-            f"approval request, then mirror the approved transition."
+            f"transition {from_column or '<unknown>'} -> {to_column} belongs to "
+            f"{authority.upper()} (Part B2 transition-authority table, "
+            f"aimaestro-trdd-approval.md); an ORCHESTRATOR may not perform it "
+            f"unilaterally. Route it to that actor (or an approval request for "
+            f"MANAGER/USER gates), then mirror the performed transition."
         )
