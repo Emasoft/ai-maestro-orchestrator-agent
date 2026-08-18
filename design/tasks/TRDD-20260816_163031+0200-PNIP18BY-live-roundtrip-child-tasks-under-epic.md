@@ -5,13 +5,13 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-16T16:30:31+0200
+updated: 2026-08-18T19:53:09+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
-created-by: 6B3K7S69
+created-by: ai-maestro-orchestrator-agent
 relevant-rules: []
-external-refs: [orch#26, architect#7, ai-maestro#77]
+external-refs: [orch#26, architect#7, ai-maestro#77, TRDD-6B3K7S69]
 npt: []
 eht: []
 blocked-by: []

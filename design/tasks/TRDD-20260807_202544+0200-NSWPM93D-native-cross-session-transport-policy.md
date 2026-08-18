@@ -1,11 +1,11 @@
 ---
 trdd-id: NSWPM93D
 title: Decide AMOA policy for Claude Code native cross-session messaging alongside AMP
-column: proposal
+column: planned
 min-approval-requirement: manager
 routed-via: manager
 created: 2026-08-07T20:25:44+0200
-updated: 2026-08-14T12:56:48+0200
+updated: 2026-08-18T19:53:09+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: docs
@@ -14,7 +14,7 @@ project-id: ai-maestro-orchestrator-agent
 blocked-by: []
 release-via: none
 relevant-rules: []
-external-refs: [https://github.com/Emasoft/ai-maestro-plugin/issues/61]
+external-refs: [https://github.com/Emasoft/ai-maestro-plugin/issues/61, ai-maestro#131]
 ---
 
 # Decide AMOA policy for Claude Code native cross-session messaging alongside AMP
@@ -63,7 +63,10 @@ split; only USER can). Native `SendMessage` used to hand another agent work is
 plainly "influencing another agent" and is therefore already outside R42.3.
 
 COS reached the same conclusion independently from the R42 reading and raised it
-to CORE as `ai-maestro#76`, adding that R42.1's ban on injecting **queued input**
+to CORE as `ai-maestro#131` (CORRECTED 2026-08-18: this line originally cited
+`ai-maestro#76`, which is the COS frozen-CLI-verbs gap, not the messaging escalation —
+verified against both issues' live titles; #131 is the one tracking the second-transport /
+no-403-enforcement-point escalation), adding that R42.1's ban on injecting **queued input**
 bites too (native auto-delivers where AMP is polled), and that R6's comm graph
 goes advisory because `ListAgents` enumerates sessions across machines
 regardless of topology. **CORE has not ruled.**
@@ -180,4 +183,18 @@ Consequences for the ask:
   directly; it should be confirmed against MANAGER's own record before being cited
   as settled. The amendment above may narrow item (2) further.
 
-<!-- Still awaiting MANAGER on item (1). Tier 2: touches the audit trail. -->
+## Approval log
+
+- 2026-08-18T19:53:09+0200 — APPROVED → planned by the hub session (ai-maestro-fd), under the
+  USER's verbatim same-session delegation "you are in charge. decide yourself in base of
+  verified facts and tests." Rulings recorded:
+  (a) AMP-unreachable default = STOP AND SURFACE — never a native fallback for registered
+  agents (a documented fallback becomes the default path during incidents and loses AID
+  identity + R6 routing). Hub verified R42.3 verbatim in docs/GOVERNANCE-RULES.md.
+  (b) Exception set = EMPTY for work-directing traffic. R42.5 (janitor global ops) and R42.8
+  (unblock) are the only carve-outs and are not transport exceptions. Outbound-unreachable
+  senders: stop and surface.
+  SCOPE: this policy binds REGISTERED ai-maestro agents (AID-bearing, R6-routed); plugin-dev
+  coordination sessions are outside AMOA scope by the USER's explicit instruction to the hub
+  ("use SendMessages to orchestrate them").
+  Citation fix applied same edit: the COS escalation is ai-maestro#131, not #76.

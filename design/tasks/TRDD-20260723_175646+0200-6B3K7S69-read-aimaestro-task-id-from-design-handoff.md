@@ -1,10 +1,10 @@
 ---
 trdd-id: 6B3K7S69
 title: Read aimaestro_task_id from the architect design-handoff (orch #26 read-side, parse-half)
-column: testing
+column: complete
 scope: project
 created: 2026-07-23T17:56:46+0200
-updated: 2026-07-23T18:02:03+0200
+updated: 2026-08-18T19:53:09+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -94,5 +94,15 @@ AMCOS-spawned agent binding — deferred, cannot run here.
 - [x] (Deployment) children read back under the epic — SPLIT OUT on 2026-08-16 into the
       standalone derived card TRDD-PNIP18BY, which owns that live-server round-trip. This box
       is checked because the scope left this card, not because the check ran.
+
+## Approval log
+
+- 2026-08-18T19:53:09+0200 — APPROVED testing → complete by the hub session (ai-maestro-fd),
+  under the USER's verbatim same-session delegation "you are in charge. decide yourself in
+  base of verified facts and tests." Condition (fix the split's paperwork first) satisfied in
+  the same commit: TRDD-PNIP18BY `created-by:` corrected from a card id to the authoring
+  agent, the lineage cited via external-refs/prose only, npt/eht/parent-trdd left empty —
+  PNIP18BY is a STANDALONE SUCCESSOR, not an EHT (an EHT would forbid this very stamp; the
+  live round-trip is deferred acceptance gated on infra, not a hole the change opened).
 
 ## Notes and lessons learned
