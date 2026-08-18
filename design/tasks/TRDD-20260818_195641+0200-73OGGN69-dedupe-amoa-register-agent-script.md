@@ -56,8 +56,8 @@ DIFFERENT PROGRAMS sharing a basename. Canonical = state-file agent registration
 registration (`register|list` subcommands, `--name/--platform/--architecture`), the renamed
 old `atlas_register_agent.py`, and its own skill's docs teach exactly that CLI shape — so
 deleting it would break a documented workflow. Fix applied: `git mv` to
-`amoa_storage_register_agent.py` (unique basename kills the drift hazard), 2 coordinator docs
-+ skill-directory-structure.md + the script docstring repointed (part5 example also gained
+`amoa_storage_register_agent.py` (unique basename kills the drift hazard); 2 coordinator
+docs plus skill-directory-structure.md plus the script docstring repointed (part5 also gained
 the required `register` subcommand it was missing), stale `<!-- TODO: Rename -->` markers
 stripped on touched lines, `scripts/__init__.py` collision note updated.
 

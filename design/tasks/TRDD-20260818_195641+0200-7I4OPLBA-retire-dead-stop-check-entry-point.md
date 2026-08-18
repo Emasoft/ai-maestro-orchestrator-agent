@@ -28,8 +28,9 @@ section), re-verified first-hand 2026-08-18 in this tree.
 The live Stop hook (`hooks/hooks.json:12`) runs `python3 -m amoa_stop_check.main` (package
 `scripts/amoa_stop_check/`). The pre-package entry point `scripts/amoa_orchestrator_stop_check.py`
 STILL EXISTS and is still cited by at least 8 files: `tests/unit/test_amoa_orchestrator_stop_check.py`
-and 6 skill docs (`amoa-two-phase-mode/README.md` + references, `amoa-orchestration-commands/README.md`
-+ `references/python-scripts.md` + `references/op-stop-hook-enforcement.md`,
+and 6 skill docs (`amoa-two-phase-mode/README.md` with its references;
+`amoa-orchestration-commands/README.md` with `references/python-scripts.md` and
+`references/op-stop-hook-enforcement.md`;
 `amoa-orchestration-loop/references/stop-hook-behavior.md`). Docs teach a dead entry point;
 two versions of the stop-check violate the one-version rule.
 
