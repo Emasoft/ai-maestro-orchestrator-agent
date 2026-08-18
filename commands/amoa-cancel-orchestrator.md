@@ -2,7 +2,7 @@
 name: amoa-cancel-orchestrator
 description: "Cancel active orchestrator loop"
 allowed-tools: ["Bash(test -f .claude/orchestrator-loop.local.md:*)", "Bash(rm .claude/orchestrator-loop.local.md)", "Read(.claude/orchestrator-loop.local.md)"]
-hide-from-slash-command-tool: "true"
+disable-model-invocation: true
 ---
 
 # Cancel Orchestrator Loop
