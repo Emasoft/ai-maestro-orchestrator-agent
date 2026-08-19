@@ -26,7 +26,7 @@
 # Verify agent has required LSP servers
 # Assign first task with ACK protocol
 
-Send the first task assignment using the `agent-messaging` skill:
+Send the first task assignment using `amp-send` (`--type task`):
 - **Recipient**: `implementer-new`
 - **Subject**: "First Task Assignment"
 - **Content**: "[ACK REQUIRED] Task: Implement feature X. Before starting, reply: [ACK] task-001 - RECEIVED"
@@ -41,7 +41,7 @@ Send the first task assignment using the `agent-messaging` skill:
 
 This example shows the full delegation message structure:
 
-Send a full delegation message using the `agent-messaging` skill:
+Send a full delegation message using `amp-send` (`--type task`):
 - **Recipient**: `implementer-1`
 - **Subject**: "Task: Implement auth-core module"
 - **Priority**: `high`
@@ -106,7 +106,7 @@ The orchestrator tracks verification state per task:
 
 This shows the 10-15 minute polling cycle during active work:
 
-Every 10-15 minutes during active work, send a progress check using the `agent-messaging` skill:
+Every 10-15 minutes during active work, send a progress check using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "Progress Check"
 - **Content**: "1. Current progress? 2. Next steps? 3. Any issues? 4. Anything unclear? 5. Difficulties? 6. Need anything?"

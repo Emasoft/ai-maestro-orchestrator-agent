@@ -54,7 +54,7 @@ Orchestrator                    AI Agent
     |                               |
 ```
 
-**Message format**: Send a task assignment message using the `agent-messaging` skill:
+**Message format**: Send a task assignment message using `amp-send` (`--type task`):
 - **Recipient**: the agent session name
 - **Subject**: "[TASK] Module: auth-core"
 - **Type**: `assignment`
@@ -70,7 +70,7 @@ To use an AI agent:
 2. **AI Maestro hook installed**: The session must have AI Maestro hooks configured
 3. **Session name known**: Must use the full session name (e.g., `helper-agent-generic`)
 
-**Verify session is active**: Use the `agent-messaging` skill to query the agent registry and list all registered session names.
+**Verify session is active**: Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry and list all registered session names.
 
 ### 4.1.4 Capabilities and Limitations
 

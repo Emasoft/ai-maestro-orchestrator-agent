@@ -28,7 +28,7 @@ This document provides message templates for cross-project dependency coordinati
 
 **When to use**: The AMOA discovers that one of its tasks depends on a deliverable from another project. The AMOA cannot contact the other project's AMOA directly. Instead, the AMOA sends the notification to AMCOS, which routes it to the correct project's AMOA.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template
 
@@ -95,7 +95,7 @@ Cross-project dependency detected
 
 **When to use**: The AMOA needs to know the current progress, blockers, estimated completion time, or deliverable readiness of another project. The request goes through AMCOS, which queries the other project's AMOA on behalf of the requesting AMOA.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template
 
@@ -159,7 +159,7 @@ Need information about another project
 
 **When to use**: The AMOA receives a status query from AMCOS (forwarded from another project's AMOA) and must respond with the requested information. The response goes back through AMCOS, which relays it to the requesting AMOA.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template (Target AMOA Responds to AMCOS)
 
@@ -206,7 +206,7 @@ Received a cross-project status query from AMCOS
 
 **When to use**: The AMOA determines that a task requires a human developer (not an AI agent). The AMOA creates a GitHub issue with a specific format that human developers can pick up, including acceptance criteria, deadline, and the label `assigned-to-human` to distinguish it from AI agent tasks.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### GitHub Issue Creation Template
 
@@ -298,7 +298,7 @@ Task requires human developer (not AI agent)
 
 **When to use**: The AMOA detects that a GitHub issue assigned to a human developer has been closed. The AMOA retrieves the completion details including any linked Pull Request URL and completion notes from the issue comments. This triggers the integration of the human developer's deliverable into the project workflow.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Monitoring Command
 
@@ -361,7 +361,7 @@ Human-assigned GitHub issue close event detected
 
 **When to use**: The AMOA detects that one of its tasks depends on a deliverable from another project. Use this decision tree to determine the correct course of action based on whether the dependency is critical-path (blocking progress) or nice-to-have (improves quality but is not strictly required).
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Decision Tree
 

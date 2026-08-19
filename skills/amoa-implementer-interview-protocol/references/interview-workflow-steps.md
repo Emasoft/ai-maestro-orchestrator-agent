@@ -8,9 +8,9 @@
 
 ## Pre-Task Interview Checklist
 
-- [ ] Send task assignment message via AI Maestro using the `agent-messaging` skill
+- [ ] Send task assignment message via `amp-send --type task --priority high`
 - [ ] Wait for implementer ACK (acknowledgment)
-- [ ] Send pre-task interview questions using the `agent-messaging` skill
+- [ ] Send pre-task interview questions via `amp-send --type request --priority high`
 - [ ] Evaluate implementer's understanding summary
 - [ ] Check for concerns (requirements, design, capability, dependencies)
 - [ ] Verify files/domains to be touched (single-writer ownership check) — NO PROCEED if any surface overlaps another task/agent's owned surface; resolve via domain claim or delegation first
@@ -39,9 +39,9 @@
 
 ## Pre-Task Interview Steps
 
-1. Send task assignment message via AI Maestro using the `agent-messaging` skill
+1. Send task assignment message via `amp-send --type task --priority high`
 2. Wait for implementer ACK (acknowledgment)
-3. Send pre-task interview questions using the `agent-messaging` skill ([interview-templates.md](./interview-templates.md))
+3. Send pre-task interview questions via `amp-send --type request --priority high` ([interview-templates.md](./interview-templates.md))
 <!-- TOC: Pre-Task Interview Questions | Pre-Task Interview: {TASK_ID} | Post-Task Interview Questions -->
 4. Evaluate implementer's understanding summary
 5. Check for concerns about requirements, design, capability, or dependencies

@@ -35,7 +35,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_assign_module.py" $ARGUMENTS
    - Sets initial status
 
 3. **Sends Assignment Message** (AI agents)
-   - Sends via AI Maestro using the `agent-messaging` skill
+   - Sends via AI Maestro using the `amp-send` CLI (`--type task`)
    - Includes GitHub Issue link
    - Includes task UUID
    - Requests instruction repetition

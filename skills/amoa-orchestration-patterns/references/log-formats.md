@@ -317,7 +317,7 @@ All AI Maestro messages follow JSON format with required fields: `from`, `to`, `
 
 **From AMCOS or AMAMA to AMOA:**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages — the template fills the body it transmits. The JSON structure below shows the message content.
 
 ```json
 {
@@ -340,7 +340,7 @@ All AI Maestro messages follow JSON format with required fields: `from`, `to`, `
 
 **AMOA Response (ACK):**
 
-Send an acknowledgment using the `agent-messaging` skill:
+Send an acknowledgment with `amp-send --type response`:
 - **Recipient**: `amcos-main`
 - **Subject**: "ACK: Task Assignment [Task Name]"
 - **Content**: "Task received and logged. UUID: [task-uuid]. Expected completion: [timestamp]."
@@ -353,7 +353,7 @@ Send an acknowledgment using the `agent-messaging` skill:
 
 **AMOA to Sub-Agent:**
 
-Send a task assignment using the `agent-messaging` skill:
+Send a task assignment with `amp-send --type task`:
 - **Recipient**: the sub-agent session name
 - **Subject**: "Task Assignment: [Task Name]"
 - **Content**: "Detailed task description with all context needed"
@@ -364,7 +364,7 @@ Send a task assignment using the `agent-messaging` skill:
 
 **Sub-Agent Response (ACK):**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages — the template fills the body it transmits. The JSON structure below shows the message content.
 
 ```json
 {
@@ -384,7 +384,7 @@ Send a task assignment using the `agent-messaging` skill:
 
 **AMOA to Sub-Agent:**
 
-Send a status request using the `agent-messaging` skill:
+Send a status request with `amp-send --type request`:
 - **Recipient**: the sub-agent session name
 - **Subject**: "Status Request: [Task Name]"
 - **Content**: "Please provide status update on task [task-uuid]. Expected completion was [timestamp]."
@@ -395,7 +395,7 @@ Send a status request using the `agent-messaging` skill:
 
 **Sub-Agent Response:**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages — the template fills the body it transmits. The JSON structure below shows the message content.
 
 ```json
 {
@@ -417,7 +417,7 @@ Send a status request using the `agent-messaging` skill:
 
 **AMOA to AMCOS:**
 
-Send a completion report using the `agent-messaging` skill:
+Send a completion report with `amp-send --type status`:
 - **Recipient**: `amcos-main`
 - **Subject**: "Task Complete: [Task Name]"
 - **Content**: "[1-2 line summary]. Key finding: [one-line summary]. Details: docs_dev/orchestration/reports/[task-uuid].md"
@@ -430,7 +430,7 @@ Send a completion report using the `agent-messaging` skill:
 
 **AMOA to AMCOS:**
 
-Send an escalation using the `agent-messaging` skill:
+Send an escalation with `amp-send --type request --priority high`:
 - **Recipient**: `amcos-main`
 - **Subject**: "ESCALATION: [Issue Description]"
 - **Type**: `escalation`, **Priority**: `urgent`

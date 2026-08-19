@@ -76,7 +76,7 @@ python shared/testing_protocol.py \
   --output test-results.json
 ```
 
-Or send directly using the `agent-messaging` skill:
+Or send directly with `amp-send --type status --priority high`:
 - **Recipient**: `orchestrator-master`
 - **Subject**: "Verification Complete: GH-42"
 - **Content**: "[TESTS] 45 total: 42 passed, 2 failed, 1 skipped (12.5s)"
@@ -114,7 +114,7 @@ Canonical copy: the minimal summary format for orchestrator consumption is maint
 
 For long-running test suites, send progress updates:
 
-Send a progress update using the `agent-messaging` skill:
+Send a progress update with `amp-send --type status`:
 - **Recipient**: `orchestrator-master`
 - **Subject**: "Test Progress: GH-42"
 - **Content**: "5000/10000 tests complete, 2 failures so far"
@@ -127,7 +127,7 @@ Send a progress update using the `agent-messaging` skill:
 
 If more time is needed:
 
-Send an extension request using the `agent-messaging` skill:
+Send an extension request with `amp-send --type request --priority high`:
 - **Recipient**: `orchestrator-master`
 - **Subject**: "Extension Request: GH-42"
 - **Content**: "Integration tests running (10k+ tests), 80% complete"
@@ -140,7 +140,7 @@ Send an extension request using the `agent-messaging` skill:
 
 ### Notification Not Delivered
 
-1. Use the `agent-messaging` skill to perform a health check on the AI Maestro service.
+1. Use AMP messaging (amp-send/amp-inbox CLIs) to perform a health check on the AI Maestro service.
 
 2. Check agent session name is correct
 

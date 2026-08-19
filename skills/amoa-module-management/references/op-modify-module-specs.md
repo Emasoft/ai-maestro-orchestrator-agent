@@ -124,7 +124,7 @@ At least one of `name`, `criteria`, or `priority` must be provided.
    - Update body if criteria changed
    - Update labels if priority changed
 
-6. **Notify assigned agent** (if applicable). Send using the `agent-messaging` skill:
+6. **Notify assigned agent** (if applicable). Send using `amp-send`:
    - **Recipient**: the assigned agent session name
    - **Subject**: "Module Modified: <module_id>"
    - **Content**: "Module specifications updated. Review changes before continuing."

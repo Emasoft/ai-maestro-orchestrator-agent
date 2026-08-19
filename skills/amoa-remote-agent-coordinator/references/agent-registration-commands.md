@@ -63,7 +63,7 @@ The session name must match an active AI Maestro session.
 
 Before registering, verify the session exists and is active:
 
-Use the `agent-messaging` skill to query the agent registry and verify whether the session (e.g., `helper-agent-generic`) exists and is active.
+Use AMP messaging (`amp-inbox`/`amp-send` CLIs) to verify whether the session (e.g., `helper-agent-generic`) exists and is active — e.g. `amp-send <session> "ping" "health check" --type request` and check for a reply via `amp-inbox`.
 
 **Verify**: confirm the agent is listed and active in the registry.
 

@@ -12,7 +12,7 @@
 
 Complete reference for all session lifecycle message templates used between AMCOS (Chief of Staff) and AMOA (Orchestrator Agent). These templates cover the full agent lifecycle: waking, hibernating, terminating, and periodic status reporting.
 
-> All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
+> All message templates below should be sent using the `amp-send` CLI, which handles the AI Maestro AMP transport automatically.
 
 ---
 

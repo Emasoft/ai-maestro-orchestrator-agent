@@ -61,7 +61,7 @@ Reassign a task from one agent to another when the current agent is unresponsive
 2. Gather partial progress from original agent (check issue comments, PRs, branches)
 3. Remove current `assign:*` label from the issue
 4. Add `assign:<new-agent>` label to the issue
-5. Send reassignment message to new agent using the `agent-messaging` skill with full context and partial progress
+5. Send reassignment message to new agent via `amp-send --type task --priority high` with full context and partial progress
 6. Notify original agent that task has been reassigned
 7. Verify new agent sends ACK
 8. Log reassignment in delegation log
@@ -80,19 +80,16 @@ gh issue edit $ISSUE --remove-label "assign:$OLD_AGENT"
 # Step 4: Add new assignment
 gh issue edit $ISSUE --add-label "assign:$NEW_AGENT"
 
-# Step 5: Message new agent using the agent-messaging skill:
-# - Recipient: $NEW_AGENT
-# - Subject: "Task Reassignment: Issue #$ISSUE"
-# - Content: "Task #$ISSUE has been reassigned to you from $OLD_AGENT. Reason: $REASON. Please review existing progress and continue."
-# - Type: reassignment, Priority: high
-# - Data: issue_number, previous_agent, partial_progress
+# Step 5: Message new agent via amp-send:
+amp-send "$NEW_AGENT" "Task Reassignment: Issue #$ISSUE" \
+  "Task #$ISSUE has been reassigned to you from $OLD_AGENT. Reason: $REASON. Please review existing progress and continue." \
+  --type task --priority high
 # Verify: confirm delivery
 
-# Step 6: Notify old agent using the agent-messaging skill:
-# - Recipient: $OLD_AGENT
-# - Subject: "Task Reassigned: Issue #$ISSUE"
-# - Content: "Task #$ISSUE has been reassigned to $NEW_AGENT. Reason: $REASON."
-# - Type: notification, Priority: normal
+# Step 6: Notify old agent via amp-send:
+amp-send "$OLD_AGENT" "Task Reassigned: Issue #$ISSUE" \
+  "Task #$ISSUE has been reassigned to $NEW_AGENT. Reason: $REASON." \
+  --type notification --priority normal
 # Verify: confirm delivery
 ```
 
@@ -126,7 +123,7 @@ Include all partial progress in the reassignment message.
 - [ ] Gather partial progress from original agent (check issue comments, PRs, branches)
 - [ ] Remove current `assign:*` label from the issue
 - [ ] Add `assign:<new-agent>` label to the issue
-- [ ] Send reassignment message to new agent via AI Maestro using the `agent-messaging` skill (include all task context and partial progress)
+- [ ] Send reassignment message to new agent via `amp-send` (include all task context and partial progress)
 - [ ] Notify original agent via AI Maestro: "Task reassigned to <new-agent>"
 - [ ] Verify new agent sends ACK
 - [ ] Log reassignment in delegation log file

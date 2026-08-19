@@ -123,7 +123,7 @@ Write: /path/to/docker-compose.yml  # NO - config is implementation
 **Allowed Actions**:
 ```bash
 # Sending AI Maestro messages
-# Use the agent-messaging skill to send task delegations
+# Use `amp-send <recipient> "<subject>" "<body>" --type task` to send task delegations
 # Specify: recipient, subject, content, type, priority
 
 # Creating delegation documents
@@ -148,7 +148,7 @@ docker-compose up    # NO - agent sets up infrastructure
 **Allowed Actions**:
 ```bash
 # Checking for messages
-# Use the agent-messaging skill to check inbox for unread messages
+# Use `amp-inbox` to check inbox for unread messages
 
 # Reading PR status
 gh pr view 42

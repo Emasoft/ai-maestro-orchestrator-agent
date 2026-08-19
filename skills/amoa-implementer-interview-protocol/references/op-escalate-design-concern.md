@@ -69,7 +69,7 @@ Escalate design-related concerns from the implementer to the Architect agent (AM
    - Current architectural context
    - Request for design decision
 
-3. **Send to Architect** using the `agent-messaging` skill:
+3. **Send to Architect** using `amp-send`:
    - **Recipient**: `architect`
    - **Subject**: "Design Review Request: <issue_number>"
    - **Content**: the escalation message with design concern details
@@ -138,7 +138,7 @@ Please respond with your decision and rationale.
 
 | Error | Cause | Recovery |
 |-------|-------|----------|
-| Architect unavailable | Agent not registered | Escalate to AMAMA for human architect involvement |
+| Architect unavailable | Agent not registered | Escalate via AMCOS (relays to AMAMA) for human architect involvement |
 | No response in 24h | Architect backlog | Follow up with reminder |
 | Design decision unclear | Ambiguous response | Request clarification from Architect |
 

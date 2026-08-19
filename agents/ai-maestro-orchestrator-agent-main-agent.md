@@ -194,7 +194,7 @@ This file contains all agent names and their AI Maestro addresses.
 
 > For all message templates (task assignment, delegation, status requests, completion reports, escalations), see **amoa-messaging-templates** skill and reference doc **ai-maestro-message-templates.md**.
 
-**To send a message**, use the `agent-messaging` skill:
+**To send a message**, use the `amp-send` CLI:
 - **From**: your AMOA session name (e.g., `amoa-<project>`)
 - **To**: target agent session name
 - **Subject**: descriptive subject line
@@ -342,7 +342,7 @@ blocker.
 2. Assess: moderate complexity, needs implementer
 3. Select agent: `project-impl-01` (has capacity)
 4. Create GitHub issue with label `assigned:project-impl-01`
-5. Send AI Maestro assignment message using the `agent-messaging` skill with success criteria
+5. Send AI Maestro assignment message via `amp-send <agent> "<subject>" "<body>" --type task --priority normal` with success criteria
 6. Wait for ACK → Log delegation
 7. Monitor progress via polling (every 2-4 hours)
 8. Receive completion report → Verify all criteria met
@@ -356,7 +356,7 @@ blocker.
 2. Review blocker: technical issue (e.g., missing API)
 3. Check attempts: first failure
 4. Decision: escalate to AMCOS; AMCOS relays to AMAMA for the MAESTRO's decision (blocker requires MAESTRO input)
-5. Send escalation message to AMCOS using the `agent-messaging` skill with failure details
+5. Send escalation message to AMCOS via `amp-send amcos "<subject>" "<body>" --type request --priority high` with failure details
 6. Wait for AMCOS guidance (resolve blocker or reassign)
 
 ## Example 3: Multi-Agent Coordination

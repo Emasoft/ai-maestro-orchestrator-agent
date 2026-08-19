@@ -74,7 +74,7 @@ Sub-agents prepare content but NEVER send externally.
 
 ### 2.1 If sending messages to remote agents
 
-The orchestrator sends messages using the `agent-messaging` skill:
+The orchestrator sends messages using `amp-send`:
 - **Recipient**: the target agent session name
 - **Subject**: the message subject
 - **Content**: the message body
@@ -85,7 +85,7 @@ The orchestrator sends messages using the `agent-messaging` skill:
 
 ### 2.2 If receiving messages from orchestrator
 
-Remote agents use the `agent-messaging` skill to check their inbox for unread messages.
+Remote agents use `amp-inbox` (and `amp-read <message-id>`) to check their inbox for unread messages.
 
 ---
 

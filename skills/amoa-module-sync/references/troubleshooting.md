@@ -199,9 +199,9 @@ AI Maestro notifications may fail. This section covers recovery.
 
 ### Diagnosing Notification Failures
 
-**Check AI Maestro is running**: Use the `agent-messaging` skill to perform a health check.
+**Check AI Maestro is running**: Run `amp-inbox` to perform a health check.
 
-**Check message was sent**: Use the `agent-messaging` skill to list recently sent messages for your session.
+**Check message was sent**: Run `amp-inbox` to list recently sent messages for your session.
 
 ### AI Maestro Not Running
 
@@ -209,7 +209,7 @@ AI Maestro notifications may fail. This section covers recovery.
 
 **Solution**:
 1. Start AI Maestro service
-2. Verify it is running using the `agent-messaging` skill health check
+2. Verify it is running using the `amp-inbox` health check
 
 ### Agent Session Not Found
 
@@ -224,7 +224,7 @@ AI Maestro notifications may fail. This section covers recovery.
 
 If automated notification failed, send manually:
 
-Send a notification manually using the `agent-messaging` skill:
+Send a notification manually using `amp-send`:
 - **Recipient**: the agent session name
 - **Subject**: "[UPDATE] Module: {name} - Spec Change"
 - **Content**: "The specifications for your assigned module have been updated..."
@@ -367,7 +367,7 @@ When force-removing an assigned module:
 # 1. Force remove
 /remove-module oauth-facebook --force
 
-# 2. Manually notify agent using the agent-messaging skill:
+# 2. Manually notify agent using amp-send:
 # Recipient: the agent session name
 # Subject: "[STOP] Module Removed: oauth-facebook"
 # Content: "The module oauth-facebook has been removed. Stop any work immediately."

@@ -34,13 +34,13 @@ Check for unread messages in your AI Maestro inbox.
 
 ## Steps
 
-1. **Check your inbox** using the `agent-messaging` skill to retrieve all unread messages for your session.
+1. **Check your inbox** using `amp-inbox` to retrieve all unread messages for your session.
 
 2. **Process messages by priority**: URGENT > HIGH > NORMAL
 
-3. **Respond to messages** that require acknowledgment using the `agent-messaging` skill.
+3. **Respond to messages** that require acknowledgment using `amp-reply`.
 
-4. **Mark messages as read** after processing using the `agent-messaging` skill.
+4. **Mark messages as read** after processing using `amp-read`.
 
 **Verify**: confirm all unread messages have been processed.
 
@@ -64,7 +64,7 @@ JSON array of messages with fields:
 
 ## Example
 
-Check your inbox using the `agent-messaging` skill:
+Check your inbox using `amp-inbox`:
 - **Retrieve unread messages**: list all unread messages for session `amoa-main`
 - **Get unread count**: query the unread count for session `amoa-main`
 

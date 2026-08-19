@@ -22,7 +22,7 @@ gh issue list --label "status:ready" --json number,title,labels,createdAt | \
 
 ### Example 2: Check Agent Availability via AI Maestro
 
-Use the `agent-messaging` skill to query agent availability:
+Use AMP messaging (amp-send/amp-inbox CLIs) to query agent availability:
 - Query the agent registry for `implementer-1` to get their current task count
 - Check the agent's last seen timestamp to determine if they are responsive
 
@@ -42,12 +42,10 @@ gh issue edit $ISSUE --add-label "assign:$AGENT"
 # 3. Update status
 gh issue edit $ISSUE --remove-label "status:ready" --add-label "status:dev"
 
-# 4. Send task assignment using the agent-messaging skill:
-# - Recipient: $AGENT
-# - Subject: "Task Assignment: Implement feature X"
-# - Content: "You are assigned issue #$ISSUE. Success criteria: implement X, pass tests. Report when complete."
-# - Type: request, Priority: high
-# - Data: issue_number
+# 4. Send task assignment via amp-send:
+amp-send "$AGENT" "Task Assignment: Implement feature X" \
+  "You are assigned issue #$ISSUE. Success criteria: implement X, pass tests. Report when complete." \
+  --type task --priority high
 # Verify: confirm message delivery
 ```
 

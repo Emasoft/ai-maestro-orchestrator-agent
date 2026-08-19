@@ -28,7 +28,7 @@
 
 ## 2.1 Basic Send Syntax
 
-Use the `agent-messaging` skill to send messages (see `~/.claude/skills/agent-messaging/SKILL.md`).
+Use the `amp-send` CLI to send messages (`amp-send <recipient> "<subject>" "<body>" [--priority ...] [--type ...]`).
 
 ### Required Parameters
 
@@ -42,7 +42,7 @@ Use the `agent-messaging` skill to send messages (see `~/.claude/skills/agent-me
 
 ### Basic Example
 
-Send a status request using the `agent-messaging` skill:
+Send a status request using `amp-send`:
 - **Recipient**: `dev-agent-1`
 - **Subject**: "Status check"
 - **Content**: "How is GH-42 progressing?"
@@ -59,7 +59,7 @@ For complex JSON content, use a variable or heredoc:
 
 ### Simple Task Assignment
 
-Send a task assignment message using the `agent-messaging` skill:
+Send a task assignment message using `amp-send` (`--type task`):
 - **Recipient**: `dev-agent-1`
 - **Subject**: "Implement Feature GH-42"
 - **Content**: JSON with `task_id` ("GH-42"), `instructions`, `completion_criteria`, `report_back` (true)
@@ -68,7 +68,7 @@ Send a task assignment message using the `agent-messaging` skill:
 
 ### Complex Task Assignment
 
-For complex task assignments, prepare the content JSON with all required fields and send using the `agent-messaging` skill:
+For complex task assignments, prepare the content JSON with all required fields and send using `amp-send` (`--type task`):
 - **Recipient**: `dev-agent-1`
 - **Subject**: "Implement Auth GH-42"
 - **Content**: JSON with `task_id`, `instructions`, `completion_criteria` (array), `test_requirements` (array), `report_back` (true)
@@ -81,11 +81,11 @@ For complex task assignments, prepare the content JSON with all required fields 
 
 ## 2.3 Check Inbox
 
-Check your inbox using the `agent-messaging` skill to retrieve all unread messages.
+Check your inbox using `amp-inbox` to retrieve all unread messages.
 
 ### List All Unread Messages
 
-Use the `agent-messaging` skill to list all unread messages for your session.
+Use `amp-inbox` to list all unread messages for your session.
 
 ### Example Output
 
@@ -100,11 +100,11 @@ Unread messages (3):
 
 ## 2.4 Read and Mark Message as Read
 
-Use the `agent-messaging` skill to read a specific message by its ID and mark it as read.
+Use `amp-read <message-id>` to read a specific message by its ID and mark it as read.
 
 ### Example
 
-Read message `msg-1767802409759-h3x4ajo` using the `agent-messaging` skill. This retrieves the full message content and marks it as read.
+Read message `msg-1767802409759-h3x4ajo` using `amp-read`. This retrieves the full message content and marks it as read.
 
 ### Example Output
 
@@ -133,17 +133,17 @@ Content:
 
 ### Complete Send-Receive-Respond Flow
 
-**Step 1: Orchestrator sends task** using the `agent-messaging` skill:
+**Step 1: Orchestrator sends task** using `amp-send`:
 - **Recipient**: `dev-agent-1`
 - **Subject**: "GH-42 Implementation"
 - **Content**: task assignment with `task_id`, `instructions`
 - **Type**: `task`, **Priority**: `high`
 
-**Step 2: Agent checks inbox** using the `agent-messaging` skill to list unread messages.
+**Step 2: Agent checks inbox** using `amp-inbox` to list unread messages.
 
-**Step 3: Agent reads message** using the `agent-messaging` skill with the specific message ID. This displays full content and marks it as read.
+**Step 3: Agent reads message** using `amp-read` with the specific message ID. This displays full content and marks it as read.
 
-**Step 4: Agent sends acknowledgment** using the `agent-messaging` skill:
+**Step 4: Agent sends acknowledgment** using `amp-reply`:
 - **Recipient**: `orchestrator-master`
 - **Subject**: "ACK: GH-42"
 - **Content**: acknowledgment with `task_id`, `understood` (true), `estimated_completion`

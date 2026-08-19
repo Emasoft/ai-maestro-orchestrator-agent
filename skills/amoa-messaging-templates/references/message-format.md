@@ -9,7 +9,7 @@
 
 All AI Maestro messages use this format:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -32,10 +32,10 @@ All AI Maestro messages use this format:
 
 ## Sending Messages
 
-Send messages using the `agent-messaging` skill. Provide the JSON payload with recipient, subject, priority, and content fields as described above.
+Send messages using the `amp-send` CLI. Provide the JSON payload as the body, with recipient, subject, priority, and content fields as described above.
 
 ## Checking Inbox
 
-Check your inbox using the `agent-messaging` skill. Retrieve all unread messages for your session and process the content of each message.
+Check your inbox using `amp-inbox`. Retrieve all unread messages for your session and process the content of each message with `amp-read`.
 
 **Verify**: confirm all messages are delivered or received as expected.

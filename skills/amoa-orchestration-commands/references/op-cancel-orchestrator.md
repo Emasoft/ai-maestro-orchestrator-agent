@@ -158,7 +158,7 @@ rm -f .claude/orchestrator.lock
 # 5. Document
 echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) CANCELLED - priority change" >> orchestrator.log
 
-# 6. Notify agents using the agent-messaging skill:
+# 6. Notify agents with `amp-send`:
 # Recipient: each active agent
 # Subject: "Orchestration Paused"
 # Content: "Please save your progress. Orchestration paused."

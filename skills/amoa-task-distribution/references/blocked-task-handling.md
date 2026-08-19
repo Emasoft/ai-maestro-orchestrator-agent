@@ -77,7 +77,7 @@ Copy this checklist and track your progress:
 - [ ] Remove current `status:*` label, add `status:blocked`
 - [ ] Add blocker details as comment on the blocked task issue (include `Previous status: $CURRENT_STATUS`)
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label, referencing the blocked task)
-- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
+- [ ] Send blocker-escalation message via AMCOS (`amp-send amcos-chief-of-staff … --type request --priority urgent`, include `blocker_issue_number`) — no direct AMOA→AMAMA edge (R6 v3)
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 ## Checklist: Restore Task from Blocked

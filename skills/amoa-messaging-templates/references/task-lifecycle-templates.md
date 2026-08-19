@@ -11,7 +11,7 @@
 
 This document provides the AI Maestro message templates for task lifecycle operations: cancelling tasks, pausing and resuming tasks, stopping work immediately, and broadcasting messages to multiple agents. These templates complement the standard task assignment and completion templates found in `message-templates.md`.
 
-> All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
+> All message templates below should be sent using the `amp-send` CLI, which handles the AI Maestro AMP transport automatically.
 
 ---
 
@@ -21,7 +21,7 @@ This document provides the AI Maestro message templates for task lifecycle opera
 
 Unlike pause (which implies the task will resume later), cancellation means the task will NOT be resumed. The agent should wrap up, report what was done, and consider the task permanently closed.
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ### AMOA Sends: Cancel Task
 
@@ -111,7 +111,7 @@ Task needs stopping
 
 Unlike cancellation, a paused task is expected to resume. The agent should save its current state so that work can continue later without starting over.
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ### AMOA Sends: Pause Task
 
@@ -206,7 +206,7 @@ Task work needs to be interrupted temporarily
 
 **When to use:** The Orchestrator (AMOA) is unpausing a previously paused task. The blocker that caused the pause has been resolved and the agent should continue from where it left off. This message includes any context that may have changed during the pause period, so the agent can adjust before resuming.
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ### AMOA Sends: Resume Task
 
@@ -319,7 +319,7 @@ Resume message received by agent
 
 Use this for situations such as: a critical bug has been discovered and all development must halt, the agent is working on the wrong branch or repository, or the agent must hand off work to a replacement agent immediately.
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ### AMOA Sends: Stop Work
 
@@ -417,7 +417,7 @@ AMOA determines an agent must stop work
 
 Each broadcast message has a unique `broadcast_id` so that individual agent acknowledgments can be tracked.
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content. Send one message per agent, but include the same `broadcast_id` in each so responses can be correlated.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content. Send one message per agent, but include the same `broadcast_id` in each so responses can be correlated.
 
 ### AMOA Sends: Broadcast
 

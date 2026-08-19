@@ -22,7 +22,7 @@ operation: handle-blocker-report
   - [Step 5: Create Blocker Tracking Issue](#step-5-create-blocker-tracking-issue)
 - [Resolution](#resolution)
 - [Notes](#notes)
-  - [Step 6: Escalate to AMAMA Immediately](#step-6-escalate-to-amama-immediately)
+  - [Step 6: Escalate via AMCOS Immediately](#step-6-escalate-via-amcos-immediately)
   - [Step 7: Check for Alternative Work](#step-7-check-for-alternative-work)
 - [Blocker Lifecycle Checklist](#blocker-lifecycle-checklist)
   - [When a task becomes blocked:](#when-a-task-becomes-blocked)
@@ -172,16 +172,14 @@ echo "Created blocker issue: #$BLOCKER_ISSUE"
 gh issue comment $TASK_ID --body "Blocker tracked in #$BLOCKER_ISSUE"
 ```
 
-### Step 6: Escalate to AMAMA Immediately
+### Step 6: Escalate via AMCOS Immediately
 
 ```bash
-# CRITICAL: Immediate MAESTRO notification - no waiting period
-# Send blocker escalation using the agent-messaging skill:
-# - Recipient: amama-main
-# - Subject: "[BLOCKER] Task #$TASK_ID blocked - User action required"
-# - Content: "Task Blocked - Immediate Attention Required. Task: #$TASK_ID, Agent: $AGENT_NAME, Blocker: $BLOCKER_DESCRIPTION, Category: $BLOCKER_CATEGORY, What is needed: $WAITING_ON, Impact: $IMPACT, Blocker tracking issue: #$BLOCKER_ISSUE. Please provide resolution or guidance."
-# - Type: blocker-escalation, Priority: urgent
-# - Data: task_id, blocker_issue, agent, category, previous_status
+# CRITICAL: Immediate escalation - no waiting period. R6 v3: no AMOA<->AMAMA
+# direct edge (server 403s it) — send to AMCOS, which relays to AMAMA/USER.
+# amp-send amcos-chief-of-staff "[BLOCKER] Task #$TASK_ID blocked - User action required" \
+#   "Task Blocked - Immediate Attention Required. Task: #$TASK_ID, Agent: $AGENT_NAME, Blocker: $BLOCKER_DESCRIPTION, Category: $BLOCKER_CATEGORY, What is needed: $WAITING_ON, Impact: $IMPACT, Blocker tracking issue: #$BLOCKER_ISSUE. Please provide resolution or guidance." \
+#   --type request --priority urgent
 ```
 
 ### Step 7: Check for Alternative Work
@@ -191,12 +189,9 @@ gh issue comment $TASK_ID --body "Blocker tracked in #$BLOCKER_ISSUE"
 AVAILABLE_TASKS=$(gh issue list --label "status:ready" --json number,title | jq -r '.[] | "#\(.number) - \(.title)"')
 
 if [ -n "$AVAILABLE_TASKS" ]; then
-  # Send alternative tasks notification using the agent-messaging skill:
-  # - Recipient: $AGENT_NAME
-  # - Subject: "Blocker Acknowledged - Alternative Tasks Available"
-  # - Content: "Your blocker on #$TASK_ID has been recorded and escalated. While waiting for resolution, you may work on: $AVAILABLE_TASKS. Would you like to be assigned one of these tasks?"
-  # - Type: info, Priority: normal
-  # - Data: blocked_task, available_tasks
+  # amp-send $AGENT_NAME "Blocker Acknowledged - Alternative Tasks Available" \
+  #   "Your blocker on #$TASK_ID has been recorded and escalated. While waiting for resolution, you may work on: $AVAILABLE_TASKS. Would you like to be assigned one of these tasks?" \
+  #   --type notification --priority normal
 fi
 ```
 
@@ -210,7 +205,7 @@ fi
 - [ ] Add `status:blocked` label to the blocked task
 - [ ] Add blocker details as comment on the blocked task issue
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label)
-- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill IMMEDIATELY
+- [ ] Send blocker-escalation message via AMCOS (`amp-send amcos-chief-of-staff …`) IMMEDIATELY — no direct AMOA→AMAMA edge (R6 v3)
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 ## Success Criteria

@@ -40,7 +40,7 @@ This document describes the MANDATORY Instruction Verification Protocol that mus
 
 ### 1.2.1 Send Assignment with Verification Request
 
-When you send the assignment message using the `agent-messaging` skill, include the verification request:
+When you send the assignment message using `amp-send` (`--type task`), include the verification request:
 
 ```markdown
 ## MANDATORY: Instruction Verification
@@ -357,7 +357,7 @@ The Instruction Verification Protocol ensures:
 
 After completing instruction verification:
 
-- [ ] **Verify**: confirm assignment message was delivered via the `agent-messaging` skill's sent messages feature
+- [ ] **Verify**: confirm assignment message was delivered via `amp-send` (check recipient's `amp-inbox`/`amp-read`)
 - [ ] **Verify**: confirm agent sent back instruction summary matching requirements
 - [ ] **Verify**: confirm all agent questions were answered before PROCEED authorization
 - [ ] **Verify**: confirm PROCEED or HOLD status was communicated to the agent

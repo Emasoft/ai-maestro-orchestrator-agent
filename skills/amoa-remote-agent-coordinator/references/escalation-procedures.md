@@ -91,7 +91,7 @@ Can wait until morning:
 
 ### Urgent Escalation
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -116,7 +116,7 @@ Can wait until morning:
 
 ### Deferred Escalation
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -156,7 +156,7 @@ Can wait until morning:
 
 ### Blocker Escalation
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {

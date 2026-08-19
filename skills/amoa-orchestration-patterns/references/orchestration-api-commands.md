@@ -26,7 +26,7 @@
 
 ### 1.2 Sending task assignments to remote agents
 
-Send task assignments using the `agent-messaging` skill:
+Send task assignments with `amp-send --type task`:
 - **Recipient**: the remote agent session name (e.g., `remote-dev-001`)
 - **Subject**: "Task Assignment: Implement module X"
 - **Content**: "Please implement..."

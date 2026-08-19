@@ -38,7 +38,7 @@ When agent reports `[BLOCKED]`:
 4. **Remove** the `status:dev` (or whatever status it had) label
 5. **Comment** on the blocked task issue with blocker details
 6. **Create a separate GitHub issue** for the blocker itself (labeled `type:blocker`, referencing the blocked task). This makes the blocking problem visible to all agents and team members on the issue tracker.
-7. **Escalate** to AMAMA IMMEDIATELY via AI Maestro blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number.
+7. **Escalate** via AMCOS IMMEDIATELY with an AI Maestro blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number. R6 v3: no direct AMOA→AMAMA edge — AMCOS relays to AMAMA/USER.
 8. **Continue** monitoring for self-resolution while waiting for the MAESTRO's response
 9. **Check** if other unblocked tasks can be assigned to the waiting agent
 
@@ -89,7 +89,7 @@ gh issue edit $ISSUE --remove-label "status:blocked" --add-label "$PREVIOUS_STAT
 gh issue comment $ISSUE --body "Unblocked. Blocker #$BLOCKER_ISSUE resolved. Returning to $PREVIOUS_STATUS."
 
 # Notify agent that blocker is resolved
-# (send message via AI Maestro using the agent-messaging skill)
+# (amp-send $ASSIGNED_AGENT with --type notification)
 ```
 
 ## Blocker Lifecycle Checklist
@@ -104,7 +104,7 @@ Copy this checklist and track your progress:
 - [ ] Move task to Blocked column on Kanban board
 - [ ] Add blocker details as comment on the blocked task issue (include `Previous status: $CURRENT_STATUS`)
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label, referencing the blocked task)
-- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
+- [ ] Send blocker-escalation message via AMCOS (`amp-send amcos-chief-of-staff …`, include `blocker_issue_number`) — no direct AMOA→AMAMA edge (R6 v3)
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 **When the blocker is resolved:**

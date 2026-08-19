@@ -89,7 +89,7 @@ echo "Task assigned at: $ASSIGNED_AT"
 ### Step 2: Get Agent's Last Message
 
 ```bash
-# Use the agent-messaging skill to check inbox for messages from this agent.
+# Use amp-inbox/amp-read to check inbox for messages from this agent.
 # Filter by sender matching $AGENT_NAME and extract the most recent message.
 LAST_MESSAGE=$(# retrieve most recent message from $AGENT_NAME)
 
@@ -103,7 +103,7 @@ echo "Message type: $MESSAGE_TYPE"
 ### Step 3: Check for ACK
 
 ```bash
-# Use the agent-messaging skill to check inbox for ACK messages from this agent.
+# Use amp-inbox/amp-read to check inbox for ACK messages from this agent.
 # Filter by sender matching $AGENT_NAME and subject containing "[ACK]" or content.type == "ack"
 ACK_EXISTS=$(# retrieve ACK message from $AGENT_NAME)
 
@@ -117,7 +117,7 @@ fi
 ### Step 4: Check for Blocker Report
 
 ```bash
-# Use the agent-messaging skill to check inbox for blocker reports from this agent.
+# Use amp-inbox/amp-read to check inbox for blocker reports from this agent.
 # Filter by sender matching $AGENT_NAME and content.type == "blocked"
 BLOCKED=$(# retrieve blocker report from $AGENT_NAME)
 
@@ -131,7 +131,7 @@ fi
 ### Step 5: Check for Completion Report
 
 ```bash
-# Use the agent-messaging skill to check inbox for completion reports from this agent.
+# Use amp-inbox/amp-read to check inbox for completion reports from this agent.
 # Filter by sender matching $AGENT_NAME and subject containing "[DONE]" or content.type == "completion"
 COMPLETED=$(# retrieve completion report from $AGENT_NAME)
 
@@ -178,7 +178,7 @@ else
 fi
 
 # Check for unresponsive (multiple reminders sent)
-# Use the agent-messaging skill to count reminder messages sent to this agent.
+# Use amp-inbox to count reminder messages sent to this agent.
 # Filter messages sent to $AGENT_NAME where from == "orchestrator" and content.type == "reminder"
 REMINDER_COUNT=$(# count reminder messages sent to $AGENT_NAME)
 

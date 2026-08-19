@@ -140,7 +140,7 @@ if [ "$ALL_PASSING" = true ] && [ ${#MISSING_CRITERIA[@]} -eq 0 ]; then
   # Add completion comment
   gh issue comment $TASK_ID --body "Task completed successfully. PR #$PR_NUMBER approved."
 
-  # Send approval to agent using the agent-messaging skill:
+  # Send approval to agent using amp-send:
   # Recipient: the agent session name
   # Subject: "Task Approved: #[TASK_ID]"
   # Content: "Task #[TASK_ID] has been verified and approved. PR #[PR_NUMBER] ready for merge."
@@ -153,7 +153,7 @@ else
   # Send revision request
   MISSING_JSON=$(printf '%s\n' "${MISSING_CRITERIA[@]}" | jq -R . | jq -s .)
 
-  # Send revision request using the agent-messaging skill:
+  # Send revision request using amp-send:
   # Recipient: the agent session name
   # Subject: "Revision Required: #[TASK_ID]"
   # Content: "Completion verification failed. Please address the following: [missing criteria]. Update PR and report completion again."

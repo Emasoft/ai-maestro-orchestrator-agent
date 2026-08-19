@@ -30,7 +30,7 @@ This document provides differentiated feedback message templates for verificatio
 
 Send this message when the agent requests PR permission for the second time, after completing verification loop 1. Loop 2 focuses on confirming that loop 1 issues are fixed and checking for regressions introduced by those fixes.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template
 
@@ -113,7 +113,7 @@ Loop 2 report received
 
 Send this message when the agent requests PR permission for the third time, after completing verification loop 2. Loop 3 focuses on deeper review: edge cases, error handling, and integration points that shallow reviews miss.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template
 
@@ -203,7 +203,7 @@ Loop 3 report received
 
 Send this message when the agent requests PR permission for the fourth time, after completing verification loop 3. Loop 4 is the final deep review before the 5th PR request triggers the approval decision. It focuses on code quality, documentation, test coverage, and security.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template
 
@@ -292,7 +292,7 @@ Loop 4 report received
 
 Send this message when the 5th PR request (the approval decision point) reveals that critical issues remain unresolved after all 4 verification loops. The entire 4-loop verification cycle must restart from loop 1.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template
 
@@ -356,7 +356,7 @@ Send this message when the 5th PR request (the approval decision point) reveals 
 
 Send this message to the Chief of Staff (AMCOS) after all verification loops pass and the PR is approved (or created). This provides AMCOS with a summary of the verification process for task tracking and team health metrics.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use `amp-send` to send messages.
 
 ### Send Template
 

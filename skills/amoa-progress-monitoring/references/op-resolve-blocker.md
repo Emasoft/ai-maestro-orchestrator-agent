@@ -140,12 +140,9 @@ echo "Assigned agent: $ASSIGNED_AGENT"
 
 ```bash
 if [ -n "$ASSIGNED_AGENT" ]; then
-  # Send unblocked notification using the agent-messaging skill:
-  # - Recipient: $ASSIGNED_AGENT
-  # - Subject: "Blocker Resolved: #$TASK_ID - Please Resume"
-  # - Content: "Good news! The blocker on task #$TASK_ID has been resolved. Resolution: $RESOLUTION_DETAILS. Previous Status Restored: $PREVIOUS_STATUS. Please resume work on this task and report your progress."
-  # - Type: unblocked, Priority: high
-  # - Data: task_id, blocker_issue, previous_status, resolution
+  # amp-send $ASSIGNED_AGENT "Blocker Resolved: #$TASK_ID - Please Resume" \
+  #   "Good news! The blocker on task #$TASK_ID has been resolved. Resolution: $RESOLUTION_DETAILS. Previous Status Restored: $PREVIOUS_STATUS. Please resume work on this task and report your progress." \
+  #   --type notification --priority high
 fi
 ```
 

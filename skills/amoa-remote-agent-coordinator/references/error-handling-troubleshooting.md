@@ -12,7 +12,7 @@
 **Cause**: API endpoint unreachable or agent identifier incorrect.
 
 **Solution**:
-1. Verify API health using the `agent-messaging` skill health check
+1. Verify API health via an `amp-send`/`amp-inbox` health check
 2. Check agent ID format (use full session name, not alias)
 3. Verify agent is registered in AI Maestro
 4. Check network connectivity
@@ -34,7 +34,7 @@
 **Solution**:
 1. Ensure 10-15 minute polling cycle is active
 2. Include ALL mandatory poll questions (issues, unclear items, difficulties)
-3. If no response after 2 polls, send escalation message using the `agent-messaging` skill
+3. If no response after 2 polls, send escalation message using `amp-send` (`--type request --priority high`)
 4. Consider reassigning if agent unresponsive
 
 ## Issue: Module assignment conflicts between agents

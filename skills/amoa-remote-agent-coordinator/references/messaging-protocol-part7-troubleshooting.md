@@ -37,13 +37,13 @@
 
 ### Solution Steps
 
-1. **Verify recipient agent is registered and online**: Use the `agent-messaging` skill to query the agent registry.
+1. **Verify recipient agent is registered and online**: Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry.
 
 2. **Check recipient's full session name is correct**:
    - Use full name like `libs-svg-svgbbox`
    - Not alias like `svgbbox`
 
-3. **Verify AI Maestro server is running**: Use the `agent-messaging` skill to perform a health check.
+3. **Verify AI Maestro server is running**: Use AMP messaging (amp-send/amp-inbox CLIs) to perform a health check.
 
 4. **Check for network issues**:
    - Verify sender can reach server
@@ -60,12 +60,12 @@
 
 ### Solution Steps
 
-1. **Verify agent session name spelling** (case-sensitive): Use the `agent-messaging` skill to list all registered session names.
+1. **Verify agent session name spelling** (case-sensitive): Use AMP messaging (amp-send/amp-inbox CLIs) to list all registered session names.
 
 2. **Check if agent session has expired or terminated**:
    - Agent may need to restart
 
-3. **List all registered agents**: Use the `agent-messaging` skill to query the full agent registry.
+3. **List all registered agents**: Use AMP messaging (amp-send/amp-inbox CLIs) to query the full agent registry.
 
 4. **If agent recently restarted, wait for re-registration**:
    - May take 30-60 seconds
@@ -174,7 +174,7 @@
    - Runs automatically with AI Maestro server
 
 2. **Check agent session is properly registered**:
-   Use the `agent-messaging` skill to query the agent registry and check the status of your agent session.
+   Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry and check the status of your agent session.
 
 3. **Verify agent is idle**:
    - Notifications only appear when idle 30+ seconds
@@ -200,7 +200,7 @@
    - Agents must implement priority handling
    - Not automatic queue reordering
 
-2. **Include `URGENT:` prefix in subject**: When sending urgent messages using the `agent-messaging` skill, prefix the subject with "URGENT:" and set priority to `urgent`.
+2. **Include `URGENT:` prefix in subject**: When sending urgent messages using `amp-send`, prefix the subject with "URGENT:" and set `--priority urgent`.
 
 3. **Send follow-up if no response within timeout**:
    - Urgent timeout is 2 minutes
@@ -243,13 +243,13 @@
 ## Diagnostic Commands
 
 ### Check Server Status
-Use the `agent-messaging` skill to perform a health check on the AI Maestro service.
+Use AMP messaging (amp-send/amp-inbox CLIs) to perform a health check on the AI Maestro service.
 
 ### List All Agents
-Use the `agent-messaging` skill to query the agent registry and list all registered agents with their status.
+Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry and list all registered agents with their status.
 
 ### Check Your Inbox
-Check your inbox using the `agent-messaging` skill to retrieve all unread messages.
+Check your inbox using `amp-inbox` to retrieve all unread messages.
 
 ### Validate JSON Before Sending
 ```bash

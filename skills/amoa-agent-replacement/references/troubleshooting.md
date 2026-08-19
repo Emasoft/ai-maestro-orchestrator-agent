@@ -20,7 +20,7 @@
 
 **Diagnostic Steps:**
 
-Use the `agent-messaging` skill to:
+Use `amp-inbox` (AMP frozen CLI) to:
 - Check your inbox for messages with content type "agent_replacement"
 - Perform a health check on the AI Maestro service
 - Query the agent registry to verify your session is registered
@@ -36,7 +36,7 @@ Use the `agent-messaging` skill to:
 
 **Manual Recovery:**
 
-Send a resend request using the `agent-messaging` skill:
+Send a resend request using `amp-send --type request --priority high`:
 - **Recipient**: `amcos-chief-of-staff-main-agent`
 - **Subject**: "[AMOA] Request: Resend Replacement Notification"
 - **Content**: "Did not receive replacement notification for agent implementer-1. Please resend."
@@ -52,7 +52,7 @@ Send a resend request using the `agent-messaging` skill:
 
 **Diagnostic Steps:**
 
-Use the `agent-messaging` skill to:
+Use `amp-inbox` (AMP frozen CLI) to:
 - List sent messages and filter for "Replacement Complete" subjects
 - Query the agent registry to verify the AMCOS session exists
 
@@ -159,7 +159,7 @@ git ls-remote origin
 
 **Diagnostic Steps:**
 
-Use the `agent-messaging` skill to:
+Use `amp-inbox` + `amp-read <id>` (AMP frozen CLI) to:
 - Test the AI Maestro API by retrieving the most recent message
 - Check the total message count for your session
 
@@ -351,7 +351,7 @@ query {
 
 **Diagnostic Steps:**
 
-Use the `agent-messaging` skill to:
+Use `amp-inbox` (AMP frozen CLI) to:
 - Verify the new agent session (e.g., `helper-agent-2`) exists in the agent registry
 - Check if the agent received the handoff message by listing messages sent to that agent
 
@@ -366,7 +366,7 @@ Use the `agent-messaging` skill to:
 
 **Escalation Path:**
 
-After 3 reminders, send an escalation using the `agent-messaging` skill:
+After 3 reminders, send an escalation using `amp-send --type request --priority urgent`:
 - **Recipient**: `amcos-chief-of-staff-main-agent`
 - **Subject**: "[AMOA-ESCALATE] Replacement Agent Not Responding"
 - **Content**: "Replacement agent helper-agent-2 has not acknowledged handoff after 3 reminders. Please provide alternative agent."
@@ -390,7 +390,7 @@ After 3 reminders, send an escalation using the `agent-messaging` skill:
 
 **Clarification Template:**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -444,7 +444,7 @@ pip list | grep -E "PyYAML|requests"
 gh auth status
 
 # Test AI Maestro connection
-Use the agent-messaging skill to perform a health check on the AI Maestro service
+Use `amp-inbox` to perform a health check on the AI Maestro service
 ```
 
 If any fail, report the error output to the orchestrator.

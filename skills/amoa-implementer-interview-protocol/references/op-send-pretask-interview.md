@@ -66,7 +66,7 @@ Send structured interview questions to an implementer agent BEFORE they begin wo
 
 2. **Format the message** using the pre-task interview template
 
-3. **Send the interview** using the `agent-messaging` skill:
+3. **Send the interview** using `amp-send`:
    - **Recipient**: the implementer agent session name
    - **Subject**: "Pre-Task Interview: <issue_number>"
    - **Content**: the formatted interview questions

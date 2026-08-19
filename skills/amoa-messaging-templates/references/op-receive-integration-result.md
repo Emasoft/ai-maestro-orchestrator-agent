@@ -33,7 +33,7 @@ Process integration/review results received from Integrator (AMIA) after a revie
 
 ## Steps
 
-1. **Check inbox for AMIA response** using the `agent-messaging` skill. Retrieve unread messages for your session and filter for messages from the AMIA agent.
+1. **Check inbox for AMIA response** using `amp-inbox`. Retrieve unread messages for your session and filter for messages from the AMIA agent, then `amp-read <message-id>`.
 
 2. **Parse the response content**:
    - `content.type`: Should be "response"
@@ -51,7 +51,7 @@ Process integration/review results received from Integrator (AMIA) after a revie
 
 4. **Send acknowledgment** to AMIA:
 
-   > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+   > **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
    ```json
    {
@@ -86,7 +86,7 @@ Parsed integration result with fields:
 
 ## Example Response Format
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {

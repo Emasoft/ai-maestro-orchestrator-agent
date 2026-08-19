@@ -119,7 +119,7 @@
 **Cause**: AI Maestro messaging issue or agent offline.
 
 **Solution**:
-1. Verify AI Maestro is accessible using the `agent-messaging` skill health check
+1. Verify AI Maestro is accessible with an `amp-send`/`amp-inbox` health check
 2. Check agent is registered: `/orchestration-status`
 3. Retry assignment with `/assign-module`
 4. If persistent, reassign to different agent: `/reassign-module`
@@ -131,7 +131,7 @@
 **Solution**:
 1. Check AI Maestro server is running
 2. Verify target agent session name is correct
-3. Check the message queue using the `agent-messaging` skill to list messages for the target agent
+3. Check the message queue with `amp-inbox` to list messages for the target agent
 4. Retry message with higher priority
 
 ### Issue: Human developer not receiving GitHub notifications

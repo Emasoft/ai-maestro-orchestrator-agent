@@ -12,10 +12,10 @@
 
 **Resolution:**
 1. Check agent's Claude Code session is running: `tmux ls | grep libs-svg-svgbbox`
-2. Check AI Maestro subconscious is running (see official skill: `~/.claude/skills/agent-messaging/SKILL.md`)
+2. Check AI Maestro subconscious is running (AMP messaging: `amp-send`/`amp-inbox` CLIs)
 3. Verify GitHub comment URL: `gh issue view {{ISSUE_NUMBER}} --json comments`
 4. Resend message with same URL
-5. Check AI Maestro message logs: `the `agent-messaging` skill to check inbox`
+5. Check AI Maestro message logs: run `amp-inbox` to check inbox
 
 **Note:** AI Maestro's subconscious automatically checks for new messages every 5 minutes and notifies idle agents via tmux send-keys. No manual inbox watcher setup required.
 
@@ -52,7 +52,7 @@
 **Resolution:**
 1. Check ACK message format matches protocol
 2. Verify `task_id` in ACK matches original message
-3. Check AI Maestro message delivery: `the `agent-messaging` skill to check inbox`
+3. Check AI Maestro message delivery: run `amp-inbox` to check inbox
 4. Review ACK tracking code for race condition
 5. Increase ACK timeout if network latency is high
 

@@ -207,7 +207,7 @@ See skill: amia-code-review  ← WRONG (AMIA plugin not loaded)
 
 #### To AMCOS (Chief of Staff)
 
-Send a status message to AMCOS using the `agent-messaging` skill:
+Send a status message to AMCOS using the `amp-send` CLI:
 - **Recipient**: `amcos-chief-of-staff-one`
 - **Subject**: "Task Status Update"
 - **Content**: "Completed 3/5 tasks. Task #4 blocked on API dependency."
@@ -218,7 +218,7 @@ Send a status message to AMCOS using the `agent-messaging` skill:
 
 #### To Implementer Agent
 
-Send a task assignment message to an implementer using the `agent-messaging` skill:
+Send a task assignment message to an implementer using the `amp-send` CLI:
 - **Recipient**: `implementer-svgbbox-tests`
 - **Subject**: "New Task Assignment"
 - **Content**: "Implement unit tests for calculateBBox() function. See GitHub issue #42."
@@ -229,7 +229,7 @@ Send a task assignment message to an implementer using the `agent-messaging` ski
 
 ### Reading Messages (AMOA Inbox)
 
-Check your inbox using the `agent-messaging` skill:
+Check your inbox using the `amp-inbox` / `amp-read` CLIs:
 - **Check unread count**: query how many unread messages exist for your session
 - **List unread messages**: retrieve all unread messages for your session
 - **Mark as read**: mark a specific message as read by its message ID
@@ -269,7 +269,7 @@ Check your inbox using the `agent-messaging` skill:
 #### 2. Distribute Tasks to Implementers
 - Break down tasks into implementer-sized units
 - Spawn implementer agents using the `ai-maestro-agents-management` skill
-- Send task assignments via AI Maestro messages using the `agent-messaging` skill
+- Send task assignments via AI Maestro messages using the `amp-send` CLI
 - Ensure no conflicting tasks (e.g., two agents editing same file)
 
 #### 3. Monitor Progress via Kanban
@@ -389,12 +389,12 @@ This prevents AMOA from consuming resources while waiting for implementers.
 #### Issue: AMOA cannot access AMCOS skills
 **Symptom**: `Skill 'amcos-strategic-planning' not found`
 **Cause**: Plugin mutual exclusivity - AMOA doesn't have AMCOS plugin loaded
-**Solution**: Use the `agent-messaging` skill to request AMCOS assistance
+**Solution**: Use `amp-send amcos-chief-of-staff-one "<subject>" "<body>" --type request` to request AMCOS assistance
 
 #### Issue: AI Maestro message not received
 **Symptom**: Implementer didn't get task assignment
 **Cause**: Wrong session name or API endpoint
-**Solution**: Verify session name in registry, check AI Maestro connectivity using the `agent-messaging` skill
+**Solution**: Verify session name in registry, check AI Maestro connectivity using `amp-inbox`/`amp-send`
 
 #### Issue: Kanban updates not reflected in GitHub
 **Symptom**: Labels added but kanban column unchanged
@@ -482,7 +482,7 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 ### Related Documentation
 
-> **Cross-Plugin References**: Each AI Maestro agent plugin is installed independently. The following plugins have their own AGENT_OPERATIONS.md documenting their role-specific operations. Communication between plugins happens via the `agent-messaging` skill.
+> **Cross-Plugin References**: Each AI Maestro agent plugin is installed independently. The following plugins have their own AGENT_OPERATIONS.md documenting their role-specific operations. Communication between plugins happens via AMP messaging (`amp-send`/`amp-inbox` CLIs).
 
 - **AMAA (Architect Agent)** - Architecture design, planning, and decision records. Plugin: `ai-maestro-architect-agent`
 - **AMIA (Integrator Agent)** - Code review, quality gates, PR management. Plugin: `ai-maestro-integrator-agent`

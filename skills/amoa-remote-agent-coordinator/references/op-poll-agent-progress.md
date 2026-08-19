@@ -57,7 +57,7 @@ Proactively poll remote agents for progress updates every 10-15 minutes during a
 
 ```bash
 # Get last message from agent about this task
-# Use the agent-messaging skill to query inbox messages, filtering for
+# Use amp-inbox to query inbox messages, filtering for
 # messages from the target agent about the specific task ID
 
 # Calculate minutes since last update
@@ -72,7 +72,7 @@ echo "Minutes since last update: $MINUTES_SINCE"
 
 If more than 10-15 minutes since last update:
 
-Send a status request using the `agent-messaging` skill:
+Send a status request using `amp-send` (`--type status`):
 - **Recipient**: the agent session name
 - **Subject**: "Status Check: #[TASK_ID]"
 - **Content**: "Please provide a progress update for task #[TASK_ID]. Report: 1. Current progress 2. Any blockers 3. Anything unclear 4. Estimated time to completion"
@@ -83,7 +83,7 @@ Send a status request using the `agent-messaging` skill:
 **Verify**: confirm message delivery.
 
 ```bash
-# NOTE: The status request is sent using the agent-messaging skill as described above
+# NOTE: The status request is sent using amp-send as described above
 ```
 
 ### Step 3: Mandatory Poll Questions

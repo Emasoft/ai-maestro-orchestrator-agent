@@ -73,7 +73,7 @@ Follow these steps in order. Mark each complete before proceeding:
 - [ ] **Implement feature** - According to task specification
 - [ ] **Run tests locally** - All tests must pass
 - [ ] **Create PR** - Following project PR template
-- [ ] **Send completion report** - Via AI Maestro message using the `agent-messaging` skill
+- [ ] **Send completion report** - Via AI Maestro message using `amp-send`
 
 ### Phase 4: Registration
 
@@ -177,7 +177,7 @@ Run the environment verification script:
 
 **Test Messaging**:
 
-Check your inbox using the `agent-messaging` skill. It should show no unread messages after a fresh onboarding.
+Check your inbox using `amp-inbox`. It should show no unread messages after a fresh onboarding.
 
 **Verify**: confirm inbox is empty (no unread messages).
 
@@ -246,7 +246,7 @@ The orchestrator assigns a small, self-contained feature to verify:
 
 When verification task is complete, send this message:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -303,7 +303,7 @@ When verification task is complete, send this message:
 
 After completing verification task, send registration message:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -340,7 +340,7 @@ Use these standard tags:
 
 Orchestrator will reply with:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -362,7 +362,7 @@ Orchestrator will reply with:
 
 **Change Availability**:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -381,7 +381,7 @@ Orchestrator will reply with:
 
 **Go Offline**:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -408,14 +408,14 @@ Orchestrator will reply with:
 |-------|---------|----------|
 | **Dependencies fail to install** | `uv sync` fails with errors | Check Python version (must be 3.11+), Clear cache: `uv cache clean`, Retry: `uv sync --reinstall` |
 | **Tests fail on fresh clone** | Existing tests fail locally | Verify environment with `./scripts/verify-environment.sh`, Check database is running (if needed), Check environment variables in `.env.example` |
-| **AI Maestro connection fails** | CLI returns error | Verify AI Maestro server is running using the `agent-messaging` skill health check, Check firewall settings, Verify session name in config matches format |
+| **AI Maestro connection fails** | CLI returns error | Verify AI Maestro server is running via an `amp-send`/`amp-inbox` health check, Check firewall settings, Verify session name in config matches format |
 | **Git identity not set** | `git commit` fails with identity error | Set name: `git config user.name "YourName"`, Set email: `git config user.email "your@email.com"` |
 | **Pre-commit hooks fail** | `git commit` blocked by hooks | Install pre-commit: `pip install pre-commit`, Setup hooks: `pre-commit install`, Run manually: `pre-commit run --all-files` |
 | **Cannot push to remote** | `git push` fails with permission error | Verify SSH key added to GitHub, Verify branch permissions, Create branch with correct prefix: `feature/`, `bugfix/` |
 | **Verification task unclear** | Don't understand what to implement | Send clarification request via AI Maestro, Reference `task-instruction-format.md`, Ask specific questions in message |
 | **Tests pass locally, fail on CI** | PR shows test failures | Check CI logs for environment differences, Verify all dependencies in `requirements.txt`, Check for absolute paths in tests |
 | **Message format rejected** | AI Maestro returns error | Verify JSON syntax: `content` must be object, not string, Check required fields: `to`, `subject`, `priority`, `content`, Use standard `type` values from protocol |
-| **No response from orchestrator** | Sent message but no reply | Check your inbox using the `agent-messaging` skill, Verify orchestrator session is active, Wait up to 15 minutes, resend if needed |
+| **No response from orchestrator** | Sent message but no reply | Check your inbox using `amp-inbox`, Verify orchestrator session is active, Wait up to 15 minutes, resend if needed |
 
 ### Getting Help
 
@@ -424,11 +424,11 @@ Orchestrator will reply with:
 1. **Check documentation** - Re-read relevant section in Required Reading List
 2. **Search existing issues** - Someone may have had same problem
 3. **Send clarification message** - Ask orchestrator specific question
-4. **Escalate if blocked >1 hour** - Send escalation message using the `agent-messaging` skill
+4. **Escalate if blocked >1 hour** - Send escalation message using `amp-send` (`--type request --priority high`)
 
 **Clarification Message Format**:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {

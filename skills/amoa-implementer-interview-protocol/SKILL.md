@@ -31,7 +31,7 @@ Interview decision (PROCEED/APPROVED/REVISE), handoff doc, and issue label updat
 
 ## Instructions
 
-1. Identify implementer and issue. Send Pre-Task Interview via `agent-messaging`
+1. Identify implementer and issue. Send Pre-Task Interview via `amp-send`
    - 7 mandatory questions: task summary, acceptance criteria, concerns,
      **files/domains touched (single-writer ownership check)**, **anticipated
      NPT/EHT derived tasks**, approach, blockers — the MEMBER answers ALL before

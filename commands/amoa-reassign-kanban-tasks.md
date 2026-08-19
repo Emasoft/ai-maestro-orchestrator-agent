@@ -259,7 +259,7 @@ This command is typically used after generating a handoff:
 2. /amoa-reassign-kanban-tasks --from-agent X --to-agent Y --handoff-url URL
    → Updates: GitHub Issues
 
-3. Send AI Maestro message to new agent with handoff using the `agent-messaging` skill
+3. Send AI Maestro message to new agent with handoff using the `amp-send` CLI (`--type task`, attach the handoff via `--attach`)
    → New agent begins work
 ```
 

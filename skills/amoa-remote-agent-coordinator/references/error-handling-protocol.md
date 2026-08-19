@@ -63,7 +63,7 @@ Agents should stop work and report when:
 
 ### 2.1 Error Report Message Schema
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -104,7 +104,7 @@ Agents should stop work and report when:
 
 The orchestrator MUST acknowledge error reports within 5 minutes:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -123,7 +123,7 @@ The orchestrator MUST acknowledge error reports within 5 minutes:
 
 After analysis, provide concrete next steps:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -157,7 +157,7 @@ If the error requires MAESTRO decision:
 **Symptoms**: Agent goes silent, no error reports received, task stalls.
 
 **Solution**:
-1. Send proactive status check message using the `agent-messaging` skill
+1. Send proactive status check message using `amp-send` (`--type status`)
 2. If no response, check if agent is online
 3. If agent is online but unresponsive, send explicit "Are you blocked?" message
 4. Reassign task if no response after 3 attempts

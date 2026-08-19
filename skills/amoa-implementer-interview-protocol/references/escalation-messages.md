@@ -20,7 +20,7 @@
 
 If implementer identifies design incompatibilities:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: `amp-send` transmits the message. The JSON structure below shows the message content the send fills in.
 
 ```json
 {
@@ -45,7 +45,7 @@ If implementer identifies design incompatibilities:
 
 If implementer identifies issues with USER requirements:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: `amp-send` transmits the message. The JSON structure below shows the message content the send fills in.
 
 ```json
 {

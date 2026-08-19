@@ -54,7 +54,7 @@ AMCOS notifications arrive via AI Maestro with specific message format:
 
 ### Step 2: Check Message Queue
 
-Use the `agent-messaging` skill to check your inbox for unread messages, then filter for messages from AMCOS (where `from` equals `amcos`).
+Use `amp-inbox` + `amp-read <id>` (AMP frozen CLI) to check your inbox for unread messages, then filter for messages from AMCOS (where `from` equals `amcos`).
 
 ### Step 3: Identify Notification Type
 
@@ -68,7 +68,7 @@ Use the `agent-messaging` skill to check your inbox for unread messages, then fi
 
 ### Step 4: Acknowledge Notification
 
-Send an acknowledgment using the `agent-messaging` skill:
+Send an acknowledgment using `amp-send --type response --priority high`:
 - **Recipient**: `amcos`
 - **Subject**: "ACK: Replacement for <failed_agent>"
 - **Content**: "Received replacement notification. Beginning context compilation."
@@ -116,7 +116,7 @@ echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) AMCOS_NOTIFICATION: Failed=$failed_agent Re
 # Full notification handling sequence
 
 # 1. Check for AMCOS notifications
-# Use the agent-messaging skill to check your inbox for unread messages,
+# Use `amp-inbox` + `amp-read <id>` to check your inbox for unread messages,
 # then filter for messages where content.type == "replacement_required"
 AMCOS_MSG=$(# retrieve unread messages and filter by content type)
 
@@ -130,7 +130,7 @@ if [ -n "$AMCOS_MSG" ]; then
   echo "AMCOS: Replacing $FAILED with $REPLACEMENT due to $REASON"
 
   # 4. Acknowledge
-  # Use the agent-messaging skill to send acknowledgment:
+  # Use `amp-send --type response --priority high` to send acknowledgment:
   # - Recipient: amcos
   # - Subject: "ACK: Replacement for $FAILED"
   # - Content: "Beginning replacement process"

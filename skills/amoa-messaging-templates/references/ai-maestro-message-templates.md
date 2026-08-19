@@ -12,7 +12,7 @@
 
 # AI Maestro Message Templates for AMOA
 
-Complete reference for all AI Maestro message templates used by AI Maestro Orchestrator Agent (AMOA). Use the `agent-messaging` skill for all message operations.
+Complete reference for all AI Maestro message templates used by AI Maestro Orchestrator Agent (AMOA). Use the `amp-send`/`amp-inbox`/`amp-read`/`amp-reply` CLIs for all message operations.
 
 ---
 
@@ -41,7 +41,7 @@ Complete reference for all AI Maestro message templates used by AI Maestro Orche
 }
 ```
 
-**AMOA acknowledgment:** Send an acknowledgment message using the `agent-messaging` skill:
+**AMOA acknowledgment:** Send an acknowledgment message using `amp-send` (or `amp-reply` if replying to a specific message):
 - **Recipient**: `amcos-main`
 - **Subject**: "ACK: Task Assignment [Task Name]"
 - **Content**: "Task received and logged. UUID: [task-uuid]. Expected completion: [timestamp]."
@@ -63,7 +63,7 @@ Complete reference for all AI Maestro message templates used by AI Maestro Orche
 
 **Use case:** When AMOA delegates a task to an implementer, tester, or specialized sub-agent.
 
-**AMOA to sub-agent:** Send a task assignment message using the `agent-messaging` skill:
+**AMOA to sub-agent:** Send a task assignment message using `amp-send --type task`:
 - **Recipient**: the sub-agent session name (e.g., `svgbbox-impl-01`)
 - **Subject**: "Task Assignment: [Task Name]"
 - **Content**: detailed task description with all context needed
@@ -101,7 +101,7 @@ Complete reference for all AI Maestro message templates used by AI Maestro Orche
 
 **Use case:** When AMOA needs to check progress on a delegated task (e.g., overdue, critical path, user request).
 
-**AMOA to sub-agent:** Send a status request message using the `agent-messaging` skill:
+**AMOA to sub-agent:** Send a status request message using `amp-send --type request`:
 - **Recipient**: the sub-agent session name
 - **Subject**: "Status Request: [Task Name]"
 - **Content**: "Please provide status update on task [task-uuid]. Expected completion was [timestamp]."
@@ -142,7 +142,7 @@ Complete reference for all AI Maestro message templates used by AI Maestro Orche
 
 **Use case:** When AMOA verifies a delegated task is complete and reports results back to AMCOS.
 
-**AMOA to AMCOS:** Send a completion report message using the `agent-messaging` skill:
+**AMOA to AMCOS:** Send a completion report message using `amp-send --type status`:
 - **Recipient**: `amcos-main`
 - **Subject**: "Task Complete: [Task Name]"
 - **Content**: "[1-2 line summary]\nKey finding: [one-line summary]\nDetails: docs_dev/orchestration/reports/[task-uuid].md"
@@ -171,7 +171,7 @@ Complete reference for all AI Maestro message templates used by AI Maestro Orche
 
 **Use case:** When AMOA encounters a blocker that requires AMCOS intervention (agent failure, technical blocker, requirement conflict).
 
-**AMOA to AMCOS:** Send an escalation message using the `agent-messaging` skill:
+**AMOA to AMCOS:** Send an escalation message using `amp-send --type request --priority high`:
 - **Recipient**: `amcos-main`
 - **Subject**: "ESCALATION: [Issue Description]"
 - **Content**: "Escalation reason and details"
@@ -210,7 +210,7 @@ Complete reference for all AI Maestro message templates used by AI Maestro Orche
 - A budget or cost decision must be made by the user
 - A feature scope question can only be answered by the user
 
-**AMOA to AMAMA:** Send a blocker escalation message using the `agent-messaging` skill:
+**AMOA to AMAMA:** Send a blocker escalation message using `amp-send --type request --priority high`:
 - **Recipient**: `amama-assistant-manager`
 - **Subject**: "BLOCKER: Task requires user decision"
 - **Content**: brief description of the blocker and what user input is needed
@@ -262,11 +262,11 @@ When AMAMA responds with the user's decision:
 AI Maestro AMP messaging (handles routing automatically)
 ```
 
-> **Note**: Do not call this API endpoint directly. Use the `agent-messaging` skill which handles the API format automatically.
+> **Note**: Do not call the AI Maestro API directly. Use the `amp-send` CLI which handles the API format automatically.
 
 ### Generic Message Template
 
-Send a message using the `agent-messaging` skill with these fields:
+Send a message using `amp-send` with these fields:
 - **From**: your session name (`<sender-session-name>`)
 - **To**: recipient session name (`<recipient-session-name>`)
 - **Subject**: descriptive subject line
@@ -336,7 +336,7 @@ Examples:
 ### Error Handling
 
 If message delivery fails:
-1. Verify AI Maestro service is running using the `agent-messaging` skill health check
+1. Verify AI Maestro service is running by checking `amp-inbox` responds without error
 2. Verify session names are correct (no typos)
 3. Validate JSON syntax (use `jq` to check)
 4. Check network connectivity to localhost
@@ -344,7 +344,7 @@ If message delivery fails:
 
 ### Testing Messages
 
-To test AI Maestro connectivity, use the `agent-messaging` skill:
+To test AI Maestro connectivity, use `amp-inbox`/`amp-send`:
 - **Health check**: verify the AI Maestro service is running and responding
 - **List unread messages**: retrieve unread messages for your session (e.g., `amoa-myproject`)
 - **Get unread count**: query how many unread messages exist
@@ -357,7 +357,7 @@ To test AI Maestro connectivity, use the `agent-messaging` skill:
 
 ### ACK Pattern (All Messages)
 
-**Always send acknowledgment after receiving any message.** Use the `agent-messaging` skill:
+**Always send acknowledgment after receiving any message.** Use `amp-reply`:
 - **Recipient**: the original sender
 - **Subject**: "ACK: [Original Subject]"
 - **Content**: brief confirmation message

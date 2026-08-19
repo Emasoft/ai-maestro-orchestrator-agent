@@ -100,7 +100,7 @@ done
 
 ### Step 5: Collect Communication History
 
-Use the `agent-messaging` skill to retrieve message history for the failed agent session. Request the most recent 20 messages sorted by timestamp and save them to `comms-history.json`.
+Use `amp-inbox` + `amp-read <id>` (AMP frozen CLI) to retrieve message history for the failed agent session. Request the most recent 20 messages sorted by timestamp and save them to `comms-history.json`.
 
 ### Step 6: Identify Blockers and Dependencies
 
@@ -187,7 +187,7 @@ git branch -a | grep "$FAILED_AGENT" >> "$CONTEXT_FILE"
 
 # Recent communications
 echo -e "\n## Recent Communications" >> "$CONTEXT_FILE"
-# Use the agent-messaging skill to retrieve the last 5 messages
+# Use `amp-inbox` + `amp-read <id>` to retrieve the last 5 messages
 # for the failed agent and append them to the context file
 
 echo "Context compiled to: $CONTEXT_FILE"

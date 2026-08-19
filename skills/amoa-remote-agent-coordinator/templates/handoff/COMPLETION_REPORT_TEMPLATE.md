@@ -16,7 +16,7 @@
 
 **Message Format**:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {

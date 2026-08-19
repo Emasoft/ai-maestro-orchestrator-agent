@@ -34,7 +34,7 @@ HANDOFF_ID="$1"
 EXPECTED_CHECKPOINT="$2"
 
 # Fetch ACK message
-# Use the agent-messaging skill to check your inbox for unread messages,
+# Use `amp-inbox` to list unread messages, `amp-read <id>` to read each,
 # then filter for the message whose content.handoff_id matches $HANDOFF_ID
 ACK=$(# retrieve unread messages and filter by handoff_id)
 
@@ -191,7 +191,7 @@ echo "State file updated successfully"
 
 Send to AMCOS when replacement is complete:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -227,7 +227,7 @@ Send to AMCOS when replacement is complete:
 
 If some tasks could not be reassigned:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -261,7 +261,7 @@ If some tasks could not be reassigned:
 
 If replacement could not be completed:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {

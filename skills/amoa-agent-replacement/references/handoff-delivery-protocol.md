@@ -63,7 +63,7 @@ cp "$HANDOFF_FILE" "$HANDOFF_DIR/"
 
 ### Message Format
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -88,7 +88,7 @@ cp "$HANDOFF_FILE" "$HANDOFF_DIR/"
 
 ### Send Notification
 
-Send using the `agent-messaging` skill:
+Send using `amp-send --type notification --priority urgent`:
 - **Recipient**: `helper-agent-2`
 - **Subject**: "[HANDOFF] Agent Replacement - You are replacing implementer-1"
 - **Content**: "You are replacing implementer-1 due to context_loss. Full handoff: <HANDOFF_URL>"
@@ -113,7 +113,7 @@ Send using the `agent-messaging` skill:
 
 The replacement agent MUST respond with:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -161,7 +161,7 @@ If replacement agent has questions:
 3. **RE-SEND** notification with updated URL
 4. **WAIT** for confirmation ACK
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -213,7 +213,7 @@ Wait for ACK (timeout period based on urgency)
 
 ### Reminder Message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -235,7 +235,7 @@ Wait for ACK (timeout period based on urgency)
 
 After 2 reminders with no response:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -293,11 +293,11 @@ After ACK received:
 
 ### AI Maestro Message Not Delivered
 
-1. Use the `agent-messaging` skill to verify the replacement agent session exists in the agent registry.
+1. Query the AMP agent registry to verify the replacement agent session exists.
 
-2. Use the `agent-messaging` skill to perform a health check on the AI Maestro service.
+2. Use `amp-inbox` to perform a health check on the AI Maestro service.
 
-3. Retry sending the notification using the `agent-messaging` skill with the full explicit session name.
+3. Retry sending the notification using `amp-send` with the full explicit session name.
 
 ### GitHub Upload Failed
 

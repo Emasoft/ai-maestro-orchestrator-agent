@@ -42,7 +42,7 @@ Use this operation after sending the handoff to verify the replacement is comple
 
 Monitor AI Maestro for acknowledgment:
 
-Use the `agent-messaging` skill to check your inbox for unread messages from the replacement agent session. Filter for messages where `content.type` equals `ack` and `from` matches the replacement session name.
+Use `amp-inbox` + `amp-read <id>` (AMP frozen CLI) to check your inbox for unread messages from the replacement agent session. Filter for messages where `content.type` equals `ack` and `from` matches the replacement session name.
 
 If an ACK message is found, proceed. If not, continue waiting.
 
@@ -66,7 +66,7 @@ echo "ETA: $ETA"
 
 If replacement agent has questions:
 
-Send a clarification using the `agent-messaging` skill:
+Send a clarification using `amp-send --type response --priority high`:
 - **Recipient**: the replacement agent session name
 - **Subject**: "RE: Task Handoff Clarifications"
 - **Content**: answers to the agent's questions
@@ -108,7 +108,7 @@ with open('design/state/exec-phase.md', 'r') as f:
 
 ### Step 6: Notify AMCOS of Completion
 
-Send a completion notification using the `agent-messaging` skill:
+Send a completion notification using `amp-send --type notification --priority normal`:
 - **Recipient**: `amcos`
 - **Subject**: "Replacement Complete: <FAILED_AGENT> -> <REPLACEMENT_AGENT>"
 - **Content**: "Agent replacement completed successfully."
@@ -187,7 +187,7 @@ HANDOFF_URL="https://github.com/owner/repo/issues/42#issuecomment-12345"
 
 # 1. Check for ACK
 echo "Checking for ACK from $REPLACEMENT_SESSION..."
-# Use the agent-messaging skill to check inbox for unread ACK messages
+# Use `amp-inbox` + `amp-read <id>` to check inbox for unread ACK messages
 # from the replacement agent session
 ACK_MSG=$(# retrieve unread messages and filter by content.type == "ack" and from == $REPLACEMENT_SESSION)
 
@@ -221,7 +221,7 @@ EOF
 
 # 4. Notify AMCOS
 echo "Notifying AMCOS..."
-# Use the agent-messaging skill to notify AMCOS:
+# Use `amp-send --type notification --priority normal` to notify AMCOS:
   # - Recipient: amcos
   # - Subject: "Replacement Complete"
   # - Content: replacement details

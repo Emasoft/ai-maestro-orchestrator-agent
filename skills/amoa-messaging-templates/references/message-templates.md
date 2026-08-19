@@ -16,7 +16,7 @@
 
 This document provides the complete AI Maestro message templates for all common agent communication scenarios across ai-maestro plugins.
 
-> All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
+> All message templates below should be sent using the `amp-send` CLI, which handles the AI Maestro AMP transport automatically.
 
 ---
 
@@ -24,7 +24,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** AMOA assigning implementation task to remote agent
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -50,7 +50,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Agent reporting task completion to orchestrator
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -76,7 +76,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Orchestrator polling agent for status
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -100,7 +100,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Agent responding to status request
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -127,7 +127,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Chief of Staff requesting approval from Assistant Manager
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -154,7 +154,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Assistant Manager responding to approval request
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -180,7 +180,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Agent encountering blocker requiring escalation
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -207,7 +207,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Acknowledging receipt of message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -232,7 +232,7 @@ This document provides the complete AI Maestro message templates for all common 
 
 **When to use:** Architect handing off design to Orchestrator
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -269,7 +269,7 @@ This is the read-side of orch#26.
 
 **When to use:** Orchestrator requesting code integration/review
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {
@@ -295,7 +295,7 @@ This is the read-side of orch#26.
 
 **When to use:** Integrator reporting integration/review result
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {

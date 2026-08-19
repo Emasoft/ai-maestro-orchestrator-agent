@@ -23,7 +23,7 @@ Escalation follows a strict **order**, not time-based triggers:
 
 When state = No ACK or No Progress:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -45,7 +45,7 @@ When state = No ACK or No Progress:
 
 When state = Unresponsive (no response to first reminder):
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {

@@ -39,7 +39,7 @@ When multiple agents attempt to modify the same issue labels:
 
 When one agent needs to modify labels another agent set, send a message before making the change:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
 ```json
 {

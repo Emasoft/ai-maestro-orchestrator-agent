@@ -68,7 +68,7 @@ TASK_TITLE=$(gh issue view $TASK_ID --json title | jq -r '.title')
 
 If agent has not acknowledged the task:
 
-Send a reminder using the `agent-messaging` skill:
+Send a reminder using `amp-send`:
 - **Recipient**: the agent session name (`$AGENT_NAME`)
 - **Subject**: "Reminder: ACK Required for #<TASK_ID>"
 - **Content**: "Task #<TASK_ID> (<TASK_TITLE>) was assigned to you but no acknowledgment has been received. Please send an ACK message confirming: 1. You received the task 2. Your understanding of the requirements 3. Any questions you have"
@@ -81,7 +81,7 @@ Send a reminder using the `agent-messaging` skill:
 
 If agent acknowledged but has not provided updates:
 
-Send a status request using the `agent-messaging` skill:
+Send a status request using `amp-send`:
 - **Recipient**: the agent session name (`$AGENT_NAME`)
 - **Subject**: "Status Request: #<TASK_ID>"
 - **Content**: "What is your current status on task #<TASK_ID> (<TASK_TITLE>)? Please report: 1. Current progress 2. Any blockers 3. Anything unclear 4. Any difficulties 5. Estimated time to completion"

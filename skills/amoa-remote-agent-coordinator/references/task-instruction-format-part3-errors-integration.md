@@ -40,7 +40,7 @@ ACTIVE → timeout → REASSIGNED (if no extension)
 
 When task is blocked:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -86,7 +86,7 @@ When task is blocked:
 
 When task cannot be completed:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {

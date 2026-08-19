@@ -84,7 +84,7 @@ echo '{"task_id": "'"$TASK_ID"'", "agent": "'"$AGENT_NAME"'", "pr_request_count"
 
 If the PR request count is less than 5 (verification loop not yet complete):
 
-Send a verification request message using the `agent-messaging` skill:
+Send a verification request message using `amp-send` (`--type request --priority normal`):
 - **Recipient**: the agent requesting PR (by session name)
 - **Subject**: "Verification Required: #[TASK_ID] ([COUNT]/4)"
 - **Content**: "Check your changes for errors. This is verification request [COUNT] of 4 required before PR approval."
@@ -100,7 +100,7 @@ If the PR request count reaches 5, proceed to final approval decision.
 
 Review the agent's final submission against acceptance criteria.
 
-**If criteria are met**, send an approval message using the `agent-messaging` skill:
+**If criteria are met**, send an approval message using `amp-send` (`--type response --priority normal`):
 - **Recipient**: the agent
 - **Subject**: "PR Approved: #[TASK_ID]"
 - **Content**: "You may now create a PR for task #[TASK_ID]. Ensure all tests pass before submission."
@@ -108,7 +108,7 @@ Review the agent's final submission against acceptance criteria.
 - **Priority**: `normal`
 - **Data**: include `task_id`, `pr_approved` (true)
 
-**If criteria are NOT met**, send a rejection message using the `agent-messaging` skill:
+**If criteria are NOT met**, send a rejection message using `amp-send` (`--type response --priority high`):
 - **Recipient**: the agent
 - **Subject**: "PR Rejected: #[TASK_ID]"
 - **Content**: "PR creation not approved. Issues found: [list]. Address these issues and request PR permission again."
@@ -122,7 +122,7 @@ Review the agent's final submission against acceptance criteria.
 # NOTE: The logic below handles tracking the verification state
 CRITERIA_MET=true  # Determine from review
 # Then send the appropriate approval or rejection message
-# using the agent-messaging skill as described above
+# using amp-send as described above
     }'
 
   # Reset verification count for another 4 loops

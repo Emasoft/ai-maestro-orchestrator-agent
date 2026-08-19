@@ -222,7 +222,7 @@ Priority Order:
 
 ### 5.2 Non-Blocking Message Check
 
-Use the `agent-messaging` skill to perform a quick non-blocking unread message count check.
+Use `amp-inbox` to perform a quick non-blocking unread message count check.
 
 If the unread count is greater than 0, read messages before continuing.
 If the unread count is 0, continue with the current task.

@@ -10,7 +10,7 @@
 
 This document provides structured templates for messages that AMOA **receives** from AMCOS (Chief of Staff), AMAMA (Assistant Manager), and AMAA (Architect Agent). For each response type, this reference includes the incoming message format, the processing instructions AMOA must follow, and the decision tree for handling the response.
 
-> All message templates below should be sent using the `agent-messaging` skill, which handles the AI Maestro API format automatically.
+> All message templates below should be sent using the `amp-send` CLI, which handles the AI Maestro AMP transport automatically.
 
 ---
 
@@ -18,7 +18,7 @@ This document provides structured templates for messages that AMOA **receives** 
 
 **When to use:** After AMOA sends a task completion report to AMCOS (using template 1.4 in [ai-maestro-message-templates.md](ai-maestro-message-templates.md)), AMCOS reviews the result and responds with one of three statuses: `accepted`, `rework_requested`, or `clarification_requested`.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use the `amp-send` CLI to send messages.
 
 ### Incoming Response Template (AMCOS to AMOA)
 
@@ -109,7 +109,7 @@ AMOA receives AMCOS completion review response
 
 **When to use:** After AMOA escalates a blocker to AMAMA requesting user input (using template 1.6 in [ai-maestro-message-templates.md](ai-maestro-message-templates.md)), AMAMA collects the user decision and responds with one of three statuses: `user_decision_delivered`, `user_deferred`, or `user_rejected_all`.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use the `amp-send` CLI to send messages.
 
 ### Incoming Response Template (AMAMA to AMOA)
 
@@ -206,7 +206,7 @@ AMOA receives AMAMA blocker response
 
 **When to use:** After AMOA escalates a design issue to AMAA (Architect Agent) because an agent encountered an architectural ambiguity, a design constraint conflict, or needs guidance on implementation approach. AMAA responds with one of three statuses: `design_guidance`, `revised_design_doc`, or `investigate_further`.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use the `amp-send` CLI to send messages.
 
 ### Incoming Response Template (AMAA to AMOA)
 
@@ -309,7 +309,7 @@ AMOA receives AMAA design response
 
 **When to use:** After AMOA sends its periodic status report to AMCOS (summarizing progress across all active tasks, agent health, and blockers), AMCOS reviews the report and responds with one of three statuses: `acknowledged`, `priority_change`, or `additional_task`.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use the `amp-send` CLI to send messages.
 
 ### Incoming Response Template (AMCOS to AMOA)
 
@@ -422,7 +422,7 @@ AMOA receives AMCOS status report response
 
 **When to use:** After AMOA escalates to AMAMA because an agent cannot satisfy an immutable project requirement (a requirement that cannot be changed without explicit user approval). This happens when there is a hard conflict between a requirement and the technical reality (for example, a required dependency is unavailable, a performance target is physically impossible, or a required integration API does not exist). AMAMA collects the user decision and responds with one of three statuses: `option_selected`, `custom_resolution`, or `requirement_waived`.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Use the `amp-send` CLI to send messages.
 
 ### Incoming Response Template (AMAMA to AMOA)
 

@@ -35,7 +35,7 @@ curl -L -H "Authorization: token $GITHUB_TOKEN" \
 
 ### 2.1.3 Step 3: Send ACK (MANDATORY)
 
-Send an acknowledgment using the `agent-messaging` skill:
+Send an acknowledgment using `amp-reply` (or `amp-send --type response`):
 - **Recipient**: `{{SENDER}}` (the sender's session name)
 - **Subject**: "[ACK] {{TASK_ID}} - RECEIVED"
 - **Content**: JSON with `type` ("acknowledgment"), `task_id`, `message` ("[ACK] {{TASK_ID}} - RECEIVED - Document: {{FILENAME}} downloaded from {{GITHUB_COMMENT_URL}}")

@@ -20,15 +20,18 @@
 
 ---
 
-## IMPORTANT: Official Skill Reference
+## IMPORTANT: Official Messaging Mechanism
 
-**For sending and receiving messages, always use the official AI Maestro skill:**
+**For sending and receiving messages, always use the AMP frozen-CLI layer (on PATH):**
 
 ```
-~/.claude/skills/agent-messaging/SKILL.md
+amp-send <recipient> "<subject>" "<body>" [--priority low|normal|high|urgent] [--type request|response|notification|task|status] [--reply-to ID] [--attach FILE]
+amp-inbox
+amp-read <message-id>
+amp-reply <message-id> ...
 ```
 
-This skill is maintained by AI Maestro and automatically updated when the API changes. It provides operations for:
+These CLIs are maintained by AI Maestro and automatically updated when the API changes. They provide operations for:
 - Checking your inbox for unread messages
 - Reading and marking messages as read
 - Sending messages to other agents
@@ -151,7 +154,7 @@ This protocol reference is split into focused sections. Read only what you need:
 
 ### Essential Operations
 
-Use the `agent-messaging` skill for all messaging operations:
+Use the `amp-send`/`amp-inbox`/`amp-read`/`amp-reply` CLIs for all messaging operations:
 - **Send a message**: specify recipient, subject, message body, priority, and type
 - **Check inbox**: retrieve all unread messages for your session
 - **Read specific message**: retrieve and mark a message as read by its ID
@@ -169,7 +172,7 @@ Use the `agent-messaging` skill for all messaging operations:
 
 ### Required Message Fields
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {

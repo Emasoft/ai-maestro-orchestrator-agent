@@ -45,13 +45,13 @@ Error: Session 'helper-agent-generic' not found in AI Maestro.
 
 **Solutions**:
 
-1. **Verify session is running**: Use the `agent-messaging` skill to query the agent registry and list all registered session names.
+1. **Verify session is running**: Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry and list all registered session names.
 
 2. **Check for typos**:
    - Session names are case-sensitive
    - Use full name (e.g., `helper-agent-generic` not `generic`)
 
-3. **Restart AI Maestro if needed**: Use the `agent-messaging` skill to perform a health check on the AI Maestro service.
+3. **Restart AI Maestro if needed**: Use AMP messaging (amp-send/amp-inbox CLIs) to perform a health check on the AI Maestro service.
 
 4. **Wait and retry**:
    - New sessions may take a few seconds to register
@@ -182,9 +182,9 @@ AI Maestro error: Connection refused.
 
 **Solutions**:
 
-1. **Check AI Maestro service**: Use the `agent-messaging` skill to perform a health check.
+1. **Check AI Maestro service**: Use AMP messaging (amp-send/amp-inbox CLIs) to perform a health check.
 
-2. **Verify session is still active**: Use the `agent-messaging` skill to query the agent registry and check if the session (e.g., `helper-agent-generic`) is registered and active.
+2. **Verify session is still active**: Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry and check if the session (e.g., `helper-agent-generic`) is registered and active.
 
 3. **Retry assignment**:
    - Wait a moment and try again
@@ -218,7 +218,7 @@ Agent does not respond to progress poll within expected time.
    Please respond immediately with your status.
    ```
 
-2. **Check session status**: Use the `agent-messaging` skill to query the agent registry and check the status of the specific session.
+2. **Check session status**: Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry and check the status of the specific session.
 
 3. **Consider reassignment** if unresponsive for >30 minutes
 
@@ -272,7 +272,7 @@ Error: Cannot connect to AI Maestro messaging system
 
 **Solutions**:
 
-1. **Check if service is running**: Use the `agent-messaging` skill to perform a health check on the AI Maestro service.
+1. **Check if service is running**: Use AMP messaging (amp-send/amp-inbox CLIs) to perform a health check on the AI Maestro service.
 
 2. **Restart AI Maestro** (ask the MAESTRO):
    ```bash
@@ -327,7 +327,7 @@ Error: Invalid message format
 
 **Correct format**:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {

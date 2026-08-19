@@ -142,7 +142,7 @@ Non-critical replacement, handle when convenient:
 
 ### ACK Message Format
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -196,7 +196,7 @@ If AMCOS does not receive ACK within expected time:
 
 If notification cannot be parsed:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -216,7 +216,7 @@ If notification cannot be parsed:
 
 If failed agent is not in orchestrator's roster:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -236,7 +236,7 @@ If failed agent is not in orchestrator's roster:
 
 If replacement agent is not available:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -256,7 +256,7 @@ If replacement agent is not available:
 
 If replacement agent also fails during handoff:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send` (AMP frozen CLI). The JSON structure below shows the message content that fills the `amp-send` body.
 
 ```json
 {
@@ -279,7 +279,7 @@ If replacement agent also fails during handoff:
 
 ### AI Maestro Integration
 
-All AMCOS notifications arrive via AI Maestro. Use the `agent-messaging` skill to check your inbox regularly for unread messages and filter for those where `content.type` equals `agent_replacement`.
+All AMCOS notifications arrive via AI Maestro. Use `amp-inbox` to check your inbox regularly for unread messages, then `amp-read <id>` and filter for those where `content.type` equals `agent_replacement`.
 
 ### State File Integration
 

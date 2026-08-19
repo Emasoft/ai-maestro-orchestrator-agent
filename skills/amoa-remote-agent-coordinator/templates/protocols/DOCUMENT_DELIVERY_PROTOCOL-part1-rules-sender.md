@@ -81,7 +81,7 @@ COMMENT_URL=$(gh issue view {{ISSUE_NUMBER}} --json comments --jq '.comments[-1]
 
 ### 1.3.4 Step 4: Send AI Maestro Message with URL Only
 
-Send a document delivery notification using the `agent-messaging` skill:
+Send a document delivery notification using `amp-send` (`--type notification --priority high`):
 - **Recipient**: `{{RECIPIENT}}` (full agent session name)
 - **Subject**: "[DOC] {{DOCUMENT_TYPE}} - {{TASK_ID}}"
 - **Content**: JSON with `type` ("document_delivery"), `task_id`, `document_type`, `github_comment_url`, `filename`, `requires_ack` (true)

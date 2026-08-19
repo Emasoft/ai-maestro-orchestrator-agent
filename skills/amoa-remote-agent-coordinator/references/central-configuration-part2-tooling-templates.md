@@ -289,7 +289,7 @@ export GITHUB_PROFILE="https://github.com/Emasoft"
 
 ### AI Maestro Configuration
 
-AI Maestro AMP handles routing automatically. Use the `agent-messaging` skill to send and receive messages.
+AI Maestro AMP handles routing automatically. Use `amp-send` to send messages and `amp-inbox`/`amp-read` to receive them.
 
 ```bash
 # Agent session identification

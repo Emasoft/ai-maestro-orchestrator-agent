@@ -63,7 +63,7 @@ Move a task to the Blocked column when an agent reports the task cannot proceed,
 4. Update labels: remove current `status:*`, add `status:blocked`
 5. Add blocker details as comment on the issue (include previous status)
 6. Create a separate GitHub issue for the blocker itself (`type:blocker` label)
-7. Send blocker-escalation message to AMAMA using the `agent-messaging` skill IMMEDIATELY
+7. Send blocker-escalation message via AMCOS (`amp-send amcos-chief-of-staff … --type request --priority urgent`) IMMEDIATELY — no direct AMOA→AMAMA edge (R6 v3)
 8. Check if other unblocked tasks can be assigned to the waiting agent
 
 ## Commands
@@ -74,11 +74,8 @@ CURRENT_STATUS="status:ai_review"
 BLOCKER_REASON="Missing AWS credentials"
 AGENT="implementer-1"
 
-# Step 1: Acknowledge blocker using the agent-messaging skill:
-# - Recipient: $AGENT
-# - Subject: "Blocker Acknowledged"
-# - Content: "Blocker received for #$ISSUE"
-# - Type: ack
+# Step 1: Acknowledge blocker via amp-send:
+amp-send "$AGENT" "Blocker Acknowledged" "Blocker received for #$ISSUE" --type response
 
 # Step 4: Update labels
 gh issue edit $ISSUE --remove-label "$CURRENT_STATUS" --add-label "status:blocked"
@@ -96,7 +93,7 @@ gh issue create --title "BLOCKER: $BLOCKER_REASON" --label "type:blocker" \
 
 ## Escalation Message to AMAMA
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: `amp-send` transmits the message. The JSON structure below shows the message content the send fills in.
 
 ```json
 {
@@ -130,7 +127,7 @@ gh issue create --title "BLOCKER: $BLOCKER_REASON" --label "type:blocker" \
 - [ ] Remove current `status:*` label, add `status:blocked`
 - [ ] Add blocker details as comment on the blocked task issue (include `Previous status: $CURRENT_STATUS`)
 - [ ] Create a separate GitHub issue for the blocker (`type:blocker` label, referencing the blocked task)
-- [ ] Send blocker-escalation message to AMAMA via AI Maestro using the `agent-messaging` skill (include `blocker_issue_number`)
+- [ ] Send blocker-escalation message via AMCOS (`amp-send amcos-chief-of-staff … --type request --priority urgent`, include `blocker_issue_number`) — no direct AMOA→AMAMA edge (R6 v3)
 - [ ] Check if other unblocked tasks can be assigned to the waiting agent
 
 ## Error Handling

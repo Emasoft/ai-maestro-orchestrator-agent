@@ -73,7 +73,7 @@ Send official authorization for the implementer to begin work. PROCEED is the fo
    - Reminder of acceptance criteria
    - Expected deliverables
 
-3. **Send the PROCEED** using the `agent-messaging` skill:
+3. **Send the PROCEED** using `amp-send`:
    - **Recipient**: the implementer agent session name
    - **Subject**: "PROCEED: <issue_number>"
    - **Content**: the proceed message with reminders and acceptance criteria

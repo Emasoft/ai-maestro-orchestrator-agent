@@ -130,7 +130,7 @@ Secrets are **NEVER** sent in task instructions. Agent must:
 
 ### Secret Request Format
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -177,7 +177,7 @@ Agents MUST:
 
 ### Config Update Acknowledgment
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -241,7 +241,7 @@ ETA: 2 hours
 
 ### Status Request Message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -259,7 +259,7 @@ ETA: 2 hours
 
 ### Timeout Warning Message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -295,7 +295,7 @@ If task not completed within timeout:
 
 When agent needs more time:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -325,7 +325,7 @@ Orchestrator grants extension if:
 
 ### Extension Response
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {

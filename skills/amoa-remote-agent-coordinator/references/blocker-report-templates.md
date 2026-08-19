@@ -40,7 +40,7 @@ Do NOT use this template for code bugs. Use `bug-reporting-protocol.md` for code
 
 ### Send Template
 
-> **Note**: Use the agent-messaging skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -235,7 +235,7 @@ Use this template after a previously reported blocker has been fully resolved. T
 
 When AMOA receives a blocker report, follow this decision tree to determine the correct action.
 
-> **Note**: Use the agent-messaging skill to send messages at each step where communication is required.
+> **Note**: Use `amp-send` to send messages at each step where communication is required.
 
 ```
 Blocker report received
@@ -290,7 +290,7 @@ Blocker report received
 │   │   │   └─ Provide interim instructions based on the most likely interpretation
 │   │   │
 │   │   └─ NO (AMAA not available or not assigned to this project)
-│   │       ├─ Escalate to AMAMA (Assistant Manager) for user clarification
+│   │       ├─ Escalate via AMCOS (relays to AMAMA) for user clarification
 │   │       ├─ Include the requirement text and the conflicting interpretations
 │   │       └─ Provide interim instructions based on the most conservative interpretation
 │   │

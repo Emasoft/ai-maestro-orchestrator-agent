@@ -345,7 +345,7 @@ columns onto one board column **without** also writing the precise value into
 #### Step 14: Agent Clarification
 **Actor**: AMOA (Orchestrator) + IMPLEMENTER AGENTS
 **Action**:
-- Send to each agent a notification using the `agent-messaging` skill that their first task has been assigned
+- Send to each agent a notification via `amp-send <agent> "<subject>" "<body>" --type task` that their first task has been assigned
 - Ask each agent if they need clarifications
 - The Orchestrator is the team lead with full project understanding (along with Architect)
 
@@ -478,7 +478,7 @@ cycle eventually reaches the pre-PR green-light (Step 19). An unresolved issue
 #### Step 20: PR Review Request
 **Actor**: AMOA (Orchestrator)
 **Action**:
-- Send message using the `agent-messaging` skill to Integrator agent (AMIA) to evaluate all PRs of completed tasks
+- Send message via `amp-send` to Integrator agent (AMIA) to evaluate all PRs of completed tasks
 - Request merge if they pass all checks
 
 **Communication**:

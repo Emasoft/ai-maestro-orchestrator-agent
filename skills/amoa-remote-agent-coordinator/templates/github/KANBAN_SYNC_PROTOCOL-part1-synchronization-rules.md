@@ -66,7 +66,7 @@ gh issue comment {{ISSUE_NUMBER}} \
 cc @{{ORCHESTRATOR_OWNER}}"
 
 # 3. Notify orchestrator via AI Maestro messaging system (AMP)
-# Use the `agent-messaging` skill to send a high-priority alert to the orchestrator agent,
+# Use amp-send to send a high-priority alert to the orchestrator agent,
 # with subject "Agent blocked: {{TASK_ID}}" and message body containing the agent name,
 # task ID, and blocker description. The message type should be "alert" and priority "high".
 ```

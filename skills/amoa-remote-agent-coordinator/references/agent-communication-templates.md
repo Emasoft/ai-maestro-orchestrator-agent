@@ -307,7 +307,7 @@ Task UUID: {task_uuid}
 
 ### Sending Messages via AI Maestro
 
-Send messages using the `agent-messaging` skill with these fields:
+Send messages using `amp-send` with these fields:
 - **Recipient**: the target agent session name
 - **Subject**: subject line with appropriate prefix (e.g., `[TASK]`, `[PROGRESS]`, etc.)
 - **Priority**: `normal`, `high`, or `urgent`

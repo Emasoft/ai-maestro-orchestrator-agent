@@ -97,7 +97,7 @@ EOF
 
 ### Step 2: Send to AMAMA (User Communication Channel)
 
-Send an escalation message to AMAMA using the `agent-messaging` skill:
+Send an escalation message via AMCOS using `amp-send amcos-chief-of-staff …` (`--type request --priority high`) — R6 v3: no direct AMOA→AMAMA edge; AMCOS relays to AMAMA/USER:
 - **Recipient**: `amama-main`
 - **Subject**: "[ESCALATION] [escalation_type]: [brief_description]"
 - **Content**: "User decision required." followed by category, context, options, impact (blocking task), and urgency
@@ -207,7 +207,7 @@ if [ -n "$BLOCKING_TASK" ]; then
 fi
 
 # Notify assigned agent
-Send a decision notification to the assigned agent using the `agent-messaging` skill:
+Send a decision notification to the assigned agent using `amp-send` (`--type notification --priority high`):
 - **Recipient**: the assigned agent session name
 - **Subject**: "Decision Made: [escalation_id]"
 - **Content**: "User has made a decision on your blocked task. Decision: [decision]. You may now proceed with task #[blocking_task]."

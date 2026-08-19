@@ -55,7 +55,7 @@ Passive monitoring leads to:
 ### 1.2 The Five Proactive Principles
 
 1. **PROACTIVELY poll** for agent status every 10-15 minutes during active work
-2. **PROACTIVELY send** status request messages using the `agent-messaging` skill if no update received
+2. **PROACTIVELY send** status request messages with `amp-send <recipient> "<subject>" "<body>" --type request` if no update received
 3. **PROACTIVELY offer** solutions when agents report blockers
 4. **PROACTIVELY remind** agents of pending tasks and priorities
 5. **PROACTIVELY verify** that agents don't stop until ALL tasks are complete

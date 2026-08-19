@@ -64,7 +64,7 @@ Complete this checklist for EACH module during Orchestration Phase.
 Only if sending updates mid-implementation:
 
 - [ ] Execute Instruction Update Verification Protocol
-- [ ] Send update notification using the `agent-messaging` skill (what changed, why, impact)
+- [ ] Send update notification using `amp-send` (what changed, why, impact)
 - [ ] Wait for receipt confirmation (agent PAUSES)
 - [ ] Request feasibility assessment (5 questions)
 - [ ] Address all concerns raised

@@ -77,7 +77,7 @@ See: [kanban-reassignment-protocol.md](kanban-reassignment-protocol.md) - 4.1 Fi
 
 ## 6. Step 5: Send Handoff to New Agent
 
-Upload handoff to GitHub issue, send AI Maestro message using the `agent-messaging` skill with URL, include urgency level, request ACK within timeout.
+Upload handoff to GitHub issue, send AI Maestro message using `amp-send --type task --priority urgent` with URL, include urgency level, request ACK within timeout.
 
 See: [handoff-delivery-protocol.md](handoff-delivery-protocol.md) - 5.1 Document Upload, 5.2 AI Maestro Notification, 5.3 ACK Requirements, 5.4 Timeout Handling
 

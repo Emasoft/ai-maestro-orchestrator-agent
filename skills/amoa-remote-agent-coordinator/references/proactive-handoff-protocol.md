@@ -91,7 +91,7 @@ Exactly what the next agent should do first.
 2. **ALWAYS write handoff before session ends** (hook should block if missing)
 3. **NEVER assume next agent knows context** - be explicit
 4. **ALWAYS include file paths** with line numbers when relevant
-5. **ALWAYS send AI Maestro message** using the `agent-messaging` skill after writing handoff with file path
+5. **ALWAYS send AI Maestro message** using `amp-send` after writing handoff with file path
 
 ## Handoff Quality Checklist
 

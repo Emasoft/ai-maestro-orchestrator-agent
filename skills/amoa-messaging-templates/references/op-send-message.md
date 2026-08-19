@@ -42,7 +42,7 @@ Send a message to another agent via AI Maestro messaging system.
    - `priority`: `high`, `normal`, or `low`
    - `content`: Object with `type` and `message` fields
 
-2. **Send the message** using the `agent-messaging` skill with the prepared payload.
+2. **Send the message** using the `amp-send` CLI with the prepared payload as the body.
 
 3. **Verify**: confirm the response indicates successful delivery (status "sent" with a message ID).
 
@@ -65,7 +65,7 @@ Send a message to another agent via AI Maestro messaging system.
 
 ## Example
 
-Send a review request message using the `agent-messaging` skill:
+Send a review request message using `amp-send`:
 - **Recipient**: `amia-main`
 - **Subject**: "PR #123 Review Request"
 - **Content**: "Please review PR #123 for code quality and CI compliance."

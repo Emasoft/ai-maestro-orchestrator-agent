@@ -6,7 +6,7 @@
 
 # AI Maestro Communication Examples
 
-This document provides intent-based examples for common AI Maestro messaging scenarios. Use the `agent-messaging` skill for all message operations.
+This document provides intent-based examples for common AI Maestro messaging scenarios. Use the `amp-send`/`amp-inbox`/`amp-read`/`amp-reply` CLIs for all message operations.
 
 ---
 
@@ -32,7 +32,7 @@ This document provides intent-based examples for common AI Maestro messaging sce
 
 ## Example 1: Send Task Assignment
 
-Send a task assignment message using the `agent-messaging` skill:
+Send a task assignment message using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "Task Assignment: Implement auth module"
 - **Content**: "You are assigned: Implement authentication module. Success criteria: JWT tokens, session management, tests passing."
@@ -46,7 +46,7 @@ Send a task assignment message using the `agent-messaging` skill:
 
 ## Example 2: Send Status Request
 
-Send a status request message using the `agent-messaging` skill:
+Send a status request message using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "Status Request: #42"
 - **Content**: "What is your current status on #42? Report progress, blockers, and next steps."
@@ -60,7 +60,7 @@ Send a status request message using the `agent-messaging` skill:
 
 ## Example 3: Escalate to Assistant Manager
 
-Send an escalation message using the `agent-messaging` skill:
+Send an escalation message using `amp-send`:
 - **Recipient**: `assistant-manager`
 - **Subject**: "Approval Required: Requirement Change"
 - **Content**: "Implementer identified issue with immutable requirement. User decision required."

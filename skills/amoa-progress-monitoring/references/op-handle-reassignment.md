@@ -74,12 +74,9 @@ if [ "$USER_AUTHORIZED" != "true" ]; then
   if [ "$OVERNIGHT_MODE" != "true" ]; then
     echo "User authorization required for reassignment. Escalating to AMAMA."
     # Send escalation
-    # Send approval request using the agent-messaging skill:
-    # - Recipient: amama-main
-    # - Subject: "Reassignment Approval Needed: #$TASK_ID"
-    # - Content: "Agent $CURRENT_AGENT is unresponsive on task #$TASK_ID. Approval needed to reassign. Options: 1. Wait longer 2. Reassign to available agent 3. Abort task"
-    # - Type: approval-request, Priority: high
-    # - Data: task_id, current_agent
+    # amp-send amama-main "Reassignment Approval Needed: #$TASK_ID" \
+    #   "Agent $CURRENT_AGENT is unresponsive on task #$TASK_ID. Approval needed to reassign. Options: 1. Wait longer 2. Reassign to available agent 3. Abort task" \
+    #   --type request --priority high
     exit 0
   fi
 fi
@@ -114,11 +111,11 @@ fi
 # Gather all context from the task
 TASK_DETAILS=$(gh issue view $TASK_ID --json title,body,comments,labels)
 
-# Use the agent-messaging skill to retrieve the original delegation message
+# Use amp-inbox/amp-read to retrieve the original delegation message
 # sent to $CURRENT_AGENT for task $TASK_ID (filter by content.type == "task")
 ORIGINAL_DELEGATION=$(# retrieve original task delegation message)
 
-# Use the agent-messaging skill to retrieve any progress updates
+# Use amp-inbox/amp-read to retrieve any progress updates
 # from $CURRENT_AGENT regarding task $TASK_ID
 PROGRESS_UPDATES=$(# retrieve progress updates from current agent)
 
@@ -143,7 +140,7 @@ Continue from where the previous agent left off. Review any partial work in the 
 ### Step 4: Notify Current Agent
 
 ```bash
-Send a reassignment notification to the current agent using the `agent-messaging` skill:
+Send a reassignment notification to the current agent using `amp-send`:
 - **Recipient**: `$CURRENT_AGENT`
 - **Subject**: "Task Reassigned: #$TASK_ID"
 - **Content**: "Task #$TASK_ID has been reassigned to $NEW_AGENT due to no response to escalation messages. If you have any partial work or context to share, please send it to the orchestrator for transfer. No further action required on this task."
@@ -174,7 +171,7 @@ gh issue comment $TASK_ID --body "**TASK REASSIGNED**
 ### Step 6: Send Task to New Agent
 
 ```bash
-Send the reassigned task to the new agent using the `agent-messaging` skill:
+Send the reassigned task to the new agent using `amp-send`:
 - **Recipient**: `$NEW_AGENT`
 - **Subject**: "Task Reassignment: #$TASK_ID"
 - **Content**: the compiled handoff context document

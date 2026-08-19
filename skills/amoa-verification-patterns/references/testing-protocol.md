@@ -259,7 +259,7 @@ python scripts/quality_pattern_detector.py \
 **Symptoms**: Tests complete but orchestrator never receives notification.
 
 **Solution**:
-1. Use the `agent-messaging` skill to perform a health check on the AI Maestro service
+1. Use AMP messaging (amp-send/amp-inbox CLIs) to perform a health check on the AI Maestro service
 2. Check agent session name is correct in notification
 3. Verify network connectivity from test environment to AI Maestro
 4. Check notification message format matches schema

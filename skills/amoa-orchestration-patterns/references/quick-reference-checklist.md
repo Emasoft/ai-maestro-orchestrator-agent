@@ -16,7 +16,7 @@ Copy this checklist and track your progress:
 - [ ] Request minimal status reports (1-2 lines)
 - [ ] Create tracking mechanism (GitHub issues or task list)
 - [ ] **PROACTIVELY** monitor progress (check regularly, no fixed schedule)
-- [ ] **PROACTIVELY** send status request messages using the `agent-messaging` skill if no update received
+- [ ] **PROACTIVELY** send status request messages with `amp-send --type request` if no update received
 - [ ] **PROACTIVELY** offer solutions when agents report blockers
 - [ ] Identify blocked tasks at first status checkpoint
 - [ ] Escalate blocked tasks immediately

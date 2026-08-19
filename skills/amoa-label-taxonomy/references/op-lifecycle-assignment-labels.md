@@ -80,7 +80,7 @@ gh issue edit <ISSUE_NUM> \
 
 ### Step 5: Notify Agent (if using AI Maestro)
 
-Send an assignment notification using the `agent-messaging` skill:
+Send an assignment notification using `amp-send`:
 - **Recipient**: the agent session name
 - **Subject**: "Task Assignment: Issue #<ISSUE_NUM>"
 - **Content**: "You have been assigned issue #<ISSUE_NUM>: <TITLE>"
@@ -137,7 +137,7 @@ gh issue comment 42 --body "**Assigned to implementer-1**
 - Effort: m (4-8 hours)
 - Acceptance criteria in issue description"
 
-# Notify via AI Maestro using the agent-messaging skill:
+# Notify via amp-send:
 # - Recipient: helper-agent-generic
 # - Subject: "Task Assignment: Issue #42"
 # - Content: "Assigned: Implement auth module (issue #42)"

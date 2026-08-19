@@ -150,7 +150,7 @@ Retrieve all AI Maestro messages to/from the failed agent.
 
 ### Query Messages
 
-Use the `agent-messaging` skill to retrieve:
+Use `amp-inbox` + `amp-read <id>` (AMP frozen CLI) to retrieve:
 - All messages **sent to** the failed agent session
 - All messages **received from** the failed agent session
 

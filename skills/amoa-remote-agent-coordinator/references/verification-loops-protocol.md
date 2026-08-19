@@ -144,7 +144,7 @@ I will then initiate a verification phase before approving the PR.
 
 **Every time the agent asks "Can I make a PR?", respond with this FULL message (4 times total):**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -233,7 +233,7 @@ When the agent requests PR permission for the 5th time (after completing all 4 v
 
 **If NO issues were discovered or remain unfixed across all 4 loops:**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -250,7 +250,7 @@ When the agent requests PR permission for the 5th time (after completing all 4 v
 
 **If issues WERE discovered and remain unfixed:**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {
@@ -307,7 +307,7 @@ When the agent requests PR permission for the 5th time (after completing all 4 v
 
 **Solution**:
 1. Close the unauthorized PR
-2. Send message using the `agent-messaging` skill reminding agent of PR notification requirement
+2. Send message using `amp-send` reminding agent of PR notification requirement
 3. Include PR notification requirement text in message
 4. Agent must restart from loop 1
 5. If repeated, escalate to the MAESTRO about agent compliance

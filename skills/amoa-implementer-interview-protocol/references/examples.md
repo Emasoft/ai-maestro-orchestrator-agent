@@ -10,7 +10,7 @@
 
 ## Example 1: Send Pre-Task Interview Questions
 
-Send a pre-task interview message using the `agent-messaging` skill:
+Send a pre-task interview message using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "Pre-Task Interview: #42"
 - **Content**: Pre-task interview questions covering: task summary, acceptance criteria, concerns, files/domains to be touched (single-writer ownership check), anticipated NPT/EHT derived tasks, approach, and blockers. Include instruction "Reply with answers. Do NOT start until I confirm PROCEED."
@@ -22,7 +22,7 @@ Send a pre-task interview message using the `agent-messaging` skill:
 
 ## Example 2: Escalate Design Concern to Architect
 
-When the implementer reports a design issue (e.g., "API design uses synchronous calls, but requirement needs real-time updates"), send an escalation using the `agent-messaging` skill:
+When the implementer reports a design issue (e.g., "API design uses synchronous calls, but requirement needs real-time updates"), send an escalation using `amp-send`:
 - **Recipient**: `architect`
 - **Subject**: "Design Review Required: #42"
 - **Content**: "Implementer identified design issue for task #42. Issue: [description]. Please review and advise on design modification."
@@ -34,7 +34,7 @@ When the implementer reports a design issue (e.g., "API design uses synchronous 
 
 ## Example 3: Send PROCEED After Satisfactory Interview
 
-Send a PROCEED approval using the `agent-messaging` skill:
+Send a PROCEED approval using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "PROCEED: #42"
 - **Content**: "Your understanding is confirmed. You may begin implementation. Reminders: Follow design document, respect immutable requirements, report blockers immediately, report completion when done (do NOT create PR yet)."
@@ -45,7 +45,7 @@ Send a PROCEED approval using the `agent-messaging` skill:
 
 ## Example 4: Send Post-Task Verification Questions
 
-Send post-task verification questions using the `agent-messaging` skill:
+Send post-task verification questions using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "Post-Task Interview: #42"
 - **Content**: Post-task interview questions covering: requirements checklist (each requirement confirmed), testing evidence, code quality, documentation, self-review. Include instruction "Reply with evidence."
@@ -56,7 +56,7 @@ Send post-task verification questions using the `agent-messaging` skill:
 
 ## Example 5: Send APPROVED and Handoff to Integrator
 
-**Step 1**: Send APPROVED message to implementer using the `agent-messaging` skill:
+**Step 1**: Send APPROVED message to implementer using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "APPROVED: #42"
 - **Content**: "Verification complete. Create PR now. PR Requirements: Title format, link to #42, include test evidence. Report PR number when created."
@@ -70,7 +70,7 @@ on pass, or back to `status:dev` on fail):
 gh issue edit 42 --remove-label "status:dev" --add-label "status:testing"
 ```
 
-**Step 3**: Notify Integrator using the `agent-messaging` skill:
+**Step 3**: Notify Integrator using `amp-send`:
 - **Recipient**: `integrator`
 - **Subject**: "PR Ready for Review: #123"
 - **Content**: "PR #123 is ready for review. Task: #42. Pre-verified by orchestrator."

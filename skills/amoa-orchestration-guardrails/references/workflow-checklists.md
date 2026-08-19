@@ -55,7 +55,7 @@
 - [ ] Include success criteria in instructions
 - [ ] Include deadline and priority
 - [ ] Include required artifacts/deliverables
-- [ ] Send AI Maestro message to sub-agent using the `agent-messaging` skill
+- [ ] Send AI Maestro message to sub-agent with `amp-send <recipient> "<subject>" "<body>" --type task`
 - [ ] Wait for ACK from sub-agent (timeout: 15 minutes)
 - [ ] If no ACK, retry once, then escalate to AMCOS
 - [ ] Log delegation in docs_dev/orchestration/delegation-log.md
@@ -141,7 +141,7 @@
 - [ ] Prepare 1-2 line summary
 - [ ] Include key finding
 - [ ] Include link to detailed report file
-- [ ] Send AI Maestro message to requester using the `agent-messaging` skill
+- [ ] Send AI Maestro message to requester with `amp-send <recipient> "<subject>" "<body>" --type status`
 - [ ] Wait for ACK from requester
 - [ ] Update task-log.md status to "REPORTED"
 - [ ] Move task files to docs_dev/orchestration/archive/[task-uuid]/

@@ -76,9 +76,9 @@ The Orchestrator relies on AI Maestro for inter-agent communication. Detect unav
 
 | Check | Method | Failure Indicator |
 |-------|--------|-------------------|
-| API Health | Use `agent-messaging` skill health check | HTTP 503/504 or timeout |
-| Connection Test | Use `agent-messaging` skill to query unread count | Connection timeout after 10 seconds |
-| Agent Registry | Use `agent-messaging` skill to query agent registry | Registry unreachable or empty response |
+| API Health | `amp-inbox` health check | HTTP 503/504 or timeout |
+| Connection Test | `amp-inbox` to query unread count | Connection timeout after 10 seconds |
+| Agent Registry | AMP agent-registry query | Registry unreachable or empty response |
 
 ### 1.2 Response Workflow
 
@@ -91,7 +91,7 @@ When AI Maestro is unavailable, follow this protocol:
 
 2. **Queue outgoing messages**:
 
-   > **Note**: This offline fallback is ONLY for when AI Maestro is completely unreachable. Under normal conditions, always use the `agent-messaging` skill to send messages.
+   > **Note**: This offline fallback is ONLY for when AI Maestro is completely unreachable. Under normal conditions, always use `amp-send` to send messages.
 
    ```bash
    mkdir -p .claude/queue/outbox
@@ -124,7 +124,7 @@ When AI Maestro is unavailable, follow this protocol:
 
 Process queued messages when AI Maestro recovers:
 
-When AI Maestro recovers, flush the queue by sending each queued message using the `agent-messaging` skill, then remove the processed queue files.
+When AI Maestro recovers, flush the queue by sending each queued message with `amp-send`, then remove the processed queue files.
 
 ### 1.4 Fallback Coordination
 
@@ -233,7 +233,7 @@ Follow this escalation sequence **in order**:
 
 **Step 1: First Reminder (when state = No ACK or No Progress)**
 
-Send a first reminder using the `agent-messaging` skill:
+Send a first reminder using `amp-send --type request --priority high`:
 - **Recipient**: the unresponsive agent session name
 - **Subject**: "Progress Check: Task <TASK_ID>"
 - **Content**: "Please provide status update for task <TASK_ID>. Awaiting response."
@@ -243,7 +243,7 @@ Send a first reminder using the `agent-messaging` skill:
 
 **Step 2: Urgent Reminder (when state = Unresponsive after Step 1)**
 
-Send an urgent escalation using the `agent-messaging` skill:
+Send an urgent escalation using `amp-send --type request --priority urgent`:
 - **Recipient**: the unresponsive agent session name
 - **Subject**: "URGENT: Task <TASK_ID> - Response Required"
 - **Content**: "No response to previous reminder. Task may be reassigned if no response."

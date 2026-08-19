@@ -29,14 +29,14 @@ Reusable JSON message templates for agent coordination, task assignment, status 
 1. Identify the communication scenario (task assignment, status report, approval, escalation)
 2. Select the appropriate template from section 2 reference files
 3. Fill in template fields with task-specific values
-4. Send via `agent-messaging` skill and wait for response
+4. Send via the `amp-send` CLI and wait for response
 5. Log the exchange in the delegation log
 
 Copy this checklist and track your progress:
 
 - [ ] Identify communication scenario (task assignment, status report, approval, escalation)
 - [ ] Select the appropriate template from section 2
-- [ ] Fill in template fields and send via `agent-messaging` skill
+- [ ] Fill in template fields and send via `amp-send` CLI
 - [ ] Wait for response and log the exchange in the delegation log
 
 ## 1. AI Maestro Message Format
@@ -64,7 +64,7 @@ See also: [references/error-handling-quickref.md](references/error-handling-quic
 See: [references/examples.md](references/examples.md)
 <!-- TOC: Full Task Assignment Flow | Example 1: Send Task Assignment | Example 2: Send Status Request | Example 3: Escalate to Assistant Manager -->
 
-**Input:** Send task assignment to agent via `agent-messaging` skill with scenario=task_assignment, to=agent-name, subject="Run tests"
+**Input:** Send task assignment to agent via `amp-send agent-name "Run tests" "<body>" --type task` with scenario=task_assignment
 **Output:** `{"status":"sent","message_id":"msg-12345"}`
 
 ## Output

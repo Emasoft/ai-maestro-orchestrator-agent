@@ -54,7 +54,7 @@
 
 **WRONG** (embedding config in message):
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -71,7 +71,7 @@
 
 **CORRECT** (referencing central config):
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -112,7 +112,7 @@ uv venv --python 3.12
 source .venv/bin/activate
 # ... implement feature ...
 
-# Step 5: Report back using the agent-messaging skill
+# Step 5: Report back using amp-send
 # Send a task-completion message to orchestrator-master
 # Include: type (task-completion), status (success),
 # and the list of configs followed
@@ -137,7 +137,7 @@ source .venv/bin/activate
 
 ### Change Notification Message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -166,7 +166,7 @@ source .venv/bin/activate
 
 **Acknowledgment message**:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -194,7 +194,7 @@ source .venv/bin/activate
 
 **Conflict report**:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -241,7 +241,7 @@ Every update to any file in `design/config/` or `design/specs/` MUST trigger a c
 echo "Updated content" >> design/config/toolchain.md
 
 # 2. Send change notification
-Send a config change notification to all active agents using the `agent-messaging` skill:
+Send a config change notification to all active agents using `amp-send`:
 - **Recipient**: broadcast to all active agents
 - **Subject**: "CONFIG UPDATE: toolchain.md changed"
 - **Content**: notification of changed files and required action

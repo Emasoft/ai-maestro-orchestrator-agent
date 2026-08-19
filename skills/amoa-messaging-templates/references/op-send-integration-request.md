@@ -41,7 +41,7 @@ Send a request from Orchestrator (AMOA) to Integrator (AMIA) for code integratio
 
 2. **Prepare integration request message**:
 
-   > **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+   > **Note**: Use the `amp-send` CLI to send messages. The JSON structure below shows the message content.
 
    ```json
    {
@@ -61,7 +61,7 @@ Send a request from Orchestrator (AMOA) to Integrator (AMIA) for code integratio
    }
    ```
 
-3. **Send the message** using the `agent-messaging` skill with the prepared payload.
+3. **Send the message** using the `amp-send` CLI with the prepared payload as the body.
 
    **Verify**: confirm the message was delivered successfully.
 
@@ -85,7 +85,7 @@ Send a request from Orchestrator (AMOA) to Integrator (AMIA) for code integratio
 
 ## Example
 
-Send an integration request using the `agent-messaging` skill:
+Send an integration request using `amp-send`:
 - **Recipient**: `amia-main`
 - **Subject**: "Integration Request: PR #456"
 - **Content**: "Please perform code review and CI verification on PR #456"

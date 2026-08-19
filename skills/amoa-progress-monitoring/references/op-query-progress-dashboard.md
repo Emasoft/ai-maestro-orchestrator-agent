@@ -124,9 +124,8 @@ echo "Stale tasks (>2h): $STALE_COUNT"
 ### Step 5: Query Agent Message Activity
 
 ```bash
-# Use the agent-messaging skill to retrieve recent messages (last 50)
-# from the orchestrator's inbox, then group by sender to produce
-# per-agent activity counts and last-seen timestamps
+# Use amp-inbox (last 50) from the orchestrator's inbox, then group by
+# sender to produce per-agent activity counts and last-seen timestamps
 RECENT_MESSAGES=$(# retrieve and group messages by agent)
 
 echo "Agent activity:"

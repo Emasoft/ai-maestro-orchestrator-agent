@@ -9,9 +9,9 @@
 
 # Resource and Skill Request Templates
 
-Templates for agents requesting resources or capabilities from AMOA, and the formal JSON format for AMOA acknowledging AMCOS task assignments. Use the `agent-messaging` skill for all message operations.
+Templates for agents requesting resources or capabilities from AMOA, and the formal JSON format for AMOA acknowledging AMCOS task assignments. Use the `amp-send`/`amp-inbox`/`amp-read`/`amp-reply` CLIs for all message operations.
 
-> **Note**: Use the agent-messaging skill to send every message below. Each JSON structure shown is the message *content*, not a raw API payload.
+> **Note**: Use the `amp-send` CLI to send every message below. Each JSON structure shown is the message *content*, not a raw API payload.
 
 ---
 

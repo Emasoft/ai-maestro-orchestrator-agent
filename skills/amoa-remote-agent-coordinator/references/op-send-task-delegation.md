@@ -52,13 +52,13 @@ Send a prepared task delegation message to a remote agent via AI Maestro.
 
 ### Step 1: Verify Agent Availability
 
-Use the `agent-messaging` skill to query the agent registry and verify the target agent is available (state is "available" or "idle"). If the agent is busy, log a warning.
+Use AMP messaging (amp-send/amp-inbox CLIs) to query the agent registry and verify the target agent is available (state is "available" or "idle"). If the agent is busy, log a warning.
 
 **Verify**: confirm agent state before proceeding.
 
 ### Step 2: Send Task Message
 
-Send a task delegation message using the `agent-messaging` skill:
+Send a task delegation message using `amp-send` (`--type task --priority normal`):
 - **Recipient**: the target agent session name
 - **Subject**: "Task Assignment: #[ISSUE_NUMBER] - [TASK_TITLE]"
 - **Content**: the full delegation message with instructions
@@ -69,7 +69,7 @@ Send a task delegation message using the `agent-messaging` skill:
 **Verify**: confirm message delivery.
 
 ```bash
-# NOTE: The delegation message is sent using the agent-messaging skill
+# NOTE: The delegation message is sent using amp-send
 # The data fields include task_id, files_in_scope, and completion_criteria
   }'
 ```

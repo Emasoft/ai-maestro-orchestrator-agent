@@ -67,7 +67,7 @@
 ## 2.0 Proactive Monitoring Principles
 
 1. **PROACTIVELY poll** for agent status every 10-15 minutes during active work
-2. **PROACTIVELY send** status request messages using the `agent-messaging` skill if no update received
+2. **PROACTIVELY send** status request messages using `amp-send` if no update received
 3. **PROACTIVELY offer** solutions when agents report blockers
 4. **PROACTIVELY remind** agents of pending tasks (no arbitrary deadlines per RULE 13)
 5. **PROACTIVELY verify** that agents don't stop until ALL tasks are complete
@@ -80,7 +80,7 @@
 
 PROACTIVELY poll for updates from remote agents at regular intervals.
 
-Check your inbox using the `agent-messaging` skill to retrieve any unread messages from remote agents.
+Check your inbox using `amp-inbox` (and `amp-read <message-id>`) to retrieve any unread messages from remote agents.
 
 **Verify**: confirm all unread messages have been processed.
 
@@ -136,7 +136,7 @@ The orchestrator MUST PROACTIVELY ensure implementers don't stop prematurely:
 
 If no update received after expected checkpoint:
 
-1. **IMMEDIATELY** - Send status-request message using the `agent-messaging` skill (don't wait)
+1. **IMMEDIATELY** - Send status-request message using `amp-send` (don't wait)
 2. **After 5 minutes** - Send follow-up with increased urgency
 3. **After 10 minutes** - Send "Are you stuck? I can help" message
 4. **After 15 minutes** - Mark agent as potentially offline, prepare reassignment
@@ -148,7 +148,7 @@ If no update received after expected checkpoint:
 
 ### 7.1 Status Request Message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -165,7 +165,7 @@ If no update received after expected checkpoint:
 
 ### 7.2 Unblocking Assistance Message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -182,7 +182,7 @@ If no update received after expected checkpoint:
 
 ### 7.3 Completion Verification Message
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {
@@ -283,7 +283,7 @@ If no update received after expected checkpoint:
 
 After completing each monitoring cycle:
 
-- [ ] **Verify**: confirm all status request messages were delivered via the `agent-messaging` skill's sent messages feature
+- [ ] **Verify**: confirm all status request messages were delivered via `amp-send` (check delivery with `amp-inbox`/`amp-read` on the recipient side, or the sender's sent-messages record)
 - [ ] **Verify**: confirm agent responses were received and processed within expected timeframes
 - [ ] **Verify**: confirm any escalation messages reached AMCOS or AMAMA successfully
 - [ ] **Verify**: confirm kanban board reflects current task statuses accurately

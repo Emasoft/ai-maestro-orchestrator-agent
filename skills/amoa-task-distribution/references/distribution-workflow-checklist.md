@@ -18,7 +18,7 @@ Follow these steps to distribute tasks to agents:
    5. Remove any existing `assign:*` label from the issue
    6. Add `assign:<agent-name>` label to the issue
    7. Update issue status from `status:ready` to `status:dev`
-   8. Send task assignment message via AI Maestro using the `agent-messaging` skill (see assignment protocol)
+   8. Send task assignment message via `amp-send --type task --priority high` (see assignment protocol)
    9. Wait for agent ACK before considering next task
    10. Log assignment in delegation log file
 
@@ -38,6 +38,6 @@ Copy this checklist and track your progress:
 - [ ] Remove any existing `assign:*` label from the issue
 - [ ] Add `assign:<agent-name>` label to the issue
 - [ ] Update issue status from `status:ready` to `status:dev`
-- [ ] Send task assignment message via AI Maestro using the `agent-messaging` skill
+- [ ] Send task assignment message via `amp-send --type task --priority high`
 - [ ] Wait for agent ACK before considering next task
 - [ ] Log assignment in delegation log file

@@ -75,17 +75,10 @@ gh issue close $BLOCKER_ISSUE --comment "Resolved: $RESOLUTION"
 # Step 5-6: Update labels
 gh issue edit $ISSUE --remove-label "status:blocked" --add-label "$PREVIOUS_STATUS"
 
-# Step 8: Notify agent using the agent-messaging skill:
-# - Recipient: $AGENT
-# - Subject: "Blocker Resolved: Task #$ISSUE"
-# - Content: "The blocker for task #$ISSUE has been resolved: $RESOLUTION. Please resume work."
-# - Type: blocker-resolved, Priority: high
-# - Data: {
-        \"task_id\": \"$ISSUE\",
-        \"restored_status\": \"$PREVIOUS_STATUS\"
-      }
-    }
-  }"
+# Step 8: Notify agent via amp-send:
+amp-send "$AGENT" "Blocker Resolved: Task #$ISSUE" \
+  "The blocker for task #$ISSUE has been resolved: $RESOLUTION. Please resume work. task_id=$ISSUE restored_status=$PREVIOUS_STATUS" \
+  --type status --priority high
 ```
 
 ## Output

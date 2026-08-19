@@ -18,7 +18,7 @@ Templates for handling changes that occur while agents are actively working on a
 
 Use this template when the Chief of Staff (AMCOS) sends a requirement change after task delegation has already occurred. This happens when the Architect (AMAA) revises specifications, when the user changes scope through AMAMA, or when external constraints force a requirement adjustment.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 1.2 Incoming message template from AMCOS
 
@@ -94,7 +94,7 @@ Requirement update received from AMCOS
 
 Send this acknowledgment after receiving and processing a mid-task requirement update from AMCOS (Section 1). AMCOS expects an acknowledgment confirming that AMOA has understood the change and has begun relaying it to affected agents.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 2.2 Acknowledgment message template
 
@@ -154,7 +154,7 @@ Composing ACK for AMCOS
 
 Use this template when AMOA needs to inform a working agent that one or more modules in their assignment have changed. This is the message AMOA sends after receiving and acknowledging a requirement update from AMCOS (Sections 1 and 2).
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 3.2 Notification message template
 
@@ -256,7 +256,7 @@ AMOA sends module modification to agent
 
 Use this template when the priority of an active task changes. Priority changes come from AMCOS (who receives them from the user via AMAMA or from project-level decisions). AMOA must relay the new priority to the working agent so the agent adjusts their pace and resource allocation.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 4.2 Notification message template
 
@@ -349,7 +349,7 @@ AMOA sends priority change to agent
 
 Use this template when the Assistant Manager (AMAMA) forwards a user decision back to AMOA. This happens after AMOA (or another agent via AMOA) escalated a question or decision to the user. AMAMA collects the user's answer and sends it to AMOA, who must then relay it to the agent that originally needed the decision.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 5.2 Incoming decision message from AMAMA
 

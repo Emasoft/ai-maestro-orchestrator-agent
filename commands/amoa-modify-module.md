@@ -35,7 +35,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/amoa_modify_module.py" modify $ARGUMENTS
    - Updates labels if priority changed
 
 3. **Notifies Assigned Agent** (if assigned)
-   - Sends update message via AI Maestro using the `agent-messaging` skill
+   - Sends update message via AI Maestro using the `amp-send` CLI (`--type notification`)
    - Agent must acknowledge spec change
 
 ## Restrictions

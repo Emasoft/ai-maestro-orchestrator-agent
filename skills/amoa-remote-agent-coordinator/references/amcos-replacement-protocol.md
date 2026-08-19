@@ -78,7 +78,7 @@ AMCOS sends replacement notifications via AI Maestro with message type `agent_re
 
 ### Step 1: Acknowledge AMCOS Notification
 
-**Immediately** send an acknowledgment message to AMCOS using the `agent-messaging` skill:
+**Immediately** send an acknowledgment message to AMCOS using `amp-send` (`--type response`):
 - **Recipient**: `amcos-monitor`
 - **Subject**: "ACK: Agent Replacement"
 - **Content**: "Replacement protocol initiated for [failed_agent_session]"
@@ -198,7 +198,7 @@ This command:
 
 Send via AI Maestro:
 
-Send a handoff message to the replacement agent using the `agent-messaging` skill:
+Send a handoff message to the replacement agent using `amp-send` (`--type task`):
 - **Recipient**: `implementer-2` (the replacement agent)
 - **Subject**: "Task Handoff from [failed_agent]"
 - **Content**: "You are replacing [failed_agent] on task [task_id]. Full handoff document: [URL]. CRITICAL: Read entire handoff before starting work. User requirements are immutable (RULE 14). Acknowledge receipt and complete Instruction Verification Protocol."
@@ -221,7 +221,7 @@ The replacement agent MUST send acknowledgment confirming:
 
 After replacement agent acknowledges:
 
-Send a completion confirmation to AMCOS using the `agent-messaging` skill:
+Send a completion confirmation to AMCOS using `amp-send` (`--type status`):
 - **Recipient**: `amcos-monitor`
 - **Subject**: "Replacement Complete"
 - **Content**: "Replacement protocol completed. New agent [replacement_agent_session] acknowledged and ready. Task UUID [task_uuid] preserved."

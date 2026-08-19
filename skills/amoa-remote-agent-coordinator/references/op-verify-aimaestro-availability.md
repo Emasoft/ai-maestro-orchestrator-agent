@@ -44,19 +44,19 @@ Verify that the AI Maestro messaging system is running and accessible before att
 
 ### Step 1: Check API Health Endpoint
 
-Use the `agent-messaging` skill to perform a health check on the AI Maestro service. Verify it returns a healthy status (HTTP 200).
+Use AMP messaging (`amp-send`/`amp-inbox` CLIs) to perform a health check on the AI Maestro service. Verify it returns a healthy status (HTTP 200).
 
 **Verify**: confirm the health check response indicates the service is operational.
 
 ### Step 2: Verify Agent Registry Access
 
-Use the `agent-messaging` skill to query the agent registry and list all registered agents. Verify at least one remote agent is registered.
+Use AMP messaging (`amp-send`/`amp-inbox` CLIs) to query the agent registry and list all registered agents. Verify at least one remote agent is registered.
 
 **Verify**: confirm the agent count is greater than zero.
 
 ### Step 3: Test Message Send Capability
 
-Optionally, send a self-test ping message using the `agent-messaging` skill:
+Optionally, send a self-test ping message using `amp-send`:
 - **Recipient**: your own session name (self-ping)
 - **Subject**: "Health Check Ping"
 - **Content**: "Self-test"

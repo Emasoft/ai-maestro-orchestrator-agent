@@ -497,7 +497,7 @@ All 2000 lines analyzed. Summary written to detail file includes full stack trac
 
 **Message Format:**
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages — the template fills the body it transmits. The JSON structure below shows the message content.
 
 ```json
 {

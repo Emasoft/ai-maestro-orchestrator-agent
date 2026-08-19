@@ -77,7 +77,7 @@ echo "First reminder was sent at: $FIRST_REMINDER_TIME"
 # Check if agent responded after first reminder
 FIRST_REMINDER_EPOCH=$(date -j -f "%Y-%m-%dT%H:%M:%S" "${FIRST_REMINDER_TIME%.*}" +%s)
 
-# Use the agent-messaging skill to check inbox for messages from the agent
+# Use amp-inbox/amp-read to check inbox for messages from the agent
 # received after the first reminder timestamp. Filter by sender matching
 # $AGENT_NAME and timestamp after $FIRST_REMINDER_EPOCH.
 RESPONSE_AFTER_REMINDER=$(# check if agent responded after first reminder)
@@ -95,12 +95,9 @@ TASK_TITLE=$(gh issue view $TASK_ID --json title | jq -r '.title')
 
 TASK_TITLE=$(gh issue view $TASK_ID --json title | jq -r '.title')
 
-# Send urgent escalation using the agent-messaging skill:
-# - Recipient: $AGENT_NAME
-# - Subject: "URGENT: #$TASK_ID - Response Required Immediately"
-# - Content: "URGENT ESCALATION: No response received for task #$TASK_ID ($TASK_TITLE). A first reminder was sent at $FIRST_REMINDER_TIME with no response. Please respond immediately with your current status. If no response within 30 minutes, this task may be reassigned."
-# - Type: escalation, Priority: urgent
-# - Data: task_id, escalation_level: 2, first_reminder_time, reassignment_warning: true
+# amp-send $AGENT_NAME "URGENT: #$TASK_ID - Response Required Immediately" \
+#   "URGENT ESCALATION: No response received for task #$TASK_ID ($TASK_TITLE). A first reminder was sent at $FIRST_REMINDER_TIME with no response. Please respond immediately with your current status. If no response within 30 minutes, this task may be reassigned." \
+#   --type request --priority urgent
 # Verify: confirm message delivery
 ```
 

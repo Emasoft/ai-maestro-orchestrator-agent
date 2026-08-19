@@ -19,7 +19,7 @@ This document provides complete message templates for the full reassignment flow
 
 Send this message when the Orchestrator (AMOA) decides to remove an agent from a task and replace it with a different agent. Reasons for reassignment include performance issues, agent unavailability, skill mismatch between the agent and the task requirements, or changing project needs that require a different agent profile.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 1.2 Reassignment notification message template
 
@@ -97,7 +97,7 @@ Send reassignment notification to old agent
 
 After the old agent acknowledges the reassignment notification, it should provide a structured work summary before the deadline specified in the notification. This summary contains all information the new agent will need to continue the work.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 2.2 Work summary response message template
 
@@ -184,7 +184,7 @@ Wait for work summary from old agent
 
 Send this message after receiving and processing the old agent's work summary (or after reconstructing context if the old agent was unresponsive). This message gives the new agent everything it needs to continue the task from where the old agent stopped.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 3.2 Reassignment assignment message template
 
@@ -295,7 +295,7 @@ Send reassignment assignment to new agent
 
 This notification is needed when AMCOS reports that the original agent (the one that was replaced) has recovered and is available again. The Orchestrator must decide whether to keep the replacement agent on the task or revert to the original agent. This decision is then communicated to both agents: the agent being removed receives a graceful stop message, and the agent continuing receives a confirmation.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 4.2 Recovery decision notification message template
 
@@ -417,7 +417,7 @@ AMCOS reports original agent recovered
 
 When AMCOS sends a recovery report indicating that a previously failed or removed agent is now available again, the Orchestrator must evaluate the situation and respond to AMCOS with the decision and its rationale.
 
-> **Note**: Use the agent-messaging skill to send messages.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`.
 
 ### 5.2 AMOA response to keep replacement agent template
 

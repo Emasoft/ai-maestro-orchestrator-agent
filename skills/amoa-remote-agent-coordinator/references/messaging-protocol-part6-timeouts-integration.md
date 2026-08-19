@@ -76,7 +76,7 @@ T+900s:  No response → Mark agent unresponsive, reassign task
 
 When retrying a message, include metadata about the retry:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Use `amp-send` to send messages. The JSON structure below shows the message content that fills the body `amp-send` transmits.
 
 ```json
 {

@@ -124,7 +124,7 @@ ORCHESTRATOR                              IMPLEMENTER
 
 ### 2.1 Step 1: Send Update Notification
 
-Send AI Maestro message using the `agent-messaging` skill with:
+Send AI Maestro message using `amp-send` with:
 - **WHAT changed** - Specific requirements/design elements modified
 - **WHY it changed** - Rationale for the change
 - **IMPACT assessment** - What parts of current work are affected

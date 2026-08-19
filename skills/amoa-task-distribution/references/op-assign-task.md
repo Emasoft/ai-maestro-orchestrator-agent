@@ -50,7 +50,7 @@ Assign a ready task to a selected agent by updating GitHub labels and sending an
 1. Remove any existing `assign:*` label from the issue
 2. Add new `assign:<agent-name>` label to the issue
 3. Update status from `status:ready` to `status:dev`
-4. Send task assignment message via AI Maestro using the `agent-messaging` skill
+4. Send task assignment message via `amp-send --type task --priority high`
 5. Wait for agent ACK
 6. Log assignment in delegation log
 
@@ -77,26 +77,15 @@ gh issue edit $ISSUE --remove-label "status:ready" --add-label "status:dev"
 ### Step 4: Send AI Maestro Message
 
 ```bash
-# Send task assignment using the agent-messaging skill:
-# - Recipient: $AGENT
-# - Subject: "Task Assignment: Issue #$ISSUE"
-# - Content: "You are assigned issue #$ISSUE. Success criteria: [criteria]. Report when complete."
-# - Type: request, Priority: high
-# - Data: task_id, issue_number, handoff_doc
+amp-send "$AGENT" "Task Assignment: Issue #$ISSUE" \
+  "You are assigned issue #$ISSUE. Success criteria: [criteria]. Report when complete. task_id=$ISSUE handoff_doc=docs_dev/handoffs/task-$ISSUE.md" \
+  --type task --priority high
 # Verify: confirm message delivery
-# {
-#   "data": {
-#     "task_id": "$ISSUE",
-#     "issue_number": $ISSUE,
-#     "handoff_doc": "docs_dev/handoffs/task-$ISSUE.md"
-#   }
-    }
-  }"
 ```
 
 ## AI Maestro Message Format
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: `amp-send` transmits the message. The JSON structure below shows the message content the send fills in.
 
 ```json
 {
@@ -147,7 +136,7 @@ After sending assignment, wait for agent acknowledgment. See amoa-progress-monit
 - [ ] Remove existing `assign:*` label from the issue
 - [ ] Add `assign:<agent-name>` label to the issue
 - [ ] Update status from `status:ready` to `status:dev`
-- [ ] Send task assignment message via AI Maestro using the `agent-messaging` skill
+- [ ] Send task assignment message via `amp-send --type task --priority high`
 - [ ] Wait for agent ACK
 - [ ] Log assignment in delegation log file
 

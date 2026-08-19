@@ -62,7 +62,7 @@ The API automatically resolves multiple formats:
 
 Always use full session names when sending messages. Aliases may be ambiguous if multiple agents have similar names.
 
-When sending messages using the `agent-messaging` skill, always use the full session name (e.g., `libs-svg-svgbbox`) rather than a short alias (e.g., `svgbbox`) to avoid ambiguity.
+When sending messages using `amp-send`, always use the full session name (e.g., `libs-svg-svgbbox`) rather than a short alias (e.g., `svgbbox`) to avoid ambiguity.
 
 ---
 
@@ -90,7 +90,7 @@ echo '{"type":"task","message":"test"}' | jq .
 
 ### 4.3.2 Fixing 404 Errors
 
-1. List all registered agents using the `agent-messaging` skill to query the agent registry.
+1. List all registered agents via AMP messaging (`amp-send`/`amp-inbox` CLIs) to query the agent registry.
 2. Verify exact session name spelling (case-sensitive)
 3. Check if agent session has expired
 4. Wait for agent re-registration if recently restarted
@@ -112,7 +112,7 @@ When a message cannot be delivered:
 
 ### Retry Example
 
-Attempt to send the message using the `agent-messaging` skill with exponential backoff:
+Attempt to send the message using `amp-send` with exponential backoff:
 - Attempt 1: send immediately
 - Attempt 2: wait 5 seconds, then retry
 - Attempt 3: wait 15 seconds, then retry
@@ -214,7 +214,7 @@ Instead of embedding large content:
 
 ### Setting Environment Variables
 
-AI Maestro AMP handles routing automatically. No manual environment variable configuration is needed. Use the `agent-messaging` skill to send and receive messages.
+AI Maestro AMP handles routing automatically. No manual environment variable configuration is needed. Use AMP messaging (`amp-send`/`amp-inbox` CLIs) to send and receive messages.
 
 ---
 

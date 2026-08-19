@@ -174,7 +174,7 @@ gh issue comment <ISSUE_NUM> --body "**Task Completed**
 
 ### Step 9: Notify Orchestrator
 
-Send a completion notification using the `agent-messaging` skill:
+Send a completion notification using `amp-send`:
 - **Recipient**: `orchestrator-master`
 - **Subject**: "Task Complete: Issue #<ISSUE_NUM>"
 - **Content**: "Issue #<ISSUE_NUM> completed by <agent-id>"

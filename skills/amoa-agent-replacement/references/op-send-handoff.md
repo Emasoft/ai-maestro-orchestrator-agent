@@ -67,7 +67,7 @@ HANDOFF_URL="https://github.com/<OWNER>/<REPO>/blob/main/docs/handoffs/handoff-*
 
 ### Step 3: Send AI Maestro Notification
 
-Send the handoff notification using the `agent-messaging` skill:
+Send the handoff notification using `amp-send --type task --priority urgent`:
 - **Recipient**: the replacement agent session name
 - **Subject**: "URGENT: Task Handoff from <FAILED_AGENT>"
 - **Content**: "You are receiving tasks from <FAILED_AGENT> due to <FAILURE_REASON>. Please review the handoff document and acknowledge receipt."
@@ -120,7 +120,7 @@ echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) HANDOFF_SENT to=$REPLACEMENT_AGENT" >> orch
 
 If no ACK within timeout:
 
-Send a retry reminder using the `agent-messaging` skill:
+Send a retry reminder using `amp-send --type request --priority urgent`:
 - **Recipient**: the replacement agent session name
 - **Subject**: "REMINDER: Task Handoff Acknowledgment Needed"
 - **Content**: "Please acknowledge the task handoff sent at <SEND_TIME>. Tasks are waiting."
@@ -172,7 +172,7 @@ HANDOFF_URL=$(gh issue view "$PRIMARY_ISSUE" --json url --jq '.url')
 
 # 2. Send AI Maestro notification
 echo "Sending notification to $REPLACEMENT_SESSION..."
-# Use the agent-messaging skill to send the handoff notification:
+# Use `amp-send --type task --priority urgent` to send the handoff notification:
 # - Recipient: $REPLACEMENT_SESSION
 # - Subject: "URGENT: Task Handoff from $FAILED_AGENT"
 # - Content: "You are receiving tasks from $FAILED_AGENT. Review handoff at: $HANDOFF_URL"
@@ -190,7 +190,7 @@ echo "Handoff delivery complete. Awaiting ACK within 30 minutes."
 
 - [ ] Upload handoff document to GitHub
 - [ ] Get URL for handoff document
-- [ ] Send AI Maestro notification to replacement agent using the `agent-messaging` skill
+- [ ] Send AI Maestro notification to replacement agent using `amp-send`
 - [ ] Include urgency level
 - [ ] Specify ACK requirements
 - [ ] Set ACK timeout

@@ -15,7 +15,7 @@
 ```bash
 # Get agent's last message timestamp
 AGENT="implementer-1"
-# Use the agent-messaging skill to retrieve messages for the agent
+# Use amp-inbox/amp-read to retrieve messages for the agent
 # and extract the timestamp of the most recent message
 echo "Agent $AGENT last seen: $LAST_MESSAGE"
 
@@ -29,7 +29,7 @@ echo "Task #$ISSUE assigned at: $ASSIGNED_AT"
 
 ## Example 2: Send First Reminder
 
-Send a status request using the `agent-messaging` skill:
+Send a status request using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "Status Request: #42"
 - **Content**: "What is your current status on #42? Report progress, blockers, and next steps."
@@ -40,7 +40,7 @@ Send a status request using the `agent-messaging` skill:
 
 ## Example 3: Escalate to Urgent
 
-Send an urgent escalation using the `agent-messaging` skill:
+Send an urgent escalation using `amp-send`:
 - **Recipient**: `implementer-1`
 - **Subject**: "URGENT: #42 - Response Required"
 - **Content**: "No response received. Please provide status immediately or task may be reassigned."

@@ -22,7 +22,7 @@
 
 ### Base URL
 
-AI Maestro AMP messaging (handles routing automatically). Use the `agent-messaging` skill to send and receive messages.
+AI Maestro AMP messaging (handles routing automatically). Use the `amp-send`/`amp-inbox`/`amp-read`/`amp-reply` CLIs to send and receive messages.
 
 ### Available Endpoints
 
@@ -39,7 +39,7 @@ AI Maestro AMP messaging (handles routing automatically). Use the `agent-messagi
 
 Every message in the AI Maestro system follows this schema:
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send via `amp-send <recipient> "<subject>" "<body>"`. The JSON structure below shows the message content to put in the body.
 
 ```json
 {

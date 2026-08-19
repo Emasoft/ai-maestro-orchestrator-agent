@@ -316,7 +316,7 @@ When handing off documents between plugins:
 
 1. **Sender** creates handoff document in `design/handoffs/`
 2. **Sender** includes all referenced document UUIDs
-3. **Sender** sends AI Maestro message using the `agent-messaging` skill with handoff UUID
+3. **Sender** sends AI Maestro message using `amp-send --type notification` with handoff UUID
 4. **Receiver** searches for handoff by UUID
 5. **Receiver** validates handoff document
 6. **Receiver** reads all referenced documents

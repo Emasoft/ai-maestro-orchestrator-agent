@@ -202,12 +202,10 @@ Verified at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
   # Close issue
   gh issue close $TASK_ID
 
-  # Notify agent of success using the agent-messaging skill:
-  # - Recipient: $AGENT_NAME
-  # - Subject: "Task Approved: #$TASK_ID"
-  # - Content: "Congratulations! Task #$TASK_ID has been verified and approved. Your PR is ready for merge."
-  # - Type: approval, Priority: normal
-  # - Data: task_id, pr_number
+  # Notify agent of success:
+  # amp-send $AGENT_NAME "Task Approved: #$TASK_ID" \
+  #   "Congratulations! Task #$TASK_ID has been verified and approved. Your PR is ready for merge." \
+  #   --type response --priority normal
 else
   # VERIFICATION FAILED
   echo "VERIFICATION FAILED - Missing: ${MISSING_ITEMS[*]}"
@@ -215,12 +213,10 @@ else
   # Send revision request
   MISSING_LIST=$(printf '%s\n' "${MISSING_ITEMS[@]}")
 
-  # Send revision request using the agent-messaging skill:
-  # - Recipient: $AGENT_NAME
-  # - Subject: "Revision Required: #$TASK_ID"
-  # - Content: "Task completion verification failed. Please address the following: $MISSING_LIST. Update your work and report completion again."
-  # - Type: revision, Priority: high
-  # - Data: task_id, missing_items
+  # Send revision request:
+  # amp-send $AGENT_NAME "Revision Required: #$TASK_ID" \
+  #   "Task completion verification failed. Please address the following: $MISSING_LIST. Update your work and report completion again." \
+  #   --type request --priority high
 
   # Add comment to issue
   gh issue comment $TASK_ID --body "**COMPLETION VERIFICATION FAILED**

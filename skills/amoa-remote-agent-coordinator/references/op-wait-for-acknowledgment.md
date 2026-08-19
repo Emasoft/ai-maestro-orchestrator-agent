@@ -71,9 +71,9 @@ while true; do
     break
   fi
 
-  # Check for ACK message using the agent-messaging skill
+  # Check for ACK message via amp-inbox
   # Query inbox for messages from the target agent containing "[ACK]" in the subject
-  # Use the agent-messaging skill to retrieve and filter messages
+  # Use amp-inbox + amp-read to retrieve and filter messages
 
   if [ -n "$ACK_MESSAGE" ]; then
     echo "ACK received from $AGENT_NAME"
@@ -100,7 +100,7 @@ QUESTIONS=$(echo "$ACK_MESSAGE" | grep -A5 "Questions:" | tail -n +2)
 
 If timeout reached without ACK:
 
-Send a reminder message using the `agent-messaging` skill:
+Send a reminder message using `amp-send` (`--type notification --priority high`):
 - **Recipient**: the agent session name
 - **Subject**: "Reminder: ACK Required for #[TASK_ID]"
 - **Content**: "Please acknowledge receipt of task #[TASK_ID] immediately. No ACK received within 5 minutes."
@@ -111,7 +111,7 @@ Send a reminder message using the `agent-messaging` skill:
 **Verify**: confirm message delivery.
 
 ```bash
-# NOTE: The reminder is sent using the agent-messaging skill as described above
+# NOTE: The reminder is sent using amp-send as described above
 
 # Log timeout for escalation tracking
 echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) | NO_ACK | #$TASK_ID | $AGENT_NAME | Reminder sent" >> assignment_log.txt

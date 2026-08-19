@@ -95,13 +95,13 @@ Transfer a module from one implementer agent to another. This involves notifying
    - New agent is different from current
    - New agent is registered
 
-2. **Request progress report** from old agent (if responsive). Send using the `agent-messaging` skill:
+2. **Request progress report** from old agent (if responsive). Send using `amp-send`:
    - **Recipient**: the old agent session name
    - **Subject**: "Progress Report Request: <module_id>"
    - **Content**: "Please provide current progress on module before reassignment."
    - **Type**: `request`, **Priority**: `urgent`
 
-3. **Notify old agent to stop**. Send using the `agent-messaging` skill:
+3. **Notify old agent to stop**. Send using `amp-send`:
    - **Recipient**: the old agent session name
    - **Subject**: "STOP: Module Reassigned - <module_id>"
    - **Content**: "Stop work on this module immediately. It is being reassigned."
