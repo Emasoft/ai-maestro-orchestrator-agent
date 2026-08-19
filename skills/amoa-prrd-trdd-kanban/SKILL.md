@@ -52,6 +52,12 @@ be seeded yet, test for the contract itself —
 `grep -q min-approval-requirement .claude/rules/aimaestro-trdd-approval.md` — never
 a plugin version or branch name. A version check answers a question about
 packaging; the behaviour you actually need is what the seeded rules say.
+**Keep grep's exit trichotomy when probing:** `0` = contract present, `1` =
+absent, `2` = THE PROBE COULD NOT RUN (unreadable path, bad pattern). Never
+collapse `2` into `1` with a bare boolean (`if grep -q …; then … else <treat as
+absent>`): a broken probe then silently reports the contract missing. Branch
+three ways, or at minimum surface exit `2` as an error. The same trichotomy
+governs `trddgrep`/`prrdgrep`/`specgrep` — never `trddgrep validate || fallback`.
 
 ## Prerequisites
 
@@ -133,6 +139,13 @@ Skill(ai-maestro-plugin:ama-unblock)
 Skill(ai-maestro-plugin:ama-trdd-find)      # filter: column = dispatch
 Skill(ai-maestro-plugin:ama-kanban-render)  # group by assignee
 ```
+
+The `trddgrep` CLI backs these lookups and is the direct query path when a
+skill round-trip is overkill: `trddgrep` (the board), `trddgrep --column todo`
+(one column), `trddgrep show <id>` (one card + STATE block), `trddgrep next`
+(what is workable now), `trddgrep validate` (the write gate). Exit codes are
+grep's trichotomy — `0` clean · `1` findings · `2` COULD NOT RUN — and `2`
+must never be collapsed into `1`.
 
 ## Single-writer-per-domain and NPT/EHT collision avoidance
 

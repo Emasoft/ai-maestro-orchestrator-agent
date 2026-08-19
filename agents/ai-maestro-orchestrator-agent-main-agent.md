@@ -550,7 +550,10 @@ testing → ai_review → human_review → complete`, then `publish → publishe
 `superseded`). These same 17 are the AI Maestro server's `TaskStatus` and this
 plugin's `shared/amoa_kanban_vocab.py`, 1:1 — never invent, rename, or collapse
 a column, and never let a surface carry its own map. `failed` is **retryable and
-stays on the board**; it is not archived.
+stays on the board**; it is not archived. The queryable SSOT for this enum is
+spec record `3P-KAN-01` — check it with `specgrep show 3P-KAN-01` (exit `0`
+answered · `1` no match · `2` could not run; never collapse `2` into `1`)
+rather than trusting any inline copy, this one included.
 
 **Transition authority (Part B2 — the SSOT table in `ai-maestro`
 `rules/aimaestro/aimaestro-trdd-approval.md`; the code oracle

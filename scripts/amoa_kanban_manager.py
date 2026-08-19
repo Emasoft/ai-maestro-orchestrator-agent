@@ -646,6 +646,43 @@ def run_command(args: list[str]) -> tuple[int, str, str]:
     return result.returncode, result.stdout, result.stderr
 
 
+def _trdd_validate_gate(trdd_id: str, project_root: Path) -> tuple[bool, str]:
+    """The TRDD write gate (TRDD-8DH44UXH F2): `trddgrep validate` before a write.
+
+    Honours the exit trichotomy the CLI documents — 0 clean, 1 findings, 2 THE
+    GATE COULD NOT RUN — and never collapses 2 into 1 or into "clean": a gate
+    that could not run has validated nothing, so the write is refused with a
+    DISTINCT message instead of proceeding unvalidated. A missing binary or a
+    timeout is the same exit-2 class. ERROR findings on OTHER cards do not gate
+    THIS card's write — blocking the whole board on any one bad card would
+    freeze every mirror write-through.
+
+    Returns (may_write, reason-when-refused).
+    """
+    try:
+        result = subprocess.run(
+            ["trddgrep", "validate", "--min-severity", "error"],
+            capture_output=True, text=True, cwd=project_root,
+            timeout=GIT_TIMEOUT_SECONDS,
+        )
+    except FileNotFoundError:
+        return False, "trddgrep not on PATH — the write gate COULD NOT RUN (exit-2 class)"
+    except subprocess.TimeoutExpired:
+        return False, "trddgrep validate timed out — the write gate COULD NOT RUN (exit-2 class)"
+    if result.returncode == 0:
+        return True, ""
+    if result.returncode == 1:
+        mine = [row for row in result.stdout.splitlines() if trdd_id.upper() in row.upper()]
+        if mine:
+            return False, "card has validate ERRORs: " + "; ".join(mine)
+        return True, ""
+    # 2 (or anything else unexpected): could-not-run — refuse, distinctly.
+    return False, (
+        f"trddgrep validate could not run (exit {result.returncode}): "
+        f"{result.stderr.strip() or result.stdout.strip()}"
+    )
+
+
 def _write_through_to_trdd(
     issue_number: int, column: str, from_column: str | None
 ) -> bool:
@@ -684,6 +721,14 @@ def _write_through_to_trdd(
         print(
             f"WARNING: issue #{issue_number} cites {trdd_id} but no such TRDD exists "
             f"under {design_root} — board and SSOT are now out of step",
+            file=sys.stderr,
+        )
+        return False
+
+    may_write, refuse_reason = _trdd_validate_gate(trdd_id, get_project_root())
+    if not may_write:
+        print(
+            f"WARNING: TRDD write-through refused for {trdd_id}: {refuse_reason}",
             file=sys.stderr,
         )
         return False
