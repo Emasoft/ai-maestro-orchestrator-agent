@@ -1,9 +1,10 @@
 ---
 trdd-id: 66ea1bb1-0982-4d6b-b680-5b15ed1388ad
 title: Canonical-pipeline migration to CPV 2.136.1 standard — publish v1.9.2
-column: complete
+column: published
+archived: true
 created: 2026-06-22T02:43:17+0200
-updated: 2026-08-16T16:31:21+0200
+updated: 2026-08-19T09:20:00+0200
 current-owner: plugin-fixer
 assignee: plugin-fixer
 task-type: infra
@@ -74,6 +75,20 @@ the remote `cpv-remote-validate` gate). The canon publish.py template must NOT r
 - CPV pipeline-migration.md §4 (idempotency) + §6 (CI-parity defects)
 - canonical-pipeline-migration-checklist.md (87-check exit gate)
 
+## Acceptance checklist (recorded retroactively 2026-08-19 — TRDD-8DH44UXH H2; each box
+cites evidence already in this card's Approval log or in the repo)
+
+- [x] Canon `ci.yml` installed; legacy `validate.yml` removed (workflows dir = ci.yml /
+      notify-marketplace.yml / release.yml — Approval-log evidence 2026-08-16)
+- [x] Remote-validation profile preserved: `publish.py` drives `cpv-remote-validate plugin
+      --strict`; retired `lint` step removed (scripts/publish.py in repo)
+- [x] Idempotency folded into publish.py (remote-version baseline, skip-bump/commit/tag
+      guards) — orchestrator#23 closed into this card
+- [x] pyproject dev deps under `[project.optional-dependencies].dev`; CLAUDE_PRIVATE_USERNAMES
+      set in ci.yml + release.yml
+- [x] v1.9.2 published with CI green; pipeline field-proven by every release v1.9.2 → v1.13.8
+      (Approval log 2026-08-16); v1.13.9 Release run 32188563813 green 2026-08-19
+
 ## Background
 
 Fleet umbrella Emasoft/ai-maestro#44. AMAMA (MANAGER, v2.12.5) is the exemplar and
@@ -84,3 +99,6 @@ idempotency fix (folded in here).
 ## Approval log
 
 - 2026-08-16T16:31:21+0200 — APPROVED by ai-maestro hub session (fleet coordination, USER-granted 2026-08-16). testing -> complete. Evidence: .github/workflows = ci.yml/notify-marketplace.yml/release.yml (legacy validate.yml gone), scripts/publish.py uses cpv-remote-validate plugin --strict, releases shipped through v1.13.8.
+- 2026-08-19T09:20:00+0200 — MIRROR complete -> published + archive (TRDD-8DH44UXH H2): the release lane this card tracked was performed in reality on 2026-06-22 (v1.9.2 shipped via publish.py, CI green) and re-proven by every release through v1.13.9; this entry records the accomplished fact on the board, it does not originate a release. Acceptance checklist recorded retroactively from the Approval-log evidence; TERMINAL-WITHOUT-CHECKLIST validate ERROR cleared.
+
+Archived 2026-08-19T09:20:00+0200: reached terminal `published` (mirror of the v1.9.2 release performed 2026-06-22; pipeline field-proven through v1.13.9).
