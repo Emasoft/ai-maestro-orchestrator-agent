@@ -39,10 +39,9 @@ immediately surfaced 5 real board defects; 4 repaired (6B3K7S69/NSWPM93D/704ZBCR
 Release CI v1.13.9 rerun = SUCCESS (run 32188563813).
 
 ### NEXT ACTION
-Run D7 (scenario walkthroughs: dispatch→dev→testing→ai_review→complete + blocked/failed/
-replacement paths; find any non-approval STOP point) and D8 (cross-reference integrity),
-including the H1 label-taxonomy sweep below. Then decide H2 (66EA1BB1) per-card, publish the
-fix batch as a release, and report completion to the hub.
+All audit dimensions D1-D8 closed; fix commits through 8dd0855. Publish the fix batch as a
+patch release (scripts/publish.py --patch, watch CI green, rerun cancelled-flakes, never bump
+timeouts), then report completion to the hub and move this card dev→testing.
 
 ## Audit dimensions (checklist)
 
@@ -62,12 +61,16 @@ fix batch as a release, and report completion to the hub.
 - [x] D6 Integrator coordination — findings G1-G9 fixed across 2711d6d + bd1ed0b: oracle
       rewritten from Part B2, release lane to INTEGRATOR/RELEASER/DEPLOYER, assignee moves
       dev→testing only, test runner owns testing→ai_review|dev.
-- [ ] D7 Scenario walkthroughs: simulate the team loop (dispatch → dev → testing → ai_review
-      → complete) and the failure paths (blocked, failed, agent replacement); identify any
-      point where an agent would STOP other than a MANAGER/COS approval wait; fix instructions
-      that dead-end.
-- [ ] D8 Inconsistencies/missing elements: cross-reference integrity (commands ↔ scripts ↔
-      skills ↔ docs), dead references, duplicated guidance that drifted.
+- [x] D7 Scenario walkthroughs — 4 findings (D7-1..D7-4, report
+      reports/d7-walkthroughs/20260819_091934+0200-d7-scenarios.md), ALL FIXED: D7-1
+      nonexistent agent-messaging skill (413 refs/105 files) swept to the amp-* CLI (8dd0855);
+      D7-2 forbidden AMOA→AMAMA escalations rerouted via AMCOS with R6 v3 reason inline;
+      D7-3 lifecycle-authority disambiguation added (TRDD authoritative, labels mirror) to the
+      3 label-driving skills + main-agent menu; D7-4 AGENT_OPERATIONS.md refs qualified;
+      D7-5 agent-replacement now writes the TRDD assignee:/current-owner: SSOT half (967836d).
+- [x] D8 Cross-reference integrity — H1 label-taxonomy migration (d5d1588, 65 files), H2
+      closed (a3b6b66), D7-1/D7-4 dead references fixed; scenario 4 clean; remaining known
+      gap: none open on the ledger.
 
 ## Findings ledger
 
