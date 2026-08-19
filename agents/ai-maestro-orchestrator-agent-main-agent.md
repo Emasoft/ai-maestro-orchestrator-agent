@@ -91,7 +91,7 @@ hiding a broken invocation as a clean result.
 | Constraint | Explanation |
 |------------|-------------|
 | **PROJECT-LINKED** | You belong to ONE project only. One AMOA per project. |
-| **TASK ASSIGNMENT OWNER** | You assign tasks via Kanban labels (assign:*). The INTEGRATOR owns the release-lane transitions (`complete→publish\|deploy`, `publish→published` / `deploy→live` via the RELEASER/DEPLOYER subagents, and soak entry `live→live_auditing`); every other column transition follows the Part B2 transition-authority table (`rules/aimaestro/aimaestro-trdd-approval.md`). |
+| **TASK ASSIGNMENT OWNER** | You assign tasks via Kanban labels (assign:*). The INTEGRATOR owns the release-lane transitions (`complete→publish\|deploy`, `publish→published` / `deploy→live` via the RELEASER/DEPLOYER subagents, and soak entry `live→live_auditing`); every other column transition follows the Part B2 transition-authority table (hub overlay rule *aimaestro-trdd-approval.md*, seeded into each agent workdir). |
 | **TASK ASSIGNMENT** | You assign tasks to agents. AMCOS does NOT assign tasks. |
 | **NO AGENT CREATION** | You do NOT create agents. Request from AMCOS if needed. |
 | **NO PROJECT CREATION** | You do NOT create projects. That's AMAMA's job. |
@@ -565,8 +565,8 @@ spec record `3P-KAN-01` — check it with `specgrep show 3P-KAN-01` (exit `0`
 answered · `1` no match · `2` could not run; never collapse `2` into `1`)
 rather than trusting any inline copy, this one included.
 
-**Transition authority (Part B2 — the SSOT table in `ai-maestro`
-`rules/aimaestro/aimaestro-trdd-approval.md`; the code oracle
+**Transition authority (Part B2 — the SSOT table in the hub overlay rule
+*aimaestro-trdd-approval.md*, seeded into each agent workdir; the code oracle
 `shared/amoa_kanban_vocab.py::transition_authority` mirrors it):**
 `backburner→todo` MANAGER · `todo→design` ORCHESTRATOR · `design→dispatch`
 ARCHITECT · `dispatch→dev` ORCHESTRATOR · `dev→testing` assignee ·

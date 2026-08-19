@@ -38,7 +38,7 @@ reverse.
 <!-- TOC: Table of Contents | Add new columns safely (preserves existing columns and their assignments) -->
 3. Execute procedure. NEVER call `updateProjectV2Field` directly -- use `scripts/gh-project-add-columns.py`
 4. Verify JSON output. Columns: [references/kanban-column-system.md](references/kanban-column-system.md)
-<!-- TOC: Table of Contents | Standard 8-Column System | Available Scripts -->
+<!-- TOC: Table of Contents | Ratified 17-Column System | Available Scripts -->
 
 Copy this checklist and track your progress:
 
@@ -73,7 +73,7 @@ See [references/kanban-error-handling.md](references/kanban-error-handling.md)
 - [Procedures](references/kanban-procedures.md)
   <!-- TOC: PROCEDURE 1: Create Project Board | PROCEDURE 2: Add or Modify Columns | PROCEDURE 3: Move Items Between Columns | PROCEDURE 4: Sync Kanban Status | Verify gh auth has project scopes (pre-flight check) | Create the GitHub Project via `gh project create` | Add the 8 standard columns using `gh-project-add-columns.py` | Link the repository to the project | Register the project number in `.github/project.json` | ALWAYS use the safe column adder script: `scripts/gh-project-add-columns.py` | NEVER manually call `updateProjectV2Field` without preserving existing option IDs | Verify existing assignments survived after the mutation | Get the project item ID and field ID | Get the option ID for the target column | Execute `gh project item-edit` with the correct IDs | If moving to "Done", check if the linked issue was auto-closed (see pitfalls) | Run the sync script: `amoa_sync_kanban.py` | Verify label status matches board column | Resolve any conflicts (board takes precedence for manual moves) | PROCEDURE 5: Attach the Child Breakdown Under the Architect's Epic | Read the epic id from the handoff with `extract_aimaestro_task_id` (None when absent) | Create each first-level child under the epic with `amp-kanban-create-task --parent` | When the epic id is None, create the children unparented — no regression -->
 - [Column System](references/kanban-column-system.md)
-  <!-- TOC: Standard 8-Column System | Available Scripts -->
+  <!-- TOC: Ratified 17-Column System | Available Scripts -->
 - [Checklists](references/kanban-checklist.md)
   <!-- TOC: Step-by-Step Instructions | Pre-Flight Checklist | Board Setup Checklist | Task Management Checklist -->
 - [Error Handling](references/kanban-error-handling.md)

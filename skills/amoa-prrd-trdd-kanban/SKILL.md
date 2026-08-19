@@ -101,7 +101,7 @@ governs `trddgrep`/`prrdgrep`/`specgrep` — never `trddgrep validate || fallbac
    `human_review`, force-`failed`. Exempt (no approval): dispatch→dev
    assignment, red-column priority bumps, within-team reassignment.
    `shared/amoa_kanban_vocab.py::transition_authority()` mirrors the Part B2
-   table (`rules/aimaestro/aimaestro-trdd-approval.md`) exactly — consult it
+   table (hub overlay rule *aimaestro-trdd-approval.md*) exactly — consult it
    rather than recalling the table. It returns the owning actor for every row
    ORCH must not originate (`assignee`, `test-runner`, `architect`,
    `ai-reviewer`, `reviewer`, `integrator`, `releaser`, `deployer`, `manager`);
