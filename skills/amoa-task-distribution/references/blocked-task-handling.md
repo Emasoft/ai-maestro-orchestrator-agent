@@ -21,7 +21,7 @@ If an agent reports that a distributed task is blocked, AMOA must take IMMEDIATE
    gh issue create --title "BLOCKER: Missing AWS credentials" --label "type:blocker" \
      --body "Blocking task #42. Category: Access/Credentials. What's needed: AWS credentials provisioned."
    ```
-7. **Escalate** to AMAMA IMMEDIATELY with blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number.
+7. **Escalate** via AMCOS IMMEDIATELY with blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number. Per R6 v3 there is NO direct AMOA↔AMAMA edge — the AMP server refuses it (403 title_communication_forbidden); AMCOS relays to AMAMA/USER.
    - Do NOT wait or "monitor for 24h first"
    - User must be informed immediately - they may have the solution ready
 8. **Check** if any other unblocked tasks can be assigned to the waiting agent
@@ -30,12 +30,12 @@ If an agent reports that a distributed task is blocked, AMOA must take IMMEDIATE
 
 ## Blocker Escalation Message Example
 
-> **Note**: Use the `agent-messaging` skill to send messages. The JSON structure below shows the message content.
+> **Note**: Send with the `amp-send` CLI — `amp-send <recipient> "<subject>" "<body>" --priority high --type request`. The JSON structure below shows the message CONTENT the templates produce, not a payload you post directly.
 
 ```json
 {
   "from": "amoa-orchestrator",
-  "to": "amama-assistant-manager",
+  "to": "amcos-chief-of-staff",
   "subject": "BLOCKER: Task #42 - Missing API Credentials",
   "priority": "high",
   "content": {

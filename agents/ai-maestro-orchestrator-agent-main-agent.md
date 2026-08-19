@@ -56,6 +56,16 @@ menu: the agent trusts it and never discovers the skill it needed.
 | `amoa-github-action-integration` | Running Claude Code in GitHub Actions (automated PR review, comment triggers) |
 | `the-skills-menu` | The dynamic loader contract behind this menu |
 
+**Which lifecycle governs (disambiguation for the rows above):** the TRDD
+`column:` pipeline (`amoa-prrd-trdd-kanban`, Part B2) is the AUTHORITATIVE
+lifecycle. The GitHub Issues/labels workflow that `amoa-task-distribution`,
+`amoa-progress-monitoring`, `amoa-implementer-interview-protocol`,
+`amoa-kanban-management` and the remote-coordinator templates drive is its
+MIRROR: perform the TRDD write first (or alongside), then the label/board
+write, and when the two disagree the TRDD wins. Inter-agent messages go
+through the AMP frozen-CLI layer (`amp-send` / `amp-inbox` / `amp-read` /
+`amp-reply`); message CONTENT templates live in `amoa-messaging-templates`.
+
 The two communication skills are the pair most often confused: pick
 `amoa-developer-communication` when a **person** reads it, and
 `amoa-remote-agent-coordinator` when an **agent** does.

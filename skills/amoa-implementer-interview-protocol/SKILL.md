@@ -20,7 +20,10 @@ Interview implementers pre/post task to verify readiness and quality before PR c
 
 ## Prerequisites
 
-AGENT_OPERATIONS.md, amoa-label-taxonomy, amoa-messaging-templates.
+docs/AGENT_OPERATIONS.md, amoa-label-taxonomy, amoa-messaging-templates.
+**Lifecycle authority:** the TRDD `column:` pipeline is AUTHORITATIVE; the
+`status:*` labels this skill sets are its mirror — TRDD wins on disagreement
+(see **amoa-prrd-trdd-kanban**).
 
 ## Output
 

@@ -20,7 +20,7 @@ GitHub label taxonomy for AI Maestro orchestration. Format: `<category>:<value>`
 
 ## Prerequisites
 
-GitHub CLI (`gh`) configured; AGENT_OPERATIONS.md for context.
+GitHub CLI (`gh`) configured; docs/AGENT_OPERATIONS.md for context.
 
 ## Instructions
 

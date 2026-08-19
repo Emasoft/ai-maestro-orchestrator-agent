@@ -18,6 +18,12 @@ agent: amoa-main
 
 Distributes tasks to agents by priority, dependencies, and agent state.
 
+**Lifecycle authority (read first):** the TRDD `column:` pipeline is the
+AUTHORITATIVE project lifecycle (see **amoa-prrd-trdd-kanban** and Part B2);
+the GitHub `status:*` labels this skill writes are its MIRROR half. Perform the
+TRDD `column:`/`assignee:` write first (or alongside), then the label; when the
+two disagree, the TRDD wins.
+
 ## Prerequisites
 
 Requires `gh` CLI, AI Maestro API, and familiarity with **amoa-label-taxonomy** and **amoa-messaging-templates**.

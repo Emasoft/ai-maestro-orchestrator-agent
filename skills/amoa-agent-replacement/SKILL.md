@@ -29,8 +29,9 @@ Handoff document (GitHub issue comment), state file update, AMCOS confirmation, 
 ## Instructions
 
 1. On AMCOS notification, compile task context from the failed agent's GitHub issues, kanban cards, and AI Maestro message history.
-2. Generate a handoff document and deliver it to the replacement agent via AI Maestro `agent-messaging` skill.
-3. Wait for ACK, confirm reassignment, and notify AMCOS of successful replacement.
+2. Generate a handoff document and deliver it to the replacement agent with the `amp-send` CLI (`amp-send <replacement> "<subject>" "<body>" --type task`, attach via `--attach`).
+3. Update the TRDD SSOT for every reassigned card: set `assignee:` (and `current-owner:` where the failed agent held the write-lock) on the card itself — the GitHub Project board move is only the MIRROR half (amoa-prrd-trdd-kanban, single-writer invariant).
+4. Wait for ACK, confirm reassignment, and notify AMCOS of successful replacement.
 
 See: [replacement-workflow-steps.md](references/replacement-workflow-steps.md) for detailed steps.
 <!-- TOC: Replacement Protocol Flow · Step 1: Receive AMCOS Notification · Step 2: Compile Task Context · Step 3: Generate Handoff Document · Step 4: Reassign Kanban Tasks · Step 5: Send Handoff to New Agent · Step 6: Confirm Reassignment · Python Scripts -->
@@ -42,8 +43,9 @@ Copy this checklist and track your progress:
 - [ ] Receive and acknowledge AMCOS replacement notification
 - [ ] Compile all task context from failed agent
 - [ ] Generate comprehensive handoff document
-- [ ] Reassign GitHub Project kanban tasks
-- [ ] Send handoff to new agent via AI Maestro `agent-messaging` skill
+- [ ] Update TRDD `assignee:`/`current-owner:` on every reassigned card (SSOT half)
+- [ ] Reassign GitHub Project kanban tasks (mirror half)
+- [ ] Send handoff to new agent with the `amp-send` CLI
 - [ ] Confirm ACK receipt and requirements understanding
 - [ ] Update orchestrator state file
 - [ ] Notify AMCOS of successful replacement

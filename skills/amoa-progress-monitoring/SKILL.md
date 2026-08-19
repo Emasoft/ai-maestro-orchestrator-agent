@@ -18,9 +18,14 @@ agent: amoa-main
 
 Monitors agent progress via state transitions, detects stalls, and escalates issues.
 
+**Lifecycle authority (read first):** the TRDD `column:` pipeline is the
+AUTHORITATIVE project lifecycle (see **amoa-prrd-trdd-kanban**); the GitHub
+`status:*` labels this skill reads/writes are its MIRROR half — when the two
+disagree, the TRDD wins.
+
 ## Prerequisites
 
-Requires **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**, AI Maestro API, GitHub CLI.
+Requires **docs/AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-templates**, AI Maestro API, GitHub CLI.
 
 ## Instructions
 
