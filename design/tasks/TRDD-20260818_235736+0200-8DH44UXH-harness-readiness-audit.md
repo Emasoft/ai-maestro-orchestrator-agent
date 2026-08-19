@@ -5,7 +5,7 @@ column: ai_review
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T23:57:37+0200
-updated: 2026-08-19T14:04:27+0200
+updated: 2026-08-19T14:30:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: audit
@@ -42,7 +42,11 @@ Release CI v1.13.9 rerun = SUCCESS (run 32188563813).
 D1-D8 all closed. v1.13.11 published (publish.py exit 0, CPV 0/0/0/0) and its Release CI
 GREEN (run 32231241419 success, 2026-08-19 — one cancelled-flake rerun, timeouts untouched).
 Card moved testing→ai_review in the test-runner capacity (CI green = the required tests).
-REMAINING: ai_review pass, then ai_review→human_review escalation per B2 (non-exempt).
+ai_review v1 REJECTED, 4 findings (reports/ai-review/20260819_141357+0200-trdd-8DH44UXH-ai-review.md),
+all verified first-hand and fixed in 011be6f (authority-mirror line, 3 docs' 8-column tables
+→ 17-column, dead ARCHIVE_ELIGIBLE_COLUMNS removed, find_trdd empty-stdout raise); cycle
+ai_review→dev→testing re-run (ruff clean, 49/49). REMAINING: re-review verdict on 011be6f
+(reviewer agent resumed), then ai_review→human_review escalation per B2 (non-exempt).
 Prior v1.13.10 CI failure (find_trdd tests vs CLI-less runners) fixed in da1550f. Side event
 ledgered: janitor cache-updater outage 09:45-10:02 tool-locked the session mid-release —
 filed ai-maestro-janitor#281.
