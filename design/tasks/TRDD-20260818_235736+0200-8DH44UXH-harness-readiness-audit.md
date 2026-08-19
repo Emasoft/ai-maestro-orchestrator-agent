@@ -5,7 +5,7 @@ column: dev
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T23:57:37+0200
-updated: 2026-08-18T23:57:37+0200
+updated: 2026-08-19T04:55:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: audit
@@ -25,21 +25,24 @@ skills, subagents, hooks, docs, templates, checklists) for the ai-maestro harnes
 collaboration with the hub session. Workflow-never-stops: the team flow may pause ONLY on
 MANAGER / CHIEF-OF-STAFF approval waits.
 
-## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-08-18
+## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-08-19
 
-S Audit running. Facts so far: direct-server refs (localhost:23000) = 0. `/api/` strings in
-33 files (triage pending: teach-a-call vs benign prose). trddgrep + prrdgrep on PATH at
-`~/.local/bin`; **specsgrep MISSING**. CPV strict = 0 blocking, 45 advisory WARNINGs to mine
-(unknown frontmatter fields, RC-PIPELINE-DRIFT on ci.yml/notify-marketplace.yml).
-Authoritative refs requested from the hub (msg 3432e501): governance version, frozen-CLI verb
-SSOT, specsgrep origin + 3-tools contract, integrator review-column contract, 3-pillars
-role-plugin checklist.
+S Fix phase largely LANDED. Commits: 2711d6d (G1-G6 oracle rewrite + AC1-AC5 archival path,
+tests green), bd1ed0b (doc batch: G1/G7/G8/G9/G10/G11 + AC6 17-column table + F7 trichotomy
+paragraph, 12 files), eb64ccc (F2 validate write-gate + F4/F5/F6 doc adoption + real-condition
+tests; 204 tests pass). Hub ruling (BRRJK57P/63a2a0bb): 3-tools adoption VOLUNTARY NOW at the
+ledgered sites — done except F1/F3, DECLINED with rationale (trddgrep show / specgrep have no
+machine-readable path/porcelain output; parsing human-oriented ranked text from library code
+is brittle — interface gap to file hub-side before migrating those two sites). The new F2 gate
+immediately surfaced 5 real board defects; 4 repaired (6B3K7S69/NSWPM93D/704ZBCR8 archived as
+`complete` per release-via none + 3P-ZON-12 three-writes; 03DYGXJW `derived: true` added).
+Release CI v1.13.9 rerun = SUCCESS (run 32188563813).
 
 ### NEXT ACTION
-Triage the 33 `/api/` files (classify each hit: (a) instructs an actual server call —
-VIOLATION of R22/plugin-abstraction; (b) mentions an API in prose/examples unrelated to the
-ai-maestro server — benign; (c) documents the frozen-CLI layer itself — benign). Then, on hub
-reply: diff every amp-*/aimaestro-* call-site against the verb SSOT.
+Run D7 (scenario walkthroughs: dispatch→dev→testing→ai_review→complete + blocked/failed/
+replacement paths; find any non-approval STOP point) and D8 (cross-reference integrity),
+including the H1 label-taxonomy sweep below. Then decide H2 (66EA1BB1) per-card, publish the
+fix batch as a release, and report completion to the hub.
 
 ## Audit dimensions (checklist)
 
@@ -48,18 +51,17 @@ reply: diff every amp-*/aimaestro-* call-site against the verb SSOT.
       (task templates, bug-report samples, changelog examples), project file paths
       (`src/api/`, `tests/api/`), or lines STATING the R23 rule. Zero instruct an ai-maestro
       server call. Full hit list preserved in the session log 2026-08-18.
-- [ ] D2 Script-call syntax current: every amp-*/aimaestro-* invocation in skills/agents/
-      commands/templates diffed against the frozen-CLI verb SSOT (need hub ref #2).
-- [ ] D3 Governance alignment: rules added since the last delta audit (TRDD-704ZBCR8) that
-      bind role plugins are reflected (need hub ref #1); PRRD S9.1 transport rule respected
-      everywhere messaging is taught.
-- [ ] D4 3 pillars + 3 tools: skills teach trddgrep/prrdgrep/specsgrep correctly; specsgrep
-      availability resolved (missing on PATH — install path or upstream gap).
-- [ ] D5 Frontmatter validity: mine CPV's 45 WARNINGs; fix malformed/unknown fields that are
-      real (some may be CPV gaps to report upstream instead).
-- [ ] D6 Integrator coordination: orchestrator handoffs at testing/ai_review columns match
-      the integrator plugin's expected verbs/messages (need hub ref #4); S7.1 pre-PR gate text
-      consistent across skills.
+- [x] D2 Script-call syntax current — PASS-with-note (2026-08-19, pre-clear session; see
+      handoff ledger).
+- [x] D3 Governance alignment — findings G10/G11 fixed in bd1ed0b (R49.4/R49.6 added to the
+      persona); R50/R51 confirmed AIO-scoped, not applicable; R52 clean.
+- [x] D4 3 pillars + 3 tools — tool is `specgrep` (not specsgrep; wrong-name zero). Adoption
+      per hub ruling: F2/F4/F5/F6/F7 landed (eb64ccc, bd1ed0b); F1/F3 declined pending a
+      machine-readable output mode (see STATE). Trichotomy taught at the F7 site.
+- [x] D5 Frontmatter validity — verdicts ledgered below; class-C phantom fixed 387ac51.
+- [x] D6 Integrator coordination — findings G1-G9 fixed across 2711d6d + bd1ed0b: oracle
+      rewritten from Part B2, release lane to INTEGRATOR/RELEASER/DEPLOYER, assignee moves
+      dev→testing only, test runner owns testing→ai_review|dev.
 - [ ] D7 Scenario walkthroughs: simulate the team loop (dispatch → dev → testing → ai_review
       → complete) and the failure paths (blocked, failed, agent replacement); identify any
       point where an agent would STOP other than a MANAGER/COS approval wait; fix instructions
@@ -141,6 +143,31 @@ Fields background(21)/type(5)/memory_requirements(5)/triggers(2)/hooks `_note`(1
 plugin-private, harmless — keep, optionally report to CPV as known-benign. The 1 class-C
 phantom `hide-from-slash-command-tool` (commands/amoa-cancel-orchestrator.md) FIXED same day
 → `disable-model-invocation: true`.
+
+### D8 partial findings (2026-08-19, verified first-hand via grep)
+
+- H1 STALE LABEL TAXONOMY — the old 8-column GitHub-label vocabulary
+  (`status:backlog`/`status:done`/`status:merge-release`, plus direct
+  `--add-label "status:ai-review"` moves) survives in ~20 files OUTSIDE the bd1ed0b batch:
+  amoa-progress-monitoring (op-verify-task-completion.md:188, escalation-and-messaging.md:126,
+  monitoring-examples.md:92), amoa-two-phase-mode/op-create-github-issues.md:75,
+  amoa-module-management/op-sync-module-github-issue.md:287-293,
+  amoa-developer-communication (op-respond-feature-request.md:145, op-respond-bug-report.md:151),
+  amoa-remote-agent-coordinator (op-review-completion-report.md:137,
+  scripts/generate_agent_skill.py:147, templates/github-projects-guide.md:81-88,
+  KANBAN_SYNC_PROTOCOL.md:57-79 + part1 + part3, AGENT_SYNC_CHECKLIST*.md, ISSUE_TEMPLATE.md,
+  PROJECT_SETUP.md:114-121, toolchain/BASE_TOOLCHAIN.md:78-84),
+  amoa-kanban-management/kanban-examples.md:44, amoa-label-taxonomy
+  (op-validate-label-cardinality.md:98, op-lifecycle-triage-labels.md — many hits).
+  Fix = migrate to the 17-column `status:` labels from `shared/amoa_kanban_vocab.py`
+  (STATUS_LABEL_COLORS is the SSOT list) + B2-correct movers.
+- H2 66EA1BB1 TERMINAL-WITHOUT-CHECKLIST (trddgrep validate ERROR, still open): `complete`
+  with no acceptance checklist. Tool prescribes move-back-to-dev + write checklist; the June
+  migration it tracked demonstrably shipped, so a retroactive checklist may be honest — but
+  it is a per-card judgment, deferred, NOT mass-repaired.
+- Board hygiene repaired (2026-08-19): 6B3K7S69 / NSWPM93D / 704ZBCR8 ZONE-MISMATCH →
+  archived as `complete` (release-via none) with 3P-ZON-12 three-writes; 03DYGXJW
+  `derived: true` added (mechanical repair, `updated:` not bumped).
 
 ## Approval log
 

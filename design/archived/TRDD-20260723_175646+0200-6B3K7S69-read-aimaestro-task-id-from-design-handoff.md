@@ -2,6 +2,7 @@
 trdd-id: 6B3K7S69
 title: Read aimaestro_task_id from the architect design-handoff (orch #26 read-side, parse-half)
 column: complete
+archived: true
 scope: project
 created: 2026-07-23T17:56:46+0200
 updated: 2026-08-18T19:53:09+0200
@@ -106,3 +107,5 @@ AMCOS-spawned agent binding — deferred, cannot run here.
   live round-trip is deferred acceptance gated on infra, not a hole the change opened).
 
 ## Notes and lessons learned
+
+Archived 2026-08-19T04:40:02+0200: terminal `complete` reached (ZONE-MISMATCH repair, trddgrep validate 2026-08-19) — work shipped in v1.13.9; release-via none (absent) makes `complete` the terminal column.

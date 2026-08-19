@@ -16,6 +16,7 @@ target-branch: main
 test-requirements: [unit, lint, typecheck]
 impacts: [ci-pipeline]
 parent-trdd: TRDD-EKKIOYAO
+derived: true
 external-refs: ["github.com/Emasoft/ai-maestro-orchestrator-agent/issues/23"]
 ---
 

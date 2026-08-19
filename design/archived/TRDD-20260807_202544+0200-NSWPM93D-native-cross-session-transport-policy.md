@@ -2,6 +2,7 @@
 trdd-id: NSWPM93D
 title: Decide AMOA policy for Claude Code native cross-session messaging alongside AMP
 column: complete
+archived: true
 min-approval-requirement: manager
 routed-via: manager
 created: 2026-08-07T20:25:44+0200
@@ -209,3 +210,5 @@ Consequences for the ask:
   surface, no native fallback). All four acceptance boxes verified by grep and ticked.
   Executed under the hub's Phase-2 GO + the USER's direct "permission granted" (2026-08-18);
   specs-first ordering per the hub.
+
+Archived 2026-08-19T04:40:02+0200: terminal `complete` reached (ZONE-MISMATCH repair, trddgrep validate 2026-08-19) — policy decided and landed; release-via none makes `complete` the terminal column.
