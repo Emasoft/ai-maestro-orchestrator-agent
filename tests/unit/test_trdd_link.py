@@ -8,6 +8,8 @@ No mocks — these operate on real TRDD files written to tmp_path, so the
 frontmatter handling is exercised against the actual on-disk shape.
 """
 
+import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -90,7 +92,30 @@ def test_failed_stays_on_the_board():
 
 
 # ── lookup ──
+#
+# find_trdd shells to `trddgrep show --porcelain` (TRDD-8DH44UXH F1), so the
+# happy-path tests need the real CLI and SKIP where it is not installed (CI
+# runners). That is the trichotomy's legitimate-deferral shape, not a hole:
+# the missing-binary RAISE branch below runs EVERYWHERE, so an environment
+# without the CLI still proves the failure mode it will actually exhibit.
 
+_HAVE_TRDDGREP = shutil.which("trddgrep") is not None
+needs_trddgrep = pytest.mark.skipif(not _HAVE_TRDDGREP, reason="trddgrep not installed")
+
+
+def test_find_trdd_missing_binary_raises_not_none(tmp_path, monkeypatch):
+    """No trddgrep on PATH must RAISE, never return None.
+
+    Collapsing could-not-run into not-found would make a broken lookup report
+    every card as missing — the exact conflation the exit trichotomy forbids.
+    """
+    _write(tmp_path, "tasks", "AAAA1111", "dev")
+    monkeypatch.setitem(os.environ, "PATH", str(tmp_path / "empty-bin"))
+    with pytest.raises(RuntimeError, match="COULD NOT RUN"):
+        find_trdd("AAAA1111", tmp_path / "design")
+
+
+@needs_trddgrep
 def test_find_trdd_across_zones_and_case(tmp_path):
     _write(tmp_path, "tasks", "AAAA1111", "dev")
     arch = _write(tmp_path, "archived", "BBBB2222", "completed")
@@ -100,6 +125,7 @@ def test_find_trdd_across_zones_and_case(tmp_path):
     assert find_trdd("CCCC3333", root) is None
 
 
+@needs_trddgrep
 def test_find_trdd_does_not_mistake_the_timestamp_for_the_id(tmp_path):
     """The filename's first 8-char run is the DATE, not the id.
 
@@ -113,6 +139,7 @@ def test_find_trdd_does_not_mistake_the_timestamp_for_the_id(tmp_path):
     assert find_trdd("20260801", root) is None
 
 
+@needs_trddgrep
 def test_find_trdd_survives_a_negative_utc_offset(tmp_path):
     """A host west of Greenwich puts a dash INSIDE the timestamp.
 
@@ -194,6 +221,7 @@ def test_add_external_ref_keeps_existing_entries(tmp_path):
 
 # ── the issue side of the link ──
 
+@needs_trddgrep
 def test_issue_title_citation_round_trips(tmp_path):
     """The id written into a title must be the id read back out of it.
 
