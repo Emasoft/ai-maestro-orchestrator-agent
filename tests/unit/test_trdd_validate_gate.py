@@ -18,7 +18,10 @@ for _d in (_ROOT / "scripts", _ROOT / "shared"):
     if str(_d) not in sys.path:
         sys.path.insert(0, str(_d))
 
-import pytest  # noqa: E402
+# I001 suppressed: CPV's remote ruff runs default isort (no first-party
+# knowledge for amoa_kanban_manager) and disagrees with the project config on
+# this block's order; the path-hack above forces late imports either way.
+import pytest  # noqa: E402, I001
 
 from amoa_kanban_manager import _trdd_validate_gate  # noqa: E402
 
