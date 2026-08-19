@@ -1,11 +1,11 @@
 ---
 trdd-id: 8DH44UXH
 title: Harness-readiness audit — full plugin conformance for the ai-maestro harness
-column: testing
+column: ai_review
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T23:57:37+0200
-updated: 2026-08-19T04:55:00+0200
+updated: 2026-08-19T14:04:27+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: audit
@@ -39,14 +39,13 @@ immediately surfaced 5 real board defects; 4 repaired (6B3K7S69/NSWPM93D/704ZBCR
 Release CI v1.13.9 rerun = SUCCESS (run 32188563813).
 
 ### NEXT ACTION
-D1-D8 all closed. v1.13.10 published but its CI/Release FAILED (find_trdd tests hit
-missing-trddgrep on runners — the F1 raise working as designed; tests now skip-when-absent +
-a raise-branch test that runs everywhere, da1550f). ROLLED FORWARD: v1.13.11 published
-(publish.py exit 0, CPV 0/0/0/0). Card moved dev→testing (assignee move). REMAINING: confirm
-the v1.13.11 CI runs green (background watch active; rerun cancelled-flakes, never bump
-timeouts), then testing→ai_review in the test-runner capacity. Side event ledgered:
-janitor cache-updater outage 09:45-10:02 tool-locked the session mid-release — filed
-ai-maestro-janitor#281.
+D1-D8 all closed. v1.13.11 published (publish.py exit 0, CPV 0/0/0/0) and its Release CI
+GREEN (run 32231241419 success, 2026-08-19 — one cancelled-flake rerun, timeouts untouched).
+Card moved testing→ai_review in the test-runner capacity (CI green = the required tests).
+REMAINING: ai_review pass, then ai_review→human_review escalation per B2 (non-exempt).
+Prior v1.13.10 CI failure (find_trdd tests vs CLI-less runners) fixed in da1550f. Side event
+ledgered: janitor cache-updater outage 09:45-10:02 tool-locked the session mid-release —
+filed ai-maestro-janitor#281.
 
 ## Audit dimensions (checklist)
 
