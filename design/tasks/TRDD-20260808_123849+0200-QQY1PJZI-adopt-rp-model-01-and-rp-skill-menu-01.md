@@ -15,6 +15,7 @@ blocked-by: []
 relevant-rules: []
 external-refs: [ai-maestro#136, TRDD-TYB3Q1NJ, TRDD-0FCR6KOW]
 release-via: publish
+implementation-commits: [ebe3202, b0db921, c58e501]
 ---
 
 # Adopt RP-MODEL-01 and RP-SKILL-MENU-01

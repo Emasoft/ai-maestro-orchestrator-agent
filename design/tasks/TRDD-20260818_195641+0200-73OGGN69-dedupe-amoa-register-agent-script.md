@@ -16,6 +16,7 @@ npt: []
 eht: []
 blocked-by: []
 release-via: publish
+implementation-commits: [1de1bfc]
 ---
 
 # Remove the dead skill-local duplicate of amoa_register_agent.py (audit C1)

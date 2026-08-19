@@ -15,6 +15,7 @@ blocked-by: []
 relevant-rules: []
 external-refs: [https://github.com/Emasoft/ai-maestro-orchestrator-agent/issues/31, ai-maestro-plugin#33]
 release-via: publish
+implementation-commits: [21eaa80, d8a6efb, c1dd043, fcf86eb, 970aa89, 2dc9972, b0db921, c58e501]
 ---
 
 # Strip GitHub @mentions from every shipped template

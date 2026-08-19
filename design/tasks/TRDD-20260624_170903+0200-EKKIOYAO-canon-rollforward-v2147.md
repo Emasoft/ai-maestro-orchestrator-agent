@@ -10,6 +10,7 @@ task-type: infra
 priority: 2
 relevant-rules: []
 release-via: publish
+implementation-commits: [0b36c1b, 5c2f4d8]
 delivery: direct-push
 target-branch: main
 publish-target: ai-maestro-plugins

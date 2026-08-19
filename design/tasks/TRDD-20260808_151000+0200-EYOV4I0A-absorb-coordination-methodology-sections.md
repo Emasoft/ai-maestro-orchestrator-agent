@@ -15,6 +15,7 @@ blocked-by: []
 relevant-rules: []
 external-refs: [https://github.com/Emasoft/ai-maestro-orchestrator-agent/issues/33]
 release-via: publish
+implementation-commits: [b0db921, 359f808]
 ---
 
 # Absorb coordination-methodology §3, §6, §11
