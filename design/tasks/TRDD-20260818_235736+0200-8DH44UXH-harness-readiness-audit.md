@@ -1,7 +1,7 @@
 ---
 trdd-id: 8DH44UXH
 title: Harness-readiness audit — full plugin conformance for the ai-maestro harness
-column: dev
+column: testing
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T23:57:37+0200
@@ -39,9 +39,14 @@ immediately surfaced 5 real board defects; 4 repaired (6B3K7S69/NSWPM93D/704ZBCR
 Release CI v1.13.9 rerun = SUCCESS (run 32188563813).
 
 ### NEXT ACTION
-All audit dimensions D1-D8 closed; fix commits through 8dd0855. Publish the fix batch as a
-patch release (scripts/publish.py --patch, watch CI green, rerun cancelled-flakes, never bump
-timeouts), then report completion to the hub and move this card dev→testing.
+D1-D8 all closed. v1.13.10 published but its CI/Release FAILED (find_trdd tests hit
+missing-trddgrep on runners — the F1 raise working as designed; tests now skip-when-absent +
+a raise-branch test that runs everywhere, da1550f). ROLLED FORWARD: v1.13.11 published
+(publish.py exit 0, CPV 0/0/0/0). Card moved dev→testing (assignee move). REMAINING: confirm
+the v1.13.11 CI runs green (background watch active; rerun cancelled-flakes, never bump
+timeouts), then testing→ai_review in the test-runner capacity. Side event ledgered:
+janitor cache-updater outage 09:45-10:02 tool-locked the session mid-release — filed
+ai-maestro-janitor#281.
 
 ## Audit dimensions (checklist)
 
