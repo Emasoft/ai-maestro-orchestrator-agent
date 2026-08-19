@@ -13,7 +13,9 @@ This document contains the valid label transitions and project board synchroniza
 ```mermaid
 graph TD
     A[Backlog] --> B[In Progress]
-    B --> C[AI Review]
+    B --> T[Testing]
+    T -->|pass| C[AI Review]
+    T -->|fail| B
     C -->|big tasks| D[Human Review]
     C -->|small tasks| E[Merge/Release]
     D --> E[Merge/Release]
@@ -33,12 +35,28 @@ gh issue edit {{ISSUE_NUMBER}} \
   --add-label "status:in-progress"
 ```
 
-#### In Progress → AI Review
+#### In Progress → Testing (moved by the ASSIGNEE, after PR is created)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --remove-label "status:in-progress" \
+  --add-label "status:testing"
+```
+
+#### Testing → AI Review (moved by the TEST RUNNER, on pass)
+```bash
+gh issue edit {{ISSUE_NUMBER}} \
+  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
+  --remove-label "status:testing" \
   --add-label "status:ai-review"
+```
+
+#### Testing → In Progress (moved by the TEST RUNNER, on fail)
+```bash
+gh issue edit {{ISSUE_NUMBER}} \
+  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
+  --remove-label "status:testing" \
+  --add-label "status:in-progress"
 ```
 
 #### AI Review → Human Review (big tasks requiring human approval)

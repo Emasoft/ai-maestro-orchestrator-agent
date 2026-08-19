@@ -32,8 +32,8 @@
 - [ ] Evaluate self-review responses
 - [ ] Send APPROVED or REVISE message
 - [ ] Wait for PR creation and PR number report
-- [ ] Notify Integrator (AMIA) that PR is ready for review
-- [ ] Update issue status to `status:ai-review`
+- [ ] Update issue status to `status:testing` (assignee's dev->testing move)
+- [ ] Notify the test runner that the PR is ready for tests; test runner moves to `status:ai-review` on pass or `status:dev` on fail
 
 ---
 
@@ -66,5 +66,5 @@
 8. If verification passes, send APPROVED message ([escalation-messages.md](./escalation-messages.md))
 9. If verification fails, send REVISE message with specific issues
 10. Wait for PR creation and PR number report
-11. Notify Integrator (AMIA) that PR is ready for review
-12. Update issue status to `status:ai-review`
+11. Update issue status to `status:testing` (assignee's dev->testing move)
+12. Notify the test runner that the PR is ready for tests; the test runner moves the card to `status:ai-review` on pass, or back to `status:dev` on fail

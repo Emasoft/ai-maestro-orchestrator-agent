@@ -371,8 +371,9 @@ gh issue comment [ISSUE_NUM] --body "[ACK] Starting work."
 # Add progress update
 gh issue comment [ISSUE_NUM] --body "[PROGRESS] Checkpoint 2: 60% complete"
 
-# Move to AI Review (after PR created)
-gh issue edit [ISSUE_NUM] --add-label "status:ai-review"
+# Move to Testing (after PR created) — this is the assignee's own dev->testing move
+gh issue edit [ISSUE_NUM] --add-label "status:testing"
+# The test runner moves to status:ai-review on pass, or back to status:dev on fail
 ```
 
 ### Reporting Guidelines

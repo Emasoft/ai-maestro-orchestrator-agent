@@ -94,9 +94,14 @@ packaging; the behaviour you actually need is what the seeded rules say.
 8. Escalate non-exempt actions via COS — cross-team reassignment,
    `human_review`, force-`failed`. Exempt (no approval): dispatch→dev
    assignment, red-column priority bumps, within-team reassignment.
-   `shared/amoa_kanban_vocab.py::transition_authority()` answers this
-   mechanically — consult it rather than recalling the table, and note it will
-   refuse ORCH's own card completions by design.
+   `shared/amoa_kanban_vocab.py::transition_authority()` mirrors the Part B2
+   table (`rules/aimaestro/aimaestro-trdd-approval.md`) exactly — consult it
+   rather than recalling the table. It returns the owning actor for every row
+   ORCH must not originate (`assignee`, `test-runner`, `architect`,
+   `ai-reviewer`, `reviewer`, `integrator`, `releaser`, `deployer`, `manager`);
+   ORCH only originates `todo→design` and `dispatch→dev`. A non-`"orchestrator"`
+   answer means route the transition to that actor and mirror the result
+   afterward — never perform it directly.
 
 ## Output
 

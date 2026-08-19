@@ -133,9 +133,10 @@ gh pr create --title "feat: {description}" \
 \`\`\`
 "
 
-# Update issue status
-gh issue edit {ISSUE_NUM} --add-label "status:ai-review"
+# Update issue status — this is the assignee's own dev->testing move
+gh issue edit {ISSUE_NUM} --add-label "status:testing"
 gh issue edit {ISSUE_NUM} --remove-label "status:in-progress"
+# The test runner moves this to status:ai-review on pass, or back to status:dev on fail
 ```
 
 ### Step 5: After Merge

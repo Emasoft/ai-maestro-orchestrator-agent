@@ -1,21 +1,39 @@
 ## Table of Contents
-- [Standard 8-Column System](#standard-8-column-system)
+- [Ratified 17-Column System](#ratified-17-column-system)
 - [Available Scripts](#available-scripts)
 
 ---
 
-## Standard 8-Column System
+## Ratified 17-Column System
+
+The board uses the ratified 17-column vocabulary (`~/.claude/rules/universal-kanban.md`),
+1:1 with the TRDD `column:` enum — 14 lifecycle columns plus 3 exception columns.
+A card's column is its TRDD frontmatter `column:` field; there is no separate task database.
 
 | Column | Status Label | Description |
 |--------|-------------|-------------|
-| Backlog | `status:backlog` | Tasks identified but not yet scheduled |
-| Todo | `status:todo` | Tasks scheduled for current sprint |
-| In Progress | `status:in-progress` | Tasks actively being worked on |
+| Backburner | `status:backburner` | Deferred, not yet scheduled |
+| Todo | `status:todo` | Scheduled, ready to be designed |
+| Design | `status:design` | ARCHITECT is designing the task |
+| Dispatch | `status:dispatch` | Designed, awaiting agent assignment |
+| Dev | `status:dev` | Actively being implemented |
+| Testing | `status:testing` | Under test |
 | AI Review | `status:ai-review` | Code submitted for automated review |
 | Human Review | `status:human-review` | Code awaiting human review |
-| Merge/Release | `status:merge-release` | Approved and ready to merge |
-| Done | `status:done` | Completed tasks |
-| Blocked | `status:blocked` | Tasks blocked by dependencies |
+| Complete | `status:complete` | Internally finished, not yet released |
+| Publish | `status:publish` | Entering the publish pipeline |
+| Published | `status:published` | Published artifact |
+| Deploy | `status:deploy` | Entering the deploy pipeline |
+| Live | `status:live` | Deployed and live |
+| Live Auditing | `status:live-auditing` | Live, under audit/soak |
+
+Exception columns (apply at any point in the lifecycle):
+
+| Column | Status Label | Description |
+|--------|-------------|-------------|
+| Blocked | `status:blocked` | Blocked by a non-empty `blocked-by:` list |
+| Failed | `status:failed` | Failed and retryable — stays open, never archived |
+| Superseded | `status:superseded` | Replaced by other TRDD(s) |
 
 ---
 

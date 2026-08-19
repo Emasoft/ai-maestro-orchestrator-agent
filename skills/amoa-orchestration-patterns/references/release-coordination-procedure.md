@@ -21,7 +21,9 @@
 
 ## 1. Overview of the 5-Step Release Process
 
-A "release" is the process of publishing a new version of the software so that users can download or install it. The Orchestrator coordinates this process by assigning each step to an implementer (a Programmer Agent or human developer) and verifying completion before advancing to the next step.
+A "release" is the process of publishing a new version of the software so that users can download or install it. Steps 1-3 (bump version, update changelog, open the PR) happen while the card is still moving toward `complete`, and the Orchestrator coordinates them by assigning each step to an implementer (a Programmer Agent or human developer) and verifying completion before advancing to the next step.
+
+**The Orchestrator's role ends at `complete`.** Entering the release lane itself (`complete` -> `publish` or `complete` -> `deploy`) is the **INTEGRATOR's** transition, not the Orchestrator's. Once the card reaches `complete`, the INTEGRATOR spawns a **RELEASER** subagent (publish path) or a **DEPLOYER** subagent (deploy path) to perform the remaining moves: RELEASER performs `publish` -> `published`, DEPLOYER performs `deploy` -> `live`. The Orchestrator monitors the board and mirrors these moves in its own status reporting -- it never originates them -- and escalates to MANAGER only at approval gates.
 
 The five steps are:
 
@@ -30,8 +32,8 @@ The five steps are:
 | 1 | Bump Version | Implementer | Assign task, provide semver rules, verify result |
 | 2 | Update CHANGELOG | Implementer | Assign task, verify completeness and formatting |
 | 3 | Create Pull Request to main | Implementer | Assign task, ensure CI tests pass before merge |
-| 4 | Merge to main | Implementer or maintainer | Monitor automated pipeline, verify tag creation |
-| 5 | Post-Release Verification | Orchestrator | Check GitHub Actions, Releases page, README badge |
+| 4 | Merge to main | Implementer or maintainer | Monitor automated pipeline; the merge reaching `complete` hands the release lane to the INTEGRATOR |
+| 5 | Post-Release Verification | INTEGRATOR (via RELEASER/DEPLOYER) | Orchestrator monitors and mirrors board state; checks GitHub Actions, Releases page, README badge for its own status report |
 
 **Important terms used in this document:**
 
@@ -87,8 +89,10 @@ The following diagram shows the complete release flow from the development branc
                           +---------------------------------+
                                            |
                             Step 5: Verify release
-                            (orchestrator checks
-                             Actions, Releases, README)
+                            (INTEGRATOR, via RELEASER/
+                             DEPLOYER, checks Actions,
+                             Releases, README; orchestrator
+                             mirrors the result)
 ```
 
 ### 1.2 Manual vs Automated Release
@@ -315,7 +319,7 @@ gh pr create --base main --title "Release v2.8.0" --body "Release version 2.8.0.
 
 ## 6. Step 5: Post-Release Verification
 
-**What this step does**: The Orchestrator verifies that the release was published correctly and all artifacts are available.
+**What this step does**: The INTEGRATOR (via the RELEASER or DEPLOYER subagent it spawned for the release lane) verifies that the release was published correctly and all artifacts are available. The Orchestrator mirrors this result in its own status reporting -- it does not perform the verification itself.
 
 See section 9 for the complete verification checklist.
 

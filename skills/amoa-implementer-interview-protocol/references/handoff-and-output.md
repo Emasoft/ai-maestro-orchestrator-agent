@@ -11,9 +11,9 @@
 
 After implementer creates PR and reports the number:
 
-1. Update issue status: `status:ai-review`
-2. Notify Integrator via AI Maestro (template in **amoa-messaging-templates**)
-3. Transfer responsibility from orchestrator to integrator
+1. Update issue status: `status:testing` (this is the assignee's own `dev` -> `testing` move)
+2. Notify the test runner via AI Maestro (template in **amoa-messaging-templates**) — the test runner moves the card to `status:ai-review` on pass, or back to `status:dev` on fail
+3. Transfer responsibility from orchestrator to integrator once the card reaches `ai_review`
 
 ### Responsibility Transfer
 

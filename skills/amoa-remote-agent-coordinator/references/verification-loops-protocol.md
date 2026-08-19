@@ -380,7 +380,7 @@ Verification loop N completed (N = 1 to 4)
 │   │         └─ No (needs architectural change) → Escalate to AMCOS for AMAA
 │   │             → Pause verification → Wait for design guidance
 │   └─ No (clean loop) → Is this the final loop (loop 4)?
-│       ├─ Yes → All 4 loops passed → Move task to "ai-review" for AMIA
+│       ├─ Yes → All 4 loops passed (this 4-loop verification IS the test-runner role) → move task to "ai-review" for AMIA, made in the TEST-RUNNER capacity, not as a coordinator convenience
 │       │         → Send completion summary with all loop results
 │       └─ No → Proceed to loop N+1 with narrower focus
 │

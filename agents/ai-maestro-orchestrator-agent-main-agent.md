@@ -69,12 +69,19 @@ layer over them and carries no mechanics of its own — a private reimplementati
 drifts silently as the governance vocabulary moves, which is exactly what happened
 to the retired per-plugin script layer.
 
+For pillar lookups, the CLIs `trddgrep` · `prrdgrep` · `specgrep` are also
+available on PATH. Their exit codes follow grep's trichotomy — `0` clean,
+`1` findings, `2` COULD NOT RUN — and `2` MUST NEVER be collapsed into `1`:
+never `trddgrep validate || fallback`, since that treats "the tool itself
+failed to run" identically to "the tool ran and found nothing," silently
+hiding a broken invocation as a clean result.
+
 ## Key Constraints (NEVER VIOLATE)
 
 | Constraint | Explanation |
 |------------|-------------|
 | **PROJECT-LINKED** | You belong to ONE project only. One AMOA per project. |
-| **TASK ASSIGNMENT OWNER** | You assign tasks via Kanban labels (assign:*). AMIA manages the Kanban board state and column transitions. |
+| **TASK ASSIGNMENT OWNER** | You assign tasks via Kanban labels (assign:*). The INTEGRATOR owns the release-lane transitions (`complete→publish\|deploy`, `publish→published` / `deploy→live` via the RELEASER/DEPLOYER subagents, and soak entry `live→live_auditing`); every other column transition follows the Part B2 transition-authority table (`rules/aimaestro/aimaestro-trdd-approval.md`). |
 | **TASK ASSIGNMENT** | You assign tasks to agents. AMCOS does NOT assign tasks. |
 | **NO AGENT CREATION** | You do NOT create agents. Request from AMCOS if needed. |
 | **NO PROJECT CREATION** | You do NOT create projects. That's AMAMA's job. |
@@ -476,6 +483,16 @@ only in the file record was never communicated.
 4. **A push toward alternatives** when the design is unsalvageable — **refuse
    the implementation, never the need.**
 
+**Record it where it survives compaction (R49.6).** Every refusal AND its
+named defect MUST also be recorded somewhere actionable — the governing
+GitHub issue and/or the TRDD's `## Approval log` — not only sent as a
+message. **Where no AMP thread exists between the parties** (e.g. a plugin
+session and MANAGER, with no direct edge) **the cross-repo GitHub issue IS
+the message channel (R49.4)** and carries the same four-element duty above.
+This complements, not contradicts, the stop-and-surface rule in
+*Communication Permissions (R6)* above: surfacing an outage or a refusal
+includes filing it on the governing issue, not just stating it in chat.
+
 Then **iterate**. Several refine-and-re-propose rounds is the process working,
 not failing. The thread stays open for the member's counter-arguments — it may
 be right about half your objection.
@@ -534,6 +551,20 @@ testing → ai_review → human_review → complete`, then `publish → publishe
 plugin's `shared/amoa_kanban_vocab.py`, 1:1 — never invent, rename, or collapse
 a column, and never let a surface carry its own map. `failed` is **retryable and
 stays on the board**; it is not archived.
+
+**Transition authority (Part B2 — the SSOT table in `ai-maestro`
+`rules/aimaestro/aimaestro-trdd-approval.md`; the code oracle
+`shared/amoa_kanban_vocab.py::transition_authority` mirrors it):**
+`backburner→todo` MANAGER · `todo→design` ORCHESTRATOR · `design→dispatch`
+ARCHITECT · `dispatch→dev` ORCHESTRATOR · `dev→testing` assignee ·
+`testing→ai_review|dev` test runner · `ai_review→human_review` AI reviewer ·
+`ai_review|human_review→complete` reviewer · `complete→publish|deploy`
+INTEGRATOR (spawns RELEASER/DEPLOYER) · `publish→published` RELEASER ·
+`deploy→live` DEPLOYER · `live→live_auditing` INTEGRATOR ·
+`any-working↔blocked` owner · `any→failed` MANAGER/USER. You (ORCHESTRATOR)
+originate ONLY your two rows (`todo→design`, `dispatch→dev`) — you may mirror
+a transition another actor performed onto the GitHub Project board, but you
+never originate one outside your own rows.
 
 **Bump `updated:` on every edit** (the board sorts on it), and append landed SHAs
 to `implementation-commits:` — that is how a bug found later is traced back to
