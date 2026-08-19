@@ -1,11 +1,11 @@
 ---
 trdd-id: 8DH44UXH
 title: Harness-readiness audit — full plugin conformance for the ai-maestro harness
-column: ai_review
+column: human_review
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T23:57:37+0200
-updated: 2026-08-19T14:22:41+0200
+updated: 2026-08-19T14:26:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: audit
@@ -199,6 +199,9 @@ phantom `hide-from-slash-command-tool` (commands/amoa-cancel-orchestrator.md) FI
 
 - 2026-08-19T14:22:41+0200 — ai_review v1 REJECTED (4 findings), fixed 011be6f; re-review
   APPROVED 0 findings (reports/ai-review/20260819_141357+0200-trdd-8DH44UXH-ai-review.md).
-  Requested `ai_review → human_review` (non-exempt §Z) via COS → MANAGER. Awaiting reply.
+  Requested `ai_review → human_review` (non-exempt §Z) via COS → MANAGER.
+- 2026-08-19T14:26:00+0200 — MANAGER reply (relayed by COS): APPROVED — `ai_review →
+  human_review`. MANAGER verified the ai_review cycle + CI green first-hand. Column moved;
+  card now awaits the USER verdict (`human_review → complete|dev` is USER-only).
 
 ## Notes and lessons learned

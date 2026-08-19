@@ -1,7 +1,7 @@
 ---
 trdd-id: 2N542B5C
 title: Reconcile the 8 complete/publish cards — backfill implementation-commits and run the publish lane
-column: todo
+column: dev
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-19T14:24:47+0200
