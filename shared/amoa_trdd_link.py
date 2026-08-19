@@ -26,6 +26,7 @@ with the issue URL. `<id8>` is 8 chars of UPPERCASE base36.
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 
 # A CITATION in prose: `TRDD-<id8>`, 8 chars of base36. Case-INSENSITIVE because
@@ -33,19 +34,6 @@ from pathlib import Path
 # while the canonical WRITTEN form is uppercase. The trailing boundary stops
 # `TRDD-ABCD1234EXTRA` matching a truncated prefix and resolving to another card.
 TRDD_ID_RE = re.compile(r"TRDD-([A-Za-z0-9]{8})(?![A-Za-z0-9])", re.IGNORECASE)
-
-# A FILENAME: `TRDD-<YYYYMMDD_HHMMSS±HHMM>-<id8>-<slug>.md`. This needs its own
-# pattern and must NOT reuse TRDD_ID_RE: the citation regex matches the first
-# 8-char run after `TRDD-`, which in a filename is the DATE (`20260801`), so a
-# lookup built on it resolves every card to the wrong file.
-#
-# Splitting on "-" does not work either — a NEGATIVE UTC offset puts a dash
-# inside the timestamp (`...+0200` vs `...-0500`), shifting the field positions
-# for exactly the hosts west of Greenwich. Anchoring on the timestamp's shape is
-# the only form that survives both.
-TRDD_FILENAME_RE = re.compile(
-    r"^TRDD-\d{8}_\d{6}[+-]\d{4}-([A-Za-z0-9]{8})(?:-|\.md$)", re.IGNORECASE
-)
 
 # Which lifecycle folder each column belongs in. A move that crosses these zones
 # needs a `git mv`, not just a frontmatter edit — the folder IS part of the
@@ -142,22 +130,42 @@ def mark_archived(trdd_path: Path, outcome_line: str) -> bool:
 
 
 def find_trdd(trdd_id: str, design_root: Path) -> Path | None:
-    """Locate a TRDD by id across every lifecycle folder.
+    """Locate a TRDD by id via `trddgrep show --porcelain` (TRDD-8DH44UXH F1).
 
-    Case-INSENSITIVE on the id, matching the `find -iname` rule the TRDD spec
-    mandates: legacy lowercase ids remain valid forever, so a case-sensitive
-    lookup silently reports a real card as missing.
+    Porcelain contract (ai-maestro TRDD-IPSNDKGM, additive-only field order):
+    one TAB-separated record per line, ABSOLUTE PATH first, title last. The
+    lookup is case-insensitive in trddgrep itself, matching the `find -iname`
+    rule the TRDD spec mandates.
+
+    Exit trichotomy, preserved on purpose: 0 found -> the path; 1 no such id ->
+    None (a missing card is a legitimate answer the caller decides about);
+    2 / missing binary / timeout -> RAISE. Collapsing could-not-run into
+    not-found is the exact conflation the trichotomy exists to prevent — a
+    broken lookup would silently report every card as missing, and the
+    write-through would then declare board and SSOT "out of step" forever.
     """
-    want = trdd_id.upper()
-    for zone in ("tasks", "proposals", "archived", "refused"):
-        folder = design_root / zone
-        if not folder.is_dir():
-            continue
-        for path in folder.glob("TRDD-*.md"):
-            m = TRDD_FILENAME_RE.match(path.name)
-            if m and m.group(1).upper() == want:
-                return path
-    return None
+    try:
+        result = subprocess.run(
+            ["trddgrep", "show", trdd_id, "--porcelain", "--design-dir", str(design_root)],
+            capture_output=True, text=True, timeout=60,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError(
+            "trddgrep not on PATH — TRDD lookup COULD NOT RUN (exit-2 class)"
+        ) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            "trddgrep show timed out — TRDD lookup COULD NOT RUN (exit-2 class)"
+        ) from exc
+    if result.returncode == 0:
+        first_record = result.stdout.splitlines()[0]
+        return Path(first_record.split("\t", 1)[0])
+    if result.returncode == 1:
+        return None
+    raise RuntimeError(
+        f"trddgrep show {trdd_id} could not run (exit {result.returncode}): "
+        f"{result.stderr.strip() or result.stdout.strip()}"
+    )
 
 
 def read_column(trdd_path: Path) -> str | None:

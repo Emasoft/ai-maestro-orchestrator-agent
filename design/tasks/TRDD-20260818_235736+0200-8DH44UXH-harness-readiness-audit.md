@@ -171,8 +171,16 @@ phantom `hide-from-slash-command-tool` (commands/amoa-cancel-orchestrator.md) FI
 - Hub follow-through (2026-08-19): spec proposal ai-maestro TRDD-Z70X3LEW (3P-TOOL-01..04,
   incl. porcelain-mode MUST with legitimate deferral — our F1/F3 declination cited as the
   reference shape); porcelain implementation carded hub-side as Tier-0 TRDD-IPSNDKGM
-  (`--porcelain` TAB path-first records, trichotomy unchanged). Our F1/F3 migration is that
-  card's acceptance test — we get pinged when it ships; F1/F3 stay deferred until then.
+  (`--porcelain` TAB path-first records, trichotomy unchanged).
+- Porcelain SHIPPED (hub 5f10772e) and verified first-hand on all 3 exit branches. F1
+  MIGRATED: find_trdd() now `trddgrep show <id> --porcelain --design-dir`; 1→None,
+  2/missing-binary/timeout→raise (never collapsed into not-found); dead TRDD_FILENAME_RE
+  removed; all 20 trdd_link tests pass against the REAL CLI (they are the acceptance tests).
+  F3 RE-CLASSIFIED as corpus mismatch, not interface gap: specgrep env shows this repo's
+  corpus = design/specs/, but compile_handoff searches design/requirements/**/specs/ module
+  files — disjoint trees, so specgrep cannot serve that lookup; F3 stays glob-based
+  legitimately unless the module-spec tree ever moves under the spec corpus. Adoption tally:
+  6 of 7 migrated, 1 not-applicable-with-rationale.
 
 ## Approval log
 
