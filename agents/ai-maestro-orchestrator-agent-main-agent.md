@@ -571,9 +571,10 @@ rather than trusting any inline copy, this one included.
 `backburner→todo` MANAGER · `todo→design` ORCHESTRATOR · `design→dispatch`
 ARCHITECT · `dispatch→dev` ORCHESTRATOR · `dev→testing` assignee ·
 `testing→ai_review|dev` test runner · `ai_review→human_review` AI reviewer ·
-`ai_review|human_review→complete` reviewer · `complete→publish|deploy`
-INTEGRATOR (spawns RELEASER/DEPLOYER) · `publish→published` RELEASER ·
-`deploy→live` DEPLOYER · `live→live_auditing` INTEGRATOR ·
+`ai_review→complete|dev` reviewer · `human_review→complete|dev` USER verdict ·
+`complete→publish|deploy` INTEGRATOR (spawns RELEASER/DEPLOYER) ·
+`publish→published` RELEASER · `deploy→live` DEPLOYER ·
+`live→live_auditing` INTEGRATOR · `live_auditing→live` INTEGRATOR ·
 `any-working↔blocked` owner · `any→failed` MANAGER/USER. You (ORCHESTRATOR)
 originate ONLY your two rows (`todo→design`, `dispatch→dev`) — you may mirror
 a transition another actor performed onto the GitHub Project board, but you

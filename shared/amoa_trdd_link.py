@@ -53,12 +53,6 @@ _ZONE_BY_COLUMN: dict[str, str] = {
 }
 DEFAULT_ZONE = "tasks"
 
-# 3P-ZON-05 (amended 2026-08-18): ONLY these terminal values may enter
-# design/archived/, and every one archives AS ITSELF — no rewrite on the way in.
-ARCHIVE_ELIGIBLE_COLUMNS: frozenset[str] = frozenset(
-    {"complete", "completed", "cancelled", "superseded", "published", "live"}
-)
-
 
 def extract_trdd_id(text: str) -> str | None:
     """Pull the canonical `TRDD-<id8>` out of an issue title or body.
@@ -158,8 +152,16 @@ def find_trdd(trdd_id: str, design_root: Path) -> Path | None:
             "trddgrep show timed out — TRDD lookup COULD NOT RUN (exit-2 class)"
         ) from exc
     if result.returncode == 0:
-        first_record = result.stdout.splitlines()[0]
-        return Path(first_record.split("\t", 1)[0])
+        lines = result.stdout.splitlines()
+        if not lines:
+            # Porcelain contract: rc 0 => at least one record. An empty stdout
+            # is a contract violation, i.e. could-not-run (exit-2 class) — raise
+            # the documented RuntimeError, never an accidental IndexError.
+            raise RuntimeError(
+                f"trddgrep show {trdd_id} returned 0 with empty stdout — "
+                "porcelain contract violation (exit-2 class)"
+            )
+        return Path(lines[0].split("\t", 1)[0])
     if result.returncode == 1:
         return None
     raise RuntimeError(

@@ -83,37 +83,55 @@ AMOA ◄──── AMIA reports merge/validation result (DIRECT) ───► 
 
 ## Kanban Column System
 
-All projects use an **8-column kanban system** on GitHub Projects. Every agent must understand these columns and use the canonical code format consistently.
+All projects use the ratified **17-column kanban system** (14 lifecycle + 3
+exception columns; SSOT `shared/amoa_kanban_vocab.py`, per
+`~/.claude/rules/universal-kanban.md`). Every agent must understand these
+columns and use the canonical code format consistently. The "Moved INTO it by"
+column mirrors Part B2 transition authority
+(`shared/amoa_kanban_vocab.py::transition_authority` is the enforced SSOT).
 
 ### Canonical Columns
 
-| # | Column | Code Format | Label | Description | Flip owner |
-|---|--------|-------------|-------|-------------|------------|
-| 1 | Backlog | `backlog` | `status:backlog` | Entry point for all new issues | AMOA |
-| 2 | Todo | `todo` | `status:todo` | Ready to start, prioritized | AMOA |
-| 3 | In Progress | `in-progress` | `status:in-progress` | Active work by assigned agent | AMOA |
-| 4 | AI Review | `ai-review` | `status:ai-review` | Integrator (AMIA) reviews the PR | AMIA |
-| 5 | Human Review | `human-review` | `status:human-review` | User reviews (big tasks only) | AMIA (sets) / USER decides |
-| 6 | Merge/Release | `merge-release` | `status:merge-release` | Approved and ready to merge | AMIA |
-| 7 | Done | `done` | `status:done` | Completed and merged | **AMIA** (validates merged PR; AMOA never self-marks) |
-| 8 | Blocked | `blocked` | `status:blocked` | Blocked at any stage | column owner at time of block |
+| # | Column | Code / Label | Description | Moved INTO it by |
+|---|--------|--------------|-------------|------------------|
+| 1 | Backburner | `backburner` / `status:backburner` | Entry point; deferred, not scheduled | card author (intake) |
+| 2 | Todo | `todo` / `status:todo` | Ready to start, prioritized | MANAGER |
+| 3 | Design | `design` / `status:design` | ARCHITECT designing the task | ORCHESTRATOR |
+| 4 | Dispatch | `dispatch` / `status:dispatch` | Designed, awaiting assignment | ARCHITECT |
+| 5 | Dev | `dev` / `status:dev` | Active implementation | ORCHESTRATOR (sets `assignee:`) |
+| 6 | Testing | `testing` / `status:testing` | Under test | assignee (code ready) |
+| 7 | AI Review | `ai_review` / `status:ai_review` | Automated review | test runner (tests passed) |
+| 8 | Human Review | `human_review` / `status:human_review` | User reviews (big tasks only) | AI reviewer (MANAGER-gated escalation) |
+| 9 | Complete | `complete` / `status:complete` | Internally finished, not yet released | reviewer (from `ai_review`) / USER (from `human_review`) |
+| 10 | Publish | `publish` / `status:publish` | Publish pipeline entered | INTEGRATOR (spawns RELEASER) |
+| 11 | Published | `published` / `status:published` | Artifact published | RELEASER |
+| 12 | Deploy | `deploy` / `status:deploy` | Deploy pipeline entered | INTEGRATOR (spawns DEPLOYER) |
+| 13 | Live | `live` / `status:live` | Live in production | DEPLOYER; INTEGRATOR on soak exit |
+| 14 | Live Auditing | `live_auditing` / `status:live_auditing` | Live, under audit/soak | INTEGRATOR |
+| 15 | Blocked | `blocked` / `status:blocked` | Blocked at any stage (non-empty `blocked-by:`) | column owner at time of block |
+| 16 | Failed | `failed` / `status:failed` | Failed, retryable — stays open, never archived | MANAGER/USER gate |
+| 17 | Superseded | `superseded` / `status:superseded` | Replaced by other TRDD(s) | MANAGER gate |
 
 ### Task Routing
 
-- **Small tasks**: In Progress → AI Review → Merge/Release → Done
-- **Big tasks**: In Progress → AI Review → Human Review → Merge/Release → Done
+- **Small tasks**: `dev` → `testing` → `ai_review` → `complete` (reviewer verdict)
+- **Big tasks**: `dev` → `testing` → `ai_review` → `human_review` → `complete` (USER verdict)
 - **Human Review** is requested up the chain via AMCOS → AMAMA (AMAMA asks the
   USER to test/review). No team-internal agent messages AMAMA directly (R6 v3).
+- **Rejections flow back**: `testing→dev` (test runner, tests FAILED),
+  `ai_review→dev` (reviewer rejection), `human_review→dev` (USER rejection).
 - **Blocked** can be set from any column; task returns to its previous column when unblocked
-- **Flip ownership**: AMOA owns Backlog → Todo → In Progress (the pre-PR
-  green-light is the last AMOA-owned step); AMIA owns AI Review → Human Review →
-  Merge/Release → Done. AMOA never flips a task to Done.
+- **Flip ownership**: the ORCHESTRATOR originates ONLY its two Part B2 rows
+  (`todo→design`, `dispatch→dev`); every other move is originated by the actor
+  in the Canonical Columns table and the ORCHESTRATOR may only MIRROR it. The
+  ORCHESTRATOR never declares tests passed and never self-marks `complete`.
 
 ### Code Format Rules
 
-- **Always use dashes**: `in-progress`, `ai-review`, `merge-release` (NOT underscores)
-- **Labels use `status:` prefix**: `status:in-progress`, `status:ai-review`
-- **Display names use title case**: "In Progress", "AI Review", "Merge/Release"
+- **Column codes use underscores, exactly the TRDD `column:` enum**:
+  `ai_review`, `human_review`, `live_auditing` (NOT dashes)
+- **Labels use `status:` prefix + the code verbatim**: `status:ai_review`, `status:live_auditing`
+- **Display names use title case**: "AI Review", "Live Auditing"
 
 ---
 

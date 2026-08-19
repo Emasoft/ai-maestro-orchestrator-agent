@@ -403,18 +403,29 @@ When AMCOS updates the registry, it sends a notification to all team agents usin
 
 ## Kanban System Reference
 
-All projects use the canonical **8-column kanban system** on GitHub Projects:
+All projects use the ratified **17-column kanban system** (14 lifecycle + 3
+exception columns; SSOT `shared/amoa_kanban_vocab.py`, per
+`~/.claude/rules/universal-kanban.md`):
 
 | Column | Code | Label |
 |--------|------|-------|
-| Backlog | `backlog` | `status:backlog` |
+| Backburner | `backburner` | `status:backburner` |
 | Todo | `todo` | `status:todo` |
-| In Progress | `in-progress` | `status:in-progress` |
-| AI Review | `ai-review` | `status:ai-review` |
-| Human Review | `human-review` | `status:human-review` |
-| Merge/Release | `merge-release` | `status:merge-release` |
-| Done | `done` | `status:done` |
+| Design | `design` | `status:design` |
+| Dispatch | `dispatch` | `status:dispatch` |
+| Dev | `dev` | `status:dev` |
+| Testing | `testing` | `status:testing` |
+| AI Review | `ai_review` | `status:ai_review` |
+| Human Review | `human_review` | `status:human_review` |
+| Complete | `complete` | `status:complete` |
+| Publish | `publish` | `status:publish` |
+| Published | `published` | `status:published` |
+| Deploy | `deploy` | `status:deploy` |
+| Live | `live` | `status:live` |
+| Live Auditing | `live_auditing` | `status:live_auditing` |
 | Blocked | `blocked` | `status:blocked` |
+| Failed | `failed` | `status:failed` |
+| Superseded | `superseded` | `status:superseded` |
 
 For full kanban workflow details, task routing rules, and code format rules, see **FULL_PROJECT_WORKFLOW.md**.
 
