@@ -5,7 +5,7 @@ column: ai_review
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T23:57:37+0200
-updated: 2026-08-19T14:30:00+0200
+updated: 2026-08-19T14:22:41+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: audit
@@ -45,8 +45,10 @@ Card moved testing→ai_review in the test-runner capacity (CI green = the requi
 ai_review v1 REJECTED, 4 findings (reports/ai-review/20260819_141357+0200-trdd-8DH44UXH-ai-review.md),
 all verified first-hand and fixed in 011be6f (authority-mirror line, 3 docs' 8-column tables
 → 17-column, dead ARCHIVE_ELIGIBLE_COLUMNS removed, find_trdd empty-stdout raise); cycle
-ai_review→dev→testing re-run (ruff clean, 49/49). REMAINING: re-review verdict on 011be6f
-(reviewer agent resumed), then ai_review→human_review escalation per B2 (non-exempt).
+ai_review→dev→testing re-run (ruff clean, 49/49). Re-review on 011be6f
+= APPROVED, 0 findings (same report, re-verdict appended 14:22). REMAINING: MANAGER
+approval for ai_review→human_review (request filed via COS — non-exempt §Z); on approval,
+USER verdict closes the review lane, then complete→publish gate for the fix commits.
 Prior v1.13.10 CI failure (find_trdd tests vs CLI-less runners) fixed in da1550f. Side event
 ledgered: janitor cache-updater outage 09:45-10:02 tool-locked the session mid-release —
 filed ai-maestro-janitor#281.
@@ -194,5 +196,9 @@ phantom `hide-from-slash-command-tool` (commands/amoa-cancel-orchestrator.md) FI
   6 of 7 migrated, 1 not-applicable-with-rationale.
 
 ## Approval log
+
+- 2026-08-19T14:22:41+0200 — ai_review v1 REJECTED (4 findings), fixed 011be6f; re-review
+  APPROVED 0 findings (reports/ai-review/20260819_141357+0200-trdd-8DH44UXH-ai-review.md).
+  Requested `ai_review → human_review` (non-exempt §Z) via COS → MANAGER. Awaiting reply.
 
 ## Notes and lessons learned
