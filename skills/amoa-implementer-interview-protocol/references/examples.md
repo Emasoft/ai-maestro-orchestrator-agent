@@ -63,9 +63,11 @@ Send post-task verification questions using the `agent-messaging` skill:
 - **Type**: `approval`
 - **Priority**: `normal`
 
-**Step 2**: After implementer reports PR #123 created, update issue status:
+**Step 2**: After implementer reports PR #123 created, update issue status (the
+assignee's own dev->testing move — the test runner moves it to `status:ai_review`
+on pass, or back to `status:dev` on fail):
 ```bash
-gh issue edit 42 --remove-label "status:in-progress" --add-label "status:ai-review"
+gh issue edit 42 --remove-label "status:dev" --add-label "status:testing"
 ```
 
 **Step 3**: Notify Integrator using the `agent-messaging` skill:

@@ -20,14 +20,14 @@ gh label create "assign:human" --color "FBCA04" --description "Human developer"
 
 ### Status Labels
 ```bash
-gh label create "status:backlog" --color "CFD3D7" --description "In backlog, awaiting triage or deferred"
-gh label create "status:ready" --color "0E8A16" --description "Ready to work on"
-gh label create "status:in-progress" --color "FBCA04" --description "Currently being worked on"
-gh label create "status:blocked" --color "D73A4A" --description "Cannot proceed, waiting for info or intentionally paused"
-gh label create "status:ai-review" --color "1D76DB" --description "Integrator reviews ALL tasks"
-gh label create "status:human-review" --color "C2E0C6" --description "User reviews BIG tasks only"
-gh label create "status:merge-release" --color "5319E7" --description "Ready to merge"
-gh label create "status:done" --color "0E8A16" --description "Completed"
+gh label create "status:backburner" --color "D4C5F9" --description "Deferred; not scheduled"
+gh label create "status:todo" --color "EDEDED" --description "Ready to work on"
+gh label create "status:dev" --color "5319E7" --description "Currently being worked on"
+gh label create "status:blocked" --color "B60205" --description "Cannot proceed, waiting for info or intentionally paused"
+gh label create "status:ai_review" --color "BFDADC" --description "Integrator reviews ALL tasks"
+gh label create "status:human_review" --color "D4C5F9" --description "User reviews BIG tasks only"
+gh label create "status:publish" --color "C2E0C6" --description "Ready to merge"
+gh label create "status:complete" --color "0E8A16" --description "Completed"
 ```
 
 ### Priority Labels
@@ -72,7 +72,7 @@ gh issue edit 42 --remove-label "assign:implementer-1"
 gh issue edit 42 --add-label "assign:implementer-2"
 
 # Update status
-gh issue edit 42 --remove-label "status:in-progress" --add-label "status:ai-review"
+gh issue edit 42 --remove-label "status:dev" --add-label "status:testing"
 ```
 
 ## Validate Label Cardinality

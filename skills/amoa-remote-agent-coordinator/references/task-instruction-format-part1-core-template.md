@@ -364,8 +364,8 @@ cargo test -> 15 passed, 0 failed
 When updating GitHub issue status:
 
 ```bash
-# Move to In Progress (after ACK)
-gh issue edit [ISSUE_NUM] --add-label "status:in-progress"
+# Move to Dev (after ACK)
+gh issue edit [ISSUE_NUM] --add-label "status:dev"
 gh issue comment [ISSUE_NUM] --body "[ACK] Starting work."
 
 # Add progress update
@@ -373,7 +373,7 @@ gh issue comment [ISSUE_NUM] --body "[PROGRESS] Checkpoint 2: 60% complete"
 
 # Move to Testing (after PR created) — this is the assignee's own dev->testing move
 gh issue edit [ISSUE_NUM] --add-label "status:testing"
-# The test runner moves to status:ai-review on pass, or back to status:dev on fail
+# The test runner moves to status:ai_review on pass, or back to status:dev on fail
 ```
 
 ### Reporting Guidelines

@@ -94,7 +94,7 @@ Apply these labels when creating the issue:
 gh issue create \
   --title "[{{TASK_ID}}] {{TITLE}}" \
   --body "$(cat issue-body.md)" \
-  --label "status:backlog" \
+  --label "status:backburner" \
   --label "priority:{{PRIORITY}}" \
   --label "platform:{{PLATFORM}}" \
   --label "type:{{TYPE}}" \
@@ -297,7 +297,7 @@ gh issue create \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --title "[AMOA-042] Implement SSH key management" \
   --body-file issue-body.md \
-  --label "status:backlog" \
+  --label "status:backburner" \
   --label "priority:high" \
   --label "platform:linux" \
   --label "type:feature" \
@@ -314,7 +314,7 @@ gh issue create \
 gh issue create \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --title "[{{TASK_ID}}] {{TITLE}}" \
-  --label "status:backlog" \
+  --label "status:backburner" \
   --label "priority:{{PRIORITY}}" \
   --label "platform:{{PLATFORM}}" \
   --web
@@ -414,7 +414,7 @@ platform: ${PLATFORM}
 
 ## Labels to Apply
 
-- status:backlog
+- status:backburner
 - priority:${PRIORITY}
 - platform:${PLATFORM}
 EOF
@@ -424,7 +424,7 @@ ISSUE_URL=$(gh issue create \
   --repo "$GITHUB_OWNER/$REPO_NAME" \
   --title "[${TASK_ID}] ${TITLE}" \
   --body "$(cat /tmp/issue-body.md)" \
-  --label "status:backlog" \
+  --label "status:backburner" \
   --label "priority:${PRIORITY}" \
   --label "platform:${PLATFORM}" \
   --project "$PROJECT_NUMBER" \

@@ -75,13 +75,23 @@ All projects managed by AMOA orchestrator MUST use these standardized labels:
 
 | Label | Color | Description |
 |-------|-------|-------------|
-| `status:backlog` | `#EDEDED` | Not started |
-| `status:in-progress` | `#0052CC` | Work in progress |
-| `status:ai-review` | `#FBCA04` | Integrator AI review |
-| `status:human-review` | `#FF9F1C` | Awaiting human review |
-| `status:merge-release` | `#2EA44F` | Approved, ready to merge and release |
-| `status:blocked` | `#D93F0B` | Blocked by dependency |
-| `status:done` | `#0E8A16` | Completed and merged |
+| `status:backburner` | `#D4C5F9` | Deferred; not scheduled |
+| `status:todo` | `#EDEDED` | Ready to start |
+| `status:design` | `#C5DEF5` | Being designed |
+| `status:dispatch` | `#BFD4F2` | Assigned, not yet started |
+| `status:dev` | `#5319E7` | Implementation in progress |
+| `status:testing` | `#FEF2C0` | Under test |
+| `status:ai_review` | `#BFDADC` | Awaiting AI review |
+| `status:human_review` | `#D4C5F9` | Awaiting human review |
+| `status:complete` | `#0E8A16` | Work finished |
+| `status:publish` | `#C2E0C6` | Ready to publish |
+| `status:published` | `#0E8A16` | Published |
+| `status:deploy` | `#C2E0C6` | Ready to deploy |
+| `status:live` | `#006B75` | Live in production |
+| `status:live_auditing` | `#FBCA04` | Live; under audit |
+| `status:blocked` | `#B60205` | Blocked by dependency |
+| `status:failed` | `#B60205` | Failed; retryable |
+| `status:superseded` | `#CCCCCC` | Replaced by another task |
 | `type:feature` | `#1D76DB` | New feature |
 | `type:bugfix` | `#D73A4A` | Bug fix |
 | `type:refactor` | `#A2EEEF` | Code refactoring |

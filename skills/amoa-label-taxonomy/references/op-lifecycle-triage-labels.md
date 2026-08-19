@@ -27,11 +27,11 @@ workflow-instruction: support
 
 ## When to Use
 
-Use this operation when triaging an issue that has `status:backlog` label.
+Use this operation when triaging an issue that has `status:backburner` label.
 
 ## Prerequisites
 
-- Issue exists with `status:backlog`
+- Issue exists with `status:backburner`
 - Issue has been analyzed for priority, effort, and scope
 - GitHub CLI (`gh`) authenticated
 
@@ -78,28 +78,28 @@ toolchain:rust
 
 | Condition | Status |
 |-----------|--------|
-| Ready for immediate work | `status:ready` |
+| Ready for immediate work | `status:todo` |
 | Needs more info | `status:blocked` |
 | Blocked by other work | `status:blocked` |
-| Deferred to later | `status:backlog` |
+| Deferred to later | `status:backburner` |
 
 ### Step 5: Apply Triage Labels
 
 ```bash
 # Full triage - move to ready
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:backlog" \
-  --add-label "priority:<priority>,effort:<effort>,status:ready"
+  --remove-label "status:backburner" \
+  --add-label "priority:<priority>,effort:<effort>,status:todo"
 
 # With platform/toolchain
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:backlog" \
-  --add-label "priority:<priority>,effort:<effort>,status:ready,platform:<platform>,toolchain:<toolchain>"
+  --remove-label "status:backburner" \
+  --add-label "priority:<priority>,effort:<effort>,status:todo,platform:<platform>,toolchain:<toolchain>"
 
 # Move to backlog
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:backlog" \
-  --add-label "priority:<priority>,effort:<effort>,status:backlog"
+  --remove-label "status:backburner" \
+  --add-label "priority:<priority>,effort:<effort>,status:backburner"
 ```
 
 ### Step 6: Add Component if Not Set
@@ -141,8 +141,8 @@ gh issue comment <ISSUE_NUM> --body "**Triage Complete**
 ```bash
 # Bug ready for immediate work
 gh issue edit 123 \
-  --remove-label "status:backlog" \
-  --add-label "priority:high,effort:m,status:ready,component:api"
+  --remove-label "status:backburner" \
+  --add-label "priority:high,effort:m,status:todo,component:api"
 ```
 
 ### Example 2: Feature to Backlog
@@ -150,8 +150,8 @@ gh issue edit 123 \
 ```bash
 # Feature deferred to backlog
 gh issue edit 124 \
-  --remove-label "status:backlog" \
-  --add-label "priority:low,effort:xl,status:backlog"
+  --remove-label "status:backburner" \
+  --add-label "priority:low,effort:xl,status:backburner"
 ```
 
 ### Example 3: Needs More Information
@@ -159,7 +159,7 @@ gh issue edit 124 \
 ```bash
 # Cannot triage without more info
 gh issue edit 125 \
-  --remove-label "status:backlog" \
+  --remove-label "status:backburner" \
   --add-label "status:blocked"
 gh issue comment 125 --body "Cannot triage: Please provide steps to reproduce the issue."
 ```
@@ -171,7 +171,7 @@ gh issue comment 125 --body "Cannot triage: Please provide steps to reproduce th
 - [ ] Estimate effort (xs/s/m/l/xl)
 - [ ] Verify component is set
 - [ ] Determine appropriate next status
-- [ ] Remove `status:backlog`
+- [ ] Remove `status:backburner`
 - [ ] Add priority, effort, and new status labels
 - [ ] Add platform/toolchain if relevant
 - [ ] Add triage comment with summary

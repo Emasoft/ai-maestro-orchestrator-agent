@@ -7,12 +7,14 @@ Reads module data from .ai-maestro/orchestration-state.json and uses the gh CLI
 to create, update, and close GitHub issues to keep them in sync with module
 status.
 
-Label mapping for module statuses:
-    planning    -> status:planning
-    assigned    -> status:assigned
-    in-progress -> status:in-progress
-    review      -> status:review
-    verified    -> status:verified
+Label mapping for module statuses (each raw status resolves through
+amoa_kanban_vocab.resolve_column to a ratified column; the label is
+`status:<column>` verbatim):
+    planning    -> status:design
+    assigned    -> status:dispatch
+    in-progress -> status:dev
+    review      -> status:ai_review
+    verified    -> status:complete
     complete    -> status:complete
 
 Usage:

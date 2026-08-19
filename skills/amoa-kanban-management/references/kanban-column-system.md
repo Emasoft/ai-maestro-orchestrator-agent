@@ -18,14 +18,14 @@ A card's column is its TRDD frontmatter `column:` field; there is no separate ta
 | Dispatch | `status:dispatch` | Designed, awaiting agent assignment |
 | Dev | `status:dev` | Actively being implemented |
 | Testing | `status:testing` | Under test |
-| AI Review | `status:ai-review` | Code submitted for automated review |
-| Human Review | `status:human-review` | Code awaiting human review |
+| AI Review | `status:ai_review` | Code submitted for automated review |
+| Human Review | `status:human_review` | Code awaiting human review |
 | Complete | `status:complete` | Internally finished, not yet released |
 | Publish | `status:publish` | Entering the publish pipeline |
 | Published | `status:published` | Published artifact |
 | Deploy | `status:deploy` | Entering the deploy pipeline |
 | Live | `status:live` | Deployed and live |
-| Live Auditing | `status:live-auditing` | Live, under audit/soak |
+| Live Auditing | `status:live_auditing` | Live, under audit/soak |
 
 Exception columns (apply at any point in the lifecycle):
 

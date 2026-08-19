@@ -70,9 +70,9 @@ Apply consistent labels:
 | `module` | All module issues |
 | `priority-high` / `priority-medium` / `priority-low` | Priority level |
 | `status:todo` | Initial status |
-| `status:in-progress` | When assigned and started |
+| `status:dev` | When assigned and started |
 | `status:review` | When PR submitted |
-| `status:done` | When completed |
+| `status:complete` | When completed |
 
 ### Step 3: Create Issues Using gh CLI
 

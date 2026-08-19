@@ -140,12 +140,12 @@ When priority changes:
 
 **Before**:
 ```
-Labels: module, priority:normal, status:in-progress
+Labels: module, priority:normal, status:dev
 ```
 
 **After** (changed to critical):
 ```
-Labels: module, priority:critical, status:in-progress
+Labels: module, priority:critical, status:dev
 ```
 
 ### Label Update Command
@@ -279,7 +279,7 @@ Modified module: remember-me
 ```yaml
 - id: "oauth-google"
   priority: "medium"
-  status: "in-progress"
+  status: "dev"
   assigned_to: "implementer-1"
 ```
 

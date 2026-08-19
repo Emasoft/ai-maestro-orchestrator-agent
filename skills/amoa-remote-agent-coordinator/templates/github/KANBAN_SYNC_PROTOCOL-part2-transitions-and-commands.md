@@ -12,14 +12,14 @@ This document contains the valid label transitions and project board synchroniza
 
 ```mermaid
 graph TD
-    A[Backlog] --> B[In Progress]
+    A[Backburner] --> B[Dev]
     B --> T[Testing]
     T -->|pass| C[AI Review]
     T -->|fail| B
     C -->|big tasks| D[Human Review]
-    C -->|small tasks| E[Merge/Release]
-    D --> E[Merge/Release]
-    E --> F[Done]
+    C -->|small tasks| E[Publish]
+    D --> E[Publish]
+    E --> F[Complete]
     B --> G[Blocked]
     G --> B
     B --> A
@@ -27,19 +27,19 @@ graph TD
 
 ### Transition Commands
 
-#### Backlog → In Progress
+#### Backburner → Dev
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:backlog" \
-  --add-label "status:in-progress"
+  --remove-label "status:backburner" \
+  --add-label "status:dev"
 ```
 
-#### In Progress → Testing (moved by the ASSIGNEE, after PR is created)
+#### Dev → Testing (moved by the ASSIGNEE, after PR is created)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:in-progress" \
+  --remove-label "status:dev" \
   --add-label "status:testing"
 ```
 
@@ -48,87 +48,87 @@ gh issue edit {{ISSUE_NUMBER}} \
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --remove-label "status:testing" \
-  --add-label "status:ai-review"
+  --add-label "status:ai_review"
 ```
 
-#### Testing → In Progress (moved by the TEST RUNNER, on fail)
+#### Testing → Dev (moved by the TEST RUNNER, on fail)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --remove-label "status:testing" \
-  --add-label "status:in-progress"
+  --add-label "status:dev"
 ```
 
 #### AI Review → Human Review (big tasks requiring human approval)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:human-review"
+  --remove-label "status:ai_review" \
+  --add-label "status:human_review"
 ```
 
-#### AI Review → Merge/Release (small tasks that pass AI review)
+#### AI Review → Publish (small tasks that pass AI review; mirror of the reviewer's verdict — the assignee never originates this move)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:merge-release"
+  --remove-label "status:ai_review" \
+  --add-label "status:publish"
 ```
 
-#### Human Review → Merge/Release (human-approved tasks)
+#### Human Review → Publish (human-approved tasks; mirror of the reviewer's verdict)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:human-review" \
-  --add-label "status:merge-release"
+  --remove-label "status:human_review" \
+  --add-label "status:publish"
 ```
 
-#### Human Review → In Progress (changes requested by human reviewer)
+#### Human Review → Dev (changes requested by human reviewer)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:human-review" \
-  --add-label "status:in-progress"
+  --remove-label "status:human_review" \
+  --add-label "status:dev"
 ```
 
-#### AI Review → In Progress (changes requested by AI reviewer)
+#### AI Review → Dev (changes requested by AI reviewer)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:in-progress"
+  --remove-label "status:ai_review" \
+  --add-label "status:dev"
 ```
 
-#### Merge/Release → Done
+#### Publish → Complete (mirror of the reviewer's verdict — the assignee never originates this move)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:merge-release" \
-  --add-label "status:done"
+  --remove-label "status:publish" \
+  --add-label "status:complete"
 ```
 
-#### In Progress → Blocked
+#### Dev → Blocked
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:in-progress" \
+  --remove-label "status:dev" \
   --add-label "status:blocked"
 ```
 
-#### Blocked → In Progress
+#### Blocked → Dev
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --remove-label "status:blocked" \
-  --add-label "status:in-progress"
+  --add-label "status:dev"
 ```
 
-#### In Progress → Backlog (de-assignment)
+#### Dev → Backburner (de-assignment)
 ```bash
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:in-progress" \
-  --add-label "status:backlog" \
+  --remove-label "status:dev" \
+  --add-label "status:backburner" \
   --remove-assignee "{{AGENT_ASSIGNEE}}"
 ```
 

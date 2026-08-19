@@ -112,7 +112,7 @@ gh issue comment <ISSUE_NUM> --body "**Task Reassigned**
 ### Step 6: Preserve Status Labels
 
 Do NOT change status labels during reassignment:
-- Keep `status:in-progress` if work was ongoing
+- Keep `status:dev` if work was ongoing
 - Keep priority labels
 - Keep component labels
 
@@ -143,7 +143,7 @@ assignments:
   implementer-2:  # NEW
     - issue: 42
       module: auth-core
-      status: in-progress
+      status: dev
       reassigned_from: implementer-1
       reassigned_at: 2024-01-15T15:30:00Z
 ```

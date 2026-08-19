@@ -85,7 +85,7 @@ PREVIOUS_STATUS=$(gh issue view $TASK_ID --json comments | \
 
 if [ -z "$PREVIOUS_STATUS" ]; then
   # Default to in-progress if previous status not found
-  PREVIOUS_STATUS="status:in-progress"
+  PREVIOUS_STATUS="status:dev"
   echo "WARNING: Previous status not found, defaulting to $PREVIOUS_STATUS"
 fi
 

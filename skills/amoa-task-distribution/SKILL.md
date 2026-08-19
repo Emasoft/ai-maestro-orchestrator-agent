@@ -27,7 +27,7 @@ Requires `gh` CLI, AI Maestro API, and familiarity with **amoa-label-taxonomy** 
 1. Query `status:ready` tasks, sort by priority (critical > high > normal > low), skip tasks with unresolved blockedBy deps
 2. Select agent by availability, skill match, and load — see [op-select-agent.md](references/op-select-agent.md)
 <!-- TOC: Metadata | Purpose | Preconditions | Selection Criteria (Evaluation Order) | Availability Check | Skill Match | Capacity Check | Input | Procedure | Command | Output | Specialization Preferences | Error Handling | Related Operations -->
-3. Assign: add `assign:<agent>` + `status:in-progress` labels, send message via `agent-messaging` — see [op-assign-task.md](references/op-assign-task.md)
+3. Assign: add `assign:<agent>` + `status:dev` labels, send message via `agent-messaging` — see [op-assign-task.md](references/op-assign-task.md)
 <!-- TOC: Metadata | Purpose | Preconditions | Input | Procedure | Commands | Step 1-3: Update Labels | Step 4: Send AI Maestro Message | AI Maestro Message Format | Output | Post-Assignment | Error Handling | Checklist | Related Operations -->
 4. Wait for ACK; if timeout, reassign per [op-reassign-task.md](references/op-reassign-task.md)
 <!-- TOC: Metadata | Purpose | Preconditions | When to Reassign | Input | Procedure | Commands | Partial Progress Gathering | Output | Checklist | Error Handling | Related Operations -->

@@ -142,7 +142,7 @@ I'll update this issue once we have a decision.
 
 2. **Label the issue**:
    - `type:enhancement`
-   - `status:backlog` initially
+   - `status:backburner` initially
    - Update based on decision
 
 3. **Assess against criteria** listed above

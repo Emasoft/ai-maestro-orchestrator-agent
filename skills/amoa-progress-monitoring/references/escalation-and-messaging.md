@@ -122,8 +122,10 @@ When agent reports `[DONE]`:
 ### If Verification Passes
 
 ```bash
-# Update status
-gh issue edit $ISSUE --remove-label "status:in-progress" --add-label "status:done"
+# Update status (mirror of the reviewer's verdict — the orchestrator never
+# originates this move; it only records the ai_review/human_review -> complete
+# decision the reviewer already made)
+gh issue edit $ISSUE --remove-label "status:dev" --add-label "status:complete"
 
 # Remove assignment (task complete)
 gh issue edit $ISSUE --remove-label "assign:$AGENT_NAME"

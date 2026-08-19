@@ -168,6 +168,11 @@ phantom `hide-from-slash-command-tool` (commands/amoa-cancel-orchestrator.md) FI
 - Board hygiene repaired (2026-08-19): 6B3K7S69 / NSWPM93D / 704ZBCR8 ZONE-MISMATCH →
   archived as `complete` (release-via none) with 3P-ZON-12 three-writes; 03DYGXJW
   `derived: true` added (mechanical repair, `updated:` not bumped).
+- Hub follow-through (2026-08-19): spec proposal ai-maestro TRDD-Z70X3LEW (3P-TOOL-01..04,
+  incl. porcelain-mode MUST with legitimate deferral — our F1/F3 declination cited as the
+  reference shape); porcelain implementation carded hub-side as Tier-0 TRDD-IPSNDKGM
+  (`--porcelain` TAB path-first records, trichotomy unchanged). Our F1/F3 migration is that
+  card's acceptance test — we get pinged when it ships; F1/F3 stay deferred until then.
 
 ## Approval log
 

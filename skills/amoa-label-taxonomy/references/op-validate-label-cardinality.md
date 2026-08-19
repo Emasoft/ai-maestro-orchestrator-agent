@@ -95,7 +95,7 @@ If violations found, use op-update-label to correct:
 gh issue view 42 --json labels --jq '.labels[].name' | grep "^status:" | while read label; do
   gh issue edit 42 --remove-label "$label"
 done
-gh issue edit 42 --add-label "status:backlog"  # Set correct status
+gh issue edit 42 --add-label "status:backburner"  # Set correct status
 
 # Fix multiple assign labels
 gh issue view 42 --json labels --jq '.labels[].name' | grep "^assign:" | while read label; do

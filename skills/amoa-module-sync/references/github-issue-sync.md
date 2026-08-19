@@ -139,8 +139,8 @@ Status labels are updated as module progresses:
 |---------------|-------------|
 | `pending` | `status:todo` |
 | `assigned` | `status:todo` (or `status:assigned`) |
-| `in-progress` | `status:in-progress` |
-| `complete` | `status:done` |
+| `in-progress` | `status:dev` |
+| `complete` | `status:complete` |
 
 ### Assignment Sync (Human Developers)
 
@@ -175,7 +175,7 @@ When a module is marked complete:
 
 1. Issue is closed
 2. PR is linked (if available)
-3. `status:done` label added
+3. `status:complete` label added
 
 **Completion closure**:
 ```bash
@@ -234,9 +234,9 @@ AMOA orchestration uses a specific set of labels for module tracking.
 | Label | Meaning | Color (suggested) |
 |-------|---------|-------------------|
 | `status:todo` | Not started | Gray (#EDEDED) |
-| `status:assigned` | Assigned to agent | Light Blue (#C2E0FF) |
-| `status:in-progress` | Work ongoing | Purple (#5319E7) |
-| `status:done` | Completed | Green (#0E8A16) |
+| `status:dispatch` | Assigned to agent | Light Blue (#BFD4F2) |
+| `status:dev` | Work ongoing | Purple (#5319E7) |
+| `status:complete` | Completed | Green (#0E8A16) |
 
 ### Creating Labels in Repository
 
@@ -254,9 +254,9 @@ gh label create "priority:low" --color "0E8A16" --description "Low priority - ni
 
 # Status labels
 gh label create "status:todo" --color "EDEDED" --description "Not yet started"
-gh label create "status:assigned" --color "C2E0FF" --description "Assigned to agent"
-gh label create "status:in-progress" --color "5319E7" --description "Work in progress"
-gh label create "status:done" --color "0E8A16" --description "Completed"
+gh label create "status:dispatch" --color "BFD4F2" --description "Assigned to agent"
+gh label create "status:dev" --color "5319E7" --description "Work in progress"
+gh label create "status:complete" --color "0E8A16" --description "Completed"
 ```
 
 ### Label Filtering
@@ -267,8 +267,8 @@ Useful GitHub filters for AMOA modules:
 |--------|---------|
 | `label:module` | All modules |
 | `label:module label:priority:critical` | Critical modules |
-| `label:module label:status:in-progress` | Active modules |
-| `label:module -label:status:done` | Incomplete modules |
+| `label:module label:status:dev` | Active modules |
+| `label:module -label:status:complete` | Incomplete modules |
 | `label:module is:open` | Open module issues |
 
 ---

@@ -23,7 +23,7 @@ This protocol defines when and how agents should update GitHub issue status and 
 **File:** [KANBAN_SYNC_PROTOCOL-part2-transitions-and-commands.md](./KANBAN_SYNC_PROTOCOL-part2-transitions-and-commands.md)
 
 - Valid Transitions (mermaid diagram)
-- Transition Commands (Backlog, Todo, In Progress, AI Review, Human Review, Merge/Release, Done, Blocked)
+- Transition Commands (Backburner, Todo, Dev, Testing, AI Review, Human Review, Publish, Complete, Blocked)
 - Project Board Sync Commands
   - Get Item ID for Issue
   - Update Status Field
@@ -36,11 +36,11 @@ This protocol defines when and how agents should update GitHub issue status and 
 
 - Automation Script (`scripts/sync-issue-status.sh`)
 - Required Fields Before Status Change
-  - Before Moving to "In Progress"
+  - Before Moving to "Dev"
   - Before Moving to "AI Review"
   - Before Moving to "Human Review"
-  - Before Moving to "Merge/Release"
-  - Before Moving to "Done"
+  - Before Moving to "Publish"
+  - Before Moving to "Complete"
   - Before Setting "Blocked"
 - Error Handling
 - Best Practices
@@ -50,51 +50,55 @@ This protocol defines when and how agents should update GitHub issue status and 
 
 ## Status States
 
-### Canonical 8-Column System
+### Ratified 17-Column System
 
-| # | Column | Code | Label | Description |
-|---|--------|------|-------|-------------|
-| 1 | Backlog | backlog | status:backlog | Entry point for new tasks |
-| 2 | Todo | todo | status:todo | Ready to start, dependencies resolved |
-| 3 | In Progress | in-progress | status:in-progress | Active work |
-| 4 | AI Review | ai-review | status:ai-review | Integrator reviews ALL tasks |
-| 5 | Human Review | human-review | status:human-review | User reviews BIG tasks only |
-| 6 | Merge/Release | merge-release | status:merge-release | Ready to merge |
-| 7 | Done | done | status:done | Completed |
-| 8 | Blocked | blocked | status:blocked | Blocked at any stage |
+The board uses the ratified 17-column vocabulary (`~/.claude/rules/universal-kanban.md`),
+14 lifecycle columns plus 3 exception columns.
+
+| Column | Status Label | Description |
+|--------|-------------|-------------|
+| Backburner | `status:backburner` | Deferred, not yet scheduled |
+| Todo | `status:todo` | Scheduled, ready to be designed |
+| Design | `status:design` | ARCHITECT is designing the task |
+| Dispatch | `status:dispatch` | Designed, awaiting agent assignment |
+| Dev | `status:dev` | Actively being implemented |
+| Testing | `status:testing` | Under test |
+| AI Review | `status:ai_review` | Integrator reviews ALL tasks |
+| Human Review | `status:human_review` | User reviews BIG tasks only |
+| Complete | `status:complete` | Internally finished, not yet released |
+| Publish | `status:publish` | Entering the publish pipeline |
+| Published | `status:published` | Published artifact |
+| Deploy | `status:deploy` | Entering the deploy pipeline |
+| Live | `status:live` | Deployed and live |
+| Live Auditing | `status:live_auditing` | Live, under audit/soak |
+| Blocked | `status:blocked` | Blocked at any stage |
+| Failed | `status:failed` | Failed and retryable |
+| Superseded | `status:superseded` | Replaced by other task(s) |
 
 ---
 
 ## Quick Reference
 
 ### Status Labels
-| State | Label |
-|-------|-------|
-| Backlog | `status:backlog` |
-| Todo | `status:todo` |
-| In Progress | `status:in-progress` |
-| AI Review | `status:ai-review` |
-| Human Review | `status:human-review` |
-| Merge/Release | `status:merge-release` |
-| Done | `status:done` |
-| Blocked | `status:blocked` |
+
+See the table above for the full 17-label vocabulary.
 
 ### Valid Transitions
 
 ```
-Backlog ► Todo ► In Progress ► AI Review ─┬─► Merge/Release ► Done
-                     │                    │         ▲
-                     │                    ▼         │
-                     │              Human Review ───┘
-                     │              (big tasks only)
-                     │
-                     │◄──── AI Review (changes requested)
-                     │
-                     ▼
-                  Blocked
-                     │
-                     ▼
-                In Progress
+Backburner ► Todo ► Dev ► Testing ─┬─► AI Review ─┬─► Publish ► Complete
+                            │      │              │       ▲
+                            │      ▼              ▼       │
+                            │    (back to Dev)  Human Review
+                            │                     (big tasks only)
+                            │
+                            │◄──── AI Review (changes requested)
+                            │
+                            ▼
+                         Blocked
+                            │
+                            ▼
+                           Dev
 ```
 
 ### Quick Commands
@@ -111,10 +115,9 @@ gh issue edit {{ISSUE_NUMBER}} \
 
 Apply the concrete per-transition label pairs from
 [KANBAN_SYNC_PROTOCOL-part2-transitions-and-commands.md](./KANBAN_SYNC_PROTOCOL-part2-transitions-and-commands.md)
-(Transition Commands section). Two transitions from the canonical 8-column
-system are not listed there — use the pattern above with these pairs:
-Backlog → Todo (`backlog` → `todo`) and Todo → In Progress (`todo` →
-`in-progress`).
+(Transition Commands section). Two transitions are not listed there — use
+the pattern above with these pairs: Backburner → Todo (`backburner` →
+`todo`) and Todo → Dev (`todo` → `dev`).
 
 ---
 
@@ -142,9 +145,9 @@ The automation script handles both label updates and kanban board synchronizatio
 ./scripts/sync-issue-status.sh ISSUE_NUMBER NEW_STATUS [COMMENT]
 
 # Examples
-./scripts/sync-issue-status.sh 42 "In Progress" "Started work"
+./scripts/sync-issue-status.sh 42 "Dev" "Started work"
 ./scripts/sync-issue-status.sh 42 "AI Review" "PR #123 ready for review"
-./scripts/sync-issue-status.sh 42 "Done" "Merged and deployed"
+./scripts/sync-issue-status.sh 42 "Complete" "Merged and deployed"
 ./scripts/sync-issue-status.sh 42 "Blocked" "Waiting for API key"
 ```
 

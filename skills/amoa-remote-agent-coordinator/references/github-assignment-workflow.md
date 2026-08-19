@@ -116,7 +116,7 @@ Instead of Project cards, use labels:
 
 ```bash
 # Remove old status, add new status
-gh issue edit 42 --remove-label "status:ready" --add-label "status:in-progress"
+gh issue edit 42 --remove-label "status:ready" --add-label "status:dev"
 ```
 
 ---
@@ -128,7 +128,7 @@ gh issue edit 42 --remove-label "status:ready" --add-label "status:in-progress"
 | Label | Color | Meaning |
 |-------|-------|---------|
 | `status:pending` | Gray | Not started |
-| `status:in-progress` | Blue | Work in progress |
+| `status:dev` | Blue | Work in progress |
 | `status:review` | Yellow | Under review |
 | `status:blocked` | Red | Blocked by issue |
 | `priority:high` | Red | High priority |
@@ -142,7 +142,7 @@ gh issue edit 42 --remove-label "status:ready" --add-label "status:in-progress"
 ```bash
 # Add multiple labels
 gh issue edit 42 \
-  --add-label "status:in-progress" \
+  --add-label "status:dev" \
   --add-label "priority:high" \
   --add-label "assigned"
 

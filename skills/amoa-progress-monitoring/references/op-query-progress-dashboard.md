@@ -65,7 +65,7 @@ Generate a comprehensive view of all active tasks, agent states, and progress me
 
 ```bash
 # Get all tasks with in-progress status
-IN_PROGRESS=$(gh issue list --label "status:in-progress" --json number,title,labels,updatedAt | \
+IN_PROGRESS=$(gh issue list --label "status:dev" --json number,title,labels,updatedAt | \
   jq -r '.[] | {number, title, labels: [.labels[].name], updated: .updatedAt}')
 
 echo "In-progress tasks:"

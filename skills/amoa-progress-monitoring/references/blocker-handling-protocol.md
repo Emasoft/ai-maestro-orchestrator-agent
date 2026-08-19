@@ -35,7 +35,7 @@ When agent reports `[BLOCKED]`:
 1. **Verify** the blocker is real (agent cannot solve it themselves)
 2. **Record** the task's current column BEFORE moving to Blocked (for restoration after unblocking)
 3. **Move** task to Blocked column and add `status:blocked` label
-4. **Remove** the `status:in-progress` (or whatever status it had) label
+4. **Remove** the `status:dev` (or whatever status it had) label
 5. **Comment** on the blocked task issue with blocker details
 6. **Create a separate GitHub issue** for the blocker itself (labeled `type:blocker`, referencing the blocked task). This makes the blocking problem visible to all agents and team members on the issue tracker.
 7. **Escalate** to AMAMA IMMEDIATELY via AI Maestro blocker-escalation message (see amoa-messaging-templates). Include the blocker issue number.

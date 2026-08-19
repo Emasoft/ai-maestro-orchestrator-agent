@@ -284,14 +284,23 @@ Sync should run automatically after:
 | `priority:high` | High priority |
 | `priority:medium` | Medium priority |
 | `priority:low` | Low priority |
-| `status:backlog` | In backlog |
-| `status:todo` | Not yet started |
-| `status:in-progress` | Work underway |
-| `status:ai-review` | PR awaiting AI review |
-| `status:human-review` | Awaiting human review |
-| `status:merge-release` | Ready to merge/release |
-| `status:done` | Module finished |
-| `status:blocked` | Blocked by dependency |
+| `status:backburner` | Deferred, not yet scheduled |
+| `status:todo` | Scheduled, ready to be designed |
+| `status:design` | ARCHITECT is designing the task |
+| `status:dispatch` | Designed, awaiting agent assignment |
+| `status:dev` | Actively being implemented |
+| `status:testing` | Under test |
+| `status:ai_review` | Code submitted for automated review |
+| `status:human_review` | Code awaiting human review |
+| `status:complete` | Internally finished, not yet released |
+| `status:publish` | Entering the publish pipeline |
+| `status:published` | Published artifact |
+| `status:deploy` | Entering the deploy pipeline |
+| `status:live` | Deployed and live |
+| `status:live_auditing` | Live, under audit/soak |
+| `status:blocked` | Blocked by a non-empty `blocked-by:` list |
+| `status:failed` | Failed and retryable — stays open, never archived |
+| `status:superseded` | Replaced by other TRDD(s) |
 
 ---
 

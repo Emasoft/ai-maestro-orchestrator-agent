@@ -184,8 +184,9 @@ if [ ${#MISSING_ITEMS[@]} -eq 0 ]; then
   # VERIFICATION PASSED
   echo "VERIFICATION PASSED - All criteria met"
 
-  # Update task status
-  gh issue edit $TASK_ID --remove-label "status:in-progress" --add-label "status:done"
+  # Update task status (mirror of the reviewer's verdict — the orchestrator
+  # never originates this move)
+  gh issue edit $TASK_ID --remove-label "status:dev" --add-label "status:complete"
 
   # Remove agent assignment (task complete)
   gh issue edit $TASK_ID --remove-label "assign:$AGENT_NAME"

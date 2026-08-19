@@ -16,12 +16,12 @@
 ## Dependency Resolution
 
 ```
-Task A: status:in-progress, blocks: [B, C]
+Task A: status:dev, blocks: [B, C]
 Task B: status:ready, blockedBy: [A] -> Cannot assign yet
 Task C: status:ready, blockedBy: [A] -> Cannot assign yet
 
 When Task A completes:
-- Update A: status:done
+- Update A: status:complete
 - B and C become assignable
 ```
 

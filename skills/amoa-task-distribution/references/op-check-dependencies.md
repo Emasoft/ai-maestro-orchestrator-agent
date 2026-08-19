@@ -42,7 +42,7 @@ Verify that a task's dependencies (blockedBy list) are all resolved before the t
 1. Get the task issue body
 2. Parse the `blockedBy` field from the body (expected format: `blockedBy: [10, 20, 30]`)
 3. For each blocking issue number:
-   - Check if the issue has `status:done` label
+   - Check if the issue has `status:complete` label
    - If ANY blocking issue is NOT done, task is blocked
 4. Return blocking status
 
@@ -56,7 +56,7 @@ BLOCKED_BY=$(gh issue view $ISSUE --json body | jq -r '.body | match("blockedBy:
 if [ -n "$BLOCKED_BY" ]; then
   for BLOCKER in $(echo $BLOCKED_BY | tr ',' ' '); do
     STATUS=$(gh issue view $BLOCKER --json labels | jq -r '.labels[].name' | grep '^status:' | head -1)
-    if [ "$STATUS" != "status:done" ]; then
+    if [ "$STATUS" != "status:complete" ]; then
       echo "BLOCKED by #$BLOCKER (status: $STATUS)"
       exit 1
     fi

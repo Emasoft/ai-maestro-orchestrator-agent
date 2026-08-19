@@ -40,7 +40,7 @@ gh issue view $ISSUE --json labels | jq -r '.labels[] | select(.name | startswit
 gh issue edit $ISSUE --add-label "assign:$AGENT"
 
 # 3. Update status
-gh issue edit $ISSUE --remove-label "status:ready" --add-label "status:in-progress"
+gh issue edit $ISSUE --remove-label "status:ready" --add-label "status:dev"
 
 # 4. Send task assignment using the agent-messaging skill:
 # - Recipient: $AGENT

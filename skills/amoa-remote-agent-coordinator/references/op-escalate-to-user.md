@@ -202,7 +202,7 @@ jq '.status = "resolved" | .decision = "'"$DECISION"'" | .resolved_at = "'"$(dat
 if [ -n "$BLOCKING_TASK" ]; then
   gh issue edit $BLOCKING_TASK --remove-label "status:blocked"
   gh issue edit $BLOCKING_TASK --remove-label "blocked:user-decision"
-  gh issue edit $BLOCKING_TASK --add-label "status:in-progress"
+  gh issue edit $BLOCKING_TASK --add-label "status:dev"
   gh issue comment $BLOCKING_TASK --body "Unblocked. User decision: $DECISION"
 fi
 

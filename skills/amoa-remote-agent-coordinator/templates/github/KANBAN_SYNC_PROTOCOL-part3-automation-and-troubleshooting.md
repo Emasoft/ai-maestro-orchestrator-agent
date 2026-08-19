@@ -15,7 +15,7 @@ Save as `scripts/sync-issue-status.sh`:
 set -e
 
 # Usage: ./sync-issue-status.sh ISSUE_NUMBER NEW_STATUS [COMMENT]
-# Example: ./sync-issue-status.sh 42 "In Progress" "Started work"
+# Example: ./sync-issue-status.sh 42 "Dev" "Started work"
 
 ISSUE_NUMBER="$1"
 NEW_STATUS="$2"
@@ -28,33 +28,37 @@ AGENT_NAME="${AGENT_NAME:-unknown}"
 
 # Determine label transitions
 case "$NEW_STATUS" in
-  "Backlog")
+  "Backburner")
     OLD_LABEL_PATTERN="status:"
-    NEW_LABEL="status:backlog"
+    NEW_LABEL="status:backburner"
     ;;
-  "In Progress")
+  "Dev")
     OLD_LABEL_PATTERN="status:"
-    NEW_LABEL="status:in-progress"
+    NEW_LABEL="status:dev"
     ;;
   "Todo")
     OLD_LABEL_PATTERN="status:"
     NEW_LABEL="status:todo"
     ;;
+  "Testing")
+    OLD_LABEL_PATTERN="status:"
+    NEW_LABEL="status:testing"
+    ;;
   "AI Review")
     OLD_LABEL_PATTERN="status:"
-    NEW_LABEL="status:ai-review"
+    NEW_LABEL="status:ai_review"
     ;;
   "Human Review")
     OLD_LABEL_PATTERN="status:"
-    NEW_LABEL="status:human-review"
+    NEW_LABEL="status:human_review"
     ;;
-  "Merge/Release")
+  "Publish")
     OLD_LABEL_PATTERN="status:"
-    NEW_LABEL="status:merge-release"
+    NEW_LABEL="status:publish"
     ;;
-  "Done")
+  "Complete")
     OLD_LABEL_PATTERN="status:"
-    NEW_LABEL="status:done"
+    NEW_LABEL="status:complete"
     ;;
   "Blocked")
     OLD_LABEL_PATTERN="status:"
@@ -62,7 +66,7 @@ case "$NEW_STATUS" in
     ;;
   *)
     echo "Error: Invalid status '$NEW_STATUS'"
-    echo "Valid: Backlog, Todo, In Progress, AI Review, Human Review, Merge/Release, Done, Blocked"
+    echo "Valid: Backburner, Todo, Dev, Testing, AI Review, Human Review, Publish, Complete, Blocked"
     exit 1
     ;;
 esac

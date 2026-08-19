@@ -67,7 +67,7 @@ gh issue edit 42 --add-label "component:api,component:auth"
 gh issue edit 42 --remove-label "assign:implementer-1"
 
 # Remove multiple labels
-gh issue edit 42 --remove-label "status:ready,status:backlog"
+gh issue edit 42 --remove-label "status:todo,status:backburner"
 ```
 
 ### Step 4: Replace Labels (Atomic Operation)
@@ -79,7 +79,7 @@ For categories with cardinality 0-1 or 1, always remove then add in single comma
 gh issue edit 42 --remove-label "assign:implementer-1" --add-label "assign:implementer-2"
 
 # Change status (atomic)
-gh issue edit 42 --remove-label "status:ready" --add-label "status:in-progress"
+gh issue edit 42 --remove-label "status:todo" --add-label "status:dev"
 
 # Change priority (atomic)
 gh issue edit 42 --remove-label "priority:normal" --add-label "priority:high"
@@ -122,17 +122,18 @@ gh label edit "assign:implementer-1" --description "Assigned to AI implementer a
 ```bash
 # Issue moves from ready to in-progress with assignment
 gh issue edit 42 \
-  --remove-label "status:ready" \
-  --add-label "status:in-progress,assign:implementer-1"
+  --remove-label "status:todo" \
+  --add-label "status:dev,assign:implementer-1"
 ```
 
 ### Example 2: Task Completion
 
 ```bash
-# Mark task complete, remove assignment
+# Mark task complete (mirror of the reviewer's ai_review|human_review -> complete
+# verdict — the orchestrator never originates this move), remove assignment
 gh issue edit 42 \
-  --remove-label "status:in-progress,assign:implementer-1" \
-  --add-label "status:done"
+  --remove-label "status:ai_review,assign:implementer-1" \
+  --add-label "status:complete"
 ```
 
 ### Example 3: Reassignment During Work
@@ -151,7 +152,7 @@ gh issue comment 42 --body "Reassigned from implementer-1 to implementer-2 due t
 
 ```bash
 # Update all issues from one status to another
-for issue_num in $(gh issue list --label "status:backlog" --json number --jq '.[].number'); do
-  gh issue edit $issue_num --remove-label "status:backlog" --add-label "status:ready"
+for issue_num in $(gh issue list --label "status:backburner" --json number --jq '.[].number'); do
+  gh issue edit $issue_num --remove-label "status:backburner" --add-label "status:todo"
 done
 ```

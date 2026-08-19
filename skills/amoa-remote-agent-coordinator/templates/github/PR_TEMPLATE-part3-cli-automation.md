@@ -11,14 +11,16 @@ This document provides gh CLI commands and automation scripts for PR management.
 ### Create Pull Request
 
 ```bash
-# Create PR from current branch
+# Create PR from current branch. status:testing is the ASSIGNEE's own
+# dev->testing move — never add status:ai_review directly; the TEST RUNNER
+# moves status:testing -> status:ai_review on pass, or back to status:dev on fail.
 gh pr create \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --title "[{{TASK_ID}}] {{TITLE}}" \
   --body "$(cat pr-body.md)" \
   --base main \
   --head {{BRANCH_NAME}} \
-  --label "status:ai-review" \
+  --label "status:testing" \
   --label "priority:{{PRIORITY}}" \
   --label "platform:{{PLATFORM}}" \
   --assignee "{{ASSIGNEE}}" \
@@ -143,7 +145,7 @@ PR_URL=$(gh pr create \
   --body "$(cat /tmp/pr-body.md)" \
   --base main \
   --head "$BRANCH_NAME" \
-  --label "status:ai-review" \
+  --label "status:testing" \
   --json url \
   --jq .url)
 

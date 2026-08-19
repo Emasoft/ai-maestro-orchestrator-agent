@@ -30,7 +30,7 @@ Use this operation when assigning an issue to an agent for implementation.
 
 ## Prerequisites
 
-- Issue is in `status:ready` state
+- Issue is in `status:todo` state
 - Issue has been triaged (has priority, effort, type, component)
 - Agent is registered and available
 - GitHub CLI (`gh`) authenticated
@@ -44,7 +44,7 @@ Use this operation when assigning an issue to an agent for implementation.
 gh issue view <ISSUE_NUM> --json labels --jq '.labels[].name'
 
 # Must have:
-# - status:ready
+# - status:todo
 # - priority:*
 # - effort:*
 # - type:*
@@ -74,8 +74,8 @@ Agent IDs follow the pattern: `<role>-<number>`
 ```bash
 # Assign and update status in single command
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:ready" \
-  --add-label "assign:<agent-id>,status:in-progress"
+  --remove-label "status:todo" \
+  --add-label "assign:<agent-id>,status:dev"
 ```
 
 ### Step 5: Notify Agent (if using AI Maestro)
@@ -102,7 +102,7 @@ gh issue comment <ISSUE_NUM> --body "**Assigned to <agent-id>**
 | Field | Type | Description |
 |-------|------|-------------|
 | Assignment Label | String | `assign:<agent-id>` |
-| Status Change | String | `status:ready` -> `status:in-progress` |
+| Status Change | String | `status:todo` -> `status:dev` |
 | Notification | Boolean | Whether agent was notified |
 
 ## Error Handling
@@ -110,7 +110,7 @@ gh issue comment <ISSUE_NUM> --body "**Assigned to <agent-id>**
 | Error | Cause | Solution |
 |-------|-------|----------|
 | Already assigned | Issue has `assign:*` label | Use reassignment procedure instead |
-| Not ready | Issue not in `status:ready` | Complete triage first |
+| Not ready | Issue not in `status:todo` | Complete triage first |
 | Agent unavailable | Agent session not responding | Choose different agent or wait |
 
 ## Examples
@@ -120,8 +120,8 @@ gh issue comment <ISSUE_NUM> --body "**Assigned to <agent-id>**
 ```bash
 # Assign issue 42 to implementer-1
 gh issue edit 42 \
-  --remove-label "status:ready" \
-  --add-label "assign:implementer-1,status:in-progress"
+  --remove-label "status:todo" \
+  --add-label "assign:implementer-1,status:dev"
 ```
 
 ### Example 2: Assignment with Full Notification
@@ -129,8 +129,8 @@ gh issue edit 42 \
 ```bash
 # Assign and notify
 gh issue edit 42 \
-  --remove-label "status:ready" \
-  --add-label "assign:implementer-1,status:in-progress"
+  --remove-label "status:todo" \
+  --add-label "assign:implementer-1,status:dev"
 
 gh issue comment 42 --body "**Assigned to implementer-1**
 - Priority: high
@@ -159,12 +159,12 @@ gh issue comment 42 --body "**Reassigned from implementer-1 to implementer-2**
 
 ## Checklist
 
-- [ ] Verify issue has `status:ready`
+- [ ] Verify issue has `status:todo`
 - [ ] Verify issue has priority, effort, type labels
 - [ ] Verify no existing `assign:*` label
 - [ ] Identify target agent
-- [ ] Remove `status:ready`
-- [ ] Add `assign:<agent>` and `status:in-progress`
+- [ ] Remove `status:todo`
+- [ ] Add `assign:<agent>` and `status:dev`
 - [ ] Add assignment comment to issue
 - [ ] Notify agent via AI Maestro (if applicable)
 - [ ] Update orchestrator state file

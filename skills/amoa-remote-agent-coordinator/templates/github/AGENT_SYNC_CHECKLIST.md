@@ -81,7 +81,7 @@ This checklist is organized into 4 parts for easier navigation. Click each part 
 
 | Label Type | Format | Example |
 |------------|--------|---------|
-| Status | `status:*` | `status:backlog`, `status:in-progress` |
+| Status | `status:*` | `status:backburner`, `status:dev` |
 | Priority | `priority:*` | `priority:high`, `priority:low` |
 | Platform | `platform:*` | `platform:linux`, `platform:macos` |
 | Type | `type:*` | `type:feature`, `type:bugfix` |

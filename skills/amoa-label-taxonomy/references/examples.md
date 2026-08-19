@@ -27,16 +27,16 @@ gh issue view 42 --json labels | jq -r '.labels[] | select(.name | startswith("a
 
 ```bash
 # Task is ready to start
-gh issue edit 42 --remove-label "status:ready" --add-label "status:in-progress"
+gh issue edit 42 --remove-label "status:todo" --add-label "status:dev"
 
 # Task is blocked
-gh issue edit 42 --remove-label "status:in-progress" --add-label "status:blocked"
+gh issue edit 42 --remove-label "status:dev" --add-label "status:blocked"
 
 # Blocker resolved
-gh issue edit 42 --remove-label "status:blocked" --add-label "status:in-progress"
+gh issue edit 42 --remove-label "status:blocked" --add-label "status:dev"
 
 # Task completed
-gh issue edit 42 --remove-label "status:in-progress" --add-label "status:done"
+gh issue edit 42 --remove-label "status:dev" --add-label "status:complete"
 ```
 
 ## Example 3: Query Issues by Multiple Labels
@@ -49,7 +49,7 @@ gh issue list --label "priority:high" --label "type:bug" --label "assign:impleme
 gh issue list --label "status:blocked"
 
 # Find all ready tasks for the API component
-gh issue list --label "status:ready" --label "component:api"
+gh issue list --label "status:todo" --label "component:api"
 ```
 
 ## Example 4: Validate Label Cardinality

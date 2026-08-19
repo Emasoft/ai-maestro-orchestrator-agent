@@ -62,18 +62,28 @@
 
 ## Status Labels (`status:*`)
 
-**Purpose:** Track the current workflow state of an issue.
+**Purpose:** Track the current workflow state of an issue — 1:1 with the ratified
+17-column kanban vocabulary (`~/.claude/rules/universal-kanban.md`).
 
 | Label | Description | Who Sets It |
 |-------|-------------|-------------|
-| `status:backlog` | In backlog, needs triage or is deferred | Created automatically, by user, or AMOA after triage |
-| `status:todo` | Ready to be worked on | AMOA when assigning |
-| `status:in-progress` | Currently being worked on | Assigned agent when starting |
+| `status:backburner` | Deferred, not yet scheduled | Created automatically, by user, or AMOA after triage |
+| `status:todo` | Scheduled, ready to be designed | AMOA when assigning |
+| `status:design` | ARCHITECT is designing the task | ARCHITECT |
+| `status:dispatch` | Designed, awaiting agent assignment | AMOA |
+| `status:dev` | Actively being implemented | Assigned agent when starting |
+| `status:testing` | Under test | Assigned agent (its own `dev` -> `testing` move) |
+| `status:ai_review` | Code submitted for automated review | Test runner, on test pass (`testing` -> `ai_review`) |
+| `status:human_review` | Code awaiting human review | AMIA after AI review passes |
+| `status:complete` | Internally finished, not yet released | Mirror of the reviewer's `ai_review\|human_review -> complete` verdict — the orchestrator never originates this move |
+| `status:publish` | Entering the publish pipeline | AMIA or user after review |
+| `status:published` | Published artifact | AMIA after publish pipeline succeeds |
+| `status:deploy` | Entering the deploy pipeline | AMIA or user after review |
+| `status:live` | Deployed and live | AMIA after deploy pipeline succeeds |
+| `status:live_auditing` | Live, under audit/soak | AMOA or AMIA |
 | `status:blocked` | Cannot proceed (includes waiting for info, intentionally paused) | Agent when blocked, AMOA or AMCOS |
-| `status:ai-review` | Integrator reviews ALL tasks | Agent after completing work |
-| `status:human-review` | User reviews BIG tasks only | AMIA after AI review passes |
-| `status:merge-release` | Ready to merge | AMIA or user after review |
-| `status:done` | Completed | AMIA after merge |
+| `status:failed` | Failed and retryable — stays open, never archived | Agent or test runner |
+| `status:superseded` | Replaced by other TRDD(s) | AMOA or AMCOS |
 
 **Rules:**
 - An issue should have EXACTLY ONE `status:*` label
@@ -82,9 +92,12 @@
 
 **Status Workflow:**
 ```
-backlog → todo → in-progress → ai-review → human-review → merge-release → done
-                       ↓                        ↑ (BIG tasks only)
-                    blocked → (resolved) → in-progress
+backburner → todo → design → dispatch → dev → testing → ai_review → human_review
+                                 ↓                            ↑ (BIG tasks only)
+                              blocked → (resolved) → dev
+
+ai_review|human_review → complete → publish → published
+                                  → deploy → live → live_auditing
 ```
 
 ## Priority Labels (`priority:*`)

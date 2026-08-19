@@ -80,8 +80,8 @@ Send a task delegation message using the `agent-messaging` skill:
 # Add assignment label
 gh issue edit $ISSUE_NUMBER --add-label "assign:$AGENT_NAME"
 
-# Update status to in-progress
-gh issue edit $ISSUE_NUMBER --add-label "status:in-progress"
+# Update status to dev
+gh issue edit $ISSUE_NUMBER --add-label "status:dev"
 
 # Add assignment comment
 gh issue comment $ISSUE_NUMBER --body "Assigned to agent: $AGENT_NAME via AI Maestro at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -97,7 +97,7 @@ echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) | ASSIGNED | #$ISSUE_NUMBER | $AGENT_NAME" 
 ## Success Criteria
 
 - [ ] Message sent successfully (AI Maestro returns message ID)
-- [ ] GitHub issue labeled with `assign:<agent>` and `status:in-progress`
+- [ ] GitHub issue labeled with `assign:<agent>` and `status:dev`
 - [ ] Assignment comment added to issue
 - [ ] Assignment logged for progress monitoring
 

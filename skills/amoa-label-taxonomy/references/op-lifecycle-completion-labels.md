@@ -13,9 +13,9 @@ workflow-instruction: support
   - [Step 1: Verify Task Completion](#step-1-verify-task-completion)
   - [Step 2: Determine Completion Path](#step-2-determine-completion-path)
   - [Step 3: Handle PR Review Status (if applicable)](#step-3-handle-pr-review-status-if-applicable)
-  - [Step 4: Move to AI Review](#step-4-move-to-ai-review)
+  - [Step 4: Move to Testing, then AI Review](#step-4-move-to-testing-then-ai-review)
   - [Step 5: Move to Human Review (BIG tasks only)](#step-5-move-to-human-review-big-tasks-only)
-  - [Step 6: Move to Merge-Release](#step-6-move-to-merge-release)
+  - [Step 6: Move to Publish](#step-6-move-to-publish)
   - [Step 7: Apply Completion Labels](#step-7-apply-completion-labels)
   - [Step 8: Close Issue (if policy allows)](#step-8-close-issue-if-policy-allows)
   - [Step 9: Notify Orchestrator](#step-9-notify-orchestrator)
@@ -34,7 +34,7 @@ Use this operation when an agent completes their assigned work and the task is d
 
 ## Prerequisites
 
-- Issue is in `status:in-progress` with `assign:<agent>` label
+- Issue is in `status:dev` with `assign:<agent>` label
 - Agent has completed the work
 - Work has been verified/reviewed
 - GitHub CLI (`gh`) authenticated
@@ -50,7 +50,7 @@ Before marking complete, confirm:
 gh issue view <ISSUE_NUM> --json labels --jq '.labels[].name'
 
 # Should have:
-# - status:in-progress
+# - status:dev
 # - assign:<agent-id>
 ```
 
@@ -83,15 +83,26 @@ gh issue edit <ISSUE_NUM> \
 # PR merged - continue to completion
 ```
 
-### Step 4: Move to AI Review
+### Step 4: Move to Testing, then AI Review
 
-Once work is complete, the Integrator (AMIA) reviews the deliverables.
+The ASSIGNEE moves its own work from `dev` to `testing` after opening the PR — it never
+adds `status:ai_review` directly.
 
 ```bash
-# Move from in-progress to ai-review
+# Assignee's own dev -> testing move (after PR creation)
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:in-progress" \
-  --add-label "status:ai-review"
+  --remove-label "status:dev" \
+  --add-label "status:testing"
+```
+
+The TEST RUNNER then moves `status:testing` -> `status:ai_review` on pass (or back to
+`status:dev` on fail), and the Integrator (AMIA) reviews the deliverables.
+
+```bash
+# Test runner: testing -> ai_review on pass
+gh issue edit <ISSUE_NUM> \
+  --remove-label "status:testing" \
+  --add-label "status:ai_review"
 ```
 
 The Integrator will review the code, run quality gates, and either approve or request changes.
@@ -101,41 +112,51 @@ The Integrator will review the code, run quality gates, and either approve or re
 For BIG tasks (tasks labeled `size:big` or `size:epic`), the user reviews the work via AMAMA (Assistant Manager) before it can proceed.
 
 ```bash
-# After AI review passes, move to human-review (BIG tasks only)
+# After AI review passes, move to human_review (BIG tasks only)
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:ai-review" \
-  --add-label "status:human-review"
+  --remove-label "status:ai_review" \
+  --add-label "status:human_review"
 ```
 
-> **Note:** Small tasks skip `status:human-review` and go directly from `status:ai-review` to `status:merge-release`.
+> **Note:** Small tasks skip `status:human_review` and go directly from `status:ai_review` to `status:complete`.
 
-### Step 6: Move to Merge-Release
+### Step 6: Move to Publish
 
-After all reviews pass, the task is ready to merge.
+`status:complete` is the mirror of the REVIEWER's `ai_review|human_review -> complete`
+verdict — the orchestrator never originates this move. After the reviewer marks the task
+complete, it is ready to enter the publish pipeline.
 
 ```bash
-# After review(s) approved, move to merge-release
+# Reviewer's ai_review/human_review -> complete verdict, then publish
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:ai-review,status:human-review,review:approved" \
-  --add-label "status:merge-release"
+  --remove-label "status:ai_review,status:human_review,review:approved" \
+  --add-label "status:complete"
+
+gh issue edit <ISSUE_NUM> \
+  --remove-label "status:complete" \
+  --add-label "status:publish"
 ```
 
 For small tasks skipping human review:
 
 ```bash
-# Small tasks: directly from ai-review to merge-release
+# Small tasks: directly from ai_review to complete, then publish
 gh issue edit <ISSUE_NUM> \
-  --remove-label "status:ai-review,review:approved" \
-  --add-label "status:merge-release"
+  --remove-label "status:ai_review,review:approved" \
+  --add-label "status:complete"
+
+gh issue edit <ISSUE_NUM> \
+  --remove-label "status:complete" \
+  --add-label "status:publish"
 ```
 
 ### Step 7: Apply Completion Labels
 
 ```bash
-# After merge is complete, mark as done
+# After publish is complete, mark as published
 gh issue edit <ISSUE_NUM> \
-  --remove-label "assign:<agent-id>,status:merge-release" \
-  --add-label "status:done"
+  --remove-label "assign:<agent-id>,status:publish" \
+  --add-label "status:published"
 ```
 
 ### Step 8: Close Issue (if policy allows)
@@ -148,7 +169,7 @@ gh issue close <ISSUE_NUM> --comment "Task completed by <agent-id>. All acceptan
 gh issue comment <ISSUE_NUM> --body "**Task Completed**
 - Agent: <agent-id>
 - Completion time: $(date -u +%Y-%m-%dT%H:%M:%SZ)
-- Status: done (issue remains open for final verification)"
+- Status: published (issue remains open for final verification)"
 ```
 
 ### Step 9: Notify Orchestrator
@@ -166,7 +187,7 @@ Send a completion notification using the `agent-messaging` skill:
 | Field | Type | Description |
 |-------|------|-------------|
 | Assignment Removed | Boolean | `assign:*` label removed |
-| Status Change | String | `status:in-progress` -> `status:ai-review` -> [`status:human-review` (BIG only)] -> `status:merge-release` -> `status:done` |
+| Status Change | String | `status:dev` -> `status:testing` -> `status:ai_review` -> [`status:human_review` (BIG only)] -> `status:complete` -> `status:publish` -> `status:published` |
 | Issue State | String | Open or Closed |
 
 ## Error Handling
@@ -174,8 +195,8 @@ Send a completion notification using the `agent-messaging` skill:
 | Error | Cause | Solution |
 |-------|-------|----------|
 | No assignment label | Already removed or never set | Just update status |
-| Multiple status labels | Previous error | Remove all, add `status:done` |
-| PR not merged | Review incomplete | Keep `status:in-progress`, add `review:*` |
+| Multiple status labels | Previous error | Remove all, add `status:complete` |
+| PR not merged | Review incomplete | Keep `status:dev`, add `review:*` |
 
 ## Examples
 
@@ -184,8 +205,8 @@ Send a completion notification using the `agent-messaging` skill:
 ```bash
 # Task done, no PR involved
 gh issue edit 42 \
-  --remove-label "assign:implementer-1,status:in-progress" \
-  --add-label "status:done"
+  --remove-label "assign:implementer-1,status:publish" \
+  --add-label "status:published"
 
 gh issue close 42 --comment "Completed by implementer-1"
 ```
@@ -195,8 +216,8 @@ gh issue close 42 --comment "Completed by implementer-1"
 ```bash
 # PR was merged, now complete the issue
 gh issue edit 42 \
-  --remove-label "assign:implementer-1,status:in-progress,review:approved" \
-  --add-label "status:done"
+  --remove-label "assign:implementer-1,status:publish,review:approved" \
+  --add-label "status:published"
 
 gh issue close 42 --comment "PR #99 merged. Task completed."
 ```
@@ -222,7 +243,7 @@ gh issue edit 42 --add-label "assign:implementer-2"
 ```bash
 # Work reveals blocking issue
 gh issue edit 42 \
-  --remove-label "assign:implementer-1,status:in-progress" \
+  --remove-label "assign:implementer-1,status:dev" \
   --add-label "status:blocked"
 
 gh issue comment 42 --body "**Blocked**
@@ -237,11 +258,12 @@ gh issue comment 42 --body "**Blocked**
 - [ ] Verify tests passing
 - [ ] Verify code reviewed (if required)
 - [ ] Handle PR review labels if applicable
-- [ ] Move to `status:ai-review` (Integrator reviews)
-- [ ] Move to `status:human-review` (BIG tasks only, user reviews via AMAMA)
-- [ ] Move to `status:merge-release` (ready to merge)
+- [ ] Move to `status:testing` (assignee's own dev -> testing move)
+- [ ] Move to `status:ai_review` (test runner, on pass)
+- [ ] Move to `status:human_review` (BIG tasks only, user reviews via AMAMA)
+- [ ] Move to `status:complete` (mirror of reviewer verdict) then `status:publish`
 - [ ] Remove `assign:<agent>` label
-- [ ] Add `status:done`
+- [ ] Add `status:published`
 - [ ] Add completion comment
 - [ ] Close issue (if policy allows)
 - [ ] Notify orchestrator

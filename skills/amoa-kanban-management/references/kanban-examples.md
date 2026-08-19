@@ -36,12 +36,18 @@ gh project item-add <project-number> --owner Emasoft --url "$ISSUE_URL"
 
 ### Example 3: Move Item to AI Review
 
+Per Part B2 (`~/.claude/rules/aimaestro/aimaestro-trdd-approval.md`), `testing -> ai_review`
+belongs to the **test runner**, not the orchestrator — the assignee moves `dev -> testing`
+after opening the PR, and the test runner moves `testing -> ai_review` on pass (or back to
+`dev` on fail). This example mirrors the test runner's move once it has happened; the
+orchestrator never originates it.
+
 ```bash
 # Get the project item ID and Status field ID
 ITEM_ID=$(gh project item-list <project-number> --owner Emasoft --format json | \
   jq -r ".items[] | select(.content.number == $ISSUE_NUMBER) | .id")
 
-# Move to AI Review column
+# Mirror the test runner's testing -> ai_review move (test runner already ran this)
 gh project item-edit \
   --project-id <project-id> \
   --id "$ITEM_ID" \

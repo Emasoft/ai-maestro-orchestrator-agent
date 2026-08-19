@@ -52,7 +52,7 @@ Choose the appropriate query based on your goal:
 gh issue list --label "assign:implementer-1"
 
 # Find all in-progress issues
-gh issue list --label "status:in-progress"
+gh issue list --label "status:dev"
 
 # Find all high-priority bugs
 gh issue list --label "priority:high"
@@ -65,14 +65,14 @@ gh issue list --label "priority:high"
 gh issue list --label "priority:high,type:bug,assign:implementer-1"
 
 # Find in-progress features in the API component
-gh issue list --label "status:in-progress,type:feature,component:api"
+gh issue list --label "status:dev,type:feature,component:api"
 ```
 
 #### Query with State Filter
 
 ```bash
 # Find open issues with label
-gh issue list --label "status:ready" --state open
+gh issue list --label "status:todo" --state open
 
 # Find closed issues for analysis
 gh issue list --label "type:bug" --state closed
@@ -101,7 +101,7 @@ gh label list
 gh issue list --label "assign:implementer-1" --json number,title,labels
 
 # Table with specific columns
-gh issue list --label "status:in-progress" --json number,title,assignees
+gh issue list --label "status:dev" --json number,title,assignees
 
 # Get just issue numbers
 gh issue list --label "priority:critical" --json number --jq '.[].number'
@@ -139,7 +139,7 @@ gh issue view 42 --json labels --jq '.labels[].name'
 
 ```bash
 # Find all ready tasks for implementer-1
-gh issue list --label "assign:implementer-1,status:ready" --json number,title
+gh issue list --label "assign:implementer-1,status:todo" --json number,title
 
 # Output:
 # [{"number": 42, "title": "Implement auth module"}]
@@ -149,7 +149,7 @@ gh issue list --label "assign:implementer-1,status:ready" --json number,title
 
 ```bash
 # Count issues per status
-for status in backlog ready in-progress blocked ai-review human-review merge-release done; do
+for status in backburner todo design dispatch dev testing ai_review human_review complete publish published deploy live live_auditing blocked failed superseded; do
   count=$(gh issue list --label "status:$status" --json number | jq 'length')
   echo "status:$status = $count"
 done
@@ -159,6 +159,6 @@ done
 
 ```bash
 # Find ready issues without assignment (requires jq filtering)
-gh issue list --label "status:ready" --json number,title,labels \
+gh issue list --label "status:todo" --json number,title,labels \
   | jq '[.[] | select(.labels | map(.name) | map(startswith("assign:")) | any | not)]'
 ```

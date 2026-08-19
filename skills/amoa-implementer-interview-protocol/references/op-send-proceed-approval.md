@@ -87,7 +87,7 @@ Send official authorization for the implementer to begin work. PROCEED is the fo
    - Instruction verification: `authorized_at: <timestamp>`
 
 5. **Update GitHub Issue**:
-   - Add label: `status:in-progress`
+   - Add label: `status:dev`
    - Remove label: `status:assigned`
 
 6. **Log PROCEED** in handoff document
@@ -156,7 +156,7 @@ active_assignments:
 |--------|--------|-------------|
 | PROCEED message sent | AI Maestro message ID | Delivery confirmation |
 | State file updated | YAML changes | Module and assignment status |
-| GitHub Issue updated | Label changes | status:in-progress added |
+| GitHub Issue updated | Label changes | status:dev added |
 | Handoff logged | Document entry | Authorization timestamp |
 
 ---
@@ -166,7 +166,7 @@ active_assignments:
 - Implementer receives PROCEED message
 - Message contains all confirmed acceptance criteria
 - State file reflects `in-progress` status
-- GitHub Issue has `status:in-progress` label
+- GitHub Issue has `status:dev` label
 - Handoff document records authorization
 
 ---

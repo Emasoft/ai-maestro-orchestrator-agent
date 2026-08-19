@@ -133,8 +133,9 @@ if [ "$ALL_PASSING" = true ] && [ ${#MISSING_CRITERIA[@]} -eq 0 ]; then
   # Verification passed
   echo "VERIFICATION PASSED"
 
-  # Update issue status
-  gh issue edit $TASK_ID --remove-label "status:in-progress" --add-label "status:done"
+  # Update issue status (mirror of the reviewer's ai_review -> complete verdict —
+  # the orchestrator never originates this move)
+  gh issue edit $TASK_ID --remove-label "status:ai_review" --add-label "status:complete"
 
   # Add completion comment
   gh issue comment $TASK_ID --body "Task completed successfully. PR #$PR_NUMBER approved."

@@ -120,8 +120,8 @@ After sending, use the `agent-messaging` skill to verify the message was deliver
 # Update issue and project board
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:backlog" \
-  --add-label "status:in-progress"
+  --remove-label "status:backburner" \
+  --add-label "status:dev"
 
 # Update project board
 ITEM_ID=$(gh project item-list {{PROJECT_NUMBER}} \
@@ -157,7 +157,7 @@ echo "Issue status updated to In Progress"
 ```
 
 **Expected Output:**
-- Issue label changed to "status:in-progress"
+- Issue label changed to "status:dev"
 - Project board updated
 - Comment added to issue
 
@@ -184,7 +184,7 @@ Copy this checklist to issue comments when starting work:
 ### GitHub
 - [x] Issue exists and is accessible
 - [x] Issue assigned to agent
-- [x] Status label: status:in-progress
+- [x] Status label: status:dev
 - [x] Priority label: priority:{{PRIORITY}}
 - [x] Platform label: platform:{{PLATFORM}}
 - [x] Type label: type:{{TYPE}}

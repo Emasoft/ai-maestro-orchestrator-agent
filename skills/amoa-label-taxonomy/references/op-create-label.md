@@ -76,7 +76,7 @@ gh label create "<category>:<value>" --description "<description>" --color "<hex
 gh label create "assign:implementer-1" --description "Assigned to implementer-1" --color "1d76db"
 
 # Example: Create status label
-gh label create "status:in-progress" --description "Work actively in progress" --color "fbca04"
+gh label create "status:dev" --description "Work actively in progress" --color "5319e7"
 
 # Example: Create priority label
 gh label create "priority:high" --description "High priority - address within 1-2 days" --color "ff6b6b"

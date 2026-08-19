@@ -45,7 +45,7 @@ echo "Done"
 echo -n "3. Checking labels... "
 LABELS=$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_OWNER/$REPO_NAME" --json labels --jq '.labels[].name')
 if ! echo "$LABELS" | grep -q "^status:"; then
-  gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_OWNER/$REPO_NAME" --add-label "status:backlog"
+  gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_OWNER/$REPO_NAME" --add-label "status:backburner"
 fi
 echo "Done"
 

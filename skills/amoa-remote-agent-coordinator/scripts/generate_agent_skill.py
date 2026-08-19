@@ -136,15 +136,16 @@ gh pr create --title "feat({task_id}): {{description}}" \\
 ## GitHub Issue Updates
 
 ```bash
-# After ACK - move to In Progress
-gh issue edit {issue_num} --add-label "status:in-progress"
+# After ACK - move to Dev
+gh issue edit {issue_num} --add-label "status:dev"
 gh issue comment {issue_num} --body "[ACK] Starting work."
 
 # Progress update
 gh issue comment {issue_num} --body "[PROGRESS] Checkpoint {{N}}: {{status}}"
 
-# After PR created
-gh issue edit {issue_num} --add-label "status:ai-review"
+# After PR created — the assignee's own dev->testing move
+gh issue edit {issue_num} --add-label "status:testing"
+# The test runner moves to status:ai_review on pass, or back to status:dev on fail
 ```
 
 ---

@@ -56,7 +56,7 @@ ISSUE=42
 
 # Agent reports blocker via message
 # Update issue labels
-gh issue edit $ISSUE --remove-label "status:in-progress" --add-label "status:blocked"
+gh issue edit $ISSUE --remove-label "status:dev" --add-label "status:blocked"
 
 # Add blocker comment to issue
 gh issue comment $ISSUE --body "BLOCKED: Waiting on API endpoint design approval. Cannot proceed until #38 is resolved."
@@ -67,7 +67,7 @@ echo "Blocking issue #38 status: $BLOCKER_STATUS"
 
 # If blocker is resolved, notify agent
 if [ "$BLOCKER_STATUS" = "closed" ]; then
-  gh issue edit $ISSUE --remove-label "status:blocked" --add-label "status:in-progress"
+  gh issue edit $ISSUE --remove-label "status:blocked" --add-label "status:dev"
   # Send message to agent
 fi
 ```
@@ -88,8 +88,9 @@ else
 
   if [ "$CI_STATUS" = "SUCCESS" ]; then
     echo "VERIFICATION PASSED: PR #$PR_NUMBER exists and CI passed"
-    # Update to done
-    gh issue edit $ISSUE --remove-label "status:in-progress" --add-label "status:done"
+    # Update to complete (mirror of the reviewer's verdict — the orchestrator
+    # never originates this move)
+    gh issue edit $ISSUE --remove-label "status:dev" --add-label "status:complete"
     gh issue edit $ISSUE --remove-label "assign:implementer-1"
   else
     echo "VERIFICATION FAILED: CI status is $CI_STATUS"
@@ -111,7 +112,7 @@ Track all active tasks:
 
 ```bash
 # All in-progress tasks
-gh issue list --label "status:in-progress" --json number,title,labels
+gh issue list --label "status:dev" --json number,title,labels
 
 # Blocked tasks
 gh issue list --label "status:blocked" --json number,title,labels

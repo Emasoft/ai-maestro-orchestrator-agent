@@ -46,7 +46,7 @@ If an agent reports that a distributed task is blocked, AMOA must take IMMEDIATE
       "blocker_issue_number": "99",
       "assigned_agent": "impl-01",
       "blocker_category": "access-credentials",
-      "previous_status": "status:ai-review",
+      "previous_status": "status:ai_review",
       "impact": "Cannot complete deployment testing"
     }
   }
@@ -89,7 +89,7 @@ Copy this checklist and track your progress:
 - [ ] Add resolution comment on the blocked task issue
 - [ ] Close the blocker issue: `gh issue close $BLOCKER_ISSUE --comment "Resolved: [details]"`
 - [ ] Remove `status:blocked` label from the task
-- [ ] Restore previous status label on the task (e.g., `status:in-progress`, `status:ai-review`)
+- [ ] Restore previous status label on the task (e.g., `status:dev`, `status:ai_review`)
 - [ ] Move task back to its PREVIOUS column on the Kanban board (not always "In Progress")
 - [ ] Notify the assigned agent via AI Maestro that the blocker is resolved and work can resume
 - [ ] Log the resolution in the issue timeline

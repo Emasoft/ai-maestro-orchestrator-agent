@@ -28,16 +28,27 @@ gh project list --owner {{GITHUB_OWNER}} --format json | jq '.projects[] | selec
 ## Standard AMOA Columns
 
 ### Column Structure
-The AMOA orchestrator uses a standard eight-column workflow:
+The AMOA orchestrator uses the ratified 17-column workflow
+(`~/.claude/rules/universal-kanban.md`) — 14 lifecycle columns plus 3
+exception columns:
 
-1. **Backlog** - Tasks awaiting triage or prioritization
-2. **Todo** - Tasks ready to start, assigned and prioritized
-3. **In Progress** - Tasks actively being worked on
-4. **AI Review** - Tasks awaiting Integrator AI review
-5. **Human Review** - Tasks requiring human review (big or sensitive tasks)
-6. **Merge/Release** - Tasks reviewed and ready to merge or release
-7. **Done** - Completed tasks
-8. **Blocked** - Tasks blocked by dependencies or external factors
+1. **Backburner** - Deferred, not yet scheduled
+2. **Todo** - Scheduled, ready to be designed
+3. **Design** - ARCHITECT is designing the task
+4. **Dispatch** - Designed, awaiting agent assignment
+5. **Dev** - Actively being implemented
+6. **Testing** - Under test
+7. **AI Review** - Integrator reviews ALL tasks
+8. **Human Review** - User reviews BIG tasks only
+9. **Complete** - Internally finished, not yet released
+10. **Publish** - Entering the publish pipeline
+11. **Published** - Published artifact
+12. **Deploy** - Entering the deploy pipeline
+13. **Live** - Deployed and live
+14. **Live Auditing** - Live, under audit/soak
+15. **Blocked** - Blocked by a dependency (exception column)
+16. **Failed** - Failed and retryable (exception column)
+17. **Superseded** - Replaced by other task(s) (exception column)
 
 ### Add Status Field
 ```bash
@@ -46,7 +57,7 @@ gh project field-create {{PROJECT_NUMBER}} \
   --owner {{GITHUB_OWNER}} \
   --name "Status" \
   --data-type "SINGLE_SELECT" \
-  --single-select-options "Backlog,Todo,In Progress,AI Review,Human Review,Merge/Release,Done,Blocked"
+  --single-select-options "Backburner,Todo,Design,Dispatch,Dev,Testing,AI Review,Human Review,Complete,Publish,Published,Deploy,Live,Live Auditing,Blocked,Failed,Superseded"
 ```
 
 ## Custom Fields
@@ -109,16 +120,28 @@ gh project field-create {{PROJECT_NUMBER}} \
 ## Labels Setup
 
 ### Status Labels
+
+The ratified 17-column vocabulary (SSOT: `STATUS_LABEL_COLORS` /
+`STATUS_LABEL_DESCRIPTIONS` in `shared/amoa_kanban_vocab.py`):
 ```bash
 # Status tracking
-gh label create "status:backlog" --color "d4c5f9" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:todo" --color "D4C5F9" --description "Ready to start" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:in-progress" --color "fbca04" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:ai-review" --color "0E8A16" --description "Integrator AI review" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:human-review" --color "FBCA04" --description "Human review (big tasks)" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:merge-release" --color "1D76DB" --description "Ready to merge" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:blocked" --color "d93f0b" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:done" --color "0075ca" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:backburner" --color "D4C5F9" --description "Deferred; not scheduled" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:todo" --color "EDEDED" --description "Ready to start" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:design" --color "C5DEF5" --description "Being designed" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:dispatch" --color "BFD4F2" --description "Assigned, not yet started" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:dev" --color "5319E7" --description "Implementation in progress" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:testing" --color "FEF2C0" --description "Under test" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:ai_review" --color "BFDADC" --description "Awaiting AI review" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:human_review" --color "D4C5F9" --description "Awaiting human review" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:complete" --color "0E8A16" --description "Work finished" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:publish" --color "C2E0C6" --description "Ready to publish" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:published" --color "0E8A16" --description "Published" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:deploy" --color "C2E0C6" --description "Ready to deploy" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:live" --color "006B75" --description "Live in production" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:live_auditing" --color "FBCA04" --description "Live; under audit" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:blocked" --color "B60205" --description "Blocked by dependency" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:failed" --color "B60205" --description "Failed; retryable" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:superseded" --color "CCCCCC" --description "Replaced by another task" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
 ```
 
 ### Priority Labels
@@ -231,13 +254,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Move to In Progress when assigned
+      - name: Move to Dev when assigned
         if: github.event_name == 'issues' && github.event.action == 'assigned'
         run: |
           gh project item-edit \
             --project-id {{PROJECT_ID}} \
             --field-id {{STATUS_FIELD_ID}} \
-            --value "In Progress"
+            --value "Dev"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -281,7 +304,7 @@ gh project create --owner $GITHUB_OWNER --title "$PROJECT_NAME" --body "$PROJECT
 export PROJECT_NUMBER=3
 
 # 3. Add status field
-gh project field-create $PROJECT_NUMBER --owner $GITHUB_OWNER --name "Status" --data-type "SINGLE_SELECT" --single-select-options "Backlog,Todo,In Progress,AI Review,Human Review,Merge/Release,Done,Blocked"
+gh project field-create $PROJECT_NUMBER --owner $GITHUB_OWNER --name "Status" --data-type "SINGLE_SELECT" --single-select-options "Backburner,Todo,Design,Dispatch,Dev,Testing,AI Review,Human Review,Complete,Publish,Published,Deploy,Live,Live Auditing,Blocked,Failed,Superseded"
 
 # 4. Add other fields (Platform, Priority, etc.)
 # ... repeat for each field above

@@ -38,7 +38,7 @@ Interview decision (PROCEED/APPROVED/REVISE), handoff doc, and issue label updat
    <!-- TOC: REVISE Message | PROCEED Message -->
 2. Evaluate responses; send PROCEED or REVISE
 3. After execution, send Post-Task Interview. All pass → APPROVED, major → REVISE
-4. On APPROVED, create PR, set `status:testing` (the assignee's own dev->testing move), notify the test runner per [handoff-and-output.md](./references/handoff-and-output.md) — the test runner moves the card to `status:ai-review` on pass or back to `status:dev` on fail
+4. On APPROVED, create PR, set `status:testing` (the assignee's own dev->testing move), notify the test runner per [handoff-and-output.md](./references/handoff-and-output.md) — the test runner moves the card to `status:ai_review` on pass or back to `status:dev` on fail
    <!-- TOC: Output Types | Handoff to Integrator -->
 
 Copy this checklist and track your progress:

@@ -66,11 +66,11 @@ If the issue content indicates affected areas:
 ```bash
 # Minimum required labels for new issue
 gh issue edit <ISSUE_NUM> \
-  --add-label "type:<type>,status:backlog"
+  --add-label "type:<type>,status:backburner"
 
 # With component if known
 gh issue edit <ISSUE_NUM> \
-  --add-label "type:<type>,status:backlog,component:<component>"
+  --add-label "type:<type>,status:backburner,component:<component>"
 ```
 
 ### Step 4: Verify Labels Applied
@@ -84,7 +84,7 @@ gh issue view <ISSUE_NUM> --json labels --jq '.labels[].name'
 | Field | Type | Description |
 |-------|------|-------------|
 | Labels Applied | Array | List of initial labels set |
-| Issue State | String | Issue now has `status:backlog` |
+| Issue State | String | Issue now has `status:backburner` |
 
 ## Error Handling
 
@@ -99,21 +99,21 @@ gh issue view <ISSUE_NUM> --json labels --jq '.labels[].name'
 
 ```bash
 # User reports: "Login fails with error 500"
-gh issue edit 123 --add-label "type:bug,status:backlog,component:auth"
+gh issue edit 123 --add-label "type:bug,status:backburner,component:auth"
 ```
 
 ### Example 2: Feature Request
 
 ```bash
 # User requests: "Add dark mode support"
-gh issue edit 124 --add-label "type:feature,status:backlog,component:ui"
+gh issue edit 124 --add-label "type:feature,status:backburner,component:ui"
 ```
 
 ### Example 3: Unknown Component
 
 ```bash
 # Issue unclear on affected component
-gh issue edit 125 --add-label "type:enhancement,status:backlog"
+gh issue edit 125 --add-label "type:enhancement,status:backburner"
 gh issue comment 125 --body "Issue triaged. Component will be determined during detailed analysis."
 ```
 
@@ -122,6 +122,6 @@ gh issue comment 125 --body "Issue triaged. Component will be determined during 
 - [ ] Read issue content to determine type
 - [ ] Identify component if mentioned
 - [ ] Apply `type:*` label (required)
-- [ ] Apply `status:backlog` (required)
+- [ ] Apply `status:backburner` (required)
 - [ ] Apply `component:*` if known (optional at this stage)
 - [ ] Verify labels with `gh issue view`

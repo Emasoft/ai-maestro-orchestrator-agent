@@ -200,9 +200,9 @@ The acceptance criteria section in the issue body is replaced with the new crite
 
 Old priority label is removed and new one added:
 
-**Before labels**: `module, priority:normal, status:in-progress`
+**Before labels**: `module, priority:normal, status:dev`
 
-**After** (changed to critical): `module, priority:critical, status:in-progress`
+**After** (changed to critical): `module, priority:critical, status:dev`
 
 ### If Sync Fails
 

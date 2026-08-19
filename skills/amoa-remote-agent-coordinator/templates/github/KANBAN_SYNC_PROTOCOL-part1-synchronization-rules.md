@@ -17,15 +17,15 @@ This document contains the agent synchronization rules for updating GitHub issue
 # 1. Update issue label
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:backlog" \
-  --add-label "status:in-progress"
+  --remove-label "status:backburner" \
+  --add-label "status:dev"
 
 # 2. Move card on kanban
 gh project item-edit \
   --project-id {{PROJECT_ID}} \
   --id {{ITEM_ID}} \
   --field-id {{STATUS_FIELD_ID}} \
-  --value "In Progress"
+  --value "Dev"
 
 # 3. Add comment to issue
 gh issue comment {{ISSUE_NUMBER}} \
@@ -51,10 +51,10 @@ gh issue comment {{ISSUE_NUMBER}} \
 # 1. Update issue labels
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:in-progress" \
+  --remove-label "status:dev" \
   --add-label "status:blocked"
 
-# 2. Keep in "In Progress" column but add blocked indicator
+# 2. Keep in "Dev" column but add blocked indicator
 gh issue comment {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --body "⚠️ Agent **{{AGENT_NAME}}** is blocked.
@@ -86,7 +86,7 @@ cc @{{ORCHESTRATOR_OWNER}}"
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
   --remove-label "status:blocked" \
-  --add-label "status:in-progress"
+  --add-label "status:dev"
 
 # 2. Add comment
 gh issue comment {{ISSUE_NUMBER}} \
@@ -103,18 +103,20 @@ gh issue comment {{ISSUE_NUMBER}} \
 
 **Actions:**
 ```bash
-# 1. Update issue label
+# 1. Update issue label — this is the ASSIGNEE's own dev->testing move.
+#    The assignee never adds status:ai_review directly; the TEST RUNNER moves
+#    status:testing -> status:ai_review on pass, or back to status:dev on fail.
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:in-progress" \
-  --add-label "status:ai-review"
+  --remove-label "status:dev" \
+  --add-label "status:testing"
 
 # 2. Move card on kanban
 gh project item-edit \
   --project-id {{PROJECT_ID}} \
   --id {{ITEM_ID}} \
   --field-id {{STATUS_FIELD_ID}} \
-  --value "AI Review"
+  --value "Testing"
 
 # 3. Link PR to issue (automatic if PR body contains "Closes #{{ISSUE_NUMBER}}")
 
@@ -144,7 +146,11 @@ Ready for review!"
 
 **Actions:**
 ```bash
-# 1. Keep status:in-progress label
+# 1. The TEST RUNNER moves the issue back: status:testing -> status:dev
+gh issue edit {{ISSUE_NUMBER}} \
+  --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
+  --remove-label "status:testing" \
+  --add-label "status:dev"
 
 # 2. Add comment with failure details
 gh issue comment {{ISSUE_NUMBER}} \
@@ -157,7 +163,7 @@ gh issue comment {{ISSUE_NUMBER}} \
 
 Agent is investigating and fixing failures."
 
-# 3. Do NOT move to "AI Review"
+# 3. Do NOT move to "AI Review" — this only happens after status:testing passes
 # 4. Fix issues and re-run tests
 # 5. When fixed, proceed with Rule 4
 ```
@@ -167,39 +173,39 @@ Agent is investigating and fixing failures."
 **When:** Pull request is approved and merged (usually by orchestrator or human reviewer)
 
 **Transition flow:**
-- Standard tasks: `status:ai-review` → `status:merge-release` → `status:done`
-- Big/critical tasks: `status:ai-review` → `status:human-review` → `status:merge-release` → `status:done`
+- Standard tasks: `status:ai_review` → `status:publish` → `status:complete`
+- Big/critical tasks: `status:ai_review` → `status:human_review` → `status:publish` → `status:complete`
 
-**Actions (Step 1 - Move to Merge/Release after approval):**
+**Actions (Step 1 - Move to Publish after approval):**
 ```bash
 # 1. Update issue label
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:merge-release"
+  --remove-label "status:ai_review" \
+  --add-label "status:publish"
 
 # 2. Move card on kanban
 gh project item-edit \
   --project-id {{PROJECT_ID}} \
   --id {{ITEM_ID}} \
   --field-id {{STATUS_FIELD_ID}} \
-  --value "Merge/Release"
+  --value "Publish"
 ```
 
-**Actions (Step 2 - Move to Done after merge):**
+**Actions (Step 2 - Move to Complete after merge):**
 ```bash
 # 1. Update issue label
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:merge-release" \
-  --add-label "status:done"
+  --remove-label "status:publish" \
+  --add-label "status:complete"
 
 # 2. Move card on kanban
 gh project item-edit \
   --project-id {{PROJECT_ID}} \
   --id {{ITEM_ID}} \
   --field-id {{STATUS_FIELD_ID}} \
-  --value "Done"
+  --value "Complete"
 
 # 3. Close issue
 gh issue close {{ISSUE_NUMBER}} \
@@ -216,8 +222,8 @@ gh issue close {{ISSUE_NUMBER}} \
 # After AI review passes, move to human review before merge
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:human-review"
+  --remove-label "status:ai_review" \
+  --add-label "status:human_review"
 
 gh project item-edit \
   --project-id {{PROJECT_ID}} \
@@ -225,7 +231,7 @@ gh project item-edit \
   --field-id {{STATUS_FIELD_ID}} \
   --value "Human Review"
 
-# After human approval, proceed to merge-release (Step 1 above)
+# After human approval, proceed to publish (Step 1 above)
 ```
 
 **Required Fields Before Transition:**
@@ -243,15 +249,15 @@ gh project item-edit \
 # 1. Update labels
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --remove-label "status:ai-review" \
-  --add-label "status:in-progress"
+  --remove-label "status:ai_review" \
+  --add-label "status:dev"
 
-# 2. Move back to "In Progress"
+# 2. Move back to "Dev"
 gh project item-edit \
   --project-id {{PROJECT_ID}} \
   --id {{ITEM_ID}} \
   --field-id {{STATUS_FIELD_ID}} \
-  --value "In Progress"
+  --value "Dev"
 
 # 3. Add comment
 gh issue comment {{ISSUE_NUMBER}} \

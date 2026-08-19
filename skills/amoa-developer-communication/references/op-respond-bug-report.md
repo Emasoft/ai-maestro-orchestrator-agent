@@ -148,7 +148,7 @@ Thanks again for reporting this - it helped improve the project!
 
 2. **Label the issue**:
    - `type:bug`
-   - `status:backlog` initially
+   - `status:backburner` initially
    - Update to `status:confirmed` or `status:blocked`
 
 3. **Attempt reproduction** with documented steps

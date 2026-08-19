@@ -27,7 +27,7 @@ Requires **AGENT_OPERATIONS.md**, **amoa-label-taxonomy**, **amoa-messaging-temp
 States: Acknowledged, No ACK, Active, No Progress, Stale, Unresponsive, Blocked, Complete. Transitions: Assigned→Acknowledged→Active→Complete. Stalls: No Progress→Stale→Unresponsive.
 <!-- TOC: Escalation|Reminders|Reassignment|Progress|Completion -->
 
-1. Query `status:in-progress` issues; determine each agent's state via timestamps
+1. Query `status:dev` issues; determine each agent's state via timestamps
 2. No ACK/No Progress/Stale → send reminder or status request
 3. Unresponsive → escalate; Blocked → create `type:blocker` issue, notify the MAESTRO
 4. Complete → verify PR, tests, review, docs; update labels

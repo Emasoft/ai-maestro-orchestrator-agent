@@ -25,34 +25,40 @@
 
 **When Issue Created:**
 1. Set `type:*` based on issue content
-2. Set `status:backlog`
+2. Set `status:backburner`
 3. Optionally set `component:*` if known
 
 **When Issue Triaged:**
 1. Set `priority:*`
 2. Set `effort:*`
 3. Set `platform:*` and `toolchain:*` if relevant
-4. Change `status:backlog` -> `status:todo` (or keep in backlog)
+4. Change `status:backburner` -> `status:todo` (or keep in backburner)
 
 **When Issue Assigned:**
 1. Add `assign:<agent-name>`
-2. Change `status:todo` -> `status:in-progress`
+2. Change `status:todo` -> `status:dev`
 
-**When Work Done, AI Reviews:**
-1. Change `status:in-progress` -> `status:ai-review`
+**When Work Done, Assignee Moves to Testing:**
+1. The ASSIGNEE changes `status:dev` -> `status:testing` (its own move, after PR creation)
+2. It never adds `status:ai_review` directly
+
+**When Tests Pass, AI Reviews:**
+1. The TEST RUNNER changes `status:testing` -> `status:ai_review` on pass (or back to
+   `status:dev` on fail)
 2. Integrator (AMIA) reviews ALL tasks
 
 **When Human Review Needed (BIG tasks only):**
-1. Change `status:ai-review` -> `status:human-review`
+1. Change `status:ai_review` -> `status:human_review`
 2. User reviews the task
 
-**When Ready to Merge:**
-1. Change review status -> `status:merge-release`
-2. Ready to merge and release
+**When Ready to Publish:**
+1. Change review status -> `status:complete` (mirror of the reviewer's verdict — the
+   orchestrator never originates this move), then `status:publish`
+2. Ready to publish and release
 
 **When Issue Completed:**
 1. Remove `assign:*` label
-2. Change `status:merge-release` -> `status:done`
+2. Change `status:publish` -> `status:published`
 
 ## Common Mistakes to Avoid
 

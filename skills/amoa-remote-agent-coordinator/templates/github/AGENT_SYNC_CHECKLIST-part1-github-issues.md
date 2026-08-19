@@ -62,15 +62,15 @@ gh issue view {{ISSUE_NUMBER}} \
 ```
 
 **Expected Output:**
-- `status:backlog` (before starting)
-- Will change to `status:in-progress` when you start work
+- `status:backburner` (before starting)
+- Will change to `status:dev` when you start work
 
 **If Failed:**
 ```bash
-# Add status:backlog label
+# Add status:backburner label
 gh issue edit {{ISSUE_NUMBER}} \
   --repo {{GITHUB_OWNER}}/{{REPO_NAME}} \
-  --add-label "status:backlog"
+  --add-label "status:backburner"
 ```
 
 ### 2.2. Required Labels Present

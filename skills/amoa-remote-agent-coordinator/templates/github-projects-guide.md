@@ -31,16 +31,28 @@ gh project item-list {PROJECT_NUMBER} --owner {OWNER}
 
 ## Task Status Columns
 
-| Column | When to Move Here |
-|--------|-------------------|
-| Backlog | Entry point for new tasks |
-| Todo | Ready to start |
-| In Progress | Active work |
-| AI Review | Integrator reviews ALL tasks |
-| Human Review | User reviews BIG tasks only |
-| Merge/Release | Ready to merge |
-| Done | Completed |
-| Blocked | Blocked at any stage |
+The ratified 17-column vocabulary (`~/.claude/rules/universal-kanban.md`) — 14 lifecycle
+columns plus 3 exception columns:
+
+| Column | Status Label | When to Move Here |
+|--------|-------------|-------------------|
+| Backburner | `status:backburner` | Deferred, not yet scheduled |
+| Todo | `status:todo` | Scheduled, ready to be designed |
+| Design | `status:design` | ARCHITECT is designing the task |
+| Dispatch | `status:dispatch` | Designed, awaiting agent assignment |
+| Dev | `status:dev` | Actively being implemented |
+| Testing | `status:testing` | Under test |
+| AI Review | `status:ai_review` | Integrator reviews ALL tasks |
+| Human Review | `status:human_review` | User reviews BIG tasks only |
+| Complete | `status:complete` | Internally finished, not yet released |
+| Publish | `status:publish` | Entering the publish pipeline |
+| Published | `status:published` | Published artifact |
+| Deploy | `status:deploy` | Entering the deploy pipeline |
+| Live | `status:live` | Deployed and live |
+| Live Auditing | `status:live_auditing` | Live, under audit/soak |
+| Blocked | `status:blocked` | Blocked at any stage |
+| Failed | `status:failed` | Failed and retryable |
+| Superseded | `status:superseded` | Replaced by other task(s) |
 
 ---
 
@@ -65,8 +77,8 @@ gh project item-edit --project-id {PROJECT_ID} --id {ITEM_ID} \
 If project field IDs are complex, use labels instead:
 
 ```bash
-# Add "in-progress" label
-gh issue edit {ISSUE_NUM} --add-label "status:in-progress"
+# Add "dev" label
+gh issue edit {ISSUE_NUM} --add-label "status:dev"
 
 # Remove old status label
 gh issue edit {ISSUE_NUM} --remove-label "status:todo"
@@ -78,14 +90,14 @@ gh issue edit {ISSUE_NUM} --remove-label "status:todo"
 
 | Label | Meaning |
 |-------|---------|
-| `status:backlog` | Entry point for new tasks |
+| `status:backburner` | Entry point for new tasks |
 | `status:todo` | Ready to start |
-| `status:in-progress` | Currently being worked on |
-| `status:ai-review` | Integrator reviewing task |
-| `status:human-review` | User reviewing big task |
-| `status:merge-release` | Ready to merge |
+| `status:dev` | Currently being worked on |
+| `status:ai_review` | Integrator reviewing task |
+| `status:human_review` | User reviewing big task |
+| `status:publish` | Ready to merge |
 | `status:blocked` | Waiting for dependency |
-| `status:done` | Completed and merged |
+| `status:complete` | Completed and merged |
 
 ---
 
@@ -95,7 +107,7 @@ gh issue edit {ISSUE_NUM} --remove-label "status:todo"
 
 ```bash
 # Update issue status
-gh issue edit {ISSUE_NUM} --add-label "status:in-progress"
+gh issue edit {ISSUE_NUM} --add-label "status:dev"
 gh issue edit {ISSUE_NUM} --remove-label "status:todo"
 
 # Add comment
@@ -135,8 +147,8 @@ gh pr create --title "feat: {description}" \
 
 # Update issue status — this is the assignee's own dev->testing move
 gh issue edit {ISSUE_NUM} --add-label "status:testing"
-gh issue edit {ISSUE_NUM} --remove-label "status:in-progress"
-# The test runner moves this to status:ai-review on pass, or back to status:dev on fail
+gh issue edit {ISSUE_NUM} --remove-label "status:dev"
+# The test runner moves this to status:ai_review on pass, or back to status:dev on fail
 ```
 
 ### Step 5: After Merge
