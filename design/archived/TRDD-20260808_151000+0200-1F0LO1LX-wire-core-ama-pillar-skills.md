@@ -1,9 +1,10 @@
 ---
 trdd-id: 1F0LO1LX
 title: Wire the core granular ama-* pillar skills and retire the per-plugin script layer
-column: complete
+column: published
+archived: true
 created: 2026-08-08T15:10:00+0200
-updated: 2026-08-16T16:31:21+0200
+updated: 2026-08-19T14:35:00+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -117,3 +118,6 @@ Also on this card (orch#25, B-MED): **R24** cited at the Memory Protocol heading
   plugin's own skill onto already-ratified core skills, no baseline deviation, no
   cross-project write.
 - 2026-08-16T16:31:21+0200 — APPROVED by ai-maestro hub session (fleet coordination, USER-granted 2026-08-16). testing -> complete. Evidence: skills/amoa-prrd-trdd-kanban/SKILL.md:4 allowed-tools carries no script-layer tool names.
+- 2026-08-19T14:35:00+0200 — APPROVED by MANAGER (via COS relay, batch TRDD-2N542B5C): complete → publish → published (reconciliation — work already shipped in v1.13.11; SHAs verified ancestors). Archived as published.
+
+OUTCOME: shipped in published releases up to v1.13.11 (implementation-commits verified tag-contained); archived as published on 2026-08-19 per MANAGER batch approval (TRDD-2N542B5C).

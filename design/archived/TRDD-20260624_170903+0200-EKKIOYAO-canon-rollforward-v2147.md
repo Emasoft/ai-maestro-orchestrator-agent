@@ -1,9 +1,10 @@
 ---
 trdd-id: EKKIOYAO
 title: Canonical-pipeline roll-forward to CPV v2.147.1 — re-pin @main, fix mypy/markdownlint, publish v1.9.3+
-column: complete
+column: published
+archived: true
 created: 2026-06-24T17:09:03+0200
-updated: 2026-06-24T18:50:00+0200
+updated: 2026-08-19T14:35:00+0200
 current-owner: plugin-fixer
 assignee: plugin-fixer
 task-type: infra
@@ -132,3 +133,6 @@ stays red until TRDD-03DYGXJW lands (separate, user-scoped refactor).
 
 ## Approval log
 - 2026-06-24T17:09:03+0200 — USER-DIRECTED roll-forward (fleet #44). No approval gate.
+- 2026-08-19T14:35:00+0200 — APPROVED by MANAGER (via COS relay, batch TRDD-2N542B5C): complete → publish → published (reconciliation — work already shipped in v1.13.11; SHAs verified ancestors). Archived as published.
+
+OUTCOME: shipped in published releases up to v1.13.11 (implementation-commits verified tag-contained); archived as published on 2026-08-19 per MANAGER batch approval (TRDD-2N542B5C).

@@ -1,9 +1,10 @@
 ---
 trdd-id: 7MGYSHMN
 title: Strip GitHub @mentions from every shipped template and guard the defect class with a test
-column: complete
+column: published
+archived: true
 created: 2026-08-08T12:22:12+0200
-updated: 2026-08-08T15:08:46+0200
+updated: 2026-08-19T14:35:00+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: bugfix
@@ -146,3 +147,6 @@ only detector that will ever exist.
   on the relay: 0 `model:` keys across 6 agent files — **control-checked** (the main
   agent read back 35,541 bytes, so the zero is a real scan and not a vacuous pass
   over an empty file set) — and the skill menu exact against 23 shipped skills.
+- 2026-08-19T14:35:00+0200 — APPROVED by MANAGER (via COS relay, batch TRDD-2N542B5C): complete → publish → published (reconciliation — work already shipped in v1.13.11; SHAs verified ancestors). Archived as published.
+
+OUTCOME: shipped in published releases up to v1.13.11 (implementation-commits verified tag-contained); archived as published on 2026-08-19 per MANAGER batch approval (TRDD-2N542B5C).

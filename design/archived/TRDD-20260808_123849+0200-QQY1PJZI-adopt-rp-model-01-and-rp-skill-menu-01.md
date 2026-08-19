@@ -1,9 +1,10 @@
 ---
 trdd-id: QQY1PJZI
 title: Adopt RP-MODEL-01 (drop the model pin) and RP-SKILL-MENU-01 (full skill menu) from role-plugins-spec 1.1.0
-column: complete
+column: published
+archived: true
 created: 2026-08-08T12:38:49+0200
-updated: 2026-08-08T15:08:46+0200
+updated: 2026-08-19T14:35:00+0200
 current-owner: ai-maestro-orchestrator-agent
 assignee: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -157,3 +158,6 @@ routing around the gate I built.
   retroactive routing is needed. Worth noting the ordering: their own fleet re-measure
   at 12:47:50+0200 still counted these five pins — six minutes before this release made
   that row stale. A measured claim can be true when taken and false when read.
+- 2026-08-19T14:35:00+0200 — APPROVED by MANAGER (via COS relay, batch TRDD-2N542B5C): complete → publish → published (reconciliation — work already shipped in v1.13.11; SHAs verified ancestors). Archived as published.
+
+OUTCOME: shipped in published releases up to v1.13.11 (implementation-commits verified tag-contained); archived as published on 2026-08-19 per MANAGER batch approval (TRDD-2N542B5C).

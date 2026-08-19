@@ -1,11 +1,12 @@
 ---
 trdd-id: 2N542B5C
 title: Reconcile the 8 complete/publish cards — backfill implementation-commits and run the publish lane
-column: dev
+column: complete
+archived: true
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-19T14:24:47+0200
-updated: 2026-08-19T14:24:47+0200
+updated: 2026-08-19T14:40:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: infra
@@ -38,11 +39,21 @@ Task (atomic, per card ×8):
 4. Any card NOT contained in a published tag stays at `complete` and is reported.
 
 Acceptance:
-- [ ] all 8 cards carry non-empty `implementation-commits:`
-- [ ] containment verdict recorded per card
-- [ ] batch approval request filed (or the not-contained exceptions listed)
-- [ ] approved cards archived as `published` via three-writes + `git mv`
+- [x] all 8 cards carry non-empty `implementation-commits:` (c45a292)
+- [x] containment verdict recorded per card — 8/8 IN v1.13.11, re-verified first-hand
+      (reports/board-reconcile/20260819_142834+0200-2N542B5C-backfill.md)
+- [x] batch approval request filed — MANAGER APPROVED via COS 2026-08-19T14:35+0200
+- [x] 8 cards archived as `published` via three-writes + `git mv` (807a267;
+      reports/board-reconcile/20260819_143444+0200-2N542B5C-archive.md)
 
 ## Approval log
+
+- 2026-08-19T14:35:00+0200 — MANAGER (via COS): APPROVED batch complete→publish→published
+  reconciliation for the 8 cards; condition (approval logged per card before moves) met.
+- 2026-08-19T14:40:00+0200 — COMPLETED by ai-maestro-orchestrator-agent. All acceptance
+  boxes closed; release-via none → archived as `complete` per 3P-ZON-05.
+
+OUTCOME: 8 stale complete/publish cards reconciled and archived as published (807a267);
+implementation-commits backfilled (c45a292). Archived as complete on 2026-08-19.
 
 ## Notes and lessons learned

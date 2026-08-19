@@ -1,11 +1,12 @@
 ---
 trdd-id: 73OGGN69
 title: Remove the dead skill-local duplicate of amoa_register_agent.py (audit C1)
-column: complete
+column: published
+archived: true
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T19:56:41+0200
-updated: 2026-08-18T19:56:41+0200
+updated: 2026-08-19T14:35:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -77,5 +78,8 @@ stripped on touched lines, `scripts/__init__.py` collision note updated.
 - 2026-08-18T19:56:41+0200 — COMPLETE under the hub's Phase-2 GO + USER "permission granted".
   Substance of C1 (basename collision/drift hazard) resolved by rename; deviation from the
   literal delete plan is fact-driven and recorded above.
+- 2026-08-19T14:35:00+0200 — APPROVED by MANAGER (via COS relay, batch TRDD-2N542B5C): complete → publish → published (reconciliation — work already shipped in v1.13.11; SHAs verified ancestors). Archived as published.
 
 ## Notes and lessons learned
+
+OUTCOME: shipped in published releases up to v1.13.11 (implementation-commits verified tag-contained); archived as published on 2026-08-19 per MANAGER batch approval (TRDD-2N542B5C).
