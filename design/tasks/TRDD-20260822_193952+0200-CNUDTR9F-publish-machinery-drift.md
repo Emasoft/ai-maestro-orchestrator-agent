@@ -1,11 +1,11 @@
 ---
 trdd-id: CNUDTR9F
 title: Publish machinery drift — frozen CPV pin, unregenerated pre-push hook, dead install path, false header
-column: todo
+column: dev
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-22T19:39:52+0200
-updated: 2026-08-22T19:39:52+0200
+updated: 2026-08-25T14:01:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: infra
@@ -129,3 +129,10 @@ replacement so a failure is attributable to one of them.
 - `ai-maestro TRDD-6WTIA4ZT` — the hub's card carrying the same fleet finding.
 - LOCAL memory `project_push-refused-publish-policy` — lesson `ATOM-XYYM-YUQO` records F1/F2/F4
   as a guardrail; its `description:` was extended so the lesson is recallable by symptom.
+
+## Approval log
+
+- 2026-08-25T14:01:00+0200 — USER APPROVED start (tier 2 satisfied — USER outranks MANAGER).
+  `todo → dev`, self-assigned. Plan: pin bump (F1) and hook replacement (F2/F4) as SEPARATE
+  commits per the Risk section; F3 fixed alongside the hook commit; acceptance measured
+  behaviourally (criterion 5) via `git push --dry-run` on both a feature ref and main.

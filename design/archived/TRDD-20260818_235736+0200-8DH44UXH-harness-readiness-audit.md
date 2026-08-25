@@ -1,11 +1,11 @@
 ---
 trdd-id: 8DH44UXH
 title: Harness-readiness audit — full plugin conformance for the ai-maestro harness
-column: human_review
+column: complete
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-18T23:57:37+0200
-updated: 2026-08-19T14:26:00+0200
+updated: 2026-08-25T14:00:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: audit
@@ -26,6 +26,11 @@ collaboration with the hub session. Workflow-never-stops: the team flow may paus
 MANAGER / CHIEF-OF-STAFF approval waits.
 
 ## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-08-19
+
+**CLOSED 2026-08-25 — USER verdict APPROVED at human_review; column: complete.** The
+complete→publish gate for the fix commits is ALREADY SATISFIED IN FACT: verified first-hand
+`git merge-base --is-ancestor 011be6f v1.13.12` → true, so the ai_review fix commit shipped in
+the published v1.13.12 release. Nothing below is a pending action any more.
 
 S Fix phase largely LANDED. Commits: 2711d6d (G1-G6 oracle rewrite + AC1-AC5 archival path,
 tests green), bd1ed0b (doc batch: G1/G7/G8/G9/G10/G11 + AC6 17-column table + F7 trichotomy
@@ -203,5 +208,9 @@ phantom `hide-from-slash-command-tool` (commands/amoa-cancel-orchestrator.md) FI
 - 2026-08-19T14:26:00+0200 — MANAGER reply (relayed by COS): APPROVED — `ai_review →
   human_review`. MANAGER verified the ai_review cycle + CI green first-hand. Column moved;
   card now awaits the USER verdict (`human_review → complete|dev` is USER-only).
+- 2026-08-25T14:00:00+0200 — USER verdict: APPROVED — `human_review → complete`. Publish gate
+  for the fix commits verified satisfied in fact: 011be6f is an ancestor of the published
+  v1.13.12 tag (measured `git merge-base --is-ancestor`, not inferred). Archived as `complete`
+  per 3P-ZON-05 (terminal columns archive AS THEMSELVES).
 
 ## Notes and lessons learned
