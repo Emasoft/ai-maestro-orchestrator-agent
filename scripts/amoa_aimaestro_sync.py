@@ -28,7 +28,8 @@ from amoa_kanban_vocab import resolve_column  # type: ignore[import-not-found]
 
 # There is NO AMOA↔AI-Maestro status translation, by design (issue #27): the
 # AMOA kanban column and the AI Maestro server's TaskStatus are the SAME
-# ratified 17-value vocabulary (amoa_kanban_vocab.KANBAN_COLUMNS 1:1 with the
+# ratified board vocabulary (amoa_kanban_vocab.KANBAN_COLUMNS — 22 under
+# 3-pillars 3.0.0 — 1:1 with the
 # server's types/task.ts default, redeployed 2026-06-20 / ai-maestro#43).
 #
 # This module used to carry AMOA_TO_AIMAESTRO_STATUS — an 8-entry IDENTITY map

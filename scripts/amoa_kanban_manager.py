@@ -66,7 +66,8 @@ GITHUB_REPO = os.environ.get("GITHUB_REPO", "")
 PROJECT_ID = os.environ.get("GITHUB_PROJECT_ID", "")
 TEAM_ID = os.environ.get("AIMAESTRO_TEAM_ID", "")
 
-# The kanban columns come from amoa_kanban_vocab (the ratified 17, issue #27).
+# The kanban columns come from amoa_kanban_vocab (the ratified board set — 22
+# under 3-pillars 3.0.0; issue #27).
 # This script used to define its own 8-entry status→display-name map; that map
 # was the pre-2026-06-20 vocabulary and disagreed with the TRDD `column:` states
 # and the ai-maestro server TaskStatus, so a task moved here landed in a column
