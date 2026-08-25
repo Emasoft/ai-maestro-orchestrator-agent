@@ -1,12 +1,12 @@
 ---
 trdd-id: V5SDTH14
 title: Migrate kanban vocabulary consumers to 3-pillars 3.0.0 (22-column board, 27-value column set)
-column: publish
-implementation-commits: [2818ca8]
+column: published
+implementation-commits: [2818ca8, 08ab835, eceea7e, aff1b19]
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-25T14:09:46+0200
-updated: 2026-08-25T18:45:00+0200
+updated: 2026-08-25T20:20:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -78,3 +78,9 @@ No governance-pin sites found in this repo (grep for pinned governance SHAs → 
   17-column claims, zero approval-tier field writes (rule-filename references retained
   deliberately); no governance-pin sites exist in this repo (measured, 0 hits). Entering
   release pipeline.
+- 2026-08-25T20:20:00+0200 — PUBLISHED in v1.13.14 (release created; CI@acb7819 success,
+  Release workflow success — terminal states read directly). One CPV MINOR remediated before
+  the gate passed (SKILL.md embedded TOC sync, 08ab835). Adversarial-review residue fixes
+  eceea7e (guard-test prose) and aff1b19 (script comments; all 4 kanban scripts verified
+  importing the SSoT module, no hardcoded column lists) landed post-release and ride the next
+  one — both are comment/prose-only. Archived as `published` per 3P-ZON-05.
