@@ -635,7 +635,7 @@ def install_branch_rules(root: Path) -> int:
             [
                 "uvx",
                 "--from",
-                "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
+                "git+https://github.com/Emasoft/claude-plugins-validation@v5.8.0",
                 "--with",
                 "pyyaml",
                 "cpv-setup-branch-rules",
@@ -903,7 +903,7 @@ def run_gate(root: Path) -> int:
         return 1
     ve = subprocess.run(
         ["uvx", "--from",
-         "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
+         "git+https://github.com/Emasoft/claude-plugins-validation@v5.8.0",
          "--with", "pyyaml",
          "cpv-remote-validate", "plugin", ".", "--strict"],
         cwd=str(root), timeout=600).returncode
@@ -1135,7 +1135,7 @@ def stage_validate(root: Path) -> None:
 
     Cornerstone rule: a plugin cannot be pushed unless validation passes
     with 0 issues (WARNING allowed). The validator is ALWAYS fetched from
-    GitHub (git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0) via
+    GitHub (git+https://github.com/Emasoft/claude-plugins-validation@v5.8.0) via
     uvx so a local tampered copy cannot weaken the rules. No exceptions.
 
     Order: runs AFTER lint + tests so behavioral regressions fail fast
@@ -1150,7 +1150,7 @@ def stage_validate(root: Path) -> None:
     # on CRITICAL(1), MAJOR(2), MINOR(3), NIT(4); WARNING(5+) passes.
     run([
         "uvx", "--from",
-        "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
+        "git+https://github.com/Emasoft/claude-plugins-validation@v5.8.0",
         "--with", "pyyaml",
         "cpv-remote-validate", "plugin", ".", "--strict",
     ], cwd=root)
@@ -1185,7 +1185,7 @@ def stage_ci_preflight(root: Path) -> None:
         sys.exit(1)
     rc = subprocess.run([
         "uvx", "--from",
-        "git+https://github.com/Emasoft/claude-plugins-validation@v2.159.0",
+        "git+https://github.com/Emasoft/claude-plugins-validation@v5.8.0",
         "--with", "pyyaml",
         "cpv-remote-validate", "ci-preflight", ".",
     ], cwd=str(root)).returncode
