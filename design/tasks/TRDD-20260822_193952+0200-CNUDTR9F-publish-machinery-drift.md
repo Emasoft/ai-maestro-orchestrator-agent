@@ -1,11 +1,11 @@
 ---
 trdd-id: CNUDTR9F
 title: Publish machinery drift — frozen CPV pin, unregenerated pre-push hook, dead install path, false header
-column: dev
+column: publish
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-22T19:39:52+0200
-updated: 2026-08-25T14:01:00+0200
+updated: 2026-08-25T17:26:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: infra
@@ -20,13 +20,26 @@ release-via: publish
 
 # Publish machinery drift — frozen CPV pin, unregenerated pre-push hook, dead install path, false header
 
-## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-08-22
+## ⏵ STATE — READ THIS FIRST ON RESUME (authoritative; supersedes the body) — 2026-08-25
 
-**Nothing has been changed.** All four findings are measured, none is fixed. No hand-edits were
-made to any hook (deliberately — see F4's note).
+**All four findings FIXED and verified.** USER approved start 2026-08-25; hub (ai-maestro
+session) approved the sequencing. Commits: 13af808 (F1 — pin v2.159.0→v5.8.0 at all 5 sites;
+v5.8.0 = latest, entrypoints verified against its tree), fde32fb (F2/F3/F4 — git-hooks/pre-push
+replaced VERBATIM from CPV v5.8.0 `generate_plugin_repo.py::gen_pre_push_hook` (mechanical
+extraction, no hand-patch); core.hooksPath→git-hooks; false-header .githooks/pre-push removed;
+install_hook() now sets hooksPath only — the dead .git/hooks copy is gone; docs swept).
 
-**NEXT ACTION:** none without owner sign-off. `approval-tier: 2` — this alters the repo's release
-gate, which is a baseline-deviation-class change. Ask before starting.
+**Acceptance, measured:** c1 grep-count 5/0 (new/old pin) · c2 wholesale template live ·
+c3 install_hook writes only what git reads · c4 lying header gone (residual template-wording
+imprecision filed upstream as CPV#214; the fail-open trufflehog edge on `HEAD:refs/heads/x`
+push shapes filed as CPV#213) · c5 behavioural: feature-branch dry-run push → trufflehog
+scanned base=origin/main..HEAD (14 chunks) → ALLOWED exit 0; main dry-run push → BLOCKED at
+G0 (no publish ancestry) exit 1. ruff clean, pytest 205/205, CPV v5.8.0 `--strict` preview on
+this tree: 0 CRITICAL / 0 MAJOR / 0 MINOR / 0 NIT (30 WARNING, non-blocking) — the feared
+3-major debt avalanche did not materialize.
+
+**NEXT ACTION:** run `uv run python scripts/publish.py --patch` (release-via: publish); on
+green Release CI → `published`, archive as itself.
 
 **Do NOT hand-patch the vendored hook.** The correct adoption replaces it wholesale from the
 CPV v5.4.0+ template; a hand-patch turns the real adoption into a merge conflict against a file
@@ -136,3 +149,8 @@ replacement so a failure is attributable to one of them.
   `todo → dev`, self-assigned. Plan: pin bump (F1) and hook replacement (F2/F4) as SEPARATE
   commits per the Risk section; F3 fixed alongside the hook commit; acceptance measured
   behaviourally (criterion 5) via `git push --dry-run` on both a feature ref and main.
+- 2026-08-25T17:26:00+0200 — dev→testing→publish. Testing evidence: ruff clean, pytest
+  205/205, both behavioural probes correct, CPV v5.8.0 strict preview 0/0/0/0. Review lane
+  closed under the USER's standing directive of 2026-08-25 ("complete all pending tasks and
+  TRDDs — you can decide yourself"); hub approved sequencing in-session. Entering the release
+  pipeline (publish.py --patch).
