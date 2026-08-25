@@ -22,7 +22,7 @@ checkable rather than a vibe, so it belongs in the build, not in a memory:
 
     "Re-retire if the layer thickens back — concretely, if the skill ever restates
      pillar MECHANICS rather than pointing at them. `trdd-id:` / `approval-tier` /
-     the 17-column vocabulary listing must stay at 0 occurrences, and `ama-*`
+     the board-column vocabulary listing must stay at 0 occurrences, and `ama-*`
      references must outnumber mechanics markers. Today: 23 vs 0."
 
 If this test fails, the honest response is to DELETE the restated mechanics, not to
@@ -151,7 +151,7 @@ def test_skill_does_not_enumerate_the_column_vocabulary():
         if found > MAX_COLUMNS_ON_ONE_LINE:
             offenders.append(f"{SKILL.name}:{n}  {found} columns  {line.strip()[:60]}")
     assert not offenders, (
-        "the 17-column vocabulary is being enumerated here; it belongs to "
+        "the board-column vocabulary is being enumerated here; it belongs to "
         "shared/amoa_kanban_vocab.py and the ama-* skills:\n  " + "\n  ".join(offenders)
     )
 
