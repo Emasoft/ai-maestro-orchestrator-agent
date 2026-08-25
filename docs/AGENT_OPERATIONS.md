@@ -464,7 +464,7 @@ The following skills were added to AMOA (2026-02-06 — 2026-02-07):
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/publish.py` | Strict delivery pipeline — lint + tests + `cpv-remote-validate --strict`, then bump/commit/push/release. Installs the `.githooks/pre-push` process-ancestry gate. Validation is delegated entirely to CPV (no local validators). |
+| `scripts/publish.py` | Strict delivery pipeline — lint + tests + `cpv-remote-validate --strict`, then bump/commit/push/release. `--install-hook` points `core.hooksPath` at the tracked `git-hooks/pre-push` branch-aware gate (release refs → `publish.py --gate`; feature branches → trufflehog secret scan, fail-closed). Validation is delegated entirely to CPV (no local validators). |
 | `scripts/amoa_kanban_manager.py` | Kanban column management |
 | `scripts/amoa_file_tracker.py` | File change tracking |
 | `scripts/amoa_download.py` | Plugin download utility |

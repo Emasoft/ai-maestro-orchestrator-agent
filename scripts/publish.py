@@ -5,7 +5,7 @@ Modes:
   --gate                  Pre-push gate: orchestrator check + lint (ruff/jscpd/
                           actionlint/mypy) + validate + tests only (no bump/push).
                           Called by git-hooks/pre-push automatically.
-  --install-hook          Install git-hooks/pre-push into .git/hooks/ and set core.hooksPath.
+  --install-hook          Set core.hooksPath = git-hooks (live hook: git-hooks/pre-push).
   --install-branch-rules  Apply the cpv-branch-rules GitHub ruleset to the origin
                           (server-side CI enforcement — run once after first push).
   (no flag)               Full release pipeline (11 stages, fail-fast). The bump type
@@ -561,26 +561,29 @@ def do_bump(root: Path, new_ver: str, dry_run: bool = False) -> bool:
 # -- Hook installer ------------------------------------------------------------
 
 def install_hook(root: Path) -> int:
-    """Copy git-hooks/pre-push to .git/hooks/pre-push and set core.hooksPath."""
-    cprint(f"\\n{BOLD}Installing git hooks...{NC}")
+    """Point core.hooksPath at the in-repo git-hooks/ dir (the live hook source).
+
+    No copy into .git/hooks/: once core.hooksPath is set, git reads hooks ONLY
+    from that path, so a .git/hooks copy is dead weight that silently drifts
+    from the tracked hook. The old copy step also targeted a path git never
+    read while printing success — TRDD-CNUDTR9F F3. Setting hooksPath is the
+    single write that git actually honours.
+    """
+    cprint(f"\n{BOLD}Installing git hooks...{NC}")
     source = root / "git-hooks" / "pre-push"
     if not source.is_file():
         cprint(f"  {RED}git-hooks/pre-push not found{NC}")
         return 1
-    git_dir = root / ".git"
-    if not git_dir.is_dir():
-        cprint(f"  {RED}.git/ not found — is this a git repository?{NC}")
+    if not (root / ".git").exists():
+        cprint(f"  {RED}.git not found — is this a git repository?{NC}")
         return 1
-    hooks_dir = git_dir / "hooks"
-    hooks_dir.mkdir(parents=True, exist_ok=True)
-    dest = hooks_dir / "pre-push"
-    shutil.copy2(source, dest)
-    dest.chmod(dest.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
-    cprint(f"  {GREEN}Installed: git-hooks/pre-push -> .git/hooks/pre-push{NC}")
-    # Also set core.hooksPath so git finds hooks in git-hooks/ directly
-    subprocess.run(["git", "config", "core.hooksPath", "git-hooks"],
-                   cwd=str(root), check=False)
-    cprint(f"  {GREEN}Set git config core.hooksPath = git-hooks{NC}")
+    source.chmod(source.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    rc = subprocess.run(["git", "config", "core.hooksPath", "git-hooks"],
+                        cwd=str(root), check=False).returncode
+    if rc != 0:
+        cprint(f"  {RED}git config core.hooksPath failed (exit {rc}){NC}")
+        return 1
+    cprint(f"  {GREEN}Set git config core.hooksPath = git-hooks (live hook: git-hooks/pre-push){NC}")
     return 0
 
 
@@ -1872,7 +1875,7 @@ def main() -> int:
     mode_group.add_argument("--gate", action="store_true",
                             help="Pre-push gate mode: lint + copy-paste (jscpd) + validate + tests only (no bump/push)")
     mode_group.add_argument("--install-hook", action="store_true",
-                            help="Install pre-push hook into .git/hooks/ and set core.hooksPath")
+                            help="Set core.hooksPath = git-hooks so git runs the tracked pre-push hook")
     mode_group.add_argument("--install-branch-rules", action="store_true",
                             dest="install_branch_rules",
                             help="Apply the cpv-branch-rules ruleset to the GitHub origin "
