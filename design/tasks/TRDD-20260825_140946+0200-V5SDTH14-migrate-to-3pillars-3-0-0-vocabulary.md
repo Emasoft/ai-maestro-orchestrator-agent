@@ -1,11 +1,12 @@
 ---
 trdd-id: V5SDTH14
 title: Migrate kanban vocabulary consumers to 3-pillars 3.0.0 (22-column board, 27-value column set)
-column: todo
+column: publish
+implementation-commits: [2818ca8]
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-25T14:09:46+0200
-updated: 2026-08-25T14:09:46+0200
+updated: 2026-08-25T18:45:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: refactor
@@ -68,3 +69,12 @@ No governance-pin sites found in this repo (grep for pinned governance SHAs → 
   migrates VOCABULARY CONSUMERS (code, tests, docs, skills), never old cards.
 
 ## Approval log
+
+- 2026-08-25T18:45:00+0200 — Executed todo→dev→testing→publish under the USER's standing
+  directive ("complete all pending tasks and TRDDs") + hub relay of the same; fleet-conformance
+  to a ratified pushed spec is apply-the-baseline-as-is. Commit 2818ca8 (19 files). Acceptance
+  measured: spec read in full from c8b0e9cb (fetched via gh api, 48312 bytes, spec-version
+  3.0.0); vocab module + tests on 3.0.0, pytest 212/212, ruff clean; repo-wide grep — zero
+  17-column claims, zero approval-tier field writes (rule-filename references retained
+  deliberately); no governance-pin sites exist in this repo (measured, 0 hits). Entering
+  release pipeline.
