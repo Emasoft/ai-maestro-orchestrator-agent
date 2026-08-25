@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Unit tests for the shared kanban vocabulary (scripts/amoa_kanban_vocab.py).
 
-Guards issue #27: the plugin must speak the ratified 17-column 3-pillars
-vocabulary from ONE source of truth, migrate every legacy status explicitly,
-and refuse (not silently bucket) an unknown status.
+Guards issue #27: the plugin must speak the ratified 22-column 3-pillars 3.0.0
+vocabulary (3P-KAN) from ONE source of truth, migrate every legacy status
+explicitly, and refuse (not silently bucket) an unknown status.
 """
 
 import sys
@@ -18,26 +18,44 @@ if str(SHARED_DIR) not in sys.path:
     sys.path.insert(0, str(SHARED_DIR))
 
 from amoa_kanban_vocab import (  # noqa: E402
+    BRACKET_COLUMNS,
     KANBAN_COLUMNS,
     LEGACY_STATUS_MIGRATION,
+    LEGAL_COLUMNS,
     resolve_column,
 )
 
 # The ratified set, spelled out independently of the module so a drift in
-# either direction fails this test.
+# either direction fails this test. `@spec:kanban-columns v2` (3P-KAN).
 EXPECTED_COLUMNS = {
-    "backburner", "todo", "design", "dispatch", "dev", "testing",
+    "backburner", "approval", "design", "design_ai_review", "design_human_review",
+    "todo", "verify_assumptions", "plan", "dispatch", "dev", "testing",
     "ai_review", "human_review", "complete", "publish", "published",
     "deploy", "live", "live_auditing",
     "blocked", "failed", "superseded",
 }
 
+# The 5 BRACKET values (3P-KAN-20): legal `column:` values, not board columns.
+EXPECTED_BRACKET_COLUMNS = {"proposal", "planned", "refused", "completed", "cancelled"}
 
-def test_exactly_the_17_ratified_columns():
-    """KANBAN_COLUMNS is exactly the 17 ratified 3-pillars states, no more, no fewer."""
-    assert len(KANBAN_COLUMNS) == 17
+
+def test_exactly_the_22_ratified_columns():
+    """KANBAN_COLUMNS is exactly the 22 ratified 3-pillars 3.0.0 board columns, no more, no fewer."""
+    assert len(KANBAN_COLUMNS) == 22
     assert set(KANBAN_COLUMNS) == EXPECTED_COLUMNS
-    assert len(set(KANBAN_COLUMNS)) == 17  # no duplicates
+    assert len(set(KANBAN_COLUMNS)) == 22  # no duplicates
+
+
+def test_bracket_columns_are_legal_but_not_board_columns():
+    """3P-KAN-20: the 5 bracket values are legal `column:` values outside the board."""
+    assert set(BRACKET_COLUMNS) == EXPECTED_BRACKET_COLUMNS
+    assert set(BRACKET_COLUMNS).isdisjoint(KANBAN_COLUMNS)
+
+
+def test_legal_columns_is_board_plus_bracket_27_total():
+    """3P-KAN-20: the LEGAL SET for a `column:` field is 22 board + 5 bracket = 27."""
+    assert len(LEGAL_COLUMNS) == 27
+    assert LEGAL_COLUMNS == frozenset(KANBAN_COLUMNS) | frozenset(BRACKET_COLUMNS)
 
 
 def test_every_ratified_column_resolves_to_itself():

@@ -171,7 +171,7 @@ front by asking each MEMBER which files/domains it will touch.
 
 ## Resources
 
-Shared mechanics, the 17-column vocabulary, and the approval matrix live in the
+Shared mechanics, the 22-column vocabulary, and the approval matrix live in the
 granular `ama-*` skills listed above — `ama-trdd-transition` carries the transition
 rules, `ama-proposal-approvals` the approval flow. There is no monolithic
 `prrd-trdd-kanban` skill to defer to any more; that name was retired when the

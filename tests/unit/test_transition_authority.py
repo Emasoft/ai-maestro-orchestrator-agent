@@ -32,12 +32,12 @@ from amoa_kanban_vocab import (  # noqa: E402
 @pytest.mark.parametrize(
     "frm,to",
     [
-        ("todo", "design"),
+        ("approval", "design"),
         ("dispatch", "dev"),
     ],
 )
 def test_b2_orchestrator_rows_need_no_approval(frm, to):
-    """The exactly-two transitions Part B2 assigns to the ORCHESTRATOR by name."""
+    """The exactly-two transitions Part B2 (3.0.0) assigns to the ORCHESTRATOR by name."""
     assert transition_authority(frm, to) == "orchestrator"
     assert_orchestrator_may_transition(frm, to)  # must not raise
 
@@ -45,8 +45,11 @@ def test_b2_orchestrator_rows_need_no_approval(frm, to):
 @pytest.mark.parametrize(
     "frm,to,actor",
     [
-        ("backburner", "todo", "manager"),
-        ("design", "dispatch", "architect"),
+        ("backburner", "approval", "manager"),
+        ("design", "design_ai_review", "architect"),
+        ("design_ai_review", "design", "design-reviewer"),
+        ("design_ai_review", "design_human_review", "design-reviewer"),
+        ("design_ai_review", "todo", "design-reviewer"),
         ("dev", "testing", "assignee"),
         ("testing", "ai_review", "test-runner"),
         ("testing", "dev", "test-runner"),
@@ -62,9 +65,23 @@ def test_b2_orchestrator_rows_need_no_approval(frm, to):
     ],
 )
 def test_b2_other_actor_rows_block_the_orchestrator(frm, to, actor):
-    """Every Part B2 row owned by another actor names that actor and raises for ORCH."""
+    """Every Part B2 (3.0.0) row owned by another actor names that actor and raises for ORCH."""
     assert transition_authority(frm, to) == actor
     with pytest.raises(PermissionError):
+        assert_orchestrator_may_transition(frm, to)
+
+
+@pytest.mark.parametrize(
+    "frm,to",
+    [
+        ("design_human_review", "todo"),
+        ("design_human_review", "design"),
+    ],
+)
+def test_leaving_design_human_review_requires_user(frm, to):
+    """3P-KAN-05/3P-KAN-22: leaving design_human_review IS the human's design verdict."""
+    assert transition_authority(frm, to) == "user"
+    with pytest.raises(PermissionError, match="USER"):
         assert_orchestrator_may_transition(frm, to)
 
 
@@ -126,7 +143,8 @@ def test_every_column_is_classifiable():
         authority = transition_authority(None, to)
         assert authority in ("orchestrator", "manager", "user")
         if to in ("publish", "published", "deploy", "live", "failed", "superseded",
-                  "human_review", "complete") and authority == "orchestrator":
+                  "human_review", "complete", "approval", "design_human_review") \
+                and authority == "orchestrator":
             unclassified.append(to)
     assert not unclassified, f"governed columns classified as permitted: {unclassified}"
 

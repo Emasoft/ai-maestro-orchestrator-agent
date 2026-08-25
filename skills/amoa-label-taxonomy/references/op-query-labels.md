@@ -149,7 +149,7 @@ gh issue list --label "assign:implementer-1,status:todo" --json number,title
 
 ```bash
 # Count issues per status
-for status in backburner todo design dispatch dev testing ai_review human_review complete publish published deploy live live_auditing blocked failed superseded; do
+for status in backburner approval design design_ai_review design_human_review todo verify_assumptions plan dispatch dev testing ai_review human_review complete publish published deploy live live_auditing blocked failed superseded; do
   count=$(gh issue list --label "status:$status" --json number | jq 'length')
   echo "status:$status = $count"
 done

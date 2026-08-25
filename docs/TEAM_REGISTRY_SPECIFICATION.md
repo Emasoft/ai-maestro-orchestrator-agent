@@ -403,15 +403,22 @@ When AMCOS updates the registry, it sends a notification to all team agents usin
 
 ## Kanban System Reference
 
-All projects use the ratified **17-column kanban system** (14 lifecycle + 3
-exception columns; SSOT `shared/amoa_kanban_vocab.py`, per
-`~/.claude/rules/universal-kanban.md`):
+All projects use the ratified **22-column kanban board** (plus 5 bracket
+values outside the board — `proposal`, `planned`, `refused`, `completed`,
+`cancelled` — for a 27-value legal `column:` set; SSOT
+`shared/amoa_kanban_vocab.py`, per `~/.claude/rules/universal-kanban.md` and
+3-pillars spec `3P-KAN`):
 
 | Column | Code | Label |
 |--------|------|-------|
 | Backburner | `backburner` | `status:backburner` |
-| Todo | `todo` | `status:todo` |
+| Approval | `approval` | `status:approval` |
 | Design | `design` | `status:design` |
+| Design AI Review | `design_ai_review` | `status:design_ai_review` |
+| Design Human Review | `design_human_review` | `status:design_human_review` |
+| Todo | `todo` | `status:todo` |
+| Verify Assumptions | `verify_assumptions` | `status:verify_assumptions` |
+| Plan | `plan` | `status:plan` |
 | Dispatch | `dispatch` | `status:dispatch` |
 | Dev | `dev` | `status:dev` |
 | Testing | `testing` | `status:testing` |

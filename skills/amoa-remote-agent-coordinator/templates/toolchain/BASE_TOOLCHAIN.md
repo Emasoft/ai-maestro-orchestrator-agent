@@ -75,10 +75,15 @@ All projects managed by AMOA orchestrator MUST use these standardized labels:
 
 | Label | Color | Description |
 |-------|-------|-------------|
-| `status:backburner` | `#D4C5F9` | Deferred; not scheduled |
-| `status:todo` | `#EDEDED` | Ready to start |
-| `status:design` | `#C5DEF5` | Being designed |
-| `status:dispatch` | `#BFD4F2` | Assigned, not yet started |
+| `status:backburner` | `#D4C5F9` | Not yet approved |
+| `status:approval` | `#D4C5F9` | Awaiting COS/MANAGER approval |
+| `status:design` | `#C5DEF5` | Card expanded in place with design + specs |
+| `status:design_ai_review` | `#C5DEF5` | Design reviewed by COS/MANAGER |
+| `status:design_human_review` | `#C5DEF5` | Design reviewed by USER |
+| `status:todo` | `#EDEDED` | Approved and designed, ready to be verified |
+| `status:verify_assumptions` | `#EDEDED` | Verifying every claim in the card |
+| `status:plan` | `#EDEDED` | Producing a non-interactive plan file |
+| `status:dispatch` | `#BFD4F2` | Planned, not yet started |
 | `status:dev` | `#5319E7` | Implementation in progress |
 | `status:testing` | `#FEF2C0` | Under test |
 | `status:ai_review` | `#BFDADC` | Awaiting AI review |

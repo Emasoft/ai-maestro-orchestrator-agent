@@ -47,16 +47,21 @@ gh issue list --label "assign:<agent-name>"
 
 ## Status Labels
 
-The ratified 17-column vocabulary (`~/.claude/rules/universal-kanban.md`), 1:1 with the TRDD
+The ratified 22-column vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`), 1:1 with the TRDD
 `column:` enum:
 
 | Label | Meaning |
 |-------|---------|
-| `status:backburner` | Deferred, not yet scheduled |
-| `status:todo` | Scheduled, ready to be designed |
-| `status:design` | ARCHITECT is designing the task |
-| `status:dispatch` | Designed, awaiting agent assignment |
-| `status:dev` | Actively being implemented |
+| `status:backburner` | Not yet approved |
+| `status:approval` | Awaiting COS/MANAGER approval per `min-approval-requirement:` |
+| `status:design` | Card expanded in place with design + specs |
+| `status:design_ai_review` | Design body reviewed by COS/MANAGER |
+| `status:design_human_review` | Human review; skipped when `min-approval-requirement: none` |
+| `status:todo` | Approved and designed, ready to be verified |
+| `status:verify_assumptions` | Every claim in the card is verified |
+| `status:plan` | Non-interactive plan-mode produces a plan file |
+| `status:dispatch` | Planned, awaiting agent assignment |
+| `status:dev` | Actively being implemented; enforces the plan's steps |
 | `status:testing` | Under test |
 | `status:ai_review` | Code submitted for automated review |
 | `status:human_review` | Code awaiting human review |

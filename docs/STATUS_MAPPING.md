@@ -24,8 +24,13 @@ distinct lifecycle states onto one status (lossy). **Nothing collapses here.**
 | TRDD `column:` (authoritative) | Board column (projection) | `trdd-column:` field (exact) | Flip owner |
 |---|---|---|---|
 | `backburner` | Backlog | `backburner` | AMOA |
-| `todo` | Todo | `todo` | AMOA |
+| `approval` | Backlog | `approval` | AMCOS / AMAMA (per `min-approval-requirement:`) |
 | `design` | Todo | `design` | AMOA (assigns AMAA) |
+| `design_ai_review` | Todo | `design_ai_review` | AMCOS / AMAMA |
+| `design_human_review` | Human Review | `design_human_review` | USER (via AMCOS → AMAMA) |
+| `todo` | Todo | `todo` | AMOA |
+| `verify_assumptions` | Todo | `verify_assumptions` | AMOA |
+| `plan` | Todo | `plan` | AMOA |
 | `dispatch` | Todo | `dispatch` | AMOA |
 | `dev` | In Progress | `dev` | AMOA |
 | `testing` | In Progress | `testing` | AMOA |
@@ -61,11 +66,11 @@ board column are distinguished by their `trdd-column:`:
 
 | Board column | Possible `trdd-column:` values (read the field to disambiguate) |
 |---|---|
-| Backlog | `backburner` |
-| Todo | `todo`, `design`, `dispatch` |
+| Backlog | `backburner`, `approval` |
+| Todo | `todo`, `design`, `design_ai_review`, `verify_assumptions`, `plan`, `dispatch` |
 | In Progress | `dev`, `testing` |
 | AI Review | `ai_review` |
-| Human Review | `human_review` |
+| Human Review | `human_review`, `design_human_review` |
 | Merge/Release | `complete`, `publish`, `deploy` |
 | Done | `published`, `live`, `live_auditing`, `superseded` |
 | Blocked | `blocked`, `failed` (read `pre-block-column:` to know where `blocked` restores to) |

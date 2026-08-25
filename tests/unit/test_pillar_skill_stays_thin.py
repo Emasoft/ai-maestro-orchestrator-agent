@@ -51,11 +51,12 @@ MECHANICS_MARKERS = (
     r"\beht:\s*\[",
 )
 
-# The 17-column vocabulary lives in `shared/amoa_kanban_vocab.py` and `ama-*`.
+# The 22-column vocabulary lives in `shared/amoa_kanban_vocab.py` and `ama-*`.
 # Naming the two or three columns ORCH OWNS is policy and stays legal; ENUMERATING
 # the vocabulary is a copy of it. The line-level threshold distinguishes the two.
 KANBAN_COLUMNS_SAMPLE = (
-    "backburner", "todo", "design", "dispatch", "dev", "testing", "ai_review",
+    "backburner", "approval", "design", "design_ai_review", "design_human_review",
+    "todo", "verify_assumptions", "plan", "dispatch", "dev", "testing", "ai_review",
     "human_review", "complete", "publish", "published", "deploy", "live",
     "live_auditing", "blocked", "failed", "superseded",
 )

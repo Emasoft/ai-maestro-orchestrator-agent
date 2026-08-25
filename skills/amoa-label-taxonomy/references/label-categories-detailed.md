@@ -63,15 +63,20 @@
 ## Status Labels (`status:*`)
 
 **Purpose:** Track the current workflow state of an issue — 1:1 with the ratified
-17-column kanban vocabulary (`~/.claude/rules/universal-kanban.md`).
+22-column kanban vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`).
 
 | Label | Description | Who Sets It |
 |-------|-------------|-------------|
-| `status:backburner` | Deferred, not yet scheduled | Created automatically, by user, or AMOA after triage |
-| `status:todo` | Scheduled, ready to be designed | AMOA when assigning |
-| `status:design` | ARCHITECT is designing the task | ARCHITECT |
-| `status:dispatch` | Designed, awaiting agent assignment | AMOA |
-| `status:dev` | Actively being implemented | Assigned agent when starting |
+| `status:backburner` | Not yet approved | Created automatically, by user, or AMOA after triage |
+| `status:approval` | Awaiting COS/MANAGER approval per `min-approval-requirement:` | AMOA |
+| `status:design` | Card expanded in place with design + specs | ARCHITECT (or implementer, solo) |
+| `status:design_ai_review` | Design body reviewed by COS/MANAGER | ARCHITECT/COS |
+| `status:design_human_review` | Human review; skipped when `min-approval-requirement: none` | USER (or MANAGER when delegated) |
+| `status:todo` | Approved and designed, ready to be verified | AMOA when assigning |
+| `status:verify_assumptions` | Every claim in the card is verified | Assigned agent |
+| `status:plan` | Non-interactive plan-mode produces a plan file | Assigned agent |
+| `status:dispatch` | Planned, awaiting agent assignment | AMOA |
+| `status:dev` | Actively being implemented; enforces the plan's steps | Assigned agent when starting |
 | `status:testing` | Under test | Assigned agent (its own `dev` -> `testing` move) |
 | `status:ai_review` | Code submitted for automated review | Test runner, on test pass (`testing` -> `ai_review`) |
 | `status:human_review` | Code awaiting human review | AMIA after AI review passes |
@@ -92,7 +97,8 @@
 
 **Status Workflow:**
 ```
-backburner → todo → design → dispatch → dev → testing → ai_review → human_review
+backburner → approval → design → design_ai_review → design_human_review → todo
+    → verify_assumptions → plan → dispatch → dev → testing → ai_review → human_review
                                  ↓                            ↑ (BIG tasks only)
                               blocked → (resolved) → dev
 

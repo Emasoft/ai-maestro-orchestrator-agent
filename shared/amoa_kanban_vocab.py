@@ -5,27 +5,40 @@ amoa_kanban_vocab.py — the SINGLE source of truth for this plugin's kanban voc
 Per the USER-ratified 3-pillars kanban-supremacy rule (ai-maestro
 TRDD-…-YUGDER9D, 2026-07-07) and GOVERNANCE-RULES R25 (Three-Pillars Task
 System), the TRDD `column:` state machine IS the universal kanban vocabulary for
-every surface — 1:1 with the ai-maestro server TaskStatus default (types/task.ts,
-redeployed 2026-06-20, ai-maestro#43). Every consumer in this plugin (the GitHub
-Project sync, the kanban manager, the aimaestro sync, the module-management
-github_sync) aligns TO this vocabulary and imports it from here; none defines its
-own status→column map. (issue #27)
+every surface. Every consumer in this plugin (the GitHub Project sync, the
+kanban manager, the aimaestro sync, the module-management github_sync) aligns TO
+this vocabulary and imports it from here; none defines its own status→column
+map. (issue #27)
 
-Before the fix, each consumer carried its own pre-2026-06-20 5-status map
-(`backlog/todo/assigned/in-progress/... → "Backlog"/"In Progress"/...`) and fell
-back silently to `"Todo"` on any unknown status, splitting the kanban pillar into
-two incompatible vocabularies. Keeping the vocabulary in ONE module makes that
-drift structurally impossible.
+Migrated to the 3-pillars 3.0.0 spec (`3P-KAN`, PRRD G2.1, TRDD-UNTF690M,
+2026-08-23): the BOARD vocabulary grew from 17 to 22 columns (five new columns
+ahead of `todo`: `approval`, `design_ai_review`, `design_human_review`,
+`verify_assumptions`, `plan` — 3P-KAN-18/19), and five BRACKET values
+(`proposal`, `planned`, `refused`, `completed`, `cancelled`) are legal
+`column:` values that sit OUTSIDE the board (3P-KAN-20) — the LEGAL SET for a
+`column:` field is 27, never conflated with the 22-column BOARD set.
+
+Before the pre-3.0.0 fix, each consumer carried its own pre-2026-06-20
+5-status map (`backlog/todo/assigned/in-progress/... → "Backlog"/"In
+Progress"/...`) and fell back silently to `"Todo"` on any unknown status,
+splitting the kanban pillar into two incompatible vocabularies. Keeping the
+vocabulary in ONE module makes that drift structurally impossible.
 """
 
-# The 17 ratified columns == TRDD `column:` states == ai-maestro server
-# TaskStatus values. Tuple order is the lifecycle order (the 3 exception states
-# follow the 14 lifecycle states), so iterating this reproduces the board order.
+# The 22 ratified BOARD columns (3P-KAN-01, `@spec:kanban-columns v2`) == TRDD
+# `column:` states that are ON THE BOARD. Tuple order is the lifecycle order
+# (the 3 exception states follow the 19 lifecycle states), so iterating this
+# reproduces the board order.
 KANBAN_COLUMNS: tuple[str, ...] = (
-    # 14 lifecycle states
+    # 19 lifecycle states (3P-KAN-04)
     "backburner",
-    "todo",
+    "approval",
     "design",
+    "design_ai_review",
+    "design_human_review",
+    "todo",
+    "verify_assumptions",
+    "plan",
     "dispatch",
     "dev",
     "testing",
@@ -43,8 +56,28 @@ KANBAN_COLUMNS: tuple[str, ...] = (
     "superseded",
 )
 
+# The 5 BRACKET values (3P-KAN-20): legal `column:` values that sit OUTSIDE the
+# board — `proposal`/`planned` are the intake antechamber ahead of
+# `backburner`; `refused`/`completed`/`cancelled` are archival terminals. They
+# are defined by the folder lifecycle (3P-ZON), not by the board vocabulary,
+# which is why they are a separate tuple rather than members of KANBAN_COLUMNS.
+BRACKET_COLUMNS: tuple[str, ...] = (
+    "proposal",
+    "planned",
+    "refused",
+    "completed",
+    "cancelled",
+)
+
+# The LEGAL SET for a `column:` field (27) — board + bracket. 3P-KAN-20 is
+# explicit that conflating this with KANBAN_COLUMNS (22) is a defect in either
+# direction; keep the two exported separately rather than merging them.
+LEGAL_COLUMNS: frozenset[str] = frozenset(KANBAN_COLUMNS) | frozenset(BRACKET_COLUMNS)
+
 # Fast membership set for resolve_column (defined before the function so it is
-# resolvable at call time regardless of import order).
+# resolvable at call time regardless of import order). resolve_column mirrors
+# BOARD state only (see the INVARIANT comment below it) so this stays scoped to
+# KANBAN_COLUMNS, not LEGAL_COLUMNS.
 _COLUMN_SET: frozenset[str] = frozenset(KANBAN_COLUMNS)
 
 # Explicit migration from every legacy status value this plugin ever emitted
@@ -93,8 +126,13 @@ LEGACY_STATUS_MIGRATION: dict[str, str] = {
 # and a second copy is exactly how the vocabularies split in the first place.
 STATUS_LABEL_COLORS: dict[str, str] = {
     "status:backburner": "D4C5F9",
-    "status:todo": "EDEDED",
+    "status:approval": "D4C5F9",
     "status:design": "C5DEF5",
+    "status:design_ai_review": "BFDADC",
+    "status:design_human_review": "D4C5F9",
+    "status:todo": "EDEDED",
+    "status:verify_assumptions": "C5DEF5",
+    "status:plan": "C5DEF5",
     "status:dispatch": "BFD4F2",
     "status:dev": "5319E7",
     "status:testing": "FEF2C0",
@@ -112,9 +150,14 @@ STATUS_LABEL_COLORS: dict[str, str] = {
 }
 
 STATUS_LABEL_DESCRIPTIONS: dict[str, str] = {
-    "status:backburner": "Deferred; not scheduled",
-    "status:todo": "Ready to start",
-    "status:design": "Being designed",
+    "status:backburner": "Deferred; not yet approved",
+    "status:approval": "Awaiting COS/MANAGER approval",
+    "status:design": "Being designed, in place",
+    "status:design_ai_review": "Design reviewed by COS/MANAGER",
+    "status:design_human_review": "Design awaiting human review",
+    "status:todo": "Approved and designed; ready to start",
+    "status:verify_assumptions": "Verifying every claim in the card",
+    "status:plan": "Implementation plan being authored",
     "status:dispatch": "Assigned, not yet started",
     "status:dev": "Implementation in progress",
     "status:testing": "Under test",
@@ -195,8 +238,15 @@ def resolve_column(status: str) -> str:
 # backburner→todo, live→live_auditing) that B2 assigns to the assignee, test
 # runner, ARCHITECT, MANAGER and INTEGRATOR — TRDD-8DH44UXH finding G2-G6. Do
 # not re-add a row here without citing its B2 line.
+#
+# Migrated to 3-pillars 3.0.0 (3P-KAN, `design` now precedes `todo` — 3P-KAN-04):
+# the old `("todo", "design")` row was the ORCHESTRATOR's "assigns ARCHITECT via
+# AMP" job for entering the design stage; since `design` now sits right after
+# `approval` in the happy path, that same job is `("approval", "design")`. The
+# `("dispatch", "dev")` row is unchanged — `dispatch` still immediately precedes
+# `dev` in the 3.0.0 order.
 ORCHESTRATOR_TRANSITIONS: frozenset[tuple[str, str]] = frozenset({
-    ("todo", "design"),         # B2: ORCHESTRATOR — assigns ARCHITECT via AMP
+    ("approval", "design"),     # B2 (3.0.0): ORCHESTRATOR — assigns ARCHITECT via AMP
     ("dispatch", "dev"),        # B2: ORCHESTRATOR — sets `assignee:`
 })
 
@@ -204,9 +254,20 @@ ORCHESTRATOR_TRANSITIONS: frozenset[tuple[str, str]] = frozenset({
 # nor an approval authority. The orchestrator may MIRROR these once the actor
 # performed them, but must never originate them (G2-G8: originating them here is
 # how the orchestrator ended up declaring tests passed).
+#
+# The five new 3.0.0 rows (design/design_ai_review/design_human_review pairs)
+# extend the existing pattern rather than inventing a new one: `design-reviewer`
+# plays the same role for the design-review pair that `ai-reviewer`/`reviewer`
+# already play for `ai_review` (3P-KAN-18: "the design body is reviewed by the
+# COS or the MANAGER"). `("backburner", "approval")` replaces the pre-3.0.0
+# `("backburner", "todo")` intake row — `approval` is now the first column past
+# `backburner` (3P-KAN-04).
 OTHER_ACTOR_TRANSITIONS: dict[tuple[str, str], str] = {
-    ("backburner", "todo"): "manager",          # B2: MANAGER (intake)
-    ("design", "dispatch"): "architect",        # B2: ARCHITECT (may split/group)
+    ("backburner", "approval"): "manager",      # B2 (3.0.0): MANAGER (intake)
+    ("design", "design_ai_review"): "architect",   # design done, submitted for review
+    ("design_ai_review", "design"): "design-reviewer",       # 3P-KAN-05: rejection
+    ("design_ai_review", "design_human_review"): "design-reviewer",  # escalates to human
+    ("design_ai_review", "todo"): "design-reviewer",  # `min-approval-requirement: none` skips human review
     ("dev", "testing"): "assignee",             # B2: assignee — code ready
     ("testing", "ai_review"): "test-runner",    # B2: test runner — tests passed
     ("testing", "dev"): "test-runner",          # B2: test runner — tests FAILED
@@ -222,16 +283,27 @@ OTHER_ACTOR_TRANSITIONS: dict[tuple[str, str], str] = {
 }
 
 # Transitions requiring MANAGER approval (§Y: release pipeline, abandonment,
-# force-supersede, escalation to human review).
+# force-supersede, escalation to human review). `approval` and
+# `design_human_review` (3.0.0) are added as the same kind of safety default
+# `human_review` already had: from an UNKNOWN origin (no explicit pair match),
+# landing on a column that waits on a decision by another party (3P-KAN-10)
+# must not default to "orchestrator, probably fine".
 MANAGER_GATED_TARGETS: frozenset[str] = frozenset({
-    "publish", "published", "deploy", "live", "failed", "superseded", "human_review",
+    "publish", "published", "deploy", "live", "failed", "superseded",
+    "human_review", "approval", "design_human_review",
 })
 
 # Transitions requiring USER approval (§Z: the human's own verdict being
 # recorded). Keyed on the pair — leaving `human_review` at all IS the verdict.
+# `design_human_review`'s two exits (3P-KAN-05, 3P-KAN-22) are the same kind of
+# verdict one stage earlier: the USER (or a MANAGER explicitly delegated to act
+# in their absence, PRRD G6.1) reviews the design and either approves it
+# (→ `todo`) or rejects it (→ `design`, which bumps `last-design-revision:`).
 USER_GATED_TRANSITIONS: frozenset[tuple[str, str]] = frozenset({
     ("human_review", "complete"),
     ("human_review", "dev"),
+    ("design_human_review", "todo"),
+    ("design_human_review", "design"),
 })
 
 

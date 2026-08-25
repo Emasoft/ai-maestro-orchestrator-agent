@@ -1,22 +1,27 @@
 ## Table of Contents
-- [Ratified 17-Column System](#ratified-17-column-system)
+- [Ratified 22-Column System (3-Pillars 3.0.0)](#ratified-22-column-system-3-pillars-300)
 - [Available Scripts](#available-scripts)
 
 ---
 
-## Ratified 17-Column System
+## Ratified 22-Column System (3-Pillars 3.0.0)
 
-The board uses the ratified 17-column vocabulary (`~/.claude/rules/universal-kanban.md`),
-1:1 with the TRDD `column:` enum — 14 lifecycle columns plus 3 exception columns.
-A card's column is its TRDD frontmatter `column:` field; there is no separate task database.
+The board uses the ratified 22-column vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`),
+1:1 with the TRDD `column:` enum for cards ON THE BOARD. A card's column is its TRDD
+frontmatter `column:` field; there is no separate task database.
 
 | Column | Status Label | Description |
 |--------|-------------|-------------|
-| Backburner | `status:backburner` | Deferred, not yet scheduled |
-| Todo | `status:todo` | Scheduled, ready to be designed |
-| Design | `status:design` | ARCHITECT is designing the task |
-| Dispatch | `status:dispatch` | Designed, awaiting agent assignment |
-| Dev | `status:dev` | Actively being implemented |
+| Backburner | `status:backburner` | Not yet approved |
+| Approval | `status:approval` | Awaiting COS/MANAGER approval per `min-approval-requirement:` |
+| Design | `status:design` | Card expanded in place with design + specs |
+| Design AI Review | `status:design_ai_review` | Design body reviewed by COS/MANAGER |
+| Design Human Review | `status:design_human_review` | Human review; skipped when `min-approval-requirement: none` |
+| Todo | `status:todo` | Approved and designed, ready to be verified |
+| Verify Assumptions | `status:verify_assumptions` | Every claim in the card is verified |
+| Plan | `status:plan` | Non-interactive plan-mode produces a plan file |
+| Dispatch | `status:dispatch` | Planned, awaiting agent assignment |
+| Dev | `status:dev` | Actively being implemented; enforces the plan's steps |
 | Testing | `status:testing` | Under test |
 | AI Review | `status:ai_review` | Code submitted for automated review |
 | Human Review | `status:human_review` | Code awaiting human review |
@@ -34,6 +39,11 @@ Exception columns (apply at any point in the lifecycle):
 | Blocked | `status:blocked` | Blocked by a non-empty `blocked-by:` list |
 | Failed | `status:failed` | Failed and retryable — stays open, never archived |
 | Superseded | `status:superseded` | Replaced by other TRDD(s) |
+
+These 22 are the BOARD vocabulary. Five additional BRACKET values are legal `column:`
+values but are NOT board columns — `proposal`/`planned` (intake antechamber ahead of
+`backburner`) and `refused`/`completed`/`cancelled` (archival terminals), defined by the
+folder lifecycle, not by the board (3P-KAN-20). Legal set = 27.
 
 ---
 

@@ -28,27 +28,32 @@ gh project list --owner {{GITHUB_OWNER}} --format json | jq '.projects[] | selec
 ## Standard AMOA Columns
 
 ### Column Structure
-The AMOA orchestrator uses the ratified 17-column workflow
-(`~/.claude/rules/universal-kanban.md`) — 14 lifecycle columns plus 3
+The AMOA orchestrator uses the ratified 22-column workflow
+(3P-KAN, `docs_dev/3-pillars-spec-*.md`) — 19 lifecycle columns plus 3
 exception columns:
 
-1. **Backburner** - Deferred, not yet scheduled
-2. **Todo** - Scheduled, ready to be designed
-3. **Design** - ARCHITECT is designing the task
-4. **Dispatch** - Designed, awaiting agent assignment
-5. **Dev** - Actively being implemented
-6. **Testing** - Under test
-7. **AI Review** - Integrator reviews ALL tasks
-8. **Human Review** - User reviews BIG tasks only
-9. **Complete** - Internally finished, not yet released
-10. **Publish** - Entering the publish pipeline
-11. **Published** - Published artifact
-12. **Deploy** - Entering the deploy pipeline
-13. **Live** - Deployed and live
-14. **Live Auditing** - Live, under audit/soak
-15. **Blocked** - Blocked by a dependency (exception column)
-16. **Failed** - Failed and retryable (exception column)
-17. **Superseded** - Replaced by other task(s) (exception column)
+1. **Backburner** - Not yet approved
+2. **Approval** - Awaiting COS/MANAGER approval per `min-approval-requirement:`
+3. **Design** - Card expanded in place with design + specs
+4. **Design AI Review** - Design body reviewed by COS/MANAGER
+5. **Design Human Review** - Human review; skipped when `min-approval-requirement: none`
+6. **Todo** - Approved and designed, ready to be verified
+7. **Verify Assumptions** - Every claim in the card is verified
+8. **Plan** - Non-interactive plan-mode produces a plan file
+9. **Dispatch** - Planned, awaiting agent assignment
+10. **Dev** - Actively being implemented; enforces the plan's steps
+11. **Testing** - Under test
+12. **AI Review** - Integrator reviews ALL tasks
+13. **Human Review** - User reviews BIG tasks only
+14. **Complete** - Internally finished, not yet released
+15. **Publish** - Entering the publish pipeline
+16. **Published** - Published artifact
+17. **Deploy** - Entering the deploy pipeline
+18. **Live** - Deployed and live
+19. **Live Auditing** - Live, under audit/soak
+20. **Blocked** - Blocked by a dependency (exception column)
+21. **Failed** - Failed and retryable (exception column)
+22. **Superseded** - Replaced by other task(s) (exception column)
 
 ### Add Status Field
 ```bash
@@ -57,7 +62,7 @@ gh project field-create {{PROJECT_NUMBER}} \
   --owner {{GITHUB_OWNER}} \
   --name "Status" \
   --data-type "SINGLE_SELECT" \
-  --single-select-options "Backburner,Todo,Design,Dispatch,Dev,Testing,AI Review,Human Review,Complete,Publish,Published,Deploy,Live,Live Auditing,Blocked,Failed,Superseded"
+  --single-select-options "Backburner,Approval,Design,Design AI Review,Design Human Review,Todo,Verify Assumptions,Plan,Dispatch,Dev,Testing,AI Review,Human Review,Complete,Publish,Published,Deploy,Live,Live Auditing,Blocked,Failed,Superseded"
 ```
 
 ## Custom Fields
@@ -121,14 +126,19 @@ gh project field-create {{PROJECT_NUMBER}} \
 
 ### Status Labels
 
-The ratified 17-column vocabulary (SSOT: `STATUS_LABEL_COLORS` /
+The ratified 22-column vocabulary (SSOT: `STATUS_LABEL_COLORS` /
 `STATUS_LABEL_DESCRIPTIONS` in `shared/amoa_kanban_vocab.py`):
 ```bash
 # Status tracking
-gh label create "status:backburner" --color "D4C5F9" --description "Deferred; not scheduled" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:todo" --color "EDEDED" --description "Ready to start" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:design" --color "C5DEF5" --description "Being designed" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
-gh label create "status:dispatch" --color "BFD4F2" --description "Assigned, not yet started" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:backburner" --color "D4C5F9" --description "Not yet approved" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:approval" --color "D4C5F9" --description "Awaiting COS/MANAGER approval" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:design" --color "C5DEF5" --description "Card expanded in place with design + specs" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:design_ai_review" --color "C5DEF5" --description "Design reviewed by COS/MANAGER" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:design_human_review" --color "C5DEF5" --description "Design reviewed by USER" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:todo" --color "EDEDED" --description "Approved and designed, ready to be verified" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:verify_assumptions" --color "EDEDED" --description "Verifying every claim in the card" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:plan" --color "EDEDED" --description "Producing a non-interactive plan file" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
+gh label create "status:dispatch" --color "BFD4F2" --description "Planned, not yet started" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
 gh label create "status:dev" --color "5319E7" --description "Implementation in progress" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
 gh label create "status:testing" --color "FEF2C0" --description "Under test" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
 gh label create "status:ai_review" --color "BFDADC" --description "Awaiting AI review" --repo {{GITHUB_OWNER}}/{{REPO_NAME}}
@@ -270,7 +280,7 @@ jobs:
 After setup, verify:
 
 - [ ] Project created and visible in GitHub
-- [ ] All eight status columns exist
+- [ ] All 22 status columns exist
 - [ ] All custom fields added
 - [ ] All labels created with correct colors
 - [ ] Repository linked to project

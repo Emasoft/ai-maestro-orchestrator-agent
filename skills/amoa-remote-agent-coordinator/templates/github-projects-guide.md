@@ -31,16 +31,21 @@ gh project item-list {PROJECT_NUMBER} --owner {OWNER}
 
 ## Task Status Columns
 
-The ratified 17-column vocabulary (`~/.claude/rules/universal-kanban.md`) — 14 lifecycle
+The ratified 22-column vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`) — 19 lifecycle
 columns plus 3 exception columns:
 
 | Column | Status Label | When to Move Here |
 |--------|-------------|-------------------|
-| Backburner | `status:backburner` | Deferred, not yet scheduled |
-| Todo | `status:todo` | Scheduled, ready to be designed |
-| Design | `status:design` | ARCHITECT is designing the task |
-| Dispatch | `status:dispatch` | Designed, awaiting agent assignment |
-| Dev | `status:dev` | Actively being implemented |
+| Backburner | `status:backburner` | Not yet approved |
+| Approval | `status:approval` | Awaiting COS/MANAGER approval per `min-approval-requirement:` |
+| Design | `status:design` | Card expanded in place with design + specs |
+| Design AI Review | `status:design_ai_review` | Design body reviewed by COS/MANAGER |
+| Design Human Review | `status:design_human_review` | Human review; skipped when `min-approval-requirement: none` |
+| Todo | `status:todo` | Approved and designed, ready to be verified |
+| Verify Assumptions | `status:verify_assumptions` | Every claim in the card is verified |
+| Plan | `status:plan` | Non-interactive plan-mode produces a plan file |
+| Dispatch | `status:dispatch` | Planned, awaiting agent assignment |
+| Dev | `status:dev` | Actively being implemented; enforces the plan's steps |
 | Testing | `status:testing` | Under test |
 | AI Review | `status:ai_review` | Integrator reviews ALL tasks |
 | Human Review | `status:human_review` | User reviews BIG tasks only |

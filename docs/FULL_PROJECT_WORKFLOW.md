@@ -83,37 +83,46 @@ AMOA ◄──── AMIA reports merge/validation result (DIRECT) ───► 
 
 ## Kanban Column System
 
-All projects use the ratified **17-column kanban system** (14 lifecycle + 3
-exception columns; SSOT `shared/amoa_kanban_vocab.py`, per
-`~/.claude/rules/universal-kanban.md`). Every agent must understand these
-columns and use the canonical code format consistently. The "Moved INTO it by"
-column mirrors Part B2 transition authority
+All projects use the ratified **22-column kanban board** (plus 5 bracket
+values outside the board — `proposal`, `planned`, `refused`, `completed`,
+`cancelled` — for a 27-value legal `column:` set; SSOT
+`shared/amoa_kanban_vocab.py`, per `~/.claude/rules/universal-kanban.md` and
+3-pillars spec `3P-KAN`). Every agent must understand these columns and use
+the canonical code format consistently. The "Moved INTO it by" column mirrors
+Part B2 transition authority
 (`shared/amoa_kanban_vocab.py::transition_authority` is the enforced SSOT).
 
 ### Canonical Columns
 
 | # | Column | Code / Label | Description | Moved INTO it by |
 |---|--------|--------------|-------------|------------------|
-| 1 | Backburner | `backburner` / `status:backburner` | Entry point; deferred, not scheduled | card author (intake) |
-| 2 | Todo | `todo` / `status:todo` | Ready to start, prioritized | MANAGER |
-| 3 | Design | `design` / `status:design` | ARCHITECT designing the task | ORCHESTRATOR |
-| 4 | Dispatch | `dispatch` / `status:dispatch` | Designed, awaiting assignment | ARCHITECT |
-| 5 | Dev | `dev` / `status:dev` | Active implementation | ORCHESTRATOR (sets `assignee:`) |
-| 6 | Testing | `testing` / `status:testing` | Under test | assignee (code ready) |
-| 7 | AI Review | `ai_review` / `status:ai_review` | Automated review | test runner (tests passed) |
-| 8 | Human Review | `human_review` / `status:human_review` | User reviews (big tasks only) | AI reviewer (MANAGER-gated escalation) |
-| 9 | Complete | `complete` / `status:complete` | Internally finished, not yet released | reviewer (from `ai_review`) / USER (from `human_review`) |
-| 10 | Publish | `publish` / `status:publish` | Publish pipeline entered | INTEGRATOR (spawns RELEASER) |
-| 11 | Published | `published` / `status:published` | Artifact published | RELEASER |
-| 12 | Deploy | `deploy` / `status:deploy` | Deploy pipeline entered | INTEGRATOR (spawns DEPLOYER) |
-| 13 | Live | `live` / `status:live` | Live in production | DEPLOYER; INTEGRATOR on soak exit |
-| 14 | Live Auditing | `live_auditing` / `status:live_auditing` | Live, under audit/soak | INTEGRATOR |
-| 15 | Blocked | `blocked` / `status:blocked` | Blocked at any stage (non-empty `blocked-by:`) | column owner at time of block |
-| 16 | Failed | `failed` / `status:failed` | Failed, retryable — stays open, never archived | MANAGER/USER gate |
-| 17 | Superseded | `superseded` / `status:superseded` | Replaced by other TRDD(s) | MANAGER gate |
+| 1 | Backburner | `backburner` / `status:backburner` | Entry point; not yet approved | card author (intake) |
+| 2 | Approval | `approval` / `status:approval` | Awaiting COS/MANAGER approval per `min-approval-requirement:` | card author |
+| 3 | Design | `design` / `status:design` | Card expanded in place with design + specs | ARCHITECT (or implementer, teamless) |
+| 4 | Design AI Review | `design_ai_review` / `status:design_ai_review` | COS/MANAGER reviews the design | ARCHITECT |
+| 5 | Design Human Review | `design_human_review` / `status:design_human_review` | USER reviews the design (skipped when `min-approval-requirement: none`) | COS/MANAGER |
+| 6 | Todo | `todo` / `status:todo` | Approved and designed, prioritized | MANAGER |
+| 7 | Verify Assumptions | `verify_assumptions` / `status:verify_assumptions` | Every claim in the card is verified or tested | ORCHESTRATOR |
+| 8 | Plan | `plan` / `status:plan` | Non-interactive plan-mode produces a plan file | ORCHESTRATOR |
+| 9 | Dispatch | `dispatch` / `status:dispatch` | Designed, awaiting assignment | ARCHITECT |
+| 10 | Dev | `dev` / `status:dev` | Active implementation (enforces the plan's steps) | ORCHESTRATOR (sets `assignee:`) |
+| 11 | Testing | `testing` / `status:testing` | Under test | assignee (code ready) |
+| 12 | AI Review | `ai_review` / `status:ai_review` | Automated review | test runner (tests passed) |
+| 13 | Human Review | `human_review` / `status:human_review` | User reviews (big tasks only) | AI reviewer (MANAGER-gated escalation) |
+| 14 | Complete | `complete` / `status:complete` | Internally finished, not yet released | reviewer (from `ai_review`) / USER (from `human_review`) |
+| 15 | Publish | `publish` / `status:publish` | Publish pipeline entered | INTEGRATOR (spawns RELEASER) |
+| 16 | Published | `published` / `status:published` | Artifact published | RELEASER |
+| 17 | Deploy | `deploy` / `status:deploy` | Deploy pipeline entered | INTEGRATOR (spawns DEPLOYER) |
+| 18 | Live | `live` / `status:live` | Live in production | DEPLOYER; INTEGRATOR on soak exit |
+| 19 | Live Auditing | `live_auditing` / `status:live_auditing` | Live, under audit/soak | INTEGRATOR |
+| 20 | Blocked | `blocked` / `status:blocked` | Blocked at any stage (non-empty `blocked-by:`) | column owner at time of block |
+| 21 | Failed | `failed` / `status:failed` | Failed, retryable — stays open, never archived | MANAGER/USER gate |
+| 22 | Superseded | `superseded` / `status:superseded` | Replaced by other TRDD(s) | MANAGER gate |
 
 ### Task Routing
 
+- **Design gate**: `backburner` → `approval` → `design` → `design_ai_review` →
+  (`design_human_review`) → `todo` → `verify_assumptions` → `plan` → `dispatch`
 - **Small tasks**: `dev` → `testing` → `ai_review` → `complete` (reviewer verdict)
 - **Big tasks**: `dev` → `testing` → `ai_review` → `human_review` → `complete` (USER verdict)
 - **Human Review** is requested up the chain via AMCOS → AMAMA (AMAMA asks the
@@ -141,10 +150,13 @@ There are two views of a task's state, and they are **not peers**:
 
 1. **The TRDD `column:` pipeline is the AUTHORITATIVE lifecycle.** Each task is a
    TRDD file in `design/tasks/` whose `column:` field is the single source of
-   truth for where the task is. The full pipeline is the v2 column set
-   (`backburner`, `todo`, `design`, `dispatch`, `dev`, `testing`, `ai_review`,
-   `human_review`, `complete`, `publish`, `published`, `deploy`, `live`,
-   `live_auditing`, plus the exceptions `blocked`, `failed`, `superseded`). See
+   truth for where the task is. The full board is the 3.0.0 22-column set
+   (`backburner`, `approval`, `design`, `design_ai_review`,
+   `design_human_review`, `todo`, `verify_assumptions`, `plan`, `dispatch`,
+   `dev`, `testing`, `ai_review`, `human_review`, `complete`, `publish`,
+   `published`, `deploy`, `live`, `live_auditing`, plus the exceptions
+   `blocked`, `failed`, `superseded`), plus 5 bracket values outside the board
+   (`proposal`, `planned`, `refused`, `completed`, `cancelled`). See
    `~/.claude/rules/trdd-design-tasks.md` for the definitive state machine.
 2. **The 8-column GitHub Projects board is a VISUAL PROJECTION of that pipeline.**
    It exists for humans to see progress at a glance. It carries fewer columns, so
@@ -163,8 +175,13 @@ columns onto one board column **without** also writing the precise value into
 | TRDD `column:` (authoritative) | Board column (projection) | `trdd-column:` field (exact, lossless) |
 |---|---|---|
 | `backburner` | Backlog | `backburner` |
-| `todo` | Todo | `todo` |
+| `approval` | Backlog | `approval` |
 | `design` | Todo | `design` |
+| `design_ai_review` | Todo | `design_ai_review` |
+| `design_human_review` | Human Review | `design_human_review` |
+| `todo` | Todo | `todo` |
+| `verify_assumptions` | Todo | `verify_assumptions` |
+| `plan` | Todo | `plan` |
 | `dispatch` | Todo | `dispatch` |
 | `dev` | In Progress | `dev` |
 | `testing` | In Progress | `testing` |
