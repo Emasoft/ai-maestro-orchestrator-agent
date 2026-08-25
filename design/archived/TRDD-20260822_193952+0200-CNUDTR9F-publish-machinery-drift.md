@@ -1,11 +1,12 @@
 ---
 trdd-id: CNUDTR9F
 title: Publish machinery drift — frozen CPV pin, unregenerated pre-push hook, dead install path, false header
-column: publish
+column: published
+implementation-commits: [13af808, fde32fb, 47f89fa, 1cb401b]
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-22T19:39:52+0200
-updated: 2026-08-25T17:26:00+0200
+updated: 2026-08-25T20:45:00+0200
 current-owner: ai-maestro-orchestrator-agent
 created-by: ai-maestro-orchestrator-agent
 task-type: infra
@@ -154,3 +155,12 @@ replacement so a failure is attributable to one of them.
   closed under the USER's standing directive of 2026-08-25 ("complete all pending tasks and
   TRDDs — you can decide yourself"); hub approved sequencing in-session. Entering the release
   pipeline (publish.py --patch).
+- 2026-08-25T20:45:00+0200 — PUBLISHED. Containment MEASURED with merge-base, not inferred:
+  13af808 (F1 pin) + fde32fb (F2/F3/F4 hook adoption) IN the v1.13.13 tag; 47f89fa (G4 rglob
+  fix, made between the two push attempts) is OUTSIDE the v1.13.13 TAG but on main and IN
+  v1.13.14, as is 1cb401b (byte-verbatim hook re-extraction). Cause: publish.py's
+  interrupted-publish recovery reuses an existing local tag without re-pointing it at the
+  retried HEAD — filed upstream on claude-plugins-validation. Both releases terminal-green
+  (v1.13.14 CI+Release success; v1.13.13 Release rerun success after the known cancelled
+  flake). First push attempt was BLOCKED by the new hook's G4 (non-recursive glob vs
+  tests/unit layout) — the gate demonstrably gates. Archived as `published` per 3P-ZON-05.
