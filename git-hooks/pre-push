@@ -45,8 +45,7 @@ secret_scan_range() {
     if [ "$2" != "$ZERO" ]; then
         base="$2"
     elif [ -n "$default_branch" ]; then
-        base="$(git rev-parse --verify --quiet "origin/$default_branch" 2>/dev/null \
-             || git rev-parse --verify --quiet "$default_branch" 2>/dev/null || true)"
+        base="$(git rev-parse --verify --quiet "origin/$default_branch" 2>/dev/null              || git rev-parse --verify --quiet "$default_branch" 2>/dev/null || true)"
     fi
     if [ -n "$base" ]; then
         trufflehog git "file://$REPO_ROOT" --since-commit "$base" --branch "$3" --no-update --fail
