@@ -920,7 +920,10 @@ def run_gate(root: Path) -> int:
     # Gate 4: Tests. MANDATORY — missing tests/ dir or zero tests is a BLOCK.
     cprint(f"\n{BLUE}[G4] Running tests...{NC}")
     test_dir = root / "tests"
-    if not (test_dir.is_dir() and any(test_dir.glob("test_*.py"))):
+    # rglob, not glob: this repo keeps tests in tests/unit/ etc. — a top-level-only
+    # glob sees zero files and G4 false-blocks the push while pytest happily
+    # collects 205 tests (TRDD-CNUDTR9F follow-up; same defect filed upstream).
+    if not (test_dir.is_dir() and any(test_dir.rglob("test_*.py"))):
         cprint(f"  {RED}BLOCKED: tests/ directory missing or empty.{NC}")
         cprint(f"  {RED}Every CPV plugin MUST ship tests.{NC}")
         return 1
