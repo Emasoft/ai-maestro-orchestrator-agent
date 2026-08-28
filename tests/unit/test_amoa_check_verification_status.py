@@ -9,8 +9,14 @@ builds, and the matcher is anchored so it does NOT also fire on `ListAgents`,
 state file `.claude/orchestrator-exec-phase.local.md` resolved relative to the
 process CWD) and emits:
 
-  * exit 0 + {"status": "ok", ...}      -> allow the spawn to proceed
+  * exit 0 + NO stdout at all           -> allow the spawn to proceed
   * exit 2 + {"decision": "block", ...} -> deny the spawn (verification pending)
+
+Claude Code parses any hook stdout starting with "{" as JSON and
+schema-validates it; an object with no recognized hook-output key now
+surfaces a visible "<hook> hook error" notice (since CC 2.1.248). So the
+allow path prints nothing, and the block path's JSON carries only
+schema-recognized top-level keys.
 
 No mocks: the actual script is invoked as a subprocess with crafted stdin and
 a real temp state file under tmp_path.
@@ -65,6 +71,21 @@ LEGACY_TASK_STDIN = json.dumps(
     {"tool_name": "Task", "tool_input": {"subagent_type": "general-purpose"}}
 )
 
+# Top-level keys Claude Code's hook-output schema recognizes for PreToolUse.
+# The block path must never emit a key outside this set -- an unrecognized
+# key is what triggers the "<hook> hook error" notice this change fixes.
+RECOGNIZED_HOOK_OUTPUT_KEYS = {
+    "decision",
+    "reason",
+    "hookSpecificOutput",
+    "continue",
+    "stopReason",
+    "suppressOutput",
+    "systemMessage",
+    "additionalContext",
+    "terminalSequence",
+}
+
 
 def test_blocks_when_verification_incomplete(tmp_path):
     """Exit 2 + decision=block when an active assignment's verification is pending/unauthorized."""
@@ -86,10 +107,14 @@ def test_blocks_when_verification_incomplete(tmp_path):
     assert parsed["decision"] == "block"
     assert parsed["hookSpecificOutput"]["permissionDecision"] == "deny"
     assert "agent-x" in parsed["reason"]
+    # No unrecognized top-level key -- that is what triggers the hook-error
+    # notice on any Claude Code build since 2.1.248.
+    assert set(parsed.keys()) <= RECOGNIZED_HOOK_OUTPUT_KEYS
+    assert "timestamp" not in parsed
 
 
 def test_allows_when_verification_complete(tmp_path):
-    """Exit 0 + status=ok when every active assignment is verified and authorized."""
+    """Exit 0 + completely silent stdout when every active assignment is verified and authorized."""
     _write_state(
         tmp_path,
         "---\n"
@@ -102,45 +127,44 @@ def test_allows_when_verification_complete(tmp_path):
         '      authorized_at: "2026-01-01T00:00:00Z"\n'
         "---\nbody\n",
     )
-    code, parsed, _out, _err = run_hook(tmp_path, SUBAGENT_STDIN)
+    code, parsed, out, _err = run_hook(tmp_path, SUBAGENT_STDIN)
     assert code == 0
-    assert parsed is not None
-    assert parsed["status"] == "ok"
-    assert "decision" not in parsed
+    assert parsed is None
+    assert out == ""
 
 
 def test_passes_through_when_not_in_orchestration(tmp_path):
-    """Exit 0 (pass-through) when a Task payload arrives but phase is not orchestration."""
+    """Exit 0 + silent stdout (pass-through) when a Task payload arrives but phase is not orchestration."""
     # State file exists but phase != orchestration -> the hook never blocks Task work.
     _write_state(tmp_path, "---\nphase: plan\n---\nbody\n")
-    code, parsed, _out, _err = run_hook(tmp_path, SUBAGENT_STDIN)
+    code, parsed, out, _err = run_hook(tmp_path, SUBAGENT_STDIN)
     assert code == 0
-    assert parsed is not None
-    assert parsed["status"] == "ok"
+    assert parsed is None
+    assert out == ""
 
 
 def test_malformed_stdin_is_fail_safe(tmp_path):
-    """Malformed stdin does not crash; the decision still follows the (absent) state file -> allow."""
+    """Malformed stdin does not crash; the decision still follows the (absent) state file -> silent allow."""
     # No state file + garbage stdin: the stdin parse error is swallowed and the
-    # decision falls through to "Not in orchestration phase" -> allow, exit 0.
-    code, parsed, _out, _err = run_hook(tmp_path, "this is not json {{{")
+    # decision falls through to "Not in orchestration phase" -> allow, exit 0,
+    # no stdout.
+    code, parsed, out, _err = run_hook(tmp_path, "this is not json {{{")
     assert code == 0
-    assert parsed is not None
-    assert parsed["status"] == "ok"
+    assert parsed is None
+    assert out == ""
 
 
 def test_missing_state_file_allows(tmp_path):
-    """Exit 0 + status=ok when no orchestrator-exec-phase state file exists at all."""
+    """Exit 0 + silent stdout when no orchestrator-exec-phase state file exists at all."""
     # tmp_path has no .claude/orchestrator-exec-phase.local.md.
-    code, parsed, _out, _err = run_hook(tmp_path, SUBAGENT_STDIN)
+    code, parsed, out, _err = run_hook(tmp_path, SUBAGENT_STDIN)
     assert code == 0
-    assert parsed is not None
-    assert parsed["status"] == "ok"
-    assert "orchestration phase" in parsed["message"].lower()
+    assert parsed is None
+    assert out == ""
 
 
 def test_exit_code_contract_block_is_2_allow_is_0(tmp_path):
-    """The exit-code contract: blocking verification -> 2, complete verification -> 0 (same dir, two states)."""
+    """The exit-code contract: blocking verification -> 2 + JSON, complete verification -> 0 + silence (same dir, two states)."""
     state = _write_state(
         tmp_path,
         "---\n"
@@ -171,10 +195,10 @@ def test_exit_code_contract_block_is_2_allow_is_0(tmp_path):
         "---\nbody\n",
         encoding="utf-8",
     )
-    code_allow, parsed_allow, _o2, _e2 = run_hook(tmp_path, SUBAGENT_STDIN)
+    code_allow, parsed_allow, out_allow, _e2 = run_hook(tmp_path, SUBAGENT_STDIN)
     assert code_allow == 0
-    assert parsed_allow is not None  # allow path MUST emit parseable JSON
-    assert parsed_allow["status"] == "ok"
+    assert parsed_allow is None  # allow path MUST emit nothing
+    assert out_allow == ""
 
 
 def test_decision_is_payload_agnostic(tmp_path):
@@ -202,3 +226,5 @@ def test_decision_is_payload_agnostic(tmp_path):
     assert agent_code == task_code == 2
     assert agent_parsed is not None and task_parsed is not None
     assert agent_parsed["decision"] == task_parsed["decision"] == "block"
+    assert set(agent_parsed.keys()) <= RECOGNIZED_HOOK_OUTPUT_KEYS
+    assert set(task_parsed.keys()) <= RECOGNIZED_HOOK_OUTPUT_KEYS

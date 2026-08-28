@@ -19,7 +19,6 @@ Exit codes:
 import contextlib
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -206,17 +205,24 @@ def main() -> None:
     is_ok, message = check_verification_status()
 
     if is_ok:
-        # Allow tool use to proceed
-        result: dict[str, Any] = {
-            "status": "ok",
-            "message": message,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        }
-        print(json.dumps(result))
+        # Allow the dispatch to proceed by saying NOTHING. Exit 0 with empty
+        # stdout is the documented "no decision — apply the normal permission
+        # flow" answer for a PreToolUse hook.
+        #
+        # This branch used to print {"status","message","timestamp"}: valid JSON,
+        # but carrying ZERO recognized hook-schema keys. Claude Code parses any
+        # stdout whose first non-whitespace character is "{" as JSON and then
+        # schema-validates it, and since CC 2.1.248 an object that fails that
+        # validation raises a visible "<hook> hook error" notice. It is
+        # non-blocking, so the gate still functioned — but this gate matches
+        # ^(Task|Agent)$, so the notice fired on EVERY subagent dispatch.
+        #
+        # Rule this encodes: a hook prints a schema-valid object, or it prints
+        # nothing. Never an unrecognized one.
         sys.exit(0)
     else:
         # Block tool use - verification incomplete
-        result = {
+        result: dict[str, Any] = {
             "decision": "block",
             "reason": message,
             "hookSpecificOutput": {
@@ -234,8 +240,11 @@ def main() -> None:
             "2. Orchestrator must verify the repetition is correct\n"
             "3. Answer any clarifying questions\n"
             "4. Issue formal authorization to proceed\n\n"
+            # No "timestamp" key here: it is not part of the hook output schema.
+            # This path exits 2, which blocks regardless of schema validation, so
+            # the stray key was never fatal — but an unrecognized key on the deny
+            # path of a MANDATORY gate is the one place not to leave doubt.
             "Use /check-agents to see verification status.",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         # Exit code 2 indicates blocking error
         # Output blocking decision to stdout so Claude Code receives it

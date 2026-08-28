@@ -261,18 +261,22 @@ def main():
     # Check polling status
     overdue, warning = check_polling_status()
 
-    result = {
-        "status": "ok",
-        "overdue_count": len(overdue),
-        "warning_count": len(warning),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    }
-
-    # Add reminder if there are overdue or warning items
+    # Emit ONLY schema-recognized keys, and only when there is something to say.
+    #
+    # This used to always print {"status","overdue_count","warning_count",
+    # "timestamp"} — valid JSON carrying no recognized hook-output key. Claude
+    # Code parses stdout starting with "{" as JSON and schema-validates it, and
+    # since CC 2.1.248 a parsed object that fails that validation surfaces a
+    # visible "<hook> hook error" notice. This hook runs on UserPromptSubmit, so
+    # that fired on EVERY prompt. The counts were never read by Claude Code —
+    # systemMessage is the only key here it acts on.
+    #
+    # Note the alternative is NOT to fall back to plain-text stdout: for
+    # UserPromptSubmit that would be injected into the conversation as context,
+    # which is the opposite of silent.
     if overdue or warning:
-        result["systemMessage"] = format_reminder(overdue, warning)
+        print(json.dumps({"systemMessage": format_reminder(overdue, warning)}))
 
-    print(json.dumps(result))
     sys.exit(0)
 
 
