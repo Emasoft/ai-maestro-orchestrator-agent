@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-29T23:41:16+0200
+updated: 2026-08-29T23:49:32+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -69,10 +69,20 @@ actually delivered, and the live check stays tracked instead of quietly disappea
   0.000229 s, `curl_exit=7` (REFUSED); nothing LISTENING on 23000; `pm2 jlist` → `ai-maestro`
   stopped, `exit_code: 130`, `unstable_restarts: 0`. Then asked the ai-maestro session, which
   replied, PARAPHRASING ITS OWN HANDOFF, **"Server STOPPED by owner directive — do NOT restart"**
-  — a quote this card's author has NOT seen and could not source (a grep for that instruction
-  across every readable peer handoff returned nothing, 2026-08-29T23:5x). So the DIRECTIVE is
-  peer-asserted, not verified; `exit_code: 130` proves only that SOMEONE sent SIGINT, never who
-  or why. Do not re-cite it as an established owner instruction. What IS first-hand: a peer that
+  — **and its own author has since confirmed there is NO user artifact behind it.** Asked for the
+  path and verbatim line, that session answered: `~/ai-maestro/.janitor/state/agent-handoff.md:71`,
+  a file that is `git check-ignore`-positive — untracked, no history, written by that session
+  itself. The sentence is rev 41 carried forward from rev 40, authored by a PREVIOUS session of
+  the same agent, injected into its context by the SessionStart hook and relayed to us as a
+  directive. Its author's words: *"a paraphrase of a paraphrase … Restore nothing on my account
+  — the weaker wording is the true one."* So the DIRECTIVE is peer-asserted, not verified;
+  `exit_code: 130` proves only that SOMEONE sent SIGINT, never who or why. Cite the 130, never
+  the directive. **Do not re-derive this from the filesystem** — one grep here was structurally
+  incapable of hitting (`~/.claude/projects/*/[a-z]*/agent-handoff.md` cannot match
+  `<project>/.janitor/state/…`: wrong depth, and `[a-z]*` excludes a leading dot by construction),
+  so its silence was guaranteed rather than evidential. The answer came from ASKING THE AUTHOR,
+  which no search could have produced, because the finding was that the source is weaker than the
+  claim. What IS first-hand: a peer that
   owns that service asked us not to restart it, and it is another team's service — sufficient to
   decline, insufficient to assert. Earlier wording here, on orch#24 and in commit `86b8c81` said
   "owner directive" flatly; that overstated the evidence and is corrected here rather than there
@@ -121,5 +131,17 @@ that needs infrastructure this repo does not have. It is filed as a derived stan
 - [ ] An implementation child is created with `amp-kanban-create-task --parent "$EPIC"`.
 - [ ] Reading the epic back from the live server returns that child under it.
 - [ ] The absence case still behaves as today (no epic id → unlinked breakdown, no error).
+      **SPLIT 2026-08-29 — half of this is already proven, half is not unit-testable at all.**
+      *Proven, no server and no AMP identity needed:* the PARSE contract. `test_absent_key_returns_none`
+      and `test_null_value_returns_none` (`tests/unit/test_amoa_design_handoff.py:53,59`) assert that a
+      handoff missing the key, and one carrying an explicit `null`, both return `None` rather than
+      raising. Both pass in the 212-test suite.
+      *NOT proven, and NOT closable by a unit test:* the "→ unlinked breakdown, no error" half.
+      `extract_aimaestro_task_id` has **no production caller** — `grep` across the repo finds it only in
+      tests and in TRDD prose. That is expected rather than a defect: 6B3K7S69 landed the READ/PARSE half
+      plus an attach PROCEDURE doc, so the consumer is an AGENT following documented steps at runtime,
+      not Python. Which means the breakdown behaviour is observable only in the live round-trip, exactly
+      like boxes 1–3. Do NOT tick this box on the strength of the two passing tests: they prove the
+      function returns `None`, never that a breakdown proceeds unlinked without error.
 
 ## Notes and lessons learned
