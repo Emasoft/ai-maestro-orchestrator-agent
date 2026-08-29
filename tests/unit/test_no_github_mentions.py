@@ -60,7 +60,14 @@ REPO = Path(__file__).resolve().parents[2]
 # scanning them produced 13 false positives against 1 real finding, and a guard
 # with a 13:1 noise ratio gets muted, taking the real finding with it.
 SHIPPED_DIRS = ("skills", "commands", "agents", "docs", "design/requirements")
-SHIPPED_FILES = ("README.md",)
+# `CLAUDE.md` was ADDED after this guard was cited as covering it and did not.
+# It ships with the plugin and is injected into every session, so its text is
+# pasted onward exactly like a skill's; it also now carries the PRRD G1.2
+# authorship contract, which is a section ABOUT `@`-handles and unavoidably
+# contains them. A guard that misses the file explaining the rule is the
+# docstring's own warning turned on itself: danger follows where text gets
+# pasted, not which directory it sits in.
+SHIPPED_FILES = ("README.md", "CLAUDE.md")
 
 # GitHub's real mention rule, as measured with `gh api markdown` and recorded in
 # ~/.claude/rules/github-mentions.md — not as guessed:
