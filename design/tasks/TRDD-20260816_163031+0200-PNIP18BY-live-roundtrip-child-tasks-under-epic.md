@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-29T22:59:50+0200
+updated: 2026-08-29T23:41:16+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -68,7 +68,15 @@ actually delivered, and the live check stays tracked instead of quietly disappea
   Re-measured first-hand: `curl --max-time 15 http://localhost:23000/api/sessions` → `000` in
   0.000229 s, `curl_exit=7` (REFUSED); nothing LISTENING on 23000; `pm2 jlist` → `ai-maestro`
   stopped, `exit_code: 130`, `unstable_restarts: 0`. Then asked the ai-maestro session, which
-  replied that its own handoff carries **"Server STOPPED by owner directive — do NOT restart"**
+  replied, PARAPHRASING ITS OWN HANDOFF, **"Server STOPPED by owner directive — do NOT restart"**
+  — a quote this card's author has NOT seen and could not source (a grep for that instruction
+  across every readable peer handoff returned nothing, 2026-08-29T23:5x). So the DIRECTIVE is
+  peer-asserted, not verified; `exit_code: 130` proves only that SOMEONE sent SIGINT, never who
+  or why. Do not re-cite it as an established owner instruction. What IS first-hand: a peer that
+  owns that service asked us not to restart it, and it is another team's service — sufficient to
+  decline, insufficient to assert. Earlier wording here, on orch#24 and in commit `86b8c81` said
+  "owner directive" flatly; that overstated the evidence and is corrected here rather than there
+  (a commit message cannot be rewritten without rewriting history).
   in as many words, and that it will not restart it or ask the owner to on our behalf.
   So the blocker is a DECISION, not a fault — nobody should keep re-diagnosing this as breakage.
   Two facts that session supplied, to save the next attempt a debugging hour:
