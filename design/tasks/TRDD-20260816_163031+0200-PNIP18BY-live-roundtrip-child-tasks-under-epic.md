@@ -34,9 +34,9 @@ on work nobody can do here. Splitting is the honest third option: the parent clo
 actually delivered, and the live check stays tracked instead of quietly disappearing.
 
 ### Attempt log — do NOT read the untouched boxes as "nobody tried"
-- **2026-08-29 — UNPERFORMABLE, not merely unperformed. The server is FLAPPING, and the two
-  observations below disagree because the state changed between them — that disagreement is the
-  finding, so do not collapse them into one.**
+- **2026-08-29 — UNPERFORMABLE, not merely unperformed. The server went hung → deliberately
+  stopped, and the two observations below disagree because the state changed between them — that
+  disagreement is the finding, so do not collapse them into one.**
   - *Peer-reported (ai-maestro session, ~15:05+0200, NOT verified by this card's author):* server
     **bound but not answering** — `pm2 jlist` online, `lsof -nP -iTCP:23000 -sTCP:LISTEN` showing
     node pid 21004 LISTENING on `*:23000`, yet `GET /api/sessions` → HTTP 000 after a full 15.0 s
@@ -45,15 +45,24 @@ actually delivered, and the live check stays tracked instead of quietly disappea
     `curl --max-time 15 http://localhost:23000/api/sessions` → `000` in **0.000334 s**, `curl_exit=7`
     ("Couldn't connect … after 0 ms") — a REFUSED connection, not a hang. `lsof … -sTCP:LISTEN` on
     23000 returns empty, pid 21004 no longer exists, and `pm2 jlist` reports `ai-maestro`
-    **stopped** with **restart_time=9**.
+    **stopped**.
+  - *Why it stopped — do NOT read this as a crash-loop.* `pm2 jlist` further reports
+    `exit_code: 130` (128+2 = **SIGINT**, i.e. deliberately interrupted), `unstable_restarts: 0`,
+    and `created_at`/`pm_uptime` = 2026-08-28T21:44:15, **the previous day**. So the
+    `restart_time: 9` counter is CUMULATIVE since yesterday, not nine restarts in the seven
+    minutes between the two observations. An earlier draft of this entry read that counter as a
+    rate and called the server "flapping"; that was wrong and is corrected here. The evidence
+    supports exactly one reading: it was hung, then somebody stopped it.
   - No AMCOS-spawned agent binding was available on the host under either observation. Nothing was
     ticked. **A timeout or a refusal on the read-back step is strictly WORSE evidence than no
     attempt** — both are indistinguishable from "the child was not linked" — so the round-trip
     could only have produced a result this card forbids. `review-after` stands.
-  - **Do not treat "the server was up" as sufficient at next attempt.** 9 restarts with a
-    hung→stopped transition inside ~7 minutes means process liveness is not the precondition; the
-    precondition is that `GET /api/sessions` ANSWERS, checked immediately before and again after
-    the round-trip, so a mid-run flap cannot be mistaken for a linkage failure.
+  - **Do not treat "the server was up" as sufficient at next attempt.** The load-bearing fact is
+    not the restart count — it is that at ~15:05 the process was **online and LISTENING while not
+    answering**, so every liveness proxy (`pm2 status`, a LISTEN check, a successful TCP connect)
+    read healthy on a server that could not complete a request. The precondition is therefore that
+    `GET /api/sessions` ANSWERS, checked immediately before AND again after the round-trip, so a
+    stop or a wedge mid-run cannot be mistaken for a linkage failure.
 
 ### NEXT ACTION
 Nothing runnable from a dev session. When a live AI-Maestro server and an AMCOS-spawned agent
