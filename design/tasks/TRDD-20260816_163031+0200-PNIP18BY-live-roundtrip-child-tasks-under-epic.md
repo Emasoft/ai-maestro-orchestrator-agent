@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-29T15:09:14+0200
+updated: 2026-08-29T15:12:26+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -34,14 +34,26 @@ on work nobody can do here. Splitting is the honest third option: the parent clo
 actually delivered, and the live check stays tracked instead of quietly disappearing.
 
 ### Attempt log — do NOT read the untouched boxes as "nobody tried"
-- **2026-08-29 — UNPERFORMABLE, not merely unperformed.** A live round-trip was sought via the
-  ai-maestro session. It measured the server as **bound but not answering**: `pm2 jlist` reported
-  `ai-maestro` online and `lsof -nP -iTCP:23000 -sTCP:LISTEN` showed node pid 21004 LISTENING on
-  `*:23000`, yet `GET http://localhost:23000/api/sessions` returned **HTTP 000 after a full 15.0 s**
-  on two probes (5 s and 15 s). No AMCOS-spawned agent binding was available on the host either.
-  Nothing was ticked. **A timeout on the read-back step is strictly WORSE evidence than no attempt**
-  — it is indistinguishable from "the child was not linked" — so running the round-trip against a
-  hung server could only have produced a result this card forbids. `review-after` stands.
+- **2026-08-29 — UNPERFORMABLE, not merely unperformed. The server is FLAPPING, and the two
+  observations below disagree because the state changed between them — that disagreement is the
+  finding, so do not collapse them into one.**
+  - *Peer-reported (ai-maestro session, ~15:05+0200, NOT verified by this card's author):* server
+    **bound but not answering** — `pm2 jlist` online, `lsof -nP -iTCP:23000 -sTCP:LISTEN` showing
+    node pid 21004 LISTENING on `*:23000`, yet `GET /api/sessions` → HTTP 000 after a full 15.0 s
+    on two probes (5 s and 15 s).
+  - *First-hand, this card's author, 2026-08-29T15:12:26+0200:* **nothing bound at all.**
+    `curl --max-time 15 http://localhost:23000/api/sessions` → `000` in **0.000334 s**, `curl_exit=7`
+    ("Couldn't connect … after 0 ms") — a REFUSED connection, not a hang. `lsof … -sTCP:LISTEN` on
+    23000 returns empty, pid 21004 no longer exists, and `pm2 jlist` reports `ai-maestro`
+    **stopped** with **restart_time=9**.
+  - No AMCOS-spawned agent binding was available on the host under either observation. Nothing was
+    ticked. **A timeout or a refusal on the read-back step is strictly WORSE evidence than no
+    attempt** — both are indistinguishable from "the child was not linked" — so the round-trip
+    could only have produced a result this card forbids. `review-after` stands.
+  - **Do not treat "the server was up" as sufficient at next attempt.** 9 restarts with a
+    hung→stopped transition inside ~7 minutes means process liveness is not the precondition; the
+    precondition is that `GET /api/sessions` ANSWERS, checked immediately before and again after
+    the round-trip, so a mid-run flap cannot be mistaken for a linkage failure.
 
 ### NEXT ACTION
 Nothing runnable from a dev session. When a live AI-Maestro server and an AMCOS-spawned agent
