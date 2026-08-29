@@ -9,6 +9,7 @@ metadata:
   tier: hub
   functionality: architecture
   globs: ["agents/**", "skills/**", "scripts/**", "hooks/**", "commands/**"]
+publish-globally: false
 ---
 ai-maestro-orchestrator-agent (AMOA) is a Claude Code plugin: the project-linked
 orchestrator that receives work from the assistant-manager (AMCOS), breaks it
