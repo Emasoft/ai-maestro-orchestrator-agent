@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-29T15:12:26+0200
+updated: 2026-08-29T22:59:50+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -63,6 +63,21 @@ actually delivered, and the live check stays tracked instead of quietly disappea
     read healthy on a server that could not complete a request. The precondition is therefore that
     `GET /api/sessions` ANSWERS, checked immediately before AND again after the round-trip, so a
     stop or a wedge mid-run cannot be mistaken for a linkage failure.
+
+- **2026-08-29T22:59:50+0200 — PARKED WITH A NAMED REASON, which supersedes "unperformable today".**
+  Re-measured first-hand: `curl --max-time 15 http://localhost:23000/api/sessions` → `000` in
+  0.000229 s, `curl_exit=7` (REFUSED); nothing LISTENING on 23000; `pm2 jlist` → `ai-maestro`
+  stopped, `exit_code: 130`, `unstable_restarts: 0`. Then asked the ai-maestro session, which
+  replied that its own handoff carries **"Server STOPPED by owner directive — do NOT restart"**
+  in as many words, and that it will not restart it or ask the owner to on our behalf.
+  So the blocker is a DECISION, not a fault — nobody should keep re-diagnosing this as breakage.
+  Two facts that session supplied, to save the next attempt a debugging hour:
+  - **A restart does NOT rebuild.** `server.mjs` and `lib/*.mjs` load at runtime and go live on
+    `pm2 restart` alone; `lib/*.ts`, `app/`, `services/`, `components/` are bundled into `.next`
+    and need `yarn build` first. If the round-trip depends on route behaviour, **verify by effect,
+    not by commit**.
+  - **There is no `/api/health`.** `/api/v1/health`, `/api/agents/health` and `/api/hosts/health`
+    exist but answer different questions, so `GET /api/sessions` remains the probe.
 
 ### NEXT ACTION
 Nothing runnable from a dev session. When a live AI-Maestro server and an AMCOS-spawned agent
