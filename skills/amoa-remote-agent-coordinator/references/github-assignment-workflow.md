@@ -192,6 +192,8 @@ gh pr view <PR_NUMBER> --json state,reviews,checks
 ### Assignment Comment
 
 ```markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Module Assignment
 
 Hi @{github_username}, you've been assigned to implement the **{module_name}** module.
@@ -224,6 +226,8 @@ Let me know if you have any questions!
 ### Progress Check Comment
 
 ```markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Progress Check
 
 Hi @{github_username}, checking in on the **{module_name}** module.
@@ -239,6 +243,8 @@ Thanks!
 ### Blocker Response Comment
 
 ```markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Re: Blocker
 
 @{github_username} regarding the blocker you reported:
@@ -253,6 +259,8 @@ Let me know if this unblocks you!
 ### Completion Acknowledgment Comment
 
 ```markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Implementation Complete
 
 Thank you @{github_username} for completing the **{module_name}** module!

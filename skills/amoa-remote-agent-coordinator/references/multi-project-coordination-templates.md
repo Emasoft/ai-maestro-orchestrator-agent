@@ -216,6 +216,8 @@ Use the `gh` CLI to create the issue:
 gh issue create \
   --title "{issue_title}" \
   --body "$(cat <<'ISSUE_BODY'
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Task Description
 
 {task_description}

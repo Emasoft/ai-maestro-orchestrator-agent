@@ -36,6 +36,8 @@ The `[Module]` prefix:
 ### Issue Body Format
 
 ```markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Module: {module_name}
 
 ### Description
@@ -188,6 +190,8 @@ PRs should reference the issue for automatic linking:
 
 **In PR description**:
 ```markdown
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 Closes #42
 
 Implementation of Core Authentication module.
@@ -299,6 +303,8 @@ If issue creation failed:
 gh issue create \
   --title "[Module] Module Name" \
   --body "$(cat <<'EOF'
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Module: Module Name
 
 ### Description
@@ -340,6 +346,8 @@ If criteria change didn't sync:
 ```bash
 # Update issue body
 gh issue edit 42 --body "$(cat <<'EOF'
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Module: Auth Core
 
 ### Description

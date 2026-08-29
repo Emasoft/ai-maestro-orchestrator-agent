@@ -140,6 +140,8 @@ Every reassignment MUST include an audit comment on the issue.
 ### Comment Template
 
 ```markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Agent Reassignment Notice
 
 | Field | Value |
@@ -285,6 +287,8 @@ gh pr comment "$PR_NUMBER" --body "This PR is being reassigned from ${OLD_AGENT}
 ### Documenting Partial Work in Handoff
 
 ```markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Partial Work Status
 
 ### Open Pull Request

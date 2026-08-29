@@ -11,6 +11,8 @@ Example: `[AMOA-001] Implement remote Docker agent deployment`
 ## Issue Body Template
 
 ````markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Task Overview
 
 **Task ID:** {{TASK_ID}}
@@ -123,6 +125,8 @@ Before creating this issue, verify:
 ### Example 1: Feature Implementation
 
 ````markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Task Overview
 
 **Task ID:** AMOA-042
@@ -206,6 +210,8 @@ Use paramiko or fabric for SSH operations. Store keys in `~/design/keys/` with 0
 ### Example 2: Bug Fix
 
 ````markdown
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Task Overview
 
 **Task ID:** AMOA-087
@@ -380,6 +386,8 @@ PROJECT_NUMBER="${PROJECT_NUMBER:-1}"
 
 # Create issue body from template
 cat > /tmp/issue-body.md << EOF
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Task Overview
 
 **Task ID:** ${TASK_ID}

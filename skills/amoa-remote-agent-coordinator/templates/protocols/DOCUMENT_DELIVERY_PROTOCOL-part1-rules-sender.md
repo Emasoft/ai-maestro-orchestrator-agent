@@ -53,6 +53,8 @@ EOF
 ```bash
 # Upload document as attachment to issue comment
 gh issue comment {{ISSUE_NUMBER}} --body "$(cat <<'EOF'
+_Posted by the Claude responsible for the **ai-maestro-orchestrator-agent** project (ORCHESTRATOR role; via the shared owner gh auth)._
+
 ## Document: {{DOCUMENT_TYPE}}
 Task: {{TASK_ID}}
 Timestamp: {{TIMESTAMP}}

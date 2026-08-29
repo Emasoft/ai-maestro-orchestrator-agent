@@ -1,5 +1,43 @@
 # ai-maestro-orchestrator-agent — plugin instructions
 
+## GitHub authorship — PRRD G1.2 (binds every skill, command, and spawned sub-agent)
+
+Every agent on this host writes to GitHub through ONE shared human-owner
+identity, so a reader cannot tell which agent authored what. Therefore: **the
+first line of every issue, comment, PR, review, or release note you post
+begins with a one-line self-identification** naming the agent/role/plugin that
+wrote it. The wording comes from G1.2 itself — a second wording is a defect,
+not a style choice:
+
+```
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+```
+
+**Keep the `<plugin-or-role>` placeholder in any template another agent
+copies** — a remote implementer working on a different project who pastes a
+line naming *this* plugin has just filed a false attribution, produced by the
+rule whose whole purpose is truthful attribution. Fill the placeholder in only
+where the poster really is this plugin posting as itself; that filled-in form
+(with the `ORCHESTRATOR role` clause) is one instantiation of G1.2, never the
+rule.
+
+Two constraints on that line, both load-bearing:
+
+1. **No `@` sigil, ever.** A bare `@name` outside a code span pages a real
+   account, and our governance vocabulary collides with GitHub's username
+   namespace by construction (`orchestrator`, `manager`, `maintainer` are all
+   real accounts registered years ago). Name the role in plain words. The
+   mechanical guard is `tests/unit/test_no_github_mentions.py`; it scans
+   published text only, and its ALLOWED set is not the fix when it reddens.
+2. **A template is copied OUT of its fence.** Backticks neutralize a mention
+   in prose but not in a template body an agent pastes into a real comment, so
+   a template carries no `@` at all — use `@<username>` (provably inert: a
+   username cannot begin with `<`) when a placeholder is genuinely needed.
+
+This contract covers every skill in this plugin and every sub-agent it spawns;
+the shipped templates model the line in their concrete examples so an agent
+copying one inherits it.
+
 ## Memory
 
 This plugin uses the GLOBAL, janitor-hosted wiki-memory system — it ships **no

@@ -99,6 +99,8 @@ REPO_NAME="${REPO_NAME:-myrepo}"
 
 # Create PR body
 cat > /tmp/pr-body.md << EOF
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 ## Summary
 
 ${TITLE}
