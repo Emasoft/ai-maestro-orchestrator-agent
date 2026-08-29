@@ -9,6 +9,8 @@ This document provides a complete example of a feature implementation PR for ref
 ## Example: SSH Key Management Feature
 
 ```markdown
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 ## Summary
 
 Implements SSH key management for remote agent authentication. The orchestrator can now securely generate SSH key pairs, distribute public keys to remote agents, and authenticate connections using private keys.

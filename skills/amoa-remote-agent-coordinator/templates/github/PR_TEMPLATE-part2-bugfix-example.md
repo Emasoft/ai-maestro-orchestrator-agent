@@ -9,6 +9,8 @@ This document provides a complete example of a bug fix PR for reference.
 ## Example: Platform Detection Bug Fix
 
 ```markdown
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 ## Summary
 
 Fixes platform detection bug where Docker containers running on macOS hosts were incorrectly identified as "macos" instead of "docker". The router now checks for the `ATLAS_PLATFORM_OVERRIDE` environment variable before detecting platform from host OS.

@@ -39,6 +39,8 @@ Example: `[AMOA-001] Implement remote Docker agent deployment`
 ## PR Body Template
 
 ```markdown
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 ## Summary
 
 {{SUMMARY}}

@@ -311,6 +311,8 @@ If yes, describe the migration path:
 Copy the following into `.github/PULL_REQUEST_TEMPLATE.md`:
 
 ```markdown
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 > [!NOTE]
 > Target branch: use `develop` for features and fixes, `main` for hotfixes only.
 

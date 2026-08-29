@@ -20,6 +20,8 @@ Lead with *what* and *why* in plain language.
 
 **Template**:
 ```markdown
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 ## Summary
 
 [1-2 sentences: What this PR does and why]
@@ -29,6 +31,8 @@ Closes #[issue-number]
 
 **Example**:
 ```markdown
+_Posted by the Claude responsible for the **<plugin-or-role>** project (via the shared owner gh auth)._
+
 ## Summary
 
 Adds rate limiting to the API authentication endpoints to prevent brute force attacks. Users are now limited to 5 login attempts per minute per IP address.
