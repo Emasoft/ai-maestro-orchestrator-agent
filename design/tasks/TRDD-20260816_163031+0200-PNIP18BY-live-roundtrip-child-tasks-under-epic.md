@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-29T23:49:32+0200
+updated: 2026-08-29T23:58:37+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -137,11 +137,21 @@ that needs infrastructure this repo does not have. It is filed as a derived stan
       handoff missing the key, and one carrying an explicit `null`, both return `None` rather than
       raising. Both pass in the 212-test suite.
       *NOT proven, and NOT closable by a unit test:* the "→ unlinked breakdown, no error" half.
-      `extract_aimaestro_task_id` has **no production caller** — `grep` across the repo finds it only in
-      tests and in TRDD prose. That is expected rather than a defect: 6B3K7S69 landed the READ/PARSE half
-      plus an attach PROCEDURE doc, so the consumer is an AGENT following documented steps at runtime,
-      not Python. Which means the breakdown behaviour is observable only in the live round-trip, exactly
-      like boxes 1–3. Do NOT tick this box on the strength of the two passing tests: they prove the
-      function returns `None`, never that a breakdown proceeds unlinked without error.
+      **CORRECTION 2026-08-29T23:5x — an earlier revision of this line claimed `extract_aimaestro_task_id`
+      "has no production caller". THAT WAS FALSE.** The consumer is documented and shipped:
+      `skills/amoa-kanban-management/references/kanban-procedures.md:67-72` (PROCEDURE 5) imports it and
+      reads the epic, and `skills/amoa-kanban-management/SKILL.md:74` carries the same in its TOC —
+      including the absence branch verbatim: *"When the epic id is None, create the children unparented —
+      no regression."* `skills/amoa-messaging-templates/references/message-templates.md:245,257,260`
+      documents the wire key. So box 4's behaviour is SPECIFIED; what is missing is a RUN of it.
+      *Why the false claim happened, because the mechanism matters more than the slip:* the caller search
+      was `grep -rn … | head`. It returned 22 hits; `head` showed 10; every `skills/` consumer was in the
+      hidden 12. A truncated result was read as the complete one — the failure
+      `~/.claude/rules` already names ("never measure or summarize a command's output from a truncated
+      tool result"). `git grep` without a pager surfaced them immediately.
+      The BOX-4 VERDICT IS UNCHANGED and now rests on the right reason: the consumer is a PROCEDURE an
+      agent executes against a live server, not Python a test can call, so the behaviour is observable
+      only in the live round-trip, exactly like boxes 1–3. Do NOT tick this box on the two passing tests:
+      they prove the function returns `None`, never that a breakdown proceeds unlinked without error.
 
 ## Notes and lessons learned
