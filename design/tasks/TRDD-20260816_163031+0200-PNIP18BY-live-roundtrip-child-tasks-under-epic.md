@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-18T19:53:09+0200
+updated: 2026-08-29T15:09:14+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -32,6 +32,16 @@ C Carrying that box on the parent left a completed card permanently one box shor
 completion gate would have had to be either violated (retro-ticked) or left standing forever
 on work nobody can do here. Splitting is the honest third option: the parent closes on what it
 actually delivered, and the live check stays tracked instead of quietly disappearing.
+
+### Attempt log — do NOT read the untouched boxes as "nobody tried"
+- **2026-08-29 — UNPERFORMABLE, not merely unperformed.** A live round-trip was sought via the
+  ai-maestro session. It measured the server as **bound but not answering**: `pm2 jlist` reported
+  `ai-maestro` online and `lsof -nP -iTCP:23000 -sTCP:LISTEN` showed node pid 21004 LISTENING on
+  `*:23000`, yet `GET http://localhost:23000/api/sessions` returned **HTTP 000 after a full 15.0 s**
+  on two probes (5 s and 15 s). No AMCOS-spawned agent binding was available on the host either.
+  Nothing was ticked. **A timeout on the read-back step is strictly WORSE evidence than no attempt**
+  — it is indistinguishable from "the child was not linked" — so running the round-trip against a
+  hung server could only have produced a result this card forbids. `review-after` stands.
 
 ### NEXT ACTION
 Nothing runnable from a dev session. When a live AI-Maestro server and an AMCOS-spawned agent
