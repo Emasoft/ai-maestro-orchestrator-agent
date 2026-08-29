@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-29T23:58:37+0200
+updated: 2026-08-30T00:02:05+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -144,11 +144,20 @@ that needs infrastructure this repo does not have. It is filed as a derived stan
       including the absence branch verbatim: *"When the epic id is None, create the children unparented —
       no regression."* `skills/amoa-messaging-templates/references/message-templates.md:245,257,260`
       documents the wire key. So box 4's behaviour is SPECIFIED; what is missing is a RUN of it.
-      *Why the false claim happened, because the mechanism matters more than the slip:* the caller search
-      was `grep -rn … | head`. It returned 22 hits; `head` showed 10; every `skills/` consumer was in the
-      hidden 12. A truncated result was read as the complete one — the failure
-      `~/.claude/rules` already names ("never measure or summarize a command's output from a truncated
-      tool result"). `git grep` without a pager surfaced them immediately.
+      *Why the false claim happened — TWO defects, multiplicative, and the second is the dangerous one:*
+      the caller search was `grep -rn … | grep -v '^./tests/' | head`.
+      (a) **The exclusion filter was DEAD.** `grep -rn` emitted **no `./` prefix** on any line, so the
+      anchored regex `^./tests/` could never match `tests/unit/…`. Measured: 22 hits, **0** matching
+      `^\./`. Seven test lines therefore survived a filter that claimed to remove them.
+      (b) `head` then capped the result at 10 — and those 7 surviving test lines ate the window, so every
+      `skills/` consumer fell outside it.
+      **Neither alone would have hidden them.** With a working filter the consumers sit inside the first
+      10; without `head` they print regardless. So the guard "don't pipe to `head`" is NOT sufficient —
+      a prefix-anchored `grep -v` that silently matches nothing looks exactly like one that worked, and
+      it is what spent the truncation window. Check both: capture to a file and inspect it
+      (`~/.claude/rules`: never measure output from a truncated result), and verify any anchored filter
+      actually matches the emitter's real output shape. `git grep` (no pager, all tracked types, no
+      prefix ambiguity) surfaced the consumers immediately.
       The BOX-4 VERDICT IS UNCHANGED and now rests on the right reason: the consumer is a PROCEDURE an
       agent executes against a live server, not Python a test can call, so the behaviour is observable
       only in the live round-trip, exactly like boxes 1–3. Do NOT tick this box on the two passing tests:
