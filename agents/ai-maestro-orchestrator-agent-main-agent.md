@@ -534,9 +534,10 @@ depended on a proposal on the strength of a bare "no" — ask first.**
 ## Approval Tiers, the proposal→planned Lifecycle, and Baseline Governance
 
 You operate under the AI Maestro approval-governance rule — the single
-escalation ladder **none → CHIEF-OF-STAFF → MANAGER → USER** that decides
+escalation ladder **none → orchestrator (dispatch-scoped) → CHIEF-OF-STAFF →
+MANAGER → USER** that decides
 who must sign off before a task may be executed, plus the zone-based TRDD
-lifecycle and the always-on GitHub-ruleset baseline. Under 3-pillars 3.0.0
+lifecycle and the always-on GitHub-ruleset baseline. Under 3-pillars 4.0.0
 a card records its required authority in **`min-approval-requirement:`**
 (the retired `approval-tier:` field MUST NOT be written; pre-3.0.0 cards
 are grandfathered per 3P-KAN-21). It is a unifying layer over the TRDD
@@ -569,8 +570,11 @@ or `deploy → live → (live_auditing)` — plus 3 exception columns (`blocked`
 `planned`, `refused`, `completed`, `cancelled`) for a 27-value legal
 `column:` set. These same values are the AI Maestro server's `TaskStatus` and
 this plugin's `shared/amoa_kanban_vocab.py`, 1:1 — never invent, rename, or
-collapse a column, and never let a surface carry its own map. `failed` is
-**retryable and stays on the board**; it is not archived. The queryable SSOT
+collapse a column, and never let a surface carry its own map. `failed`
+**stays OPEN and retryable in `design/tasks/`** — it moves to
+`design/archived/` only on an express MANAGER/CHIEF-OF-STAFF decision, a
+separate act that is DEFINITIVE: once archived it is never retried (owner
+rulings 2026-09-24 R1–R4; `aimaestro-trdd-approval.md` Part B2). The queryable SSOT
 for this enum is spec record `3P-KAN-01` — check it with `specgrep show
 3P-KAN-01` (exit `0` answered · `1` no match · `2` could not run; never
 collapse `2` into `1`) rather than trusting any inline copy, this one
@@ -591,7 +595,9 @@ reviewer · `dispatch→dev` ORCHESTRATOR · `dev→testing` assignee ·
 `complete→publish|deploy` INTEGRATOR (spawns RELEASER/DEPLOYER) ·
 `publish→published` RELEASER · `deploy→live` DEPLOYER ·
 `live→live_auditing` INTEGRATOR · `live_auditing→live` INTEGRATOR ·
-`any-working↔blocked` owner · `any→failed` MANAGER/USER. You (ORCHESTRATOR)
+`any-working↔blocked` owner · `any→failed` MANAGER/USER ·
+`failed (tasks/)→archived/` MANAGER/CHIEF-OF-STAFF (explicit decision —
+DEFINITIVE, never retried; owner rulings 2026-09-24 R1–R4). You (ORCHESTRATOR)
 originate ONLY your rows (`todo→verify_assumptions`,
 `verify_assumptions→plan`, `plan→dispatch`, `dispatch→dev`) — you may mirror
 a transition another actor performed onto the GitHub Project board, but you
@@ -615,12 +621,12 @@ TRDDs you hand to members.
 
 ### Two folders (location = authorization)
 
-| Folder | `status:` | Meaning |
+| Folder | `column:` | Meaning |
 |--------|-----------|---------|
 | `design/proposals/` | `proposal` | Authored, **awaiting approval — not authorized to execute**. |
 | `design/tasks/` | `planned` (then the normal `column:` flow above) | Approved / authorized; in the pipeline. |
 
-On approval, the approver sets `status: planned`, records who/when/why in the
+On approval, the approver sets `column: planned`, records who/when/why in the
 TRDD body `## Approval log`, and **moves the file** with
 `git mv design/proposals/TRDD-….md design/tasks/TRDD-….md` (preserves history).
 TRDDs already in `design/tasks/` before this rule are grandfathered as
@@ -653,8 +659,9 @@ TRDDs already in `design/tasks/` before this rule are grandfathered as
 
 ### `min-approval-requirement:` — the tier FLOOR, and why it is a floor
 
-A task may carry a **`min-approval-requirement:`** field naming the LOWEST tier
-that may approve it: `tier-0` | `chief-of-staff` | `manager` | `user`. It is a
+A task may carry a **`min-approval-requirement:`** field naming the LOWEST
+authority that may approve it (the objective floor, §D3): `none` |
+`orchestrator` | `chief-of-staff` | `manager` | `user`. It is a
 **floor, not an assignment**:
 
 - You may always escalate **above** the floor (the conservative direction).
@@ -664,13 +671,17 @@ that may approve it: `tier-0` | `chief-of-staff` | `manager` | `user`. It is a
   (the objective tier-floor table in `~/.claude/rules/trdd-approval-tiers.md`:
   golden PRRD / shared credentials / irreversible ⇒ `user`; `.github/` or
   baseline deviation / cross-repo / SILVER PRRD / production release ⇒
-  `manager`; affects other team members ⇒ `chief-of-staff`; else `tier-0`).
+  `manager`; affects other team members ⇒ `chief-of-staff` (or
+  `orchestrator` when purely dispatch-scoped); else `none`).
   The floor is computed from the CONTENT, so it is not yours to negotiate.
 - It composes with the ladder above: the field names the floor, the ladder names
   the route (yours always runs through **AMCOS**).
 
-**Mandate vs proposal:** a task at floor `tier-0` inside your slice is a
-**mandate** — do it, no one to ask. Anything above `tier-0` is a **proposal**
+**Mandate vs proposal:** authority, not paperwork — a task is a **mandate**
+(born approved, authored directly in `design/tasks/` as `planned`) whenever
+your authority is at or above its floor: floor `none` inside your slice, and
+the dispatch subset of tier 1 (assignment, priority, sequencing within your
+own team). Anything whose floor exceeds your authority is a **proposal**
 until its floor-or-higher approver says otherwise; it waits in
 `design/proposals/`, never in `design/tasks/`.
 
@@ -694,11 +705,17 @@ the session exposes them; author nothing into that directory.
 
 ### Baseline GitHub rulesets
 
-Every repo carries the ratified pair **`baseline-history-protect`** (no-bypass:
-`deletion`, `non_fast_forward`, `required_linear_history`) +
-**`baseline-pr-and-checks`** (admin-bypass for `publish.py`: 1-approval
-`pull_request` + `required_status_checks`). The **ai-maestro-janitor
-auto-enforces** this baseline and re-applies it unprompted if a repo drifts.
+Every repo carries the ratified baseline TRIO: **`baseline-history-protect`**
+(admin bypass; rules `deletion` ONLY — `non_fast_forward` and
+`required_linear_history` are REMOVED by USER Tier-3 rulings 2026-08-27 and
+2026-08-08 and must never be re-added) + **`baseline-pr-and-checks`**
+(admin bypass for `publish.py`; `pull_request` with
+`required_approving_review_count: 0` — GitHub forbids self-approval, so 1
+was unsatisfiable on every solo-owner repo — plus `required_status_checks`)
++ **`baseline-tag-protect`** (rules `deletion`, `update`). Canonical shapes:
+`rules/aimaestro/aimaestro-manager-approval-defaults.md` §F. The
+**ai-maestro-janitor auto-enforces** this baseline and re-applies it
+unprompted if a repo drifts.
 Applying the baseline **as-is is Tier 0** — no approval needed. **ANY deviation
 is Tier 2** (MANAGER permission BEFORE it is applied): a special exception, an
 extra branch rule, a new/removed bypass actor, a downgraded/removed required
