@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-09-28T22:12:51+0200
+updated: 2026-09-28T22:14:57+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -124,6 +124,7 @@ SECOND ROUTE-1 PROBE 2026-09-28 ~23:15 — emasoft-architect-agent-2e independen
 ROUTE-1 CANONICAL-FORM PROBE 2026-09-28 ~23:25 — round-11 review found the ~/agents/<name> class untested; THIS session ran the probe itself from ~/agents/jvs-orchestrator (a real agents-tree workdir, 23 siblings exist): amp-kanban-list → exit 1, SAME guard refusal ('not bound to any agent', captured to /tmp/route1-probe.txt). Provenance is first-party this time — this session's own cwd and own capture. The canonical ~/agents/<name> route is now measured and ALSO refused for a non-server-spawned session. EVERY session-level route is now genuinely measured: unbound ×2, repo-checkout-cwd ×2, ~/agents/<name> ×1 (first-party), host ×1. The guard's option-1 wording is satisfied only when the SERVER spawns the session with injected env (option 2) — i.e. the deployment path. The acceptance box is measured infrastructure-gated, provenance complete. Caveat per round 11: the two peer probes' cwd claims are self-stated (bounded — their refusals still prove their class); this third probe carries first-party provenance.
 ROUND-12 CORRECTIONS (2026-09-28 ~23:45): (1) the guard's option-1 help text ('cd ~/agents/<your-agent-name>') is MISLEADING by design-exploration: cd alone cannot resolve because the env cross-check needs server injection — every future agent will follow the guard's own advice and fail confusingly. UPSTREAM-ACTIONABLE: worth a report to the amp tooling owner (janitor-style issue) — do NOT silently absorb this as private knowledge. (2) Provenance phrase corrected: 'complete for the canonical class; the two peer probes' cwd claims remain self-stated (bounded — refusals prove their class)'. (3) The /tmp/route1-probe.txt pointer is ephemeral; the durable record is the refusal text quoted in this log and the entry above. Card scope is otherwise unchanged: measured infrastructure-gated, next touch belongs to deployment.
 UPSTREAM REPORTED 2026-09-28 ~23:55 — the guard-help-text defect is filed as Emasoft/ai-maestro-janitor#318 (with repro, root-cause reading, and suggested rewording). The round-12 UPSTREAM-ACTIONABLE flag is discharged; the card keeps the pointer.
+ROUND-13 CORRECTIONS (2026-09-28 ~00:05 next day): (1) janitor#318 body EDITED post-filing — peer-repo absolute paths genericized to 'agent-plugin repos under the user's Code directory' (scope-leak rule: real paths are not pasted publicly even when the repo is the user's own), and a routing note added for maintainers (guard source may live in ai-maestro core; transfer if so). (2) Wording: the earlier 'UPSTREAM-ACTIONABLE flag is discharged' reads closed — corrected intent: FILED AND TRACKED as janitor#318; the flag's remaining condition is the issue's resolution, check its state before treating this as settled. Card scope otherwise unchanged.
 
 ## Why this is a standalone card and NOT an `eht:` of 6B3K7S69
 
