@@ -304,7 +304,7 @@ Sync should run automatically after:
 | `status:live` | Deployed and live |
 | `status:live_auditing` | Live, under audit/soak |
 | `status:blocked` | Blocked by a non-empty `blocked-by:` list |
-| `status:failed` | Failed and retryable — stays open, never archived |
+| `status:failed` | Failed — stays OPEN and retryable in `design/tasks/`; archived only by an express MANAGER/CHIEF-OF-STAFF decision, a separate DEFINITIVE act (never retried after) — owner rulings 2026-09-24 R1–R4 |
 | `status:superseded` | Replaced by other TRDD(s) |
 
 ---
