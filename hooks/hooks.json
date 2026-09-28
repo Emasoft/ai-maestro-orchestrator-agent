@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd ${CLAUDE_PLUGIN_ROOT}/scripts && python3 -m amoa_stop_check.main",
+            "command": "cd \"${CLAUDE_PLUGIN_ROOT}/scripts\" && python3 -m amoa_stop_check.main",
             "timeout": 120
           }
         ]
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_verification_status.py",
+            "command": "uv run --script \"${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_verification_status.py\"",
             "timeout": 30
           }
         ]
@@ -37,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --script ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_polling_due.py",
+            "command": "uv run --script \"${CLAUDE_PLUGIN_ROOT}/scripts/amoa_check_polling_due.py\"",
             "timeout": 30
           }
         ]
@@ -52,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/amoa_file_tracker.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/amoa_file_tracker.py\"",
             "timeout": 10
           }
         ]
