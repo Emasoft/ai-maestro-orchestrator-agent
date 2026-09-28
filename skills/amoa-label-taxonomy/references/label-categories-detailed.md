@@ -63,7 +63,7 @@
 ## Status Labels (`status:*`)
 
 **Purpose:** Track the current workflow state of an issue — 1:1 with the ratified
-22-column kanban vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`).
+22-column kanban vocabulary (3P-KAN, the 3-pillars spec 4.0.0).
 
 | Label | Description | Who Sets It |
 |-------|-------------|-------------|
@@ -97,13 +97,13 @@
 
 **Status Workflow:**
 ```
-backburner → approval → design → design_ai_review → design_human_review → todo
-    → verify_assumptions → plan → dispatch → dev → testing → ai_review → human_review
+backburner → approval → design → design_ai_review → (design_human_review) → todo
+    → verify_assumptions → plan → dispatch → dev → testing → ai_review → (human_review)
                                  ↓                            ↑ (BIG tasks only)
                               blocked → (resolved) → dev
 
-ai_review|human_review → complete → publish → published
-                                  → deploy → live → live_auditing
+ai_review|human_review → complete ─┬─→ publish → published
+                                   └─→ deploy → live → (live_auditing)
 ```
 
 ## Priority Labels (`priority:*`)

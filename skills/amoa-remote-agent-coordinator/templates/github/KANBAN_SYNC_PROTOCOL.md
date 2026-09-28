@@ -50,10 +50,10 @@ This protocol defines when and how agents should update GitHub issue status and 
 
 ## Status States
 
-### Ratified 22-Column System (3-Pillars 3.0.0)
+### Ratified 22-Column System (3-Pillars 4.0.0)
 
-The board uses the ratified 22-column vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`),
-19 lifecycle columns plus 3 exception columns.
+The board uses the ratified 22-column vocabulary (3P-KAN, the 3-pillars spec
+4.0.0), 19 lifecycle columns plus 3 exception columns.
 
 | Column | Status Label | Description |
 |--------|-------------|-------------|
@@ -92,9 +92,9 @@ See the table above for the full 22-label vocabulary.
 
 ```
 Backburner ► Approval ► Design ► Design AI Review ► (Design Human Review) ► Todo
-    ► Verify Assumptions ► Plan ► Dispatch ► Dev ► Testing ─┬─► AI Review ─┬─► Publish ► Complete
-                                                     │      │              │       ▲
-                                                     │      ▼              ▼       │
+    ► Verify Assumptions ► Plan ► Dispatch ► Dev ► Testing ─┬─► AI Review ─┬─► Complete
+                                                     │      │              │       ▲    ┌─► Publish ► Published
+                                                     │      ▼              ▼       │    └─► Deploy ► Live ► (Live Auditing)
                                                      │    (back to Dev)  Human Review
                                                      │                     (big tasks only)
                                                      │

@@ -29,7 +29,7 @@ gh project list --owner {{GITHUB_OWNER}} --format json | jq '.projects[] | selec
 
 ### Column Structure
 The AMOA orchestrator uses the ratified 22-column workflow
-(3P-KAN, `docs_dev/3-pillars-spec-*.md`) — 19 lifecycle columns plus 3
+(3P-KAN, the 3-pillars spec 4.0.0) — 19 lifecycle columns plus 3
 exception columns:
 
 1. **Backburner** - Not yet approved
@@ -126,7 +126,8 @@ gh project field-create {{PROJECT_NUMBER}} \
 
 ### Status Labels
 
-The ratified 22-column vocabulary (SSOT: `STATUS_LABEL_COLORS` /
+The ratified 22-column vocabulary (the 3-pillars spec 4.0.0; SSOT:
+`STATUS_LABEL_COLORS` /
 `STATUS_LABEL_DESCRIPTIONS` in `shared/amoa_kanban_vocab.py`):
 ```bash
 # Status tracking
@@ -314,7 +315,7 @@ gh project create --owner $GITHUB_OWNER --title "$PROJECT_NAME" --body "$PROJECT
 export PROJECT_NUMBER=3
 
 # 3. Add status field
-gh project field-create $PROJECT_NUMBER --owner $GITHUB_OWNER --name "Status" --data-type "SINGLE_SELECT" --single-select-options "Backburner,Todo,Design,Dispatch,Dev,Testing,AI Review,Human Review,Complete,Publish,Published,Deploy,Live,Live Auditing,Blocked,Failed,Superseded"
+gh project field-create $PROJECT_NUMBER --owner $GITHUB_OWNER --name "Status" --data-type "SINGLE_SELECT" --single-select-options "Backburner,Approval,Design,Design AI Review,Design Human Review,Todo,Verify Assumptions,Plan,Dispatch,Dev,Testing,AI Review,Human Review,Complete,Publish,Published,Deploy,Live,Live Auditing,Blocked,Failed,Superseded"
 
 # 4. Add other fields (Platform, Priority, etc.)
 # ... repeat for each field above

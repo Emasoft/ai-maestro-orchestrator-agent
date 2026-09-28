@@ -31,7 +31,7 @@ gh project item-list {PROJECT_NUMBER} --owner {OWNER}
 
 ## Task Status Columns
 
-The ratified 22-column vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`) — 19 lifecycle
+The ratified 22-column vocabulary (3P-KAN, the 3-pillars spec 4.0.0) — 19 lifecycle
 columns plus 3 exception columns:
 
 | Column | Status Label | When to Move Here |
@@ -85,24 +85,27 @@ If project field IDs are complex, use labels instead:
 # Add "dev" label
 gh issue edit {ISSUE_NUM} --add-label "status:dev"
 
-# Remove old status label
-gh issue edit {ISSUE_NUM} --remove-label "status:todo"
+# Remove old status label (the dispatching orchestrator left it at dispatch)
+gh issue edit {ISSUE_NUM} --remove-label "status:dispatch"
 ```
 
 ---
 
 ## Status Labels Convention
 
+Common labels shown below; the full 22-label vocabulary is the Task Status
+Columns table above.
+
 | Label | Meaning |
 |-------|---------|
 | `status:backburner` | Entry point for new tasks |
-| `status:todo` | Ready to start |
-| `status:dev` | Currently being worked on |
+| `status:todo` | Approved and designed, ready to be verified |
+| `status:dev` | Actively being implemented |
 | `status:ai_review` | Integrator reviewing task |
 | `status:human_review` | User reviewing big task |
-| `status:publish` | Ready to merge |
+| `status:publish` | Entering the publish pipeline |
 | `status:blocked` | Waiting for dependency |
-| `status:complete` | Completed and merged |
+| `status:complete` | Internally finished, not yet released |
 
 ---
 
@@ -111,9 +114,9 @@ gh issue edit {ISSUE_NUM} --remove-label "status:todo"
 ### Step 1: Receive Task (ACK)
 
 ```bash
-# Update issue status
+# Update issue status — ACK moves the dispatched task to dev
 gh issue edit {ISSUE_NUM} --add-label "status:dev"
-gh issue edit {ISSUE_NUM} --remove-label "status:todo"
+gh issue edit {ISSUE_NUM} --remove-label "status:dispatch"
 
 # Add comment
 gh issue comment {ISSUE_NUM} --body "[ACK] Starting work."
@@ -241,7 +244,7 @@ gh project item-edit --project-id {PROJECT_ID} --id {ITEM_ID} \
 
 | Field | Typical Values |
 |-------|----------------|
-| Status | Backlog, Todo, In Progress, AI Review, Human Review, Merge/Release, Done, Blocked |
+| Status | The 22 ratified columns (see "Task Status Columns" above) |
 | Priority | P0-Critical, P1-High, P2-Medium, P3-Low |
 | Component | Frontend, Backend, API, Database, CI/CD |
 | Platform | macOS, Windows, Linux, Cross-platform |

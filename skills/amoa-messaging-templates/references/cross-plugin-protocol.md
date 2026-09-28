@@ -47,7 +47,7 @@ gh issue list --label "assign:<agent-name>"
 
 ## Status Labels
 
-The ratified 22-column vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`), 1:1 with the TRDD
+The ratified 22-column vocabulary (3P-KAN, the 3-pillars spec 4.0.0), 1:1 with the TRDD
 `column:` enum:
 
 | Label | Meaning |
