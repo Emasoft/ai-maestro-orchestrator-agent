@@ -5,7 +5,7 @@ column: backburner
 scope: project
 project-id: ai-maestro-orchestrator-agent
 created: 2026-08-16T16:30:31+0200
-updated: 2026-08-30T00:02:05+0200
+updated: 2026-09-28T21:59:41+0200
 current-owner: ai-maestro-orchestrator-agent
 task-type: feature
 approval-tier: 0
@@ -117,6 +117,7 @@ proves nothing about the traceability chain this exists to verify.
   `/api/*` call (R23, Plugin Abstraction Principle).
 - Not blocked by ai-maestro#46: identity resolves via `AGENT_WORK_DIR/$PWD → name → uuid`;
   the colliding address was display-only (ai-maestro#77, 2026-07-23).
+FRESH CHECK 2026-09-28 21:59 — server :23000 is UP (curl 200) for the first time this session; AMP identity probe STILL FAILS: 'AMP identity could not be resolved for this session (36 agents registered). This session is not bound to any agent, so an amp-* command here would have to ASSERT an identity rather than prove one.' The identity blocker (36 registered agents, none is this dev session) persists independently of server state — the two blockers were never the same blocker. Card remains backburner/parked: the live roundtrip still needs a spawned AMOA session, not this one.
 
 ## Why this is a standalone card and NOT an `eht:` of 6B3K7S69
 
