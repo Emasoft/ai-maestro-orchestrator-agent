@@ -1,12 +1,13 @@
 ## Table of Contents
-- [Ratified 22-Column System (3-Pillars 3.0.0)](#ratified-22-column-system-3-pillars-300)
+- [Ratified 22-Column System (3-Pillars 4.0.0)](#ratified-22-column-system-3-pillars-400)
 - [Available Scripts](#available-scripts)
 
 ---
 
-## Ratified 22-Column System (3-Pillars 3.0.0)
+## Ratified 22-Column System (3-Pillars 4.0.0)
 
-The board uses the ratified 22-column vocabulary (3P-KAN, `docs_dev/3-pillars-spec-*.md`),
+The board uses the ratified 22-column vocabulary (the 3-pillars spec 4.0.0, clauses
+3P-KAN-01..21),
 1:1 with the TRDD `column:` enum for cards ON THE BOARD. A card's column is its TRDD
 frontmatter `column:` field; there is no separate task database.
 

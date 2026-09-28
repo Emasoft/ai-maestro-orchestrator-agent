@@ -14,8 +14,10 @@ Kanban model. ORCH is the team's traffic controller and **owns the RED
 (blocked) column** — TRDDs whose `blocked-by:` list is non-empty are
 the fundamental source of project delays, and ORCH's central job is to
 minimise the time TRDDs spend there. ORCH owns three columns: `todo`
-(claims promoted TRDDs from AMAMA), `dispatch` (assigns designed TRDDs
-to agents and moves to `dev`), and `blocked` 🔴. It reads but does not
+(claims TRDDs that cleared the design-review gates — design precedes
+`todo` per 3P-KAN-18), `dispatch` (assigns planned TRDDs to agents and
+moves to `dev` — `dispatch` means planned, per 3P-KAN-19), and
+`blocked` 🔴. It reads but does not
 own `dev`, `testing`, `ai_review`, `human_review` for upward status.
 
 ## The pillar operations live in the CORE plugin — call them, do not reimplement
@@ -73,14 +75,18 @@ governs `trddgrep`/`prrdgrep`/`specgrep` — never `trddgrep validate || fallbac
 
 1. Claim a todo: `Skill(ai-maestro-plugin:ama-trdd-find)` filtered to
    `column: todo`, pick highest-priority (oldest breaks ties), read body +
-   frontmatter for intent.
-2. Delegate design to ARCHITECT: AMP-send via COS "delegate TRDD-<id>
-   to ARCHITECT", then transition to `design` with
+   frontmatter for intent. (Since 3.0.0, `design` precedes `todo`
+   (3P-KAN-18): a `todo` card is approved AND designed — the design
+   delegation happened earlier, at `approval → design`.)
+2. On `approval → design`, ORCH delegates design to ARCHITECT: AMP-send via
+   COS "delegate TRDD-<id> to ARCHITECT", then transition to `design` with
    `Skill(ai-maestro-plugin:ama-trdd-transition)` (it bumps `updated:` for you —
    do not also hand-edit the field, or the board's sort order reflects two writes).
-3. On design→dispatch, ARCHITECT signals via AMP (a 1→N split leaves N
-   child TRDDs in `dispatch`, parent `superseded`); verify each child's
+3. On design→todo, ARCHITECT signals via AMP (a 1→N split leaves N
+   child TRDDs in `todo` after the design gates, parent `superseded`); verify each child's
    `task-type:`, `test-requirements:`, `review-requirements:`, `eht:`.
+   The card then crosses `verify_assumptions` and `plan` (3P-KAN-19) before
+   reaching `dispatch`.
 4. **Before dispatching, check the DISPATCH PRECONDITION** — every dependency must
    have a closing PR **merged into the base this worker will branch from**, not
    merely a closed issue. `shared/amoa_dispatch_gate.py` evaluates it. A closed
@@ -105,7 +111,8 @@ governs `trddgrep`/`prrdgrep`/`specgrep` — never `trddgrep validate || fallbac
    rather than recalling the table. It returns the owning actor for every row
    ORCH must not originate (`assignee`, `test-runner`, `architect`,
    `ai-reviewer`, `reviewer`, `integrator`, `releaser`, `deployer`, `manager`);
-   ORCH only originates `todo→design` and `dispatch→dev`. A non-`"orchestrator"`
+   ORCH only originates `approval→design` and `dispatch→dev` (3.0.0: the
+   design entry moved to `approval → design` since `design` precedes `todo`). A non-`"orchestrator"`
    answer means route the transition to that actor and mirror the result
    afterward — never perform it directly.
 
