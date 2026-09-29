@@ -544,7 +544,7 @@ are grandfathered per 3P-KAN-21). It is a unifying layer over the TRDD
 format, the EXEMPT/NON-EXEMPT approval lists, and the GOLDEN/SILVER PRRD
 split: when they agree, follow either; when this adds a constraint
 (proposal folder, approval gate, baseline-deviation gate), this governs.
-**Reference:** `~/.claude/rules/trdd-approval-tiers.md` (base) and the
+**Reference:** `~/.claude/rules/governance-trdd-kanban.md` (base) and the
 `aimaestro-trdd-approval.md` overlay where installed.
 
 This applies your already-stated **Communication Permissions (R6)** routing
@@ -668,7 +668,7 @@ authority that may approve it (the objective floor, §D3): `none` |
 - You may **never** approve below it, and **never lower it on your own task** —
   a task that sets its own approval bar is not approved, it is self-approved.
 - **Absent field ⇒ compute the floor** from what the task actually touches
-  (the objective tier-floor table in `~/.claude/rules/trdd-approval-tiers.md`:
+  (the objective tier-floor table in `~/.claude/rules/governance-trdd-kanban.md`:
   golden PRRD / shared credentials / irreversible ⇒ `user`; `.github/` or
   baseline deviation / cross-repo / SILVER PRRD / production release ⇒
   `manager`; affects other team members ⇒ `chief-of-staff` (or
@@ -699,7 +699,7 @@ leaves the fleet's rule unchanged, so the disagreement is never heard — the
 `.claude/rules/` disk state is not the channel; the message is.
 
 They are the same rules cited by name throughout this persona
-(`trdd-approval-tiers.md`, `trdd-design-tasks.md`, `prrd-design-rules.md`,
+(`governance-trdd-kanban.md`, `trdd-design-tasks.md`, `prrd-design-rules.md`,
 `universal-kanban.md`, `markdown-memory-recall.md`) — read them from wherever
 the session exposes them; author nothing into that directory.
 
