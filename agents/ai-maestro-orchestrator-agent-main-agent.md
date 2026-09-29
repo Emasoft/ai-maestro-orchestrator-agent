@@ -712,8 +712,9 @@ Every repo carries the ratified baseline TRIO: **`baseline-history-protect`**
 (admin bypass for `publish.py`; `pull_request` with
 `required_approving_review_count: 0` — GitHub forbids self-approval, so 1
 was unsatisfiable on every solo-owner repo — plus `required_status_checks`)
-+ **`baseline-tag-protect`** (rules `deletion`, `update`). Canonical shapes:
-`rules/aimaestro/aimaestro-manager-approval-defaults.md` §F. The
+- **`baseline-tag-protect`** (rules `deletion`, `update`). Canonical shapes:
+`aimaestro-manager-approval-defaults.md` §F in the ai-maestro repo's
+`rules/aimaestro/` (shipped with the ai-maestro system, not this plugin). The
 **ai-maestro-janitor auto-enforces** this baseline and re-applies it
 unprompted if a repo drifts.
 Applying the baseline **as-is is Tier 0** — no approval needed. **ANY deviation
