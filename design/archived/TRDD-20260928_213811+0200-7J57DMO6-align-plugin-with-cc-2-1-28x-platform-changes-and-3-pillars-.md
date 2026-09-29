@@ -22,7 +22,7 @@ relevant-rules: [2.1, 3.1, 7.1, 8.1, 9.1, 10.1]
 
 # Align plugin with CC 2.1.28x platform changes and 3-pillars 4.0.0
 
-User goal 2026-09-28: (1) hooks.json quote CLAUDE_PLUGIN_ROOT (CC 2.1.281 validate warning); (2) approval-tier field retired to decode-only, min-approval-requirement live; (3) kanban refs cite 3-pillars 4.0.0 (3P-KAN-17..21); (4) absorb governance deltas (failed-card rulings R1-R4, refusal protocol, three-kanban query model, baseline ruleset corrections) into embedded skills by pointer, not duplication. Implementation via parallel lean-workers on disjoint file sets. Specs: 3-pillars-spec.md in the ai-maestro repo (governance-rules branch), head 44248ae4b.
+User goal 2026-09-28: (1) hooks.json quote CLAUDE_PLUGIN_ROOT (CC 2.1.281 validate warning); (2) approval-tier field retired to decode-only, min-approval-requirement live; (3) kanban refs cite 3-pillars 4.0.0 (3P-KAN-17..21); (4) absorb governance deltas (failed-card rulings R1-R4, refusal protocol, three-kanban query model, baseline ruleset corrections) into embedded skills by pointer, not duplication. Implementation via parallel lean-workers on disjoint file sets. Specs: 3-pillars-spec.md in the ai-maestro repo (governance-rules branch, unpushed local working copy as of 2026-09-29), head 44248ae4b.
 
 ## Approval log
 

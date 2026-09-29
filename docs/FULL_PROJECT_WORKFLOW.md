@@ -150,7 +150,7 @@ There are two views of a task's state, and they are **not peers**:
 
 1. **The TRDD `column:` pipeline is the AUTHORITATIVE lifecycle.** Each task is a
    TRDD file in `design/tasks/` whose `column:` field is the single source of
-   truth for where the task is. The full board is the 3.0.0 22-column set
+   truth for where the task is. The full board is the ratified 22-column set
    (`backburner`, `approval`, `design`, `design_ai_review`,
    `design_human_review`, `todo`, `verify_assumptions`, `plan`, `dispatch`,
    `dev`, `testing`, `ai_review`, `human_review`, `complete`, `publish`,

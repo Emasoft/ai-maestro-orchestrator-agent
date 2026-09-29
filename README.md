@@ -1,6 +1,6 @@
 # AI Maestro Orchestrator Agent (amoa-)
 
-**Version**: 1.9.0
+**Version**: 1.13.14
 
 A Claude Code plugin that turns one Claude session into a multi-agent
 orchestrator: it breaks a plan into GitHub-Issue-backed modules, assigns them
